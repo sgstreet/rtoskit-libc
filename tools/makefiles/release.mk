@@ -1,0 +1,9 @@
+CPPFLAGS += -DNDEBUG -DBUILD_TYPE_RELEASE
+CFLAGS += -Os -g3
+CXXFLAGS += -Os -3
+ASFLAGS += -Os -g3
+LDFLAGS += -Os -g3
+
+ifeq (${ARCH_CROSS},host)
+LISTING_STYLE := -adlns
+endif

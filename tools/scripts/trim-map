@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+"""
+Trim linker map file to extract content between "Memory Configuration" 
+and the line starting with "OUTPUT(".
+"""
+
+import sys
+import argparse
+import tempfile
+import shutil
+from typing import TextIO
+
+
+def trim_map_file(input_file: TextIO, output_file: TextIO) -> None:
+    """
+    Extract lines between "Memory Configuration" and "OUTPUT(" from input to output.
+    
+    Args:
+        input_file: Input file object to read from
+        output_file: Output file object to write to
+    """
+    in_section = False
+    
+    for line in input_file:
+        # Check if we've reached the start marker
+        if "Memory Configuration" in line:
+            in_section = True
+        
+        # If we're in the section, check if we've hit the end marker
+        if in_section:
+            if line.startswith("OUTPUT("):
+                # Stop processing when we hit OUTPUT(
+                break
+            # Write the line to output
+            output_file.write(line)
+
+
+def edit_file_inplace(filename: str) -> None:
+    """
+    Edit a file in place by reading it, processing it, and writing back.
+    Uses a temporary file for safety.
+    
+    Args:
+        filename: Path to the file to edit in place
+    """
+    # Create a temporary file in the same directory as the target file
+    # This ensures it's on the same filesystem for atomic rename
+    import os
+    dir_name = os.path.dirname(filename) or '.'
+    
+    with tempfile.NamedTemporaryFile(mode='w', dir=dir_name, delete=False) as tmp_file:
+        tmp_filename = tmp_file.name
+        try:
+            with open(filename, 'r') as input_file:
+                trim_map_file(input_file, tmp_file)
+            
+            # Replace original file with temporary file
+            shutil.move(tmp_filename, filename)
+        except Exception:
+            # Clean up temporary file on error
+            if os.path.exists(tmp_filename):
+                os.unlink(tmp_filename)
+            raise
+
+
+def main():
+    """Main entry point for the script."""
+    parser = argparse.ArgumentParser(
+        description="Trim linker map file to extract Memory Configuration section",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Read from stdin, write to stdout
+  cat file.map | %(prog)s > output.txt
+  
+  # Specify input and output files
+  %(prog)s -i input.map -o output.txt
+  
+  # Read from file, write to stdout
+  %(prog)s -i input.map
+  
+  # Read from stdin, write to file
+  cat input.map | %(prog)s -o output.txt
+  
+  # Edit file in place
+  %(prog)s -e input.map
+        """
+    )
+    
+    parser.add_argument(
+        '-i', '--input',
+        type=str,
+        default=None,
+        metavar='FILE',
+        help='Input map file (default: stdin)'
+    )
+    
+    parser.add_argument(
+        '-o', '--output',
+        type=str,
+        default=None,
+        metavar='FILE',
+        help='Output file (default: stdout)'
+    )
+    
+    parser.add_argument(
+        '-e', '--edit',
+        type=str,
+        metavar='FILE',
+        help='Edit file in place (overwrite with trimmed content)'
+    )
+    
+    args = parser.parse_args()
+    
+    # Validate arguments
+    if args.edit and (args.input or args.output):
+        parser.error("Cannot use -e/--edit with -i/--input or -o/--output")
+    
+    try:
+        if args.edit:
+            # In-place editing mode
+            edit_file_inplace(args.edit)
+        else:
+            # Normal mode with separate input/output
+            if args.input:
+                input_file = open(args.input, 'r')
+            else:
+                input_file = sys.stdin
+                
+            if args.output:
+                output_file = open(args.output, 'w')
+            else:
+                output_file = sys.stdout
+            
+            try:
+                trim_map_file(input_file, output_file)
+            finally:
+                # Close files if they're not stdin/stdout
+                if args.input:
+                    input_file.close()
+                if args.output:
+                    output_file.close()
+    except FileNotFoundError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()

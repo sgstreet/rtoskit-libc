@@ -1,0 +1,13 @@
+#!/bin/bash
+
+PROJECT_ROOT=$1
+
+if [[ ! -f $PROJECT_ROOT/compile_commands.json ]]; then
+	make -C $PROJECT_ROOT -j db
+fi
+
+exec &> /dev/null
+
+CLION_DIR=$PROJECT_ROOT
+unset PROJECT_ROOT
+clion $CLION_DIR > /dev/null&

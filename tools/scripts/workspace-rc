@@ -1,0 +1,13 @@
+source ~/.profile
+PROJECT_ROOT=$(realpath ${BASH_SOURCE%/tools/scripts/workspace-rc})
+export CROSS_COMPILE=${HOME}/local/libexec/gcc-arm-none-eabi/gcc-arm-none-eabi-15-2-0/bin/arm-none-eabi-
+
+alias ide="$PROJECT_ROOT/tools/scripts/ide $PROJECT_ROOT"
+alias edit='subl'
+alias mksrc="$PROJECT_ROOT/tools/scripts/mksrc"
+alias serial='picocom -b 115200 --imap=lfcrlf'
+alias home="cd $PROJECT_ROOT"
+
+cd $PROJECT_ROOT
+
+unset PROJECT_ROOT
