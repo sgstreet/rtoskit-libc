@@ -1,0 +1,9 @@
+api/errno PASS
+api/float PASS
+api/iso646 PASS
+api/stdarg PASS
+api/stdbool PASS
+api/stddef PASS
+api/stdint PASS
+functional/udiv PASS
+regression/printf-fmt-n PASS

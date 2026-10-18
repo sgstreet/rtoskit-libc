@@ -87,9 +87,11 @@ example test: libc port
 target: example test
 endif
 
-# Build, then run every unit test; a test directory may provide <name>.run to drive its binary
+# Build, then run every unit test (a test directory may provide <name>.run to drive its binary)
+# and the libc-test tests against test/libc-test/expected/<board>.txt; LIBC_TEST_UPDATE=1 records improvements
 check: target
 	${PROJECT_ROOT}/test/unit/run-unit ${BUILD_ROOT}/test/unit
+	${PROJECT_ROOT}/test/libc-test/run $(if ${LIBC_TEST_UPDATE},--update) ${BUILD_ROOT}/test/libc-test ${PROJECT_ROOT}/test/libc-test/expected/${BOARD_TYPE}.txt
 .PHONY: check
 
 endif
@@ -140,6 +142,7 @@ help:
 	@echo "  BOARD_TYPE=all         Which board(s): all (${BOARDS}), or a single board"
 	@echo "  BUILD_TYPE=debug       Build variant: debug, release, or all"
 	@echo "  V=1                    Verbose output (show full compiler commands)"
+	@echo "  LIBC_TEST_UPDATE=1     With check: record libc-test improvements in the board baseline"
 	@echo "  PROJECT_ROOT=<path>    Override project root (required in worktrees)"
 .PHONY: help
 

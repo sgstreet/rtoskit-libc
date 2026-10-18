@@ -38,5 +38,9 @@ int puts(const char *s);
 
 /* Declared for the compiler's printf-to-puts folding; implemented in P1.09 */
 int printf(const char *restrict format, ...);
+int snprintf(char *restrict s, size_t n, const char *restrict format, ...);
+int sprintf(char *restrict s, const char *restrict format, ...);
+int vsnprintf(char *restrict s, size_t n, const char *restrict format, __builtin_va_list arg);
+int vsprintf(char *restrict s, const char *restrict format, __builtin_va_list arg);
 
 #endif /* _STDIO_H */
