@@ -18,7 +18,7 @@ in order unless a step says otherwise.
 6. This file's checkboxes are updated, any new decisions are appended to
    PLAN.md, and the work is committed.
 
-Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-cortex-m0plus`, `linux-cortex-m4f`, `linux-cortex-m7`, `linux-cortex-m33`) from P1.06 on (PLAN target matrix, D22).
+Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-armv6-m`, `linux-armv7e-m`, `linux-armv7e-m-dp`, `linux-armv8-m.main`) from P1.06 on (PLAN target matrix, D22, D24).
 
 ---
 
@@ -74,11 +74,11 @@ Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-corte
 - [ ] `<signal.h>`: a software `signal`/`raise` (a handler table with `SIG_DFL`/`SIG_IGN` semantics). No OS signals.
 
 ## P1.06 — ARM cross bring-up (armv6-m, armv7e-m, armv7e-m-dp, armv8-m.main)
-- [ ] Toolchain files `tools/makefiles/cortex-m0plus.mk`, `cortex-m4f.mk`, `cortex-m7.mk` (`-mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard`, D18) and `cortex-m33.mk` (`-mthumb -mcpu=…`, float ABI per the target matrix; `LIBC_FPU` set for shared FPU subdirectories, D22). Board files `linux-cortex-*.mk` with `RTOS_PORT := linux`, plus a `TARGET_RUNNER` for qemu-arm; add them to `BOARDS`.
+- [ ] Toolchain files `tools/makefiles/armv6-m.mk` (`-march=armv6-m`), `armv7e-m.mk` (`-march=armv7e-m+fp -mfloat-abi=hard`), `armv7e-m-dp.mk` (`-march=armv7e-m+fp.dp -mfloat-abi=hard`, D18) and `armv8-m.main.mk` (`-march=armv8-m.main+fp+dsp -mfloat-abi=hard`), all `-mthumb` with no `-mcpu` (D24); `LIBC_FPU` set for shared FPU subdirectories (D22). Board files `linux-<arch>.mk` with `RTOS_PORT := linux`, plus a `TARGET_RUNNER` for qemu-arm; add them to `BOARDS`.
 - [ ] Linux port for ARM: Thumb `_start`, `svc 0` syscalls, TLS via `set_tls` and a port-provided `__aeabi_read_tp`.
-- [ ] `libc/setjmp/<cpu>/*.S` variant subdirectories for each ARM core (Thumb-1 for v6-m; the VFP registers for the hard-float variants; the `fpv5-dp` code saves d8–d15, which is the same storage as s16–s31). One shared `arch/arm/include/` with `jmp_buf` sized for the largest variant (D15).
+- [ ] `libc/setjmp/<arch>/*.S` variant subdirectories for each ARM arch (Thumb-1 for v6-m; the VFP registers for the hard-float variants; the `fpv5-dp` code saves d8–d15, which is the same storage as s16–s31). One shared `arch/arm/include/` with `jmp_buf` sized for the largest variant (D15).
 - [ ] Runner: `qemu-arm -cpu max` wrapper. Verify that v6-m and v7e-m code runs correctly under qemu-user, and document any instruction caveats.
-- [ ] Check that `qemu-arm` executes FPv5-D16 double-precision code correctly (`-cpu max`, or `cortex-m7` if the qemu build accepts it), including `VRINT`/`VMAXNM`/`VFMA.F64`.
+- [ ] Check that `qemu-arm` executes FPv5-D16 double-precision code correctly (`qemu-arm -cpu max`), including `VRINT`/`VMAXNM`/`VFMA.F64`.
 - [ ] Baselines `expected/armv6-m.txt`, `armv7e-m.txt`, `armv7e-m-dp.txt` and `armv8-m.main.txt` match x86_64, apart from documented differences.
 - **DoD extra:** from here on, every step gates on all five arches.
 

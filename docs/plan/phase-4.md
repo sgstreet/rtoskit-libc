@@ -5,7 +5,7 @@ D15 (one header set per target triple) and D16 (a build that can be driven from
 outside) must hold from Phase 1 on.
 
 **Goal:** crosstool-NG builds a multilib `arm-none-eabi` GCC whose C library is
-rtoskit-libc. A user can then run `arm-none-eabi-gcc -mcpu=cortex-m33 ... foo.c`
+rtoskit-libc. A user can then run `arm-none-eabi-gcc -march=armv8-m.main+fp+dsp -mfloat-abi=hard ... foo.c` (or any `-mcpu` mapping to it)
 and get the right libc variant, crt and RTOS port library with no extra flags
 (or with one documented `--specs=`).
 

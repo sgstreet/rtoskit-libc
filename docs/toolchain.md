@@ -19,8 +19,8 @@ Cloud sessions install the apt packages through `.claude/hooks/session-start.sh`
   some of them (it has `__INT64_C_SUFFIX__` instead). Verify the Clang version
   that provides them before enabling Clang builds (D9).
 - The `linux-x86_64` board uses `tools/makefiles/x86_64.mk`. ARM toolchain
-  files follow pi-pico's `cortex-m0plus.mk`/`cortex-m33.mk` pattern (`CROSS_COMPILE`,
-  `CROSS_FLAGS`).
+  files follow pi-pico's toolchain-file pattern (`CROSS_COMPILE`, `CROSS_FLAGS`) but are
+  named after the architecture and use `-march`, not `-mcpu` (D24).
 - `__builtin_flt_rounds` does not exist in GCC 14, so `FLT_ROUNDS` calls the
   library function `__flt_rounds()`.
 - Ubuntu's GCC enables PIE, `-fstack-protector-strong` and CET by default.

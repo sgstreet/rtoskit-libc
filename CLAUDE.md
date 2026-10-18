@@ -55,8 +55,9 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
 
 - **Boards and toolchains:** `BOARD_TYPE` files (`tools/makefiles/linux-x86_64.mk`, ...)
   export `ARCH_CROSS` and `RTOS_PORT`. The `ARCH_CROSS` file
-  (`tools/makefiles/x86_64.mk`, later `cortex-m0plus.mk`, `cortex-m4f.mk`,
-  `cortex-m7.mk`, `cortex-m33.mk`) sets the toolchain and all flags, including
+  (`tools/makefiles/x86_64.mk`, later `armv6-m.mk`, `armv7e-m.mk`,
+  `armv7e-m-dp.mk`, `armv8-m.main.mk`; architecture names, `-march` not
+  `-mcpu`, D24) sets the toolchain and all flags, including
   `LIBC_CFLAGS` for library code. It also links `libc.a` from the build tree
   through `LDLIBS`.
 - **Output:** `build/<board>/<build-type>/<module path>/`; installs go to
@@ -171,9 +172,9 @@ Any exception needs a PLAN.md decision entry.
 ```
 include/           public headers (no .mk; + include/rtos/rtos-port.h seam contract)
 libc/              libc.a: libc/<area>/ modules, one function per file
-libc/<area>/<cpu>/ ARCH_CROSS variant subdirectory (SUBDIRS := ${ARCH_CROSS})
+libc/<area>/<arch>/ ARCH_CROSS variant subdirectory (SUBDIRS := ${ARCH_CROSS})
 libc/internal/     private headers (no .mk)
-port/<port>/       linux (test port), none (bare metal), rtoskit (future); port/<port>/<cpu>/ variants
+port/<port>/       linux (test port), none (bare metal), rtoskit (future); port/<port>/<arch>/ variants
 test/              unit tests (test/unit/<name>/), libc-test glue, size, bench
 example/           examples
 toolchain/         Phase 4: crosstool-NG libc backend, multilib configs
