@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# smoke.run
+#
+# Created on: Oct 18, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+
+# Usage: smoke.run <smoke.elf>
+# Runs the in-process checks, then confirms exit statuses reach the parent.
+
+elf=$1
+${TARGET_RUNNER:-} "${elf}" || exit 1
+
+for status in 0 1 42 255; do
+	${TARGET_RUNNER:-} "${elf}" exit ${status}
+	actual=$?
+	if [[ ${actual} -ne ${status} ]]; then
+		echo "FAIL: exit(${status}) gave status ${actual}"
+		exit 1
+	fi
+	echo "PASS: exit(${status}) status reaches the parent"
+done

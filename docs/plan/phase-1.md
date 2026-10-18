@@ -22,18 +22,20 @@ Enabled arches: `x86_64` from P1.01, and all four ARM targets (`armv6-m`, `armv7
 
 ---
 
-## P1.01 — Toolchain, layout, build integration, Linux port bootstrap
-- [ ] Install/verify GCC 14 (`gcc-14`) and Clang 19 (if used), qemu-user, and `arm-none-eabi` (cross toolchain; needed from P1.06). Record the versions in `docs/toolchain.md`.
-- [ ] Add a SessionStart hook (`.claude/`) that installs the toolchain packages in cloud sessions.
-- [ ] Add `tools/makefiles/x86_64.mk`: gcc-14, `-std=c23 -nostdinc -ffreestanding -fno-builtin -ffunction-sections -fdata-sections -ftls-model=local-exec -mlong-double-64` (D7, pending Q1), static link with `-nostdlib`, libgcc.
-- [ ] Add `tools/makefiles/libc.mk`: the `ARCH_LAYERS` source search (D17); include paths (`arch/${ARCH_FAMILY}/include`, i.e. one header set per target triple per D15; `port/${PORT}/include`; `include`), the generic-vs-arch file selection (D5), and `install`/`install-headers` targets that external callers can drive (D16).
-- [ ] Change the top-level `Makefile` default to `ARCH_CROSS ?= x86_64`, add `PORT ?= linux`, and order modules as `libc → test`. Keep `example` building against the new libc.
-- [ ] Create the skeleton: `include/`, `src/internal/`, `arch/x86_64/`, `port/linux/`, `port/none/`, `libc/` (produces `libc.a`), and `test/unit/`.
-- [ ] Draft `include/rtos/rtos-port.h` (seam v0: exit, abort, write, read, clock, TLS hooks).
-- [ ] Linux port: x86_64 `_start` (crt1), raw syscall helpers, TLS block setup via `arch_prctl(ARCH_SET_FS)` and `__libc_tls_init` (D10), argc/argv/envp, then `main` → `exit`.
-- [ ] Freestanding headers: `stddef.h`, `stdint.h`, `limits.h`, `float.h`, `stdarg.h`, `stdbool.h`, `stdalign.h`, `stdnoreturn.h`, `iso646.h` (D8).
-- [ ] `<errno.h>` with `thread_local int errno` (an object, not a macro over a function).
-- [ ] `test/unit/smoke`: prove that `errno` is thread-local per TLS block, that the exit status propagates, and that the TLS `.tdata` image is copied.
+## P1.01 — Toolchain, layout, build integration, Linux port bootstrap  `[x]`
+- [x] Install/verify GCC 14 (`gcc-14`) and Clang 19 (if used), qemu-user, and `arm-none-eabi` (cross toolchain; needed from P1.06). Record the versions in `docs/toolchain.md`. *GCC 14.2 and qemu 8.2.2 are installed; Clang is deferred (it lacks some GCC predefines the headers use). The arm-none-eabi 15.2 download is confirmed reachable and is installed in P1.06.*
+- [x] Add a SessionStart hook (`.claude/`) that installs the toolchain packages in cloud sessions.
+- [x] Add `tools/makefiles/x86_64.mk`: gcc-14, `-std=c23 -nostdinc -ffreestanding -fno-builtin -ffunction-sections -fdata-sections -ftls-model=local-exec -mlong-double-64` (D7, pending Q1), static link with `-nostdlib`, libgcc.
+- [x] Add `tools/makefiles/libc.mk`: the `ARCH_LAYERS` source search (D17); include paths (`arch/${ARCH_FAMILY}/include`, i.e. one header set per target triple per D15; `port/${PORT}/include`; `include`), the generic-vs-arch file selection (D5), and `install`/`install-headers` targets that external callers can drive (D16).
+- [x] Change the top-level `Makefile` default to `ARCH_CROSS ?= x86_64`, add `PORT ?= linux` (named `RTOS_PORT`), and order modules as `libc → test`. Keep `example` building against the new libc.
+- [x] Create the skeleton: `include/`, `src/internal/`, `arch/x86_64/`, `port/linux/`, `port/none/`, `libc/` (produces `libc.a`), and `test/unit/`.
+- [x] Draft `include/rtos/rtos-port.h` (seam v0: exit, abort, write, read, clock, TLS hooks). *The clock function moves to P1.11 with `<time.h>`. v0 also has `__libc_start_main`.*
+- [x] Linux port: x86_64 `_start` (crt1), raw syscall helpers, TLS block setup via `arch_prctl(ARCH_SET_FS)` and `__libc_tls_init` (D10), argc/argv/envp, then `main` → `exit`.
+- [x] Freestanding headers: `stddef.h`, `stdint.h`, `limits.h`, `float.h`, `stdarg.h`, `stdbool.h`, `stdalign.h`, `stdnoreturn.h`, `iso646.h` (D8).
+- [x] `<errno.h>` with `thread_local int errno` (an object, not a macro over a function).
+- [x] `test/unit/smoke`: prove that `errno` is thread-local per TLS block, that the exit status propagates, and that the TLS `.tdata` image is copied.
+- [x] Also done: `test/unit/headers` (every limit usable in `#if`, C23 `va_start`, ...), a top-level `make check` (unit tests only until P1.02), and simple byte-loop `memcpy`/`memset`/`strlen` plus `fputs`/`puts` on a minimal `FILE`, all revisited in P1.03 and P1.09.
+- Follow-ups recorded for later steps: libc must provide `stdc-predef.h` (or an equivalent) for `__STDC_IEC_60559_BFP__` and the other Annex F/G macros, which GCC normally takes from glibc (P1.13/P1.17); and a TLS test with `p_vaddr % p_align != 0` (P1.12).
 - **DoD extra:** `example/hello-world` links against our libc only (`-nostdlib`) and runs, using a temporary `fputs` → `__rtos_write` path.
 
 ## P1.02 — libc-test harness and formatted-output core

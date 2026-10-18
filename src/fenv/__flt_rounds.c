@@ -1,0 +1,20 @@
+/*
+ * Copyright (C) 2026 Red Rocket Computing, LLC
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * __flt_rounds.c
+ *
+ * Created on: Oct 18, 2026
+ *     Author: Stephen Street (stephen@redrocketcomputing.com)
+ */
+
+#include <float.h>
+
+/* Targets without a floating-point environment only round to nearest (C23 5.2.5.3.3) */
+int __flt_rounds(void)
+{
+	return 1;
+}

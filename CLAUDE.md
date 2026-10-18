@@ -41,18 +41,23 @@ make                                   # debug + release for ARCH_CROSS (default
 make BUILD_TYPE=debug                  # single build type
 make ARCH_CROSS=armv7e-m               # cross arch: x86_64 | armv6-m | armv7e-m | armv7e-m-dp | armv8-m.main
 make libc                              # one module (dep-free, assumes prior full build)
-make check                             # build + run libc-test + diff vs expected (P1.02+)
+make check                             # build + run unit tests (test/unit/run-unit); + libc-test from P1.02
 make size-report                       # Phase 2+
 make bench                             # Phase 3+
 make info | help | clean | distclean
 V=1 make ...                           # verbose
 ```
 
-- The output goes to `build/<build_type>/...` and the installs to `images/<build_type>/`.
-- Every source directory needs a `<dirname>.mk`. Create one with
+- The output goes to `build/<arch>/<build_type>/...` and the installs to `images/<arch>/<build_type>/`.
+- Module directories need a `<dirname>.mk`. Create one with
   `tools/scripts/mksrc <path>`, or copy from `tools/templates/`. A directory with
   only `.mk` files is a tree node (`tree-template.mk`); a directory with sources
-  is a project (`src-template.mk`, optionally with a `subdir.mk`).
+  is a project (`src-template.mk`, optionally with a `subdir.mk`). Exception
+  (D21): `src/`, `arch/` and `include/` are source pools without `.mk` files.
+  The `libc/` module compiles them through `tools/makefiles/libc.mk`. The ports
+  do the same from `port/<port>/src` and `port/<port>/arch/<layer>/src`.
+- Consumers (examples, tests) automatically compile and link against the
+  in-tree libc via `tools/makefiles/libc-target.mk`.
 - Modules are discovered automatically (`*/<name>.mk`). The cross-module order
   is set in the top-level `Makefile` (`target:` dependencies).
 - Extend the build system by **adding** files under `tools/makefiles/`
@@ -89,6 +94,7 @@ V=1 make ...                           # verbose
 Allowed `#if`/`#ifdef` uses, and nothing else:
 
 1. Include guards.
+   (Plus the D19 exception: `CHAR_MIN`/`CHAR_MAX` in `<limits.h>`.)
 2. `__cplusplus` `extern "C"` wrappers in public headers.
 3. Macros the standard requires to be conditional (`NDEBUG` in `<assert.h>`,
    `__STDC_WANT_*`, and feature macros the standard says are defined only
@@ -109,7 +115,8 @@ Any exception needs a PLAN.md decision entry.
 ### Style
 
 - Format with `tools/clang-format` (tabs, width 4, function braces on their own
-  line, `PointerAlignment: Right`).
+  line, `PointerAlignment: Right`). Check:
+  `clang-format --style=file:tools/clang-format --dry-run <files>`.
 - New files start with the MPL header from
   `tools/templates/mpl-c-code-header.txt`. Fill in `<filename>` and `<date>`;
   the author is Stephen Street.
