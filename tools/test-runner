@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# test-runner
+#
+# Created on: Oct 18, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+
+# Usage: tools/test-runner [--timeout <seconds>] <elf|directory>...
+#
+# Runs test executables built for a Linux-port board and reports PASS/FAIL.
+# A directory argument runs every .elf below it. A test passes when it exits
+# with status 0, unless its source directory has an executable <name>.run,
+# which is then run with the executable's path and decides the outcome.
+# TARGET_RUNNER (e.g. a qemu-arm command) prefixes every execution. The log of
+# each test is written next to its executable as <name>.log.
+
+set -u
+
+project_root=$(realpath "$(dirname "$0")/..")
+timeout=60
+
+if [[ ${1:-} == --timeout ]]; then
+	timeout=$2
+	shift 2
+fi
+
+if [[ $# -eq 0 ]]; then
+	echo "usage: $0 [--timeout <seconds>] <elf|directory>..." >&2
+	exit 2
+fi
+
+elfs=()
+for arg in "$@"; do
+	if [[ -d ${arg} ]]; then
+		while IFS= read -r elf; do elfs+=("${elf}"); done < <(find "$(realpath "${arg}")" -name '*.elf' | sort)
+	else
+		elfs+=("$(realpath "${arg}")")
+	fi
+done
+
+passed=0
+failed=0
+
+for elf in "${elfs[@]}"; do
+	# build/<board>/<build-type>/<module path>/<name>.elf mirrors <module path> in the source tree
+	module=$(dirname "${elf#${project_root}/build/*/*/}")
+	name=$(basename "${elf}" .elf)
+	driver=${project_root}/${module}/${name}.run
+	log=${elf%.elf}.log
+
+	if [[ -x ${driver} ]]; then
+		TARGET_RUNNER=${TARGET_RUNNER:-} timeout "${timeout}" "${driver}" "${elf}" > "${log}" 2>&1
+	else
+		timeout "${timeout}" ${TARGET_RUNNER:-} "${elf}" > "${log}" 2>&1
+	fi
+	status=$?
+
+	if [[ ${status} -eq 0 ]]; then
+		echo "PASS ${module}"
+		passed=$((passed + 1))
+	else
+		echo "FAIL ${module} (status ${status}, log ${log})"
+		sed 's/^/    /' "${log}"
+		failed=$((failed + 1))
+	fi
+done
+
+echo "tests: ${passed} passed, ${failed} failed"
+[[ ${failed} -eq 0 && ${passed} -gt 0 ]]

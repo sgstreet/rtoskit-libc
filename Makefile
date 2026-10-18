@@ -3,10 +3,10 @@ ifeq (${MAKECMDGOALS},)
 MAKECMDGOALS := all
 endif
 
+BOARDS ?= linux-x86_64
 BUILDS ?= debug release
 
-export ARCH_CROSS ?= x86_64
-export RTOS_PORT ?= linux
+export BOARD_TYPE ?= all
 export BUILD_TYPE ?= all
 export PROJECT_ROOT ?= ${CURDIR}
 export OUTPUT_ROOT ?= ${PROJECT_ROOT}/build
@@ -19,62 +19,61 @@ endif
 
 MAKEFLAGS += ${SILENT}
 
-ifeq (${BUILD_TYPE},all)
+ifeq (${BOARD_TYPE},all)
 
-export INSTALL_ROOT := ${PREFIX}/${ARCH_CROSS}$(if ${BOARD_TYPE},/${BOARD_TYPE},)
-export BUILD_ROOT := ${OUTPUT_ROOT}/${ARCH_CROSS}$(if ${BOARD_TYPE},/${BOARD_TYPE},)
+# Stop at the first board that fails instead of reporting only the last one
+all:
+	@for board in ${BOARDS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BOARD_TYPE=$$board all || exit $$?; \
+	done
+.PHONY: all
+
+clean:
+	@for board in ${BOARDS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BOARD_TYPE=$$board clean || exit $$?; \
+	done
+.PHONY: clean
+
+else ifeq (${BUILD_TYPE},all)
+
+export INSTALL_ROOT := ${PREFIX}$(if ${BOARD_TYPE},/${BOARD_TYPE},)
+export BUILD_ROOT := ${OUTPUT_ROOT}$(if ${BOARD_TYPE},/${BOARD_TYPE},)
 
 all:
 	@for build_type in ${BUILDS}; do \
-		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=$$build_type all; \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=$$build_type all || exit $$?; \
 	done
 .PHONY: all
 
 clean:
 	@for build_type in ${BUILDS}; do \
-		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=$$build_type clean; \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=$$build_type clean || exit $$?; \
 	done
 .PHONY: clean
 
-check:
-	@for build_type in ${BUILDS}; do \
-		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=$$build_type check || exit 1; \
-	done
-.PHONY: check
-
-install-headers:
-	${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=release install-headers
-.PHONY: install-headers
-
 else
 
-export INSTALL_ROOT := ${PREFIX}/${ARCH_CROSS}$(if ${BOARD_TYPE},/${BOARD_TYPE},)$(if ${BUILD_TYPE},/${BUILD_TYPE},)
-export BUILD_ROOT := ${OUTPUT_ROOT}/${ARCH_CROSS}$(if ${BOARD_TYPE},/${BOARD_TYPE},)$(if ${BUILD_TYPE},/${BUILD_TYPE},)
+export INSTALL_ROOT := ${PREFIX}$(if ${BOARD_TYPE},/${BOARD_TYPE},)$(if ${BUILD_TYPE},/${BUILD_TYPE},)
+export BUILD_ROOT := ${OUTPUT_ROOT}$(if ${BOARD_TYPE},/${BOARD_TYPE},)$(if ${BUILD_TYPE},/${BUILD_TYPE},)
+
+# Concurrent "install -D" calls can race creating the same parent directory,
+# so create the install root once, serially, for goals that install anything.
+NO_INSTALL_ROOT_GOALS := clean distclean realclean info help setup
+ifneq ($(filter-out ${NO_INSTALL_ROOT_GOALS},$(or ${MAKECMDGOALS},all)),)
+$(if $(shell mkdir -p '${INSTALL_ROOT}' 2>&1),$(error cannot create ${INSTALL_ROOT}))
+endif
 
 include ${TOOLS_ROOT}/makefiles/setup.mk
 include ${TOOLS_ROOT}/makefiles/tree.mk
 
 # Dependency ordering only active for full builds (all/clean/install)
-# Individual module targets (make rtos, make test/unit/fault) are dep-free
-ifneq ($(filter-out all target clean install check,${MAKECMDGOALS}),)
+# Individual module targets (make libc, make test/unit/smoke) are dep-free
+ifneq ($(filter-out all target clean install,${MAKECMDGOALS}),)
 target:
 else
-target: libc port example test
 example test: libc port
+target: example test
 endif
-
-# Run every unit test binary; a test directory may provide <name>.run to drive its binary
-check: target
-	${PROJECT_ROOT}/test/unit/run-unit ${BUILD_ROOT}/test/unit
-.PHONY: check
-
-# Install only the public headers (PLAN D16)
-install-headers:
-	@echo "INSTALLING ${INSTALL_ROOT}/include"
-	mkdir -p ${INSTALL_ROOT}/include
-	cp -R ${PROJECT_ROOT}/include/. ${INSTALL_ROOT}/include/
-	cp -R ${PROJECT_ROOT}/arch/${ARCH_FAMILY}/include/. ${INSTALL_ROOT}/include/
-.PHONY: install-headers
 
 endif
 
@@ -93,6 +92,7 @@ info:
 	@echo "ARCH_CROSS=${ARCH_CROSS}"
 	@echo "RTOS_PORT=${RTOS_PORT}"
 	@echo "CROSS_COMPILE=${CROSS_COMPILE}"
+	@echo "BOARD_TYPE=${BOARD_TYPE}"
 	@echo "BUILD_TYPE=${BUILD_TYPE}"
 	@echo "PROJECT_ROOT=${PROJECT_ROOT}"
 	@echo "OUTPUT_ROOT=${OUTPUT_ROOT}"
@@ -107,22 +107,22 @@ help:
 	@echo "  all                    Build everything (full ordered build)"
 	@echo "  clean                  Clean all build artifacts"
 	@echo "  install                Install all build artifacts"
-	@echo "  install-headers        Install only the public libc headers"
-	@echo "  check                  Build and run the tests"
 	@echo "  db                     Generate compilation database (bear)"
 	@echo "  setup                  Download and install host build tools"
 	@echo "  distclean              Delete all build artifacts and output directories"
 	@echo "  realclean              Delete all build artifacts, directories and downloaded tools"
 	@echo "  info                   Display build configuration"
 	@echo ""
-	@echo "Direct module targets (dep-free, assumes prior full build):"
-	@echo "  <module>               Build a top-level module, e.g. rtos, hardware, test"
-	@echo "  <module>/<submodule>   Build a nested module, e.g. test/unit, scheduler/multicore"
-	@echo "  test/unit/<name>       Build a single unit test, e.g. test/unit/fault"
+	@echo "Direct module targets (dep-free, assumes prior full build; set BOARD_TYPE and BUILD_TYPE):"
+	@echo "  <module>               Build a top-level module, e.g. libc, port, test"
+	@echo "  <module>/<submodule>   Build a nested module, e.g. libc/string, port/linux"
+	@echo "  test/unit/<name>       Build a single unit test, e.g. test/unit/smoke"
+	@echo ""
+	@echo "Running tests:"
+	@echo "  tools/test-runner build/linux-x86_64/debug/test/unit"
 	@echo ""
 	@echo "Configuration variables:"
-	@echo "  ARCH_CROSS=x86_64      Target arch: x86_64 (Linux port test host)"
-	@echo "  RTOS_PORT=linux        RTOS port linked into executables: linux or none"
+	@echo "  BOARD_TYPE=all         Which board(s): all (${BOARDS}), or a single board"
 	@echo "  BUILD_TYPE=debug       Build variant: debug, release, or all"
 	@echo "  V=1                    Verbose output (show full compiler commands)"
 	@echo "  PROJECT_ROOT=<path>    Override project root (required in worktrees)"

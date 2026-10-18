@@ -14,7 +14,7 @@
 #include <rtos/rtos-port.h>
 
 #include "internal/tls.h"
-#include "internal/tls-arch.h"
+#include "tls-arch.h"
 
 void *__libc_tls_init(void *block, const struct __libc_tls_image *image)
 {

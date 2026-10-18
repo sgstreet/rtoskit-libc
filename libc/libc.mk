@@ -11,33 +11,33 @@
 #     Author: Stephen Street (stephen@redrocketcomputing.com)
 #
 
-# Builds libc.a from src/ and the arch layers (see tools/makefiles/libc.mk)
-# and installs it with the public headers.
-
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
-EXTRA_DEPS := ${SOURCE_DIR}/libc.mk ${SOURCE_DIR}/subdir.mk
+# libc.a collects the objects of every libc module, including the ${ARCH_CROSS} variants
+TARGET_OBJ_LIBS := libc/errno
+TARGET_OBJ_LIBS += libc/fenv/${ARCH_CROSS}
+TARGET_OBJ_LIBS += libc/startup
+TARGET_OBJ_LIBS += libc/stdio
+TARGET_OBJ_LIBS += libc/stdlib
+TARGET_OBJ_LIBS += libc/string
+TARGET_OBJ_LIBS += libc/tls/${ARCH_CROSS}
+
+EXTRA_DEPS := ${SOURCE_DIR}/libc.mk
+
+LIBC_HEADERS := $(patsubst ${PROJECT_ROOT}/include/%,${INSTALL_ROOT}/include/%,$(shell find ${PROJECT_ROOT}/include -name '*.h'))
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
-LIBC_HEADERS := $(shell cd ${PROJECT_ROOT}/include && find . -name '*.h')
-LIBC_ARCH_HEADERS := $(shell cd ${PROJECT_ROOT}/arch/${ARCH_FAMILY}/include && find . -name '*.h')
-LIBC_INSTALLED_HEADERS := $(addprefix ${INSTALL_ROOT}/include/,$(patsubst ./%,%,${LIBC_HEADERS} ${LIBC_ARCH_HEADERS}))
-
-all: ${INSTALL_ROOT}/lib/libc.a ${LIBC_INSTALLED_HEADERS}
-
-${CURDIR}/libc.a: ${OBJ} ${EXTRA_DEPS}
-	$(call libc-archive,${OBJ})
+all: ${INSTALL_ROOT}/lib/libc.a ${LIBC_HEADERS}
 
 ${INSTALL_ROOT}/lib/libc.a: ${CURDIR}/libc.a
-	$(call libc-install,$<,$@)
-
-${INSTALL_ROOT}/include/%.h: ${PROJECT_ROOT}/arch/${ARCH_FAMILY}/include/%.h
-	$(call libc-install,$<,$@)
+	@echo "INSTALLING ${@}"
+	$(INSTALL) -m 644 -D ${<} ${@}
 
 ${INSTALL_ROOT}/include/%.h: ${PROJECT_ROOT}/include/%.h
-	$(call libc-install,$<,$@)
+	@echo "INSTALLING ${@}"
+	$(INSTALL) -m 644 -D ${<} ${@}
 
 endif

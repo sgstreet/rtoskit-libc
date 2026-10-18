@@ -11,7 +11,9 @@
 #     Author: Stephen Street (stephen@redrocketcomputing.com)
 #
 
-# x86_64 Linux target using rtoskit-libc (port/linux) instead of the host libc
+# x86_64 toolchain building against rtoskit-libc instead of the host C library
+
+CROSS_FLAGS ?= -mlong-double-64
 
 CC := gcc-14
 CXX := g++-14
@@ -25,23 +27,21 @@ NM := nm
 INSTALL := install
 INSTALL_STRIP := install --strip-program=strip -s
 
-ARCH_FAMILY := x86_64
-ARCH_LAYERS := x86_64
-RTOS_PORT ?= linux
-
-CPPFLAGS :=
+CPPFLAGS := -nostdinc -isystem ${PROJECT_ROOT}/include
 ARFLAGS := cr
 ASFLAGS :=
 
-# -mlong-double-64 matches long double to the ARM targets (PLAN D7)
-CFLAGS := -std=c23 -pipe -fmessage-length=0 -ffunction-sections -fdata-sections -fno-common -fno-pie -fno-stack-protector -mlong-double-64 -Wall -Wunused -Wuninitialized -Wmissing-declarations -Werror
+# -mlong-double-64 makes long double binary64 as on the ARM targets (PLAN D7)
+CFLAGS := ${CROSS_FLAGS} -pipe -feliminate-unused-debug-types -fmessage-length=0 -ffunction-sections -fdata-sections -fno-common -fno-pie -fno-stack-protector -Wall -Wunused -Wuninitialized -Wmissing-declarations -Werror -std=c23
 CXXFLAGS :=
 
+# Added by the modules that build the library and the ports
+LIBC_CFLAGS := -ffreestanding -fno-builtin -fno-tree-loop-distribute-patterns -ftls-model=local-exec
+
 LDSCRIPTS :=
-LDFLAGS := -static -no-pie -Wl,--gc-sections
+LDFLAGS := ${CROSS_FLAGS} -static -no-pie -nostdlib -Wl,--gc-sections
 LOADLIBES :=
-LDLIBS :=
+LDLIBS := -Wl,--start-group ${BUILD_ROOT}/libc/libc.a $(shell ${CC} ${CROSS_FLAGS} -print-libgcc-file-name) -Wl,--end-group
 
+# As for host builds in release.mk: the native assembler cannot interleave source (-h) in listings of optimised code
 LISTING_STYLE := -adlns
-
-include ${PROJECT_ROOT}/tools/makefiles/libc-target.mk

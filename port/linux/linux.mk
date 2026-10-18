@@ -11,31 +11,25 @@
 #     Author: Stephen Street (stephen@redrocketcomputing.com)
 #
 
-# Builds the linux RTOS port: librtos-linux.a plus the startup object crt1.o
-
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
+SUBDIRS := ${ARCH_CROSS}
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
-EXTRA_DEPS := ${SOURCE_DIR}/linux.mk ${SOURCE_DIR}/subdir.mk
+# librtos-linux.a: the Linux test port, generic part plus the ${ARCH_CROSS} variant
+TARGET_OBJ_LIBS := port/linux/${ARCH_CROSS}
+
+EXTRA_DEPS := ${SOURCE_DIR}/linux.mk
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
-PORT_CRT_OBJ := $(filter %/crt1.o,${OBJ})
-PORT_OBJ := $(filter-out %/crt1.o,${OBJ})
+CPPFLAGS += -I${SOURCE_DIR}/${ARCH_CROSS}
+CFLAGS += ${LIBC_CFLAGS}
 
-all: ${INSTALL_ROOT}/lib/librtos-linux.a $(if ${PORT_CRT_OBJ},${INSTALL_ROOT}/lib/linux/crt1.o)
-
-${CURDIR}/librtos-linux.a: ${PORT_OBJ} ${EXTRA_DEPS}
-	$(call libc-archive,${PORT_OBJ})
-
-${CURDIR}/crt1.o: ${PORT_CRT_OBJ}
-	cp $< $@
+all: ${INSTALL_ROOT}/lib/librtos-linux.a
 
 ${INSTALL_ROOT}/lib/librtos-linux.a: ${CURDIR}/librtos-linux.a
-	$(call libc-install,$<,$@)
-
-${INSTALL_ROOT}/lib/linux/crt1.o: ${CURDIR}/crt1.o
-	$(call libc-install,$<,$@)
+	@echo "INSTALLING ${@}"
+	$(INSTALL) -m 644 -D ${<} ${@}
 
 endif

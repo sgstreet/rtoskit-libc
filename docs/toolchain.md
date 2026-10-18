@@ -18,11 +18,16 @@ Cloud sessions install the apt packages through `.claude/hooks/session-start.sh`
   `__SIG_ATOMIC_MIN__`, `__WCHAR_MIN__`, `__WINT_MIN__`, ...). Clang 18 lacks
   some of them (it has `__INT64_C_SUFFIX__` instead). Verify the Clang version
   that provides them before enabling Clang builds (D9).
+- The `linux-x86_64` board uses `tools/makefiles/x86_64.mk`. ARM toolchain
+  files follow pi-pico's `cortex-m0plus.mk`/`cortex-m33.mk` pattern (`CROSS_COMPILE`,
+  `CROSS_FLAGS`).
 - `__builtin_flt_rounds` does not exist in GCC 14, so `FLT_ROUNDS` calls the
   library function `__flt_rounds()`.
 - Ubuntu's GCC enables PIE, `-fstack-protector-strong` and CET by default.
   `tools/makefiles/x86_64.mk` turns off PIE and the stack protector for the
-  static, libc-less link.
+  static, libc-less link. It also sets `LISTING_STYLE := -adlns` (as
+  `release.mk` does for host builds), because the native assembler cannot
+  interleave source in listings of optimised code.
 
 ## Formatting check
 

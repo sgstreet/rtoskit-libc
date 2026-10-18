@@ -14,7 +14,7 @@
 #include <rtos/rtos-port.h>
 
 #include "internal/tls.h"
-#include "internal/tls-arch.h"
+#include "tls-arch.h"
 
 size_t __libc_tls_block_size(const struct __libc_tls_image *image)
 {

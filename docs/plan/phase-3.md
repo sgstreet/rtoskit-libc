@@ -19,7 +19,7 @@ x86_64, wall clock with `rdtsc`, pinned, median of N runs.
 ## P3.01 — Benchmark infrastructure
 - [ ] Research existing libc benchmarks (glibc `benchtests`, the ARM optimized-routines bench, the bionic benchmarks, picolibc's) for workload ideas.
 - [ ] `test/bench/`: a harness that is self-contained against our libc. Workloads: memory/string functions over a size × alignment sweep, `printf`/`snprintf` mixes, `strtod`/`strtol`, the `malloc` patterns, `qsort`, the libm throughput and latency per function, and `<threads.h>` mutex uncontended.
-- [ ] `make bench` produces a machine-readable baseline per arch. Capture the Phase 2 baseline.
+- [ ] `tools/bench-runner` produces a machine-readable baseline per arch. Capture the Phase 2 baseline.
 
 ## P3.02 — Memory and string functions
 - [ ] armv7e-m, armv7e-m-dp and v8-m.main: `LDRD`/`LDM`-based `memcpy`/`memset`/`memmove`, word-at-a-time `strlen`/`strcmp`/`strchr` using `UADD8`/`SEL` (DSP), and IT-block tuning. These are the `speed/` flavour files.

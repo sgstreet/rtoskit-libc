@@ -82,8 +82,8 @@ provide.
   aligning TP anywhere in the block, so ports pass an unaligned block (from
   mmap, a heap, or a static array).
 - `__libc_tls_init(block, image)` lays out the data plus control block and
-  returns TP. The variant is chosen **per arch layer**
-  (`arch/<layer>/src/tls/*.c`) with shared helpers in `src/internal/tls.h`.
+  returns TP. The variant is chosen **per `ARCH_CROSS` variant subdirectory**
+  (`libc/tls/<cpu>/*.c`) with shared helpers in `libc/internal/tls.h`.
   There is no `#if`.
 - x86_64: a 64-byte TCB (`self` + 7 zero words), TP aligned to
   `max(p_align, 16)`. The data offset uses the exact variant II formula.

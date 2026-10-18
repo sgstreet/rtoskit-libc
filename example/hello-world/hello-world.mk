@@ -17,6 +17,8 @@ else
 
 EXTRA_DEPS := ${SOURCE_DIR}/hello-world.mk
 
+TARGET_OBJ_LIBS := port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_CROSS}
+
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
 all: ${INSTALL_ROOT}/hello-world

@@ -11,31 +11,21 @@
 #     Author: Stephen Street (stephen@redrocketcomputing.com)
 #
 
-# Builds the none RTOS port: librtos-none.a plus the startup object crt1.o
-
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
-EXTRA_DEPS := ${SOURCE_DIR}/none.mk ${SOURCE_DIR}/subdir.mk
+# librtos-none.a: the bare-metal single-threaded port
+EXTRA_DEPS := ${SOURCE_DIR}/none.mk
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
-PORT_CRT_OBJ := $(filter %/crt1.o,${OBJ})
-PORT_OBJ := $(filter-out %/crt1.o,${OBJ})
+CFLAGS += ${LIBC_CFLAGS}
 
-all: ${INSTALL_ROOT}/lib/librtos-none.a $(if ${PORT_CRT_OBJ},${INSTALL_ROOT}/lib/none/crt1.o)
-
-${CURDIR}/librtos-none.a: ${PORT_OBJ} ${EXTRA_DEPS}
-	$(call libc-archive,${PORT_OBJ})
-
-${CURDIR}/crt1.o: ${PORT_CRT_OBJ}
-	cp $< $@
+all: ${INSTALL_ROOT}/lib/librtos-none.a
 
 ${INSTALL_ROOT}/lib/librtos-none.a: ${CURDIR}/librtos-none.a
-	$(call libc-install,$<,$@)
-
-${INSTALL_ROOT}/lib/none/crt1.o: ${CURDIR}/crt1.o
-	$(call libc-install,$<,$@)
+	@echo "INSTALLING ${@}"
+	$(INSTALL) -m 644 -D ${<} ${@}
 
 endif

@@ -6,7 +6,7 @@ Prerequisite: `phase-1-complete`. Targets: `armv6-m`, `armv7e-m`, `armv7e-m-dp`,
 **Every step's definition of done (DoD)** is the Phase 1 DoD (libc-test with no
 regressions on all five arches, research notes, no new `#if`, committed) plus:
 
-- `make size-report` shows that no object grew by more than 0 bytes unless the
+- `tools/size-report` shows that no object grew by more than 0 bytes unless the
   growth is justified in the step notes. The reductions are recorded in
   `docs/size/<arch>.md`.
 - Correctness is never traded for size: the libc-test baseline must stay identical.
@@ -21,7 +21,7 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 ---
 
 ## P2.01 — Measurement infrastructure
-- [ ] `make size-report`: per-member `size`, `.su` stack data, and the reference program images, written as a committed JSON or Markdown baseline per arch (`docs/size/baseline-<arch>.json`).
+- [ ] `tools/size-report` (a script like `tools/test-runner`): per-member `size`, `.su` stack data, and the reference program images, written as a committed JSON or Markdown baseline per arch (`docs/size/baseline-<arch>.json`).
 - [ ] A diff tool that compares the current build against the baseline and highlights the biggest regressions.
 - [ ] Add `test/size/*` reference programs to the build.
 - [ ] Capture the Phase 1 baseline. Do a comparison run against picolibc and newlib-nano (the same reference programs) for context only.
@@ -50,7 +50,7 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 
 ## P2.06 — Per-arch hand-written size kernels
 - [ ] armv6-m Thumb-1: `memcpy`, `memset`, `memmove`, `strlen`, `strcmp`, `setjmp`, written for size (the arch `size/` flavour, D12).
-- [ ] armv7e-m, armv7e-m-dp and v8-m.main Thumb-2: the same set (one shared Thumb-2 layer), if they beat the compiler output.
+- [ ] armv7e-m, armv7e-m-dp and v8-m.main Thumb-2: the same set (one shared Thumb-2 subdirectory), if they beat the compiler output.
 - [ ] Each assembly file has a research note and goes through libc-test plus our own exhaustive alignment/length tests.
 
 ## P2.07 — Phase wrap-up
