@@ -26,7 +26,7 @@ Enabled arches: `x86_64` from P1.01, and all three ARM targets from P1.06 on.
 - [ ] Install/verify GCC 14 (`gcc-14`) and Clang 19 (if used), qemu-user, and `arm-none-eabi` (cross toolchain; needed from P1.06). Record the versions in `docs/toolchain.md`.
 - [ ] Add a SessionStart hook (`.claude/`) that installs the toolchain packages in cloud sessions.
 - [ ] Add `tools/makefiles/x86_64.mk`: gcc-14, `-std=c23 -nostdinc -ffreestanding -fno-builtin -ffunction-sections -fdata-sections -ftls-model=local-exec -mlong-double-64` (D7, pending Q1), static link with `-nostdlib`, libgcc.
-- [ ] Add `tools/makefiles/libc.mk`: include paths (`arch/${ARCH}/include`, `port/${PORT}/include`, `include`) and the generic-vs-arch file selection (D5).
+- [ ] Add `tools/makefiles/libc.mk`: include paths (`arch/${ARCH_FAMILY}/include`, i.e. one header set per target triple per D15; `port/${PORT}/include`; `include`), the generic-vs-arch file selection (D5), and `install`/`install-headers` targets that external callers can drive (D16).
 - [ ] Change the top-level `Makefile` default to `ARCH_CROSS ?= x86_64`, add `PORT ?= linux`, and order modules as `libc → test`. Keep `example` building against the new libc.
 - [ ] Create the skeleton: `include/`, `src/internal/`, `arch/x86_64/`, `port/linux/`, `port/none/`, `libc/` (produces `libc.a`), and `test/unit/`.
 - [ ] Draft `include/rtos/rtos-port.h` (seam v0: exit, abort, write, read, clock, TLS hooks).
@@ -37,7 +37,7 @@ Enabled arches: `x86_64` from P1.01, and all three ARM targets from P1.06 on.
 - **DoD extra:** `example/hello-world` links against our libc only (`-nostdlib`) and runs, using a temporary `fputs` → `__rtos_write` path.
 
 ## P1.02 — libc-test harness and formatted-output core
-- [ ] **Blocked on Q2:** fetch the `third-party/libc-test` submodule at its pinned commit.
+- [x] Fetch the `third-party/libc-test` submodule at its pinned commit (Q2 resolved; run `git submodule update --init`). Rough survey: `src/functional` 85 files, `src/regression` 72, `src/math` 206 (tests and data tables), `src/api` 80 (POSIX-heavy, so curate the ISO subset), `src/common` 14. About 55 of the 146 functional+regression tests include POSIX headers or use pthread/fork.
 - [ ] Survey libc-test (`src/functional`, `src/regression`, `src/math`, `src/api`, `src/common`) and write `test/libc-test/manifest.txt` with a `run`/`skip:`/`pending:` status for every test.
 - [ ] `test/libc-test/shim/`: ISO/port replacements for libc-test's `src/common` pieces (`t_printf`, `t_error`, `t_status`, and the runtest equivalent without fork).
 - [ ] Build glue: one ELF per test through the tools build system (`test/libc-test/libc-test.mk` + `subdir.mk`), compiled with our headers only.
@@ -73,7 +73,7 @@ Enabled arches: `x86_64` from P1.01, and all three ARM targets from P1.06 on.
 ## P1.06 — ARM cross bring-up (armv6-m, armv7e-m, armv8-m.main)
 - [ ] Toolchain files `tools/makefiles/armv6-m.mk`, `armv7e-m.mk`, `armv8-m.main.mk` (`-mthumb -mcpu=…`, float ABI per the target matrix).
 - [ ] Linux port for ARM: Thumb `_start`, `svc 0` syscalls, TLS via `set_tls` and a port-provided `__aeabi_read_tp`.
-- [ ] `arch/<arm>/src/setjmp/*.S` for each ARM arch (Thumb-1 for v6-m; the VFP registers for the hard-float variants), plus the `jmp_buf` headers.
+- [ ] `arch/<arm>/src/setjmp/*.S` for each ARM arch (Thumb-1 for v6-m; the VFP registers for the hard-float variants). One shared `arch/arm/include/` with `jmp_buf` sized for the largest variant (D15).
 - [ ] Runner: `qemu-arm -cpu max` wrapper. Verify that v6-m and v7e-m code runs correctly under qemu-user, and document any instruction caveats.
 - [ ] Baselines `expected/armv6-m.txt`, `armv7e-m.txt` and `armv8-m.main.txt` match x86_64, apart from documented differences.
 - **DoD extra:** from here on, every step gates on all four arches.

@@ -6,6 +6,7 @@ The work items live in the phase files:
 - [phase-1.md](phase-1.md) — compliant implementation
 - [phase-2.md](phase-2.md) — size optimization pass
 - [phase-3.md](phase-3.md) — performance optimization pass
+- [phase-4.md](phase-4.md) — crosstool-NG multilib GCC cross-toolchain integration
 
 Status legend used in all phase files: `[ ]` todo, `[~]` in progress, `[x]` done,
 `[-]` dropped (with a reason).
@@ -38,6 +39,7 @@ Status legend used in all phase files: `[ ]` todo, `[~]` in progress, `[x]` done
 | 1 | Compliant implementation | Every applicable libc-test test passes on x86_64 and all ARM targets. The header audit against Annex B is clean. |
 | 2 | Size pass | The size baseline is reduced per target, and libc-test still passes in full. |
 | 3 | Performance pass | The benchmark baseline is improved per target, libc-test still passes in full, and the size budget from Phase 2 holds. |
+| 4 | Toolchain integration | crosstool-NG builds a multilib `arm-none-eabi` GCC with rtoskit-libc as its C library. libc-test passes for every multilib when built with that toolchain, and its objects match the in-tree build. |
 
 ### Scope (decided)
 
@@ -92,6 +94,8 @@ supersedes it; do not edit history.
 | D12 | **Size and speed flavours** are chosen per build without `#if`. Speed-oriented arch files live in `arch/<arch>/speed/...` and size-oriented ones in `arch/<arch>/size/...`. The build picks a flavour directory (`LIBC_FLAVOUR=size|speed`, default `size`). | It reconciles Phase 2 and Phase 3. Needs confirmation (see Q3). |
 | D13 | **Feature trimming is link-time.** Expensive optional paths, such as floating point in `printf`/`scanf`, are reached through a symbol that the full variant defines and a small variant stubs out. The small variant lives in a separate archive (`libc-nofloat.a`) linked ahead of `libc.a`. It is never selected with `#if`. | This is the picolibc-style flavour idea, done at link time. It is a Phase 2 item. |
 | D14 | **Tracking:** phase files plus a step ID per session. Each step lists its deliverables and its definition of done. Sessions update the checkboxes, the test baselines and the decision log, then commit. | The work spans many sessions. |
+| D15 | **Headers are per target triple, not per multilib.** Every multilib of one GCC (e.g. all `arm-none-eabi` M-profile variants) shares one `include/` directory, so `arch/arm/include/` must be valid for all of them. Types such as `jmp_buf` are sized for the largest variant (with the VFP registers); `fenv_t` is the same for all. Only `arch/<arch>/src/` (code) differs per multilib. | Phase 4 needs it: GCC multilib installs one sysroot `include/` and per-multilib `lib/<multidir>/`. Deciding this early stops Phases 1 to 3 from baking per-arch header differences in. |
+| D16 | **The build can be driven from outside.** A caller (crosstool-NG) can build and install one multilib with `make ARCH_CROSS=<arch> CROSS_COMPILE=<prefix> MULTILIB_FLAGS='<flags>' MULTIDIR=<dir> PREFIX=<sysroot> install`, and install headers alone with `make install-headers`. | crosstool-NG needs headers before the final GCC, and then one libc build per multilib. |
 
 ---
 
@@ -118,6 +122,7 @@ libc/                     module that archives everything into libc.a (+ libm.a)
 test/libc-test/           build glue, shim, runner, manifests, expected results per arch
 test/unit/                our own tests for gaps in libc-test (C23 additions, threads.h, seam)
 test/bench/               Phase 3 benchmarks
+toolchain/crosstool-ng/   Phase 4: crosstool-NG libc backend, sample configs, patches
 third-party/libc-test     git submodule (test suite only, never linked into libc)
 docs/plan/                this plan and the phase task lists
 docs/research/            per-algorithm research notes (D2)
@@ -197,9 +202,11 @@ decisions here, and commit.
 | ID | Question | Default until answered |
 |---|---|---|
 | Q1 | Accept D7 (`-mlong-double-64` on x86_64)? | Yes |
-| Q2 | libc-test cannot be fetched from this cloud environment: `repo.or.cz` is denied by the network policy. Allow `repo.or.cz`, or vendor a mirror? | P1.02 blocked until then |
+| Q2 | ~~libc-test cannot be fetched (`repo.or.cz` denied).~~ **Resolved 2026-10-18:** the network policy now allows `repo.or.cz`, and the submodule is checked out at the pinned commit. | — |
 | Q3 | Should size and speed be separate library flavours (D12), or one library tuned for size with speed only where it costs nothing? | Separate flavours |
 | Q4 | What does the rtoskit RTOS port need (is a repo available, which primitives, TLS handling on Cortex-M)? It would be a `port/rtoskit` step after P1.12. | Not planned yet |
 | Q5 | Phase 3 measurement on ARM: qemu instruction counts (TCG plugin) only, or also real hardware cycle counts (RP2040 / RP2350 with the DWT cycle counter)? | qemu instruction counts, plus hardware if a board is attached |
 | Q6 | Time zone support for `localtime`/`mktime`: UTC only, or the POSIX `TZ` string from `getenv("TZ")`? | POSIX `TZ` string, no tzdata files |
 | Q7 | Is extending `tools/makefiles` with new files (arch toolchains, `libc.mk`) acceptable, as long as existing files keep their structure? | Yes |
+| Q8 | Must the Phase 4 toolchain include C++ (`libstdc++`)? `libstdc++` expects `<wchar.h>`/`<wctype.h>`, which are out of scope, so it would need `--disable-wchar_t`, a C-only toolchain, or a scope change. | C-only toolchain (`--enable-languages=c`); C++ is a later decision |
+| Q9 | "cross-ng" is taken to mean **crosstool-NG**. Where does the integration live: patches in this repo (`toolchain/crosstool-ng/`), a crosstool-NG fork, or the existing `red-rocket-computing/cross-dev` toolchain build that `tools/makefiles/setup.mk` downloads from? Which multilib set: GCC's `rmprofile` list, or a custom list limited to the three ARM arches? | Patches in this repo; custom multilib list (v6-m, v7e-m+fp, v8-m.main+fp, plus their soft-float variants) |

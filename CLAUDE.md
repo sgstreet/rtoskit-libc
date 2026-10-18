@@ -5,7 +5,7 @@ systems, bound to an RTOS through a link-time seam. Licence: MPL-2.0.
 
 **Read first, every session:** `docs/plan/PLAN.md` (goals, architecture, the
 decision log D*, open questions Q*), then the active phase file
-(`docs/plan/phase-{1,2,3}.md`).
+(`docs/plan/phase-{1,2,3,4}.md`).
 
 ## Session workflow
 
@@ -77,6 +77,9 @@ V=1 make ...                           # verbose
   `__rtos_*`, and arch/port header pieces are named `__arch_*.h` / `rtos-port-types.h`.
   No non-standard identifier may leak from public headers unless it is reserved
   (`__x`, `_X`).
+- **Headers must not differ per multilib** (D15). Anything ABI-visible in
+  `arch/<family>/include` must be identical for every arch of that triple.
+  Size `jmp_buf` and similar types for the largest variant.
 - **The RTOS seam** (D4): the library reaches the OS only through the `__rtos_*`
   functions declared in `include/rtos/rtos-port.h`. No syscalls and no port
   knowledge belong in `src/`. A port implements the seam in `port/<port>/`.
@@ -131,9 +134,9 @@ Any exception needs a PLAN.md decision entry.
 
 ## Environment notes
 
-- The libc-test submodule host (`repo.or.cz`) may be blocked by the cloud
-  environment's network policy (Q2). Do not substitute made-up results; report
-  the blocker.
+- Fetch libc-test with `git submodule update --init` (`repo.or.cz` must be
+  reachable). If the network blocks it, report the blocker. Never substitute
+  made-up results.
 - `doc/*.pdf` is the standard text used for clean-room work.
 
 ## Layout
@@ -141,10 +144,12 @@ Any exception needs a PLAN.md decision entry.
 ```
 include/           public headers (+ include/rtos/rtos-port.h seam contract)
 src/<area>/        generic code, one function per file; src/internal/ private headers
-arch/<arch>/       include/ (__arch_*.h) and src/<area>/ overrides; size/ and speed/ flavours (Phase 2/3)
+arch/<family>/include/  __arch_*.h, one header set per target triple (arm, x86_64), shared by all multilibs (D15)
+arch/<arch>/src/   code overrides per arch; size/ and speed/ flavours (Phase 2/3)
 port/<port>/       linux (test port), none (bare metal), rtoskit (future)
 libc/              archives libc.a / libm.a
 test/              libc-test glue, unit, size, bench
+toolchain/         Phase 4: crosstool-NG libc backend, multilib configs
 docs/plan/         PLAN.md + phase task lists
 docs/research/     per-algorithm research notes
 tools/             build system
