@@ -187,6 +187,8 @@ Any exception needs a PLAN.md decision entry.
   helpers. It is never part of `libc.a`.
 - `test/unit/` holds our own tests for everything libc-test misses (the C23
   additions, `<threads.h>`, thread-local state, the seam, `port/none`).
+  Unit-test modules add `CFLAGS += -fno-builtin` after `project.mk` so the
+  library, not the compiler's built-in folding, is what runs.
 - Never skip, disable or weaken a test to get green. Fix the code, or record a
   justified `skip:` that refers to the scope in PLAN.md §1.
 

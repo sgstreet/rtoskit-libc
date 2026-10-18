@@ -49,14 +49,14 @@ Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-armv6
 - [x] Research `printf` engine designs (musl, picolibc tinystdio, newlib nano, mpaland/eyalroz printf, Linux `vsprintf`). Implement the format parser plus the integer, char, string, pointer and `%n` conversions; `snprintf`/`vsnprintf`/`sprintf`/`vsprintf`; and the C23 `%b`, `%wN` and `%wfN` length modifiers. Floating point is deferred to P1.08. *`docs/research/printf-engine.md` (newlib nano not reviewed); engine `libc/stdio/__libc_format.c` (D28), also `%B`; `test/unit/printf` covers the research vectors. Executables now relink when `libc.a` changes.*
 - **DoD extra:** the baseline is committed. Running the harness twice gives identical results. *Verified: identical `results.txt` across two runs and across debug/release.*
 
-## P1.03 — `<string.h>`, `<ctype.h>`, `<assert.h>`, `<stdbit.h>`, `<stdckdint.h>`
-- [ ] Research generic word-at-a-time string algorithms (with aliasing-safe access in C23) and the known edge cases.
-- [ ] All `<string.h>` functions except `strdup`/`strndup` (which wait for P1.04): `memcpy`, `memmove`, `memset`, `memset_explicit`, `memccpy`, `memchr`, `memcmp`, `strcpy`/`strncpy`/`strcat`/`strncat`, `strcmp`/`strncmp`/`strcoll`/`strxfrm`, `strchr`/`strrchr`/`strspn`/`strcspn`/`strpbrk`/`strstr`, `strtok` (`thread_local` state), `strlen`, `strerror` (message table), and `memalignment` (which is in `<stdlib.h>`).
-- [ ] `<ctype.h>` for the "C" locale, table-free or table-based (decide in the research note).
-- [ ] `<assert.h>`: `assert` as a variadic macro (C23) and `__assert_fail` → `fprintf(stderr)` → `abort`.
-- [ ] `<stdbit.h>`: every function plus the type-generic macros, built on `__builtin_clzg`/`ctzg`/`popcountg` (with fallbacks where the builtins are missing).
-- [ ] `<stdckdint.h>`: `ckd_add`/`ckd_sub`/`ckd_mul` via `__builtin_*_overflow`.
-- [ ] Unit tests for `memset_explicit`, `memccpy`, `<stdbit.h>` and `<stdckdint.h>`.
+## P1.03 — `<string.h>`, `<ctype.h>`, `<assert.h>`, `<stdbit.h>`, `<stdckdint.h>`  `[x]`
+- [x] Research generic word-at-a-time string algorithms (with aliasing-safe access in C23) and the known edge cases. *`docs/research/string-ctype-stdbit.md` (musl, glibc generic, FreeBSD, Bit Twiddling Hacks, Crochemore–Perrin; newlib/picolibc sources were unreachable). D30.*
+- [x] All `<string.h>` functions except `strdup`/`strndup` (which wait for P1.04): `memcpy`, `memmove`, `memset`, `memset_explicit`, `memccpy`, `memchr`, `memcmp`, `strcpy`/`strncpy`/`strcat`/`strncat`, `strcmp`/`strncmp`/`strcoll`/`strxfrm`, `strchr`/`strrchr`/`strspn`/`strcspn`/`strpbrk`/`strstr`, `strtok` (`thread_local` state), `strlen`, `strerror` (message table), and `memalignment` (which is in `<stdlib.h>`). *Also the C23 const-preserving generic macros. `strerror` covers the numbers `<errno.h>` defines so far (P1.11 completes it).*
+- [x] `<ctype.h>` for the "C" locale, table-free or table-based (decide in the research note). *Table-free.*
+- [x] `<assert.h>`: `assert` as a variadic macro (C23) and `__assert_fail` → `fprintf(stderr)` → `abort`. *Named `__libc_assert_fail`; writes with `snprintf` + `fputs(stderr)` until `fprintf` exists (P1.09).*
+- [x] `<stdbit.h>`: every function plus the type-generic macros, built on `__builtin_clzg`/`ctzg`/`popcountg` (with fallbacks where the builtins are missing). *Built on GCC 14's `__builtin_stdc_*` instead, which also cover bit-precise types; the Clang path is Q11.*
+- [x] `<stdckdint.h>`: `ckd_add`/`ckd_sub`/`ckd_mul` via `__builtin_*_overflow`.
+- [x] Unit tests for `memset_explicit`, `memccpy`, `<stdbit.h>` and `<stdckdint.h>`. *Plus `test/unit/string` (alignment sweeps, overlaps, Two-Way against a naive search), `test/unit/ctype`, and `test/unit/assert` with an `assert.run` driver. libc-test: `api/assert` and five `functional/string_*` tests now run; `api/ctype`, `api/string` and `functional/string` are skipped because they need POSIX/BSD functions unconditionally.*
 
 ## P1.04 — Memory allocator (`<stdlib.h>` part 1)
 - [ ] Research allocators for embedded systems (TLSF, dlmalloc, musl mallocng/oldmalloc, picolibc nano-malloc, umm_malloc, FreeRTOS heap_4/heap_5). Choose for determinism and fragmentation, write a size estimate, and record the decision in PLAN.md.

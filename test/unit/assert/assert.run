@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# assert.run
+#
+# Created on: Oct 18, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+
+# Usage: assert.run <assert.elf>
+#
+# A passing run exits 0. A failing assertion must print the expression, file,
+# line and function on stderr and abort (SIGABRT, or status 134 from the Linux
+# port's fallback).
+
+elf=$1
+status=0
+
+${TARGET_RUNNER:-} "${elf}" || { echo "fail: passing run exited with $?"; status=1; }
+
+output=$(${TARGET_RUNNER:-} "${elf}" fail 2>&1 >/dev/null)
+code=$?
+if [[ ${code} -ne 134 ]]; then
+	echo "fail: failing assertion exited with ${code}, want 134 (SIGABRT)"
+	status=1
+fi
+if [[ ${output} != *"assert.c:"*": main: Assertion 'x == 2' failed."* ]]; then
+	echo "fail: unexpected message: ${output}"
+	status=1
+fi
+
+[[ ${status} -eq 0 ]] && echo "pass: assert.run"
+exit ${status}

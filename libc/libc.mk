@@ -16,9 +16,12 @@ include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
 # libc.a collects the objects of every libc module, including the ${ARCH_CROSS} variants
-TARGET_OBJ_LIBS := libc/errno
+TARGET_OBJ_LIBS := libc/assert
+TARGET_OBJ_LIBS += libc/ctype
+TARGET_OBJ_LIBS += libc/errno
 TARGET_OBJ_LIBS += libc/fenv/${ARCH_CROSS}
 TARGET_OBJ_LIBS += libc/startup
+TARGET_OBJ_LIBS += libc/stdbit
 TARGET_OBJ_LIBS += libc/stdio
 TARGET_OBJ_LIBS += libc/stdlib
 TARGET_OBJ_LIBS += libc/string
