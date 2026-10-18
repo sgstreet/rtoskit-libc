@@ -434,7 +434,7 @@ static int failures;
 
 static void check(bool ok, const char *what)
 {
-	fputs(ok ? "PASS: " : "FAIL: ", stdout);
+	fputs(ok ? "pass: " : "fail: ", stdout);
 	puts(what);
 	if (!ok)
 		++failures;

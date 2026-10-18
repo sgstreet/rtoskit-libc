@@ -39,10 +39,10 @@ for elf in $(find "${build_dir}" -name '*.elf' | sort); do
 	status=$?
 
 	if [[ ${status} -eq 0 ]]; then
-		echo "PASS ${relative}/${name}"
+		echo "pass ${relative}/${name}"
 		passed=$((passed + 1))
 	else
-		echo "FAIL ${relative}/${name} (status ${status}, log ${log})"
+		echo "fail ${relative}/${name} (status ${status}, log ${log})"
 		sed 's/^/    /' "${log}"
 		failed=$((failed + 1))
 	fi

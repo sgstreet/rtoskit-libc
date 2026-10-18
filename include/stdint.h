@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _STDINT_H
-#define _STDINT_H
+#ifndef __stdint_h
+#define __stdint_h
 
 /*
  * C23 7.22. Every type and limit comes from the compiler's predefined macros,

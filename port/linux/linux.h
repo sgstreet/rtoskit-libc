@@ -11,19 +11,19 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _LINUX_H
-#define _LINUX_H
+#ifndef __linux_h
+#define __linux_h
 
 #include "linux-arch.h"
 
-#define __LINUX_PT_TLS 7
+static constexpr long __linux_pt_tls = 7;
 
-#define __LINUX_PROT_READ 0x1
-#define __LINUX_PROT_WRITE 0x2
-#define __LINUX_MAP_PRIVATE 0x02
-#define __LINUX_MAP_ANONYMOUS 0x20
+static constexpr long __linux_prot_read = 0x1;
+static constexpr long __linux_prot_write = 0x2;
+static constexpr long __linux_map_private = 0x02;
+static constexpr long __linux_map_anonymous = 0x20;
 
-#define __LINUX_SIGABRT 6
+static constexpr long __linux_sigabrt = 6;
 
 /* Kernel results in this range are negated error numbers */
 static inline bool __linux_is_error(long result)

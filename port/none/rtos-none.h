@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _RTOS_NONE_H
-#define _RTOS_NONE_H
+#ifndef __rtos_none_h
+#define __rtos_none_h
 
 #include <stddef.h>
 

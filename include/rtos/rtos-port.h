@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _RTOS_RTOS_PORT_H
-#define _RTOS_RTOS_PORT_H
+#ifndef __rtos_rtos_port_h
+#define __rtos_rtos_port_h
 
 /*
  * The RTOS seam (PLAN D4, seam v0).

@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _STDLIB_H
-#define _STDLIB_H
+#ifndef __stdlib_h
+#define __stdlib_h
 
 /* C23 7.24 (partial: the remaining declarations arrive with P1.04 and P1.05) */
 #define __STDC_VERSION_STDLIB_H__ 202311L

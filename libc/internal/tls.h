@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _INTERNAL_TLS_H
-#define _INTERNAL_TLS_H
+#ifndef __internal_tls_h
+#define __internal_tls_h
 
 #include <stddef.h>
 #include <stdint.h>

@@ -11,9 +11,10 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _INTERNAL_TLS_ARCH_H
-#define _INTERNAL_TLS_ARCH_H
+#ifndef __internal_tls_arch_h
+#define __internal_tls_arch_h
 
+#include <stddef.h>
 #include <stdint.h>
 
 /*
@@ -30,6 +31,6 @@ struct __libc_tcb {
 };
 
 /* Thread pointer alignment; the control block holds pointers and 16 suits SSE spills */
-#define __LIBC_TCB_ALIGN 16
+static constexpr size_t __libc_tcb_align = 16;
 
 #endif

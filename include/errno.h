@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _ERRNO_H
-#define _ERRNO_H
+#ifndef __errno_h
+#define __errno_h
 
 /*
  * C23 7.5. The values follow the Linux numbering so the Linux test port can

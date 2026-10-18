@@ -18,8 +18,8 @@
 /* Die by SIGABRT so the parent sees an abnormal termination; exit if the signal is ignored */
 void __rtos_abort(void)
 {
-	__linux_syscall3(__LINUX_SYS_tgkill, __linux_syscall0(__LINUX_SYS_getpid), __linux_syscall0(__LINUX_SYS_gettid), __LINUX_SIGABRT);
+	__linux_syscall3(__linux_sys_tgkill, __linux_syscall0(__linux_sys_getpid), __linux_syscall0(__linux_sys_gettid), __linux_sigabrt);
 
 	for (;;)
-		__linux_syscall1(__LINUX_SYS_exit_group, 128 + __LINUX_SIGABRT);
+		__linux_syscall1(__linux_sys_exit_group, 128 + __linux_sigabrt);
 }

@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _STDALIGN_H
-#define _STDALIGN_H
+#ifndef __stdalign_h
+#define __stdalign_h
 
 /* C23 7.15p1: alignas and alignof are keywords, so this header provides no content */
 

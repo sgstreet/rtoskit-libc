@@ -16,5 +16,5 @@
 /* The x86_64 thread pointer is the %fs segment base */
 void __rtos_linux_set_tp(void *tp)
 {
-	__linux_syscall2(__LINUX_SYS_arch_prctl, __LINUX_ARCH_SET_FS, (long)tp);
+	__linux_syscall2(__linux_sys_arch_prctl, __linux_arch_set_fs, (long)tp);
 }

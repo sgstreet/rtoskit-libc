@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _FLOAT_H
-#define _FLOAT_H
+#ifndef __float_h
+#define __float_h
 
 /* C23 7.7, 5.2.5.3.3 and 5.2.5.3.4, built from the compiler's predefined macros (PLAN D8) */
 #define __STDC_VERSION_FLOAT_H__ 202311L

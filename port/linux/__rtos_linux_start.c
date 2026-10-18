@@ -30,7 +30,7 @@ static void find_tls_image(struct __libc_tls_image *image)
 
 	for (unsigned int i = 0; i < __ehdr_start.e_phnum; ++i) {
 		const struct __linux_phdr *phdr = (const struct __linux_phdr *)(phdrs + i * __ehdr_start.e_phentsize);
-		if (phdr->p_type == __LINUX_PT_TLS) {
+		if (phdr->p_type == __linux_pt_tls) {
 			image->init = (const void *)(uintptr_t)phdr->p_vaddr;
 			image->init_size = phdr->p_filesz;
 			image->size = phdr->p_memsz;
@@ -47,10 +47,10 @@ static void setup_initial_tls(void)
 	image->init = &__ehdr_start;
 	find_tls_image(image);
 
-	long block = __linux_syscall6(__LINUX_SYS_mmap, 0, (long)__libc_tls_block_size(image),
-								  __LINUX_PROT_READ | __LINUX_PROT_WRITE, __LINUX_MAP_PRIVATE | __LINUX_MAP_ANONYMOUS, -1, 0);
+	long block = __linux_syscall6(__linux_sys_mmap, 0, (long)__libc_tls_block_size(image),
+								  __linux_prot_read | __linux_prot_write, __linux_map_private | __linux_map_anonymous, -1, 0);
 	if (__linux_is_error(block))
-		__linux_syscall1(__LINUX_SYS_exit_group, 127);
+		__linux_syscall1(__linux_sys_exit_group, 127);
 
 	__rtos_linux_set_tp(__libc_tls_init((void *)block, image));
 }

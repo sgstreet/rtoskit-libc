@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _STRING_H
-#define _STRING_H
+#ifndef __string_h
+#define __string_h
 
 /* C23 7.26 (partial: the remaining declarations arrive with P1.03) */
 #define __STDC_VERSION_STRING_H__ 202311L

@@ -18,5 +18,5 @@
 void __rtos_exit(int status)
 {
 	for (;;)
-		__linux_syscall1(__LINUX_SYS_exit_group, status);
+		__linux_syscall1(__linux_sys_exit_group, status);
 }

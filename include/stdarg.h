@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _STDARG_H
-#define _STDARG_H
+#ifndef __stdarg_h
+#define __stdarg_h
 
 /* C23 7.16 */
 #define __STDC_VERSION_STDARG_H__ 202311L

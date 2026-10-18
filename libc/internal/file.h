@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _INTERNAL_FILE_H
-#define _INTERNAL_FILE_H
+#ifndef __internal_file_h
+#define __internal_file_h
 
 #include <stddef.h>
 #include <stdio.h>

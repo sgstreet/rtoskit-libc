@@ -95,6 +95,14 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
 - **One external function per `.c` file**, with the file named after the
   function (D6). Internal helpers shared between files go in
   `libc/internal/*.h` with `__libc_` names, declared `static inline` or hidden.
+- **Lowercase only (D25):** identifiers, macros, include guards and file names
+  are lowercase unless the standard requires otherwise (`_Exit`, `FILE`,
+  `EOF`, `INT32_MAX`, `EDOM` and additional `E*` errno macros, which C23 7.5p4
+  requires to start with `E` plus an uppercase letter). Compiler- and
+  toolchain-defined names (`__SIZE_TYPE__`, `.note.GNU-stack`) are exempt.
+  Prefer `static constexpr` constants to macros. Include guards are `__<name>_h`.
+  A file defining a standard function with uppercase letters gets a lowercase
+  file name (`_Exit` lives in `libc/stdlib/_exit.c`).
 - **Reserved names only:** internal symbols use `__libc_*`, the seam uses
   `__rtos_*`, and arch/port header pieces are named `__arch_*.h` / `rtos-port-types.h`.
   No non-standard identifier may leak from public headers unless it is reserved

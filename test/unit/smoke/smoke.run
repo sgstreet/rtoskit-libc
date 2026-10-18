@@ -22,8 +22,8 @@ for status in 0 1 42 255; do
 	${TARGET_RUNNER:-} "${elf}" exit ${status}
 	actual=$?
 	if [[ ${actual} -ne ${status} ]]; then
-		echo "FAIL: exit(${status}) gave status ${actual}"
+		echo "fail: exit(${status}) gave status ${actual}"
 		exit 1
 	fi
-	echo "PASS: exit(${status}) status reaches the parent"
+	echo "pass: exit(${status}) status reaches the parent"
 done

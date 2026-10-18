@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _STDIO_H
-#define _STDIO_H
+#ifndef __stdio_h
+#define __stdio_h
 
 /* C23 7.23 (partial: the streams are completed in P1.09) */
 #define __STDC_VERSION_STDIO_H__ 202311L

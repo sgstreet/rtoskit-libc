@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _ISO646_H
-#define _ISO646_H
+#ifndef __iso646_h
+#define __iso646_h
 
 /* C23 7.9 */
 #define and &&

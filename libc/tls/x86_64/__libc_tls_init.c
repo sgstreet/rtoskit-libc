@@ -19,8 +19,8 @@
 void *__libc_tls_init(void *block, const struct __libc_tls_image *image)
 {
 	size_t align = __libc_tls_segment_align(image);
-	if (align < __LIBC_TCB_ALIGN)
-		align = __LIBC_TCB_ALIGN;
+	if (align < __libc_tcb_align)
+		align = __libc_tcb_align;
 
 	/* The lowest thread pointer that leaves room for the TLS data below it */
 	size_t offset = __libc_tls_variant2_offset(image);

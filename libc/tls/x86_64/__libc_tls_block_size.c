@@ -19,8 +19,8 @@
 size_t __libc_tls_block_size(const struct __libc_tls_image *image)
 {
 	size_t align = __libc_tls_segment_align(image);
-	if (align < __LIBC_TCB_ALIGN)
-		align = __LIBC_TCB_ALIGN;
+	if (align < __libc_tcb_align)
+		align = __libc_tcb_align;
 
 	/* Slack for aligning the thread pointer anywhere inside the block */
 	return __libc_tls_variant2_offset(image) + sizeof(struct __libc_tcb) + align - 1;
