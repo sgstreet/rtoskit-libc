@@ -1,0 +1,43 @@
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# libc.mk
+#
+# Created on: Oct 18, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+
+ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
+include ${PROJECT_ROOT}/tools/makefiles/target.mk
+else
+
+# libc.a collects the objects of every libc module, including the ${ARCH_CROSS} variants
+TARGET_OBJ_LIBS := libc/errno
+TARGET_OBJ_LIBS += libc/fenv/${ARCH_CROSS}
+TARGET_OBJ_LIBS += libc/startup
+TARGET_OBJ_LIBS += libc/stdio
+TARGET_OBJ_LIBS += libc/stdlib
+TARGET_OBJ_LIBS += libc/string
+TARGET_OBJ_LIBS += libc/tls/${ARCH_CROSS}
+
+EXTRA_DEPS := ${SOURCE_DIR}/libc.mk
+
+LIBC_HEADERS := $(patsubst ${PROJECT_ROOT}/include/%,${INSTALL_ROOT}/include/%,$(shell find ${PROJECT_ROOT}/include -name '*.h'))
+
+include ${PROJECT_ROOT}/tools/makefiles/project.mk
+
+all: ${INSTALL_ROOT}/lib/libc.a ${LIBC_HEADERS}
+
+${INSTALL_ROOT}/lib/libc.a: ${CURDIR}/libc.a
+	@echo "INSTALLING ${@}"
+	$(INSTALL) -m 644 -D ${<} ${@}
+
+${INSTALL_ROOT}/include/%.h: ${PROJECT_ROOT}/include/%.h
+	@echo "INSTALLING ${@}"
+	$(INSTALL) -m 644 -D ${<} ${@}
+
+endif

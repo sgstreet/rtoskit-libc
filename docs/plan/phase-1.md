@@ -9,8 +9,8 @@ in order unless a step says otherwise.
    the step (PLAN D2), and the code is clean-room (D1).
 2. `make` builds the `debug` and `release` builds for every enabled arch with
    `-Werror`.
-3. `make check` passes on every enabled arch with no PASS→FAIL regressions. The
-   newly passing tests are recorded in `test/libc-test/expected/<arch>.txt`, and
+3. `make check` passes on every enabled board (unit tests and libc-test) with no PASS→FAIL regressions. The
+   newly passing tests are recorded in `test/libc-test/expected/<board>.txt`, and
    the `pending:` entries in `test/libc-test/manifest.txt` belong only to later
    steps.
 4. Our own unit tests cover what libc-test does not cover.
@@ -18,22 +18,25 @@ in order unless a step says otherwise.
 6. This file's checkboxes are updated, any new decisions are appended to
    PLAN.md, and the work is committed.
 
-Enabled arches: `x86_64` from P1.01, and all four ARM targets (`armv6-m`, `armv7e-m`, `armv7e-m-dp`, `armv8-m.main`) from P1.06 on.
+Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-armv6-m`, `linux-armv7e-m`, `linux-armv7e-m-dp`, `linux-armv8-m.main`) from P1.06 on (PLAN target matrix, D22, D24).
 
 ---
 
-## P1.01 — Toolchain, layout, build integration, Linux port bootstrap
-- [ ] Install/verify GCC 14 (`gcc-14`) and Clang 19 (if used), qemu-user, and `arm-none-eabi` (cross toolchain; needed from P1.06). Record the versions in `docs/toolchain.md`.
-- [ ] Add a SessionStart hook (`.claude/`) that installs the toolchain packages in cloud sessions.
-- [ ] Add `tools/makefiles/x86_64.mk`: gcc-14, `-std=c23 -nostdinc -ffreestanding -fno-builtin -ffunction-sections -fdata-sections -ftls-model=local-exec -mlong-double-64` (D7, pending Q1), static link with `-nostdlib`, libgcc.
-- [ ] Add `tools/makefiles/libc.mk`: the `ARCH_LAYERS` source search (D17); include paths (`arch/${ARCH_FAMILY}/include`, i.e. one header set per target triple per D15; `port/${PORT}/include`; `include`), the generic-vs-arch file selection (D5), and `install`/`install-headers` targets that external callers can drive (D16).
-- [ ] Change the top-level `Makefile` default to `ARCH_CROSS ?= x86_64`, add `PORT ?= linux`, and order modules as `libc → test`. Keep `example` building against the new libc.
-- [ ] Create the skeleton: `include/`, `src/internal/`, `arch/x86_64/`, `port/linux/`, `port/none/`, `libc/` (produces `libc.a`), and `test/unit/`.
-- [ ] Draft `include/rtos/rtos-port.h` (seam v0: exit, abort, write, read, clock, TLS hooks).
-- [ ] Linux port: x86_64 `_start` (crt1), raw syscall helpers, TLS block setup via `arch_prctl(ARCH_SET_FS)` and `__libc_tls_init` (D10), argc/argv/envp, then `main` → `exit`.
-- [ ] Freestanding headers: `stddef.h`, `stdint.h`, `limits.h`, `float.h`, `stdarg.h`, `stdbool.h`, `stdalign.h`, `stdnoreturn.h`, `iso646.h` (D8).
-- [ ] `<errno.h>` with `thread_local int errno` (an object, not a macro over a function).
-- [ ] `test/unit/smoke`: prove that `errno` is thread-local per TLS block, that the exit status propagates, and that the TLS `.tdata` image is copied.
+## P1.01 — Toolchain, layout, build integration, Linux port bootstrap  `[x]`
+- [x] Install/verify GCC 14 (`gcc-14`) and Clang 19 (if used), qemu-user, and `arm-none-eabi` (cross toolchain; needed from P1.06). Record the versions in `docs/toolchain.md`. *GCC 14.2 and qemu 8.2.2 are installed; Clang is deferred (it lacks some GCC predefines the headers use). The arm-none-eabi 15.2 download is confirmed reachable and is installed in P1.06.*
+- [x] Add a SessionStart hook (`.claude/`) that installs the toolchain packages in cloud sessions.
+- [x] *Build usage reworked to the pi-pico conventions after review (D22, superseding D5/D17/D21). The items below describe the original attempt; the result is: board file `tools/makefiles/linux-x86_64.mk`, toolchain file `tools/makefiles/x86_64.mk`, per-directory modules under `libc/` and `port/`, `SUBDIRS := ${ARCH_CROSS}` variants, archives through `TARGET_OBJ_LIBS`, a `BOARDS` × `BUILDS` `Makefile`, and `make check` (D23).*
+- [x] Add `tools/makefiles/x86_64.mk`: gcc-14, `-std=c23 -nostdinc -ffreestanding -fno-builtin -ffunction-sections -fdata-sections -ftls-model=local-exec -mlong-double-64` (D7, pending Q1), static link with `-nostdlib`, libgcc.
+- [x] Add `tools/makefiles/libc.mk`: the `ARCH_LAYERS` source search (D17); include paths (`arch/${ARCH_FAMILY}/include`, i.e. one header set per target triple per D15; `port/${PORT}/include`; `include`), the generic-vs-arch file selection (D5), and `install`/`install-headers` targets that external callers can drive (D16).
+- [x] Change the top-level `Makefile` default to `ARCH_CROSS ?= x86_64`, add `PORT ?= linux` (named `RTOS_PORT`), and order modules as `libc → test`. Keep `example` building against the new libc.
+- [x] Create the skeleton: `include/`, `src/internal/`, `arch/x86_64/`, `port/linux/`, `port/none/`, `libc/` (produces `libc.a`), and `test/unit/`.
+- [x] Draft `include/rtos/rtos-port.h` (seam v0: exit, abort, write, read, clock, TLS hooks). *The clock function moves to P1.11 with `<time.h>`. v0 also has `__libc_start_main`.*
+- [x] Linux port: x86_64 `_start` (crt1), raw syscall helpers, TLS block setup via `arch_prctl(ARCH_SET_FS)` and `__libc_tls_init` (D10), argc/argv/envp, then `main` → `exit`.
+- [x] Freestanding headers: `stddef.h`, `stdint.h`, `limits.h`, `float.h`, `stdarg.h`, `stdbool.h`, `stdalign.h`, `stdnoreturn.h`, `iso646.h` (D8).
+- [x] `<errno.h>` with `thread_local int errno` (an object, not a macro over a function).
+- [x] `test/unit/smoke`: prove that `errno` is thread-local per TLS block, that the exit status propagates, and that the TLS `.tdata` image is copied.
+- [x] Also done: `test/unit/headers` (every limit usable in `#if`, C23 `va_start`, ...), a top-level `make check` (unit tests until P1.02), and simple byte-loop `memcpy`/`memset`/`strlen` plus `fputs`/`puts` on a minimal `FILE`, all revisited in P1.03 and P1.09.
+- Follow-ups recorded for later steps: libc must provide `stdc-predef.h` (or an equivalent) for `__STDC_IEC_60559_BFP__` and the other Annex F/G macros, which GCC normally takes from glibc (P1.13/P1.17); and a TLS test with `p_vaddr % p_align != 0` (P1.12).
 - **DoD extra:** `example/hello-world` links against our libc only (`-nostdlib`) and runs, using a temporary `fputs` → `__rtos_write` path.
 
 ## P1.02 — libc-test harness and formatted-output core
@@ -42,7 +45,7 @@ Enabled arches: `x86_64` from P1.01, and all four ARM targets (`armv6-m`, `armv7
 - [ ] `test/libc-test/shim/`: ISO/port replacements for libc-test's `src/common` pieces (`t_printf`, `t_error`, `t_status`, and the runtest equivalent without fork).
 - [ ] Build glue: one ELF per test through the tools build system (`test/libc-test/libc-test.mk` + `subdir.mk`), compiled with our headers only.
 - [ ] Runner `test/libc-test/run`: per-test timeout, qemu wrapper hook for cross arches, and a `results.txt` writer.
-- [ ] `make check`: build, run, and diff against `test/libc-test/expected/<arch>.txt` (fail on regressions; print improvements).
+- [ ] `make check`: also run the libc-test binaries and diff against `test/libc-test/expected/<board>.txt` (fail on regressions; print improvements).
 - [ ] Research `printf` engine designs (musl, picolibc tinystdio, newlib nano, mpaland/eyalroz printf, Linux `vsprintf`). Implement the format parser plus the integer, char, string, pointer and `%n` conversions; `snprintf`/`vsnprintf`/`sprintf`/`vsprintf`; and the C23 `%b`, `%wN` and `%wfN` length modifiers. Floating point is deferred to P1.08.
 - **DoD extra:** the baseline is committed. Running the harness twice gives identical results.
 
@@ -71,11 +74,11 @@ Enabled arches: `x86_64` from P1.01, and all four ARM targets (`armv6-m`, `armv7
 - [ ] `<signal.h>`: a software `signal`/`raise` (a handler table with `SIG_DFL`/`SIG_IGN` semantics). No OS signals.
 
 ## P1.06 — ARM cross bring-up (armv6-m, armv7e-m, armv7e-m-dp, armv8-m.main)
-- [ ] Toolchain files `tools/makefiles/armv6-m.mk`, `armv7e-m.mk`, `armv7e-m-dp.mk` (`-mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard`, D18) and `armv8-m.main.mk` (`-mthumb -mcpu=…`, float ABI per the target matrix), each with its `ARCH_LAYERS` (D17).
+- [ ] Toolchain files `tools/makefiles/armv6-m.mk` (`-march=armv6-m`), `armv7e-m.mk` (`-march=armv7e-m+fp -mfloat-abi=hard`), `armv7e-m-dp.mk` (`-march=armv7e-m+fp.dp -mfloat-abi=hard`, D18) and `armv8-m.main.mk` (`-march=armv8-m.main+fp+dsp -mfloat-abi=hard`), all `-mthumb` with no `-mcpu` (D24); `LIBC_FPU` set for shared FPU subdirectories (D22). Board files `linux-<arch>.mk` with `RTOS_PORT := linux`, plus a `TARGET_RUNNER` for qemu-arm; add them to `BOARDS`.
 - [ ] Linux port for ARM: Thumb `_start`, `svc 0` syscalls, TLS via `set_tls` and a port-provided `__aeabi_read_tp`.
-- [ ] `arch/<arm>/src/setjmp/*.S` for each ARM arch (Thumb-1 for v6-m; the VFP registers for the hard-float variants; the `fpv5-dp` layer saves d8–d15, which is the same storage as s16–s31). One shared `arch/arm/include/` with `jmp_buf` sized for the largest variant (D15).
+- [ ] `libc/setjmp/<arch>/*.S` variant subdirectories for each ARM arch (Thumb-1 for v6-m; the VFP registers for the hard-float variants; the `fpv5-dp` code saves d8–d15, which is the same storage as s16–s31). One shared `arch/arm/include/` with `jmp_buf` sized for the largest variant (D15).
 - [ ] Runner: `qemu-arm -cpu max` wrapper. Verify that v6-m and v7e-m code runs correctly under qemu-user, and document any instruction caveats.
-- [ ] Check that `qemu-arm` executes FPv5-D16 double-precision code correctly (`-cpu max`, or `cortex-m7` if the qemu build accepts it), including `VRINT`/`VMAXNM`/`VFMA.F64`.
+- [ ] Check that `qemu-arm` executes FPv5-D16 double-precision code correctly (`qemu-arm -cpu max`), including `VRINT`/`VMAXNM`/`VFMA.F64`.
 - [ ] Baselines `expected/armv6-m.txt`, `armv7e-m.txt`, `armv7e-m-dp.txt` and `armv8-m.main.txt` match x86_64, apart from documented differences.
 - **DoD extra:** from here on, every step gates on all five arches.
 
@@ -118,10 +121,10 @@ Enabled arches: `x86_64` from P1.01, and all four ARM targets (`armv6-m`, `armv7
 
 ## P1.13 — `<fenv.h>` and libm part 1 (exact operations)
 - [ ] Research the CORE-MATH project, FreeBSD msun, musl, ARM optimized-routines and the CRlibm papers for *techniques* (clean-room). Decide the accuracy target in PLAN.md (correctly rounded vs ≤ 1 ULP, per function).
-- [ ] `<fenv.h>`: x86_64 (SSE MXCSR); armv7e-m, armv7e-m-dp and v8-m.main (VFP FPSCR; one shared `arm-vfp` layer, D17); and armv6-m soft-float (document what libgcc's soft-float exposes; `FE_*` may be limited, with the macros defined only for supported modes per the standard).
+- [ ] `<fenv.h>`: x86_64 (SSE MXCSR); armv7e-m, armv7e-m-dp and v8-m.main (VFP FPSCR; one shared FPU subdirectory selected through `LIBC_FPU`, D22); and armv6-m soft-float (document what libgcc's soft-float exposes; `FE_*` may be limited, with the macros defined only for supported modes per the standard).
 - [ ] `<math.h>` macros and classification: `fpclassify`, `isfinite`, `isinf`, `isnan`, `isnormal`, `signbit`, `iszero`, `issubnormal`, `issignaling`, `iscanonical`, and the comparison macros.
 - [ ] Exact operations for f/d/l: `fabs`, `copysign`, `nan`, `nextafter`/`nexttoward`/`nextup`/`nextdown`, `fmin`/`fmax`/`fmaximum*`/`fminimum*`, `fdim`, `fma`, `ceil`/`floor`/`trunc`/`round`/`lround`/`llround`/`roundeven`/`rint`/`lrint`/`llrint`/`nearbyint`, `fromfp`/`ufromfp`/`fromfpx`/`ufromfpx`, `frexp`, `ldexp`, `scalbn`/`scalbln`, `logb`, `ilogb`/`llogb`, `modf`, `fmod`, `remainder`, `remquo`, `canonicalize`, `totalorder`/`totalordermag`, `getpayload`/`setpayload`/`setpayloadsig`, and the narrowing `fadd`/`fsub`/`fmul`/`fdiv`/`ffma`/`fsqrt` (and the `d` versions).
-- [ ] FPU layers (D17/D18): `sqrt`, `fma`, `fabs`, `copysign`, the `rint`/`round`/`trunc`/`ceil`/`floor`/`nearbyint` family and `fmin`/`fmax`/`fmaximum_num`/`fminimum_num` map to single instructions. `fpv5-sp` covers the `float` versions (v8-m.main, M7), `fpv5-dp` the `double` versions (armv7e-m-dp), and `fpv4-sp` only `sqrtf`/`fabsf`/`fmaf`. Exhaustive `float` tests and random `double` tests compare the instruction paths with the generic C ones.
+- [ ] FPU subdirectories (D22/D18): `sqrt`, `fma`, `fabs`, `copysign`, the `rint`/`round`/`trunc`/`ceil`/`floor`/`nearbyint` family and `fmin`/`fmax`/`fmaximum_num`/`fminimum_num` map to single instructions. `fpv5-sp` covers the `float` versions (v8-m.main, M7), `fpv5-dp` the `double` versions (armv7e-m-dp), and `fpv4-sp` only `sqrtf`/`fabsf`/`fmaf`. Exhaustive `float` tests and random `double` tests compare the instruction paths with the generic C ones.
 - [ ] Build `libm.a` (or merge it into `libc.a` with a `libm.a` stub; decide and record).
 
 ## P1.14 — libm part 2: exponentials, logarithms, powers, roots

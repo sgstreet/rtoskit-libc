@@ -61,13 +61,19 @@ the "C" locale only (`MB_CUR_MAX == 1`), and `wchar_t` comes from `<stddef.h>`.
 
 ### Target matrix
 
-| `ARCH_CROSS` | Core / ISA | `long double` | FPU | Role |
-|---|---|---|---|---|
-| `x86_64` | x86-64 | 64-bit, see D7 | SSE2 | Phase 1 primary dev/test host and Phase 3 perf reference |
-| `armv6-m` | Cortex-M0+ (Thumb-1) | 64-bit | none (soft) | Phase 2 and 3 target |
-| `armv7e-m` | Cortex-M4F/M7 (Thumb-2, DSP) | 64-bit | FPv4-SP (hard) | Phase 2 and 3 target |
-| `armv7e-m-dp` | Cortex-M7 with the double-precision FPU (Thumb-2, DSP) | 64-bit | FPv5-D16, single + double (hard) | Phase 2 and 3 target |
-| `armv8-m.main` | Cortex-M33 (Thumb-2, DSP) | 64-bit | FPv5-SP (hard) | Phase 2 and 3 target |
+| Target | `ARCH_CROSS` (D22) | Test board (`BOARD_TYPE`) | Core / ISA | `long double` | FPU | Role |
+|---|---|---|---|---|---|---|
+| `x86_64` | `x86_64` | `linux-x86_64` | x86-64 | 64-bit, see D7 | SSE2 | Phase 1 primary dev/test host and Phase 3 perf reference |
+| `armv6-m` | `armv6-m` | `linux-armv6-m` | Cortex-M0+ (Thumb-1) | 64-bit | none (soft) | Phase 2 and 3 target |
+| `armv7e-m` | `armv7e-m` | `linux-armv7e-m` | Cortex-M4F (Thumb-2, DSP) | 64-bit | FPv4-SP (hard) | Phase 2 and 3 target |
+| `armv7e-m-dp` | `armv7e-m-dp` | `linux-armv7e-m-dp` | Cortex-M7 with the double-precision FPU (Thumb-2, DSP) | 64-bit | FPv5-D16, single + double (hard) | Phase 2 and 3 target |
+| `armv8-m.main` | `armv8-m.main` | `linux-armv8-m.main` | Cortex-M33 (Thumb-2, DSP) | 64-bit | FPv5-SP (hard) | Phase 2 and 3 target |
+
+The `linux-*` boards run the test binaries through `port/linux`, natively or
+under `qemu-arm`. Real hardware boards (e.g. `pi-pico`, `pi-pico2`) with
+`port/none` or `port/rtoskit` can be added as further `BOARD_TYPE` files.
+The plan text uses the target names; build commands use the board and
+`ARCH_CROSS` names.
 
 RISC-V is not targeted for now. The layout allows it to be added as just
 another `arch/` and toolchain file.
@@ -98,7 +104,15 @@ supersedes it; do not edit history.
 | D15 | **Headers are per target triple, not per multilib.** Every multilib of one GCC (e.g. all `arm-none-eabi` M-profile variants) shares one `include/` directory, so `arch/arm/include/` must be valid for all of them. Types such as `jmp_buf` are sized for the largest variant (with the VFP callee-saved registers: s16–s31 for single precision and d8–d15 for double precision are the same 64 bytes); `fenv_t` (FPSCR) is the same for all. Only `arch/<arch>/src/` (code) differs per multilib. | Phase 4 needs it: GCC multilib installs one sysroot `include/` and per-multilib `lib/<multidir>/`. Deciding this early stops Phases 1 to 3 from baking per-arch header differences in. |
 | D16 | **The build can be driven from outside.** A caller (crosstool-NG) can build and install one multilib with `make ARCH_CROSS=<arch> CROSS_COMPILE=<prefix> MULTILIB_FLAGS='<flags>' MULTIDIR=<dir> PREFIX=<sysroot> install`, and install headers alone with `make install-headers`. | crosstool-NG needs headers before the final GCC, and then one libc build per multilib. |
 | D17 | **Arch code comes from ordered layers.** Each `tools/makefiles/<arch>.mk` sets `ARCH_LAYERS`, an ordered list of `arch/<layer>/src` directories. For each source stem the first layer that has the file wins; otherwise the generic `src/` file is used. Layers are per ISA (`armv6-m`, `armv7e-m`, `armv8-m.main`) and per FPU (`fpv4-sp`, `fpv5-sp`, `fpv5-dp`). For example, `armv7e-m-dp` uses `armv7e-m-dp fpv5-dp fpv5-sp armv7e-m`. This extends D5. | It shares FPU-specific code between ISAs (the Cortex-M7 DP unit and FPv5 on v8-M) and ISA-specific code between FPU variants, without duplicating files and without `#if`. |
-| D18 | **Support the Cortex-M double-precision FPU (FPv5-D16, e.g. Cortex-M7 with the DP unit)** as the arch `armv7e-m-dp` (`-mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard`). On it, `double` operations are hardware; `float` and `double` both get FPv5 instructions (`VSQRT`, `VFMA`, `VRINT[ANPMZX]`, `VMAXNM`/`VMINNM`, `VCVT[ANPM]`) through the `fpv5-sp`/`fpv5-dp` layers. Note that FPv5-SP (Cortex-M33, and the M7 SP option) also has these instructions for `float`, but FPv4-SP (Cortex-M4F) does not. | User requirement. It needs no header changes (D15 holds: the register file and FPSCR are shared). |
+| D18 | **Support the Cortex-M double-precision FPU (FPv5-D16, e.g. Cortex-M7 with the DP unit)** as the arch `armv7e-m-dp` (`-march=armv7e-m+fp.dp -mfloat-abi=hard`, i.e. FPv5-D16; D24). On it, `double` operations are hardware; `float` and `double` both get FPv5 instructions (`VSQRT`, `VFMA`, `VRINT[ANPMZX]`, `VMAXNM`/`VMINNM`, `VCVT[ANPM]`) through the `fpv5-sp`/`fpv5-dp` layers. Note that FPv5-SP (Cortex-M33, and the M7 SP option) also has these instructions for `float`, but FPv4-SP (Cortex-M4F) does not. | User requirement. It needs no header changes (D15 holds: the register file and FPSCR are shared). |
+| D19 | **Exception to the no-`#if` rule:** `<limits.h>` selects `CHAR_MIN`/`CHAR_MAX` with `#ifdef __CHAR_UNSIGNED__`. Plain `char` signedness is a compiler option with no predefined *value* macro, and the limits must be usable in `#if`. Further compiler-property selections in headers need their own entry. | There is no conditional-free way to express it. |
+| D20 | **`<errno.h>` values follow the Linux numbering** (`EDOM` 33, `ERANGE` 34, `EILSEQ` 84, `EBADF` 9, ...). Seam functions return negated errno values, so `port/linux` passes kernel results through unchanged, and other ports map their own codes. | Simplest for the test port. The values are arbitrary otherwise. |
+| D21 | **Build layout:** `src/`, `arch/` and `include/` are source pools with no `.mk` files. The `libc/` module compiles them (through `libc/subdir.mk` → `tools/makefiles/libc.mk`), and the `port/<port>/` modules select from their own `src/` and `arch/<layer>/src/` the same way. `BUILD_ROOT` and `INSTALL_ROOT` include `ARCH_CROSS` (`build/<arch>/<type>`, `images/<arch>/<type>`). Consumers (`example/`, `test/`) get the libc include and link flags from `tools/makefiles/libc-target.mk`, which each `<arch>.mk` includes. | It keeps one compile rule for layered selection (D5, D17), and lets several arches coexist in one tree. |
+| D22 | **Build system usage follows the pi-pico conventions** (supersedes D5, D17 and D21). (1) Every source directory is a module with its own `<dir>.mk` (from `tools/templates/src-template.mk`) and compiles in place. Library code lives under `libc/<area>/` and `port/<port>/`, and private headers in `libc/internal/` (header-only, no `.mk`). (2) Arch variation lives in variant subdirectories named after the `ARCH_CROSS` toolchain file (`libc/tls/x86_64/`, `port/linux/armv8-m.main/`). The parent module selects them with `SUBDIRS := ${ARCH_CROSS}` (as `sys/sys.mk` does in pi-pico). Code shared between cores goes in a subdirectory named by a variable the toolchain file sets (e.g. `LIBC_FPU := fpv5-dp`, `SUBDIRS := ${ARCH_CROSS} ${LIBC_FPU}`). When a generic C function needs an arch override (Phase 2/3), the generic module's `subdir.mk` filters it out of `SRC`. (3) Archives are built by a parent module that lists its children in `TARGET_OBJ_LIBS` with `all: ${CURDIR}/libX.a` (`libc/libc.mk` → `libc.a`, `port/linux/linux.mk` → `librtos-linux.a`, like pi-pico `runtime.mk`). (4) Executables list the object directories they link in `TARGET_OBJ_LIBS` (e.g. `port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_CROSS}`). The toolchain file links `libc.a` from the build tree through `LDLIBS`, as pi-pico's toolchain file points at its build-tree picolibc. (5) A `BOARD_TYPE` file (`tools/makefiles/<board>.mk`) exports `ARCH_CROSS` and `RTOS_PORT`. The `ARCH_CROSS` file (`tools/makefiles/<arch>.mk`) holds the toolchain and all flags, including `LIBC_CFLAGS` for library modules. The top-level `Makefile` loops over `BOARDS` × `BUILDS` into `build/<board>/<build-type>`. (6) Builds always run from the project root. | Required by the user: the build system in `tools/` must be used the way pi-pico uses it. |
+| D23 | **Tests run with `make check`** (amends D22 (6)): the top-level `Makefile` builds, then runs `test/unit/run-unit` on `${BUILD_ROOT}/test/unit` for every board and build type. libc-test joins the same target in P1.02. There is no `tools/test-runner`. | User direction. |
+| D24 | **`ARCH_CROSS` toolchain files and variant subdirectories are named after the architecture, not a core** (amends D22): `x86_64`, `armv6-m`, `armv7e-m`, `armv7e-m-dp`, `armv8-m.main`, with test boards `linux-<arch>`. The ARM toolchain files select the target with `-march` plus extensions (e.g. `armv7e-m+fp`, `armv7e-m+fp.dp`, `armv8-m.main+fp+dsp`) and `-mfloat-abi`, never `-mcpu`. That way the library is not tuned for one core, and the names match the GCC multilib directories used in Phase 4. | User direction. |
+| D25 | **Lowercase everywhere unless the standard requires uppercase.** Applies to our identifiers, constants (as `static constexpr`, not macros), include guards (`__<name>_h`), file names (`_Exit` is in `_exit.c`) and test output. The exceptions are standard-mandated names (`_Exit`, `FILE`, the limit macros, `E*` errno macros per C23 7.5p4) and compiler/toolchain names (`__INT32_TYPE__`, `.note.GNU-stack`). This refines D6, which says the file is named after its function. | User direction. |
+| D26 | **Linux kernel coding style, as in pi-pico** (supersedes D25 for macros and include guards): lower-case identifiers and file names; `ALL_CAPS` macros and enum constants (`__LINUX_SYS_WRITE`, `__LIBC_TCB_ALIGN`); include guards `_NAME_H` closed with `#endif /* _NAME_H */`; `/* */` comments only; `while (true)`; no alignment padding; no new typedefs beyond those the standard requires; `extern` declarations only in headers. `tools/clang-format` stays authoritative for layout. From D25, the lowercase file names (`_exit.c`) and the lowercase test output remain. | User direction. |
 
 ---
 
@@ -106,23 +120,18 @@ supersedes it; do not edit history.
 
 ```
 CLAUDE.md
-Makefile                  top-level (tools/ tree driver)
+Makefile                  top-level: BOARDS x BUILDS loop, module ordering (D22)
 tools/                    build system (extend, don't restructure)
-  makefiles/x86_64.mk     toolchain + flags per ARCH_CROSS (new)
-  makefiles/armv6-m.mk    (new, Phase 1 cross bring-up)
-  makefiles/armv7e-m.mk
-  makefiles/armv7e-m-dp.mk
-  makefiles/armv8-m.main.mk
-  makefiles/libc.mk       shared fragment: generic/arch file selection, include paths (new)
-include/                  public headers, arch-neutral
+  makefiles/<board>.mk    BOARD_TYPE: exports ARCH_CROSS and RTOS_PORT (linux-x86_64, ...)
+  makefiles/<arch>.mk     ARCH_CROSS toolchain + flags (x86_64, armv6-m, armv7e-m, armv7e-m-dp, armv8-m.main)
+include/                  public headers (no .mk)
   rtos/rtos-port.h        the RTOS seam contract (installed for port authors)
-src/<area>/               generic implementation, one function per file
-  internal/               private headers (never installed)
-arch/<family>/include/    arch-specific header pieces (__arch_*.h), one set per triple (D15)
-arch/<layer>/src/<area>/  arch overrides by ISA or FPU layer (setjmp, fenv, crt, string, ...), D17
-port/linux/               RTOS seam over Linux syscalls (test port)
+libc/libc.mk              tree node; archives its children into libc.a (+ libm.a)
+libc/<area>/              one module per area, one function per file
+libc/<area>/<arch>/       ARCH_CROSS variant subdirectory, selected with SUBDIRS (setjmp, fenv, tls, ...)
+libc/internal/            private headers (never installed, no .mk)
+port/linux/               RTOS seam over Linux syscalls (test port) + port/linux/<arch>/ variants
 port/none/                single-thread, bare-metal default port (no-op locks, one static TLS block)
-libc/                     module that archives everything into libc.a (+ libm.a)
 test/libc-test/           build glue, shim, runner, manifests, expected results per arch
 test/unit/                our own tests for gaps in libc-test (C23 additions, threads.h, seam)
 test/bench/               Phase 3 benchmarks
@@ -136,8 +145,7 @@ example/                  existing example
 ```
 
 Each source directory has a `<dir>.mk` made from `tools/templates/` (use
-`tools/scripts/mksrc <path>`). Directories that select files (D5) use a
-`subdir.mk` that includes `tools/makefiles/libc.mk`.
+`tools/scripts/mksrc <path>`). See D22 for variants, archives and linking.
 
 ---
 
@@ -174,8 +182,8 @@ user-replaceable byte sink. That way a bare-metal image works with no RTOS at al
     pieces (for example `t_printf` built on `write`, and `runtest` built on
     fork/exec) with ISO/port equivalents. This is test-only code.
   - The runner `test/libc-test/run` runs each test binary with a timeout (under
-    `qemu-arm -cpu …` for ARM) and writes `build/<arch>/<type>/libc-test/results.txt`.
-  - `test/libc-test/expected/<arch>.txt` holds the committed baseline. `make check`
+    `qemu-arm -cpu …` for ARM) and writes `build/<board>/<type>/test/libc-test/results.txt`.
+  - `test/libc-test/expected/<board>.txt` holds the committed baseline. The libc-test runner
     fails on any PASS→FAIL regression and reports FAIL→PASS improvements. A
     step updates the baseline only to record improvements.
   - `src/api` tests (compile-only declaration checks) are curated to their ISO subset.
@@ -197,7 +205,7 @@ user-replaceable byte sink. That way a bare-metal image works with no RTOS at al
 
 See CLAUDE.md. In short: pick the first `[ ]` step in the active phase file,
 mark it `[~]`, do the research notes, implement, run `make check` for every
-enabled arch, update the manifest and the baseline, tick the boxes, append any
+enabled board, update the manifest and the baseline, tick the boxes, append any
 decisions here, and commit.
 
 ---
@@ -212,7 +220,7 @@ decisions here, and commit.
 | Q4 | What does the rtoskit RTOS port need (is a repo available, which primitives, TLS handling on Cortex-M)? It would be a `port/rtoskit` step after P1.12. | Not planned yet |
 | Q5 | Phase 3 measurement on ARM: qemu instruction counts (TCG plugin) only, or also real hardware cycle counts (RP2040 / RP2350 with the DWT cycle counter)? | qemu instruction counts, plus hardware if a board is attached |
 | Q6 | Time zone support for `localtime`/`mktime`: UTC only, or the POSIX `TZ` string from `getenv("TZ")`? | POSIX `TZ` string, no tzdata files |
-| Q7 | Is extending `tools/makefiles` with new files (arch toolchains, `libc.mk`) acceptable, as long as existing files keep their structure? | Yes |
+| Q7 | ~~Is extending `tools/makefiles` with new files acceptable?~~ **Resolved by D22:** follow the pi-pico conventions, and add only board and `ARCH_CROSS` toolchain files there. | — |
 | Q8 | Must the Phase 4 toolchain include C++ (`libstdc++`)? `libstdc++` expects `<wchar.h>`/`<wctype.h>`, which are out of scope, so it would need `--disable-wchar_t`, a C-only toolchain, or a scope change. | C-only toolchain (`--enable-languages=c`); C++ is a later decision |
 | Q9 | "cross-ng" is taken to mean **crosstool-NG**. Where does the integration live: patches in this repo (`toolchain/crosstool-ng/`), a crosstool-NG fork, or the existing `red-rocket-computing/cross-dev` toolchain build that `tools/makefiles/setup.mk` downloads from? Which multilib set: GCC's `rmprofile` list, or a custom list limited to the ARM arches in the target matrix? | Patches in this repo; custom multilib list (v6-m, v7e-m+fp, v7e-m+fp.dp, v8-m.main+fp, plus their soft-float variants) |
 | Q10 | Beyond the Cortex-M7 DP unit, should the Armv8.1-M cores with an optional DP FPU and MVE (Cortex-M55/M85, `armv8.1-m.main+fp.dp+mve.fp`) be a target too? With D17 that would add an `armv8.1-m.main` layer and reuse `fpv5-dp`. | No; add later if needed |

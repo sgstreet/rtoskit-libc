@@ -1,0 +1,19 @@
+/*
+ * Copyright (C) 2026 Red Rocket Computing, LLC
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * stdalign.h
+ *
+ * Created on: Oct 18, 2026
+ *     Author: Stephen Street (stephen@redrocketcomputing.com)
+ */
+
+#ifndef _STDALIGN_H
+#define _STDALIGN_H
+
+/* C23 7.15p1: alignas and alignof are keywords, so this header provides no content */
+
+#endif /* _STDALIGN_H */
