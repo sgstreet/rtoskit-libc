@@ -1,10 +1,10 @@
 # Phase 2 — Size optimization pass
 
-Prerequisite: `phase-1-complete`. Targets: `armv6-m`, `armv7e-m`,
+Prerequisite: `phase-1-complete`. Targets: `armv6-m`, `armv7e-m`, `armv7e-m-dp`,
 `armv8-m.main` and `x86_64` (the last one for reference only).
 
 **Every step's definition of done (DoD)** is the Phase 1 DoD (libc-test with no
-regressions on all four arches, research notes, no new `#if`, committed) plus:
+regressions on all five arches, research notes, no new `#if`, committed) plus:
 
 - `make size-report` shows that no object grew by more than 0 bytes unless the
   growth is justified in the step notes. The reductions are recorded in
@@ -45,11 +45,12 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 ## P2.05 — libm size
 - [ ] Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows. Re-derive the table sizes with the size/accuracy trade-off documented.
 - [ ] armv7e-m and v8-m.main: the `float` functions must use only the single-precision FPU (no double promotion; enforce with `-Wdouble-promotion`).
+- [ ] armv7e-m-dp: the `double` functions must not pull in any soft-float helpers (`__aeabi_d*`); check the link maps. Use the hardware ops instead of software bit tricks wherever that is smaller.
 - [ ] armv6-m: minimise the soft-float helper pull-in (audit the libgcc dependencies).
 
 ## P2.06 — Per-arch hand-written size kernels
 - [ ] armv6-m Thumb-1: `memcpy`, `memset`, `memmove`, `strlen`, `strcmp`, `setjmp`, written for size (the arch `size/` flavour, D12).
-- [ ] armv7e-m and v8-m.main Thumb-2: the same set, if they beat the compiler output.
+- [ ] armv7e-m, armv7e-m-dp and v8-m.main Thumb-2: the same set (one shared Thumb-2 layer), if they beat the compiler output.
 - [ ] Each assembly file has a research note and goes through libc-test plus our own exhaustive alignment/length tests.
 
 ## P2.07 — Phase wrap-up

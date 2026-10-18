@@ -1,6 +1,6 @@
 # Phase 3 — Performance optimization pass
 
-Prerequisite: `phase-2-complete`. Targets: `armv6-m`, `armv7e-m`,
+Prerequisite: `phase-2-complete`. Targets: `armv6-m`, `armv7e-m`, `armv7e-m-dp`,
 `armv8-m.main` and `x86_64`.
 
 **Every step's definition of done (DoD)** is the Phase 1 DoD plus:
@@ -22,7 +22,7 @@ x86_64, wall clock with `rdtsc`, pinned, median of N runs.
 - [ ] `make bench` produces a machine-readable baseline per arch. Capture the Phase 2 baseline.
 
 ## P3.02 — Memory and string functions
-- [ ] armv7e-m and v8-m.main: `LDRD`/`LDM`-based `memcpy`/`memset`/`memmove`, word-at-a-time `strlen`/`strcmp`/`strchr` using `UADD8`/`SEL` (DSP), and IT-block tuning. These are the `speed/` flavour files.
+- [ ] armv7e-m, armv7e-m-dp and v8-m.main: `LDRD`/`LDM`-based `memcpy`/`memset`/`memmove`, word-at-a-time `strlen`/`strcmp`/`strchr` using `UADD8`/`SEL` (DSP), and IT-block tuning. These are the `speed/` flavour files.
 - [ ] armv6-m: unrolled Thumb-1 variants (no unaligned access; the `LDM`/`STM` limits).
 - [ ] x86_64: SSE2 baseline versions (the reference flavour only).
 - [ ] Research note per kernel. Exhaustive alignment/length/overlap tests plus libc-test.
@@ -37,6 +37,8 @@ x86_64, wall clock with `rdtsc`, pinned, median of N runs.
 
 ## P3.05 — libm hot paths
 - [ ] armv7e-m and v8-m.main: the single-precision functions use the FPU fully (`vsqrt.f32`, `vfma`), with table-driven reductions in the speed flavour.
+- [ ] armv7e-m-dp: the double-precision functions use the DP unit fully (`vsqrt.f64`, `vfma.f64`, `vrint*.f64`). Re-tune the `double` algorithms for hardware FMA, where polynomial and error-compensation choices differ from soft-float. The `fpv5-dp` layer is shared, so a later Armv8.1-M DP target (Q10) can reuse it.
+- [ ] Cortex-M7 specifics for armv7e-m-dp: the dual-issue pipeline and the 64-bit AXI/TCM path; `LDRD`/`VLDM` for `memcpy`. Measure with the DWT cycle counter on hardware if available (Q5).
 - [ ] armv6-m: integer-only `float` implementations where they beat soft-float emulation.
 - [ ] x86_64: use `sqrtsd`/`roundsd` (SSE4.1 only if the baseline ISA is raised; decide and record).
 

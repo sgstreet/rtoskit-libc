@@ -20,7 +20,7 @@ decision log D*, open questions Q*), then the active phase file
    approach, the edge cases and the test vectors.
 4. **Clean-room (mandatory).** Never copy, paste or mechanically translate code
    from other implementations, whatever their licence. Write from the
-   standard text (`doc/library-7.pdf`, `doc/annex-b.pdf`; extract text with
+   standard text (`docs/standard/library-7.pdf`, `docs/standard/annex-b.pdf`; extract text with
    `pdftotext -layout`) and your own research notes.
 5. Implement, then build and validate on **every enabled arch** (see the phase
    file): `make` and `make check`.
@@ -39,7 +39,7 @@ tell the user.
 ```sh
 make                                   # debug + release for ARCH_CROSS (default x86_64 once P1.01 lands)
 make BUILD_TYPE=debug                  # single build type
-make ARCH_CROSS=armv7e-m               # cross arch: x86_64 | armv6-m | armv7e-m | armv8-m.main
+make ARCH_CROSS=armv7e-m               # cross arch: x86_64 | armv6-m | armv7e-m | armv7e-m-dp | armv8-m.main
 make libc                              # one module (dep-free, assumes prior full build)
 make check                             # build + run libc-test + diff vs expected (P1.02+)
 make size-report                       # Phase 2+
@@ -97,8 +97,8 @@ Allowed `#if`/`#ifdef` uses, and nothing else:
 Instead of `#if`:
 
 - Arch/port variation means a different file selected by the build
-  (`arch/<arch>/src/...` overrides `src/...` by stem; arch headers come
-  through the include path) (D5).
+  (the first match by stem in the arch layer list, then `src/...`; arch
+  headers come through the include path) (D5, D17).
 - Feature or flavour variation means a separate archive or a link-time symbol
   replacement (D12, D13).
 - Type-size variation means plain `if (sizeof(long) == 8)`, `constexpr` and
@@ -137,7 +137,7 @@ Any exception needs a PLAN.md decision entry.
 - Fetch libc-test with `git submodule update --init` (`repo.or.cz` must be
   reachable). If the network blocks it, report the blocker. Never substitute
   made-up results.
-- `doc/*.pdf` is the standard text used for clean-room work.
+- `docs/standard/*.pdf` is the standard text used for clean-room work.
 
 ## Layout
 
@@ -145,11 +145,12 @@ Any exception needs a PLAN.md decision entry.
 include/           public headers (+ include/rtos/rtos-port.h seam contract)
 src/<area>/        generic code, one function per file; src/internal/ private headers
 arch/<family>/include/  __arch_*.h, one header set per target triple (arm, x86_64), shared by all multilibs (D15)
-arch/<arch>/src/   code overrides per arch; size/ and speed/ flavours (Phase 2/3)
+arch/<layer>/src/  code overrides; each ARCH_CROSS searches an ordered list of layers, e.g. armv7e-m-dp → fpv5-dp → armv7e-m → src (D17); size/ and speed/ flavours (Phase 2/3)
 port/<port>/       linux (test port), none (bare metal), rtoskit (future)
 libc/              archives libc.a / libm.a
 test/              libc-test glue, unit, size, bench
 toolchain/         Phase 4: crosstool-NG libc backend, multilib configs
+docs/standard/     C23 standard text (N3220 clause 7, Annex B)
 docs/plan/         PLAN.md + phase task lists
 docs/research/     per-algorithm research notes
 tools/             build system

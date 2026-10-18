@@ -16,8 +16,8 @@ Status legend used in all phase files: `[ ]` todo, `[~]` in progress, `[x]` done
 ## 1. Goals
 
 1. A clean-room, ISO/IEC 9899:2024 (C23, N3220) compliant C standard library for
-   deeply embedded systems. The normative reference is `doc/library-7.pdf`
-   (clause 7) and `doc/annex-b.pdf` (library summary).
+   deeply embedded systems. The normative reference is `docs/standard/library-7.pdf`
+   (clause 7) and `docs/standard/annex-b.pdf` (library summary).
 2. Implemented in C23 (`-std=c23`). All per-thread library state uses
    `thread_local` (`errno`, `strtok`, `rand`, the `asctime`/`gmtime`/`localtime`
    static buffers, `tmpnam`, ...).
@@ -66,6 +66,7 @@ the "C" locale only (`MB_CUR_MAX == 1`), and `wchar_t` comes from `<stddef.h>`.
 | `x86_64` | x86-64 | 64-bit, see D7 | SSE2 | Phase 1 primary dev/test host and Phase 3 perf reference |
 | `armv6-m` | Cortex-M0+ (Thumb-1) | 64-bit | none (soft) | Phase 2 and 3 target |
 | `armv7e-m` | Cortex-M4F/M7 (Thumb-2, DSP) | 64-bit | FPv4-SP (hard) | Phase 2 and 3 target |
+| `armv7e-m-dp` | Cortex-M7 with the double-precision FPU (Thumb-2, DSP) | 64-bit | FPv5-D16, single + double (hard) | Phase 2 and 3 target |
 | `armv8-m.main` | Cortex-M33 (Thumb-2, DSP) | 64-bit | FPv5-SP (hard) | Phase 2 and 3 target |
 
 RISC-V is not targeted for now. The layout allows it to be added as just
@@ -94,8 +95,10 @@ supersedes it; do not edit history.
 | D12 | **Size and speed flavours** are chosen per build without `#if`. Speed-oriented arch files live in `arch/<arch>/speed/...` and size-oriented ones in `arch/<arch>/size/...`. The build picks a flavour directory (`LIBC_FLAVOUR=size|speed`, default `size`). | It reconciles Phase 2 and Phase 3. Needs confirmation (see Q3). |
 | D13 | **Feature trimming is link-time.** Expensive optional paths, such as floating point in `printf`/`scanf`, are reached through a symbol that the full variant defines and a small variant stubs out. The small variant lives in a separate archive (`libc-nofloat.a`) linked ahead of `libc.a`. It is never selected with `#if`. | This is the picolibc-style flavour idea, done at link time. It is a Phase 2 item. |
 | D14 | **Tracking:** phase files plus a step ID per session. Each step lists its deliverables and its definition of done. Sessions update the checkboxes, the test baselines and the decision log, then commit. | The work spans many sessions. |
-| D15 | **Headers are per target triple, not per multilib.** Every multilib of one GCC (e.g. all `arm-none-eabi` M-profile variants) shares one `include/` directory, so `arch/arm/include/` must be valid for all of them. Types such as `jmp_buf` are sized for the largest variant (with the VFP registers); `fenv_t` is the same for all. Only `arch/<arch>/src/` (code) differs per multilib. | Phase 4 needs it: GCC multilib installs one sysroot `include/` and per-multilib `lib/<multidir>/`. Deciding this early stops Phases 1 to 3 from baking per-arch header differences in. |
+| D15 | **Headers are per target triple, not per multilib.** Every multilib of one GCC (e.g. all `arm-none-eabi` M-profile variants) shares one `include/` directory, so `arch/arm/include/` must be valid for all of them. Types such as `jmp_buf` are sized for the largest variant (with the VFP callee-saved registers: s16–s31 for single precision and d8–d15 for double precision are the same 64 bytes); `fenv_t` (FPSCR) is the same for all. Only `arch/<arch>/src/` (code) differs per multilib. | Phase 4 needs it: GCC multilib installs one sysroot `include/` and per-multilib `lib/<multidir>/`. Deciding this early stops Phases 1 to 3 from baking per-arch header differences in. |
 | D16 | **The build can be driven from outside.** A caller (crosstool-NG) can build and install one multilib with `make ARCH_CROSS=<arch> CROSS_COMPILE=<prefix> MULTILIB_FLAGS='<flags>' MULTIDIR=<dir> PREFIX=<sysroot> install`, and install headers alone with `make install-headers`. | crosstool-NG needs headers before the final GCC, and then one libc build per multilib. |
+| D17 | **Arch code comes from ordered layers.** Each `tools/makefiles/<arch>.mk` sets `ARCH_LAYERS`, an ordered list of `arch/<layer>/src` directories. For each source stem the first layer that has the file wins; otherwise the generic `src/` file is used. Layers are per ISA (`armv6-m`, `armv7e-m`, `armv8-m.main`) and per FPU (`fpv4-sp`, `fpv5-sp`, `fpv5-dp`). For example, `armv7e-m-dp` uses `armv7e-m-dp fpv5-dp fpv5-sp armv7e-m`. This extends D5. | It shares FPU-specific code between ISAs (the Cortex-M7 DP unit and FPv5 on v8-M) and ISA-specific code between FPU variants, without duplicating files and without `#if`. |
+| D18 | **Support the Cortex-M double-precision FPU (FPv5-D16, e.g. Cortex-M7 with the DP unit)** as the arch `armv7e-m-dp` (`-mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard`). On it, `double` operations are hardware; `float` and `double` both get FPv5 instructions (`VSQRT`, `VFMA`, `VRINT[ANPMZX]`, `VMAXNM`/`VMINNM`, `VCVT[ANPM]`) through the `fpv5-sp`/`fpv5-dp` layers. Note that FPv5-SP (Cortex-M33, and the M7 SP option) also has these instructions for `float`, but FPv4-SP (Cortex-M4F) does not. | User requirement. It needs no header changes (D15 holds: the register file and FPSCR are shared). |
 
 ---
 
@@ -108,14 +111,15 @@ tools/                    build system (extend, don't restructure)
   makefiles/x86_64.mk     toolchain + flags per ARCH_CROSS (new)
   makefiles/armv6-m.mk    (new, Phase 1 cross bring-up)
   makefiles/armv7e-m.mk
+  makefiles/armv7e-m-dp.mk
   makefiles/armv8-m.main.mk
   makefiles/libc.mk       shared fragment: generic/arch file selection, include paths (new)
 include/                  public headers, arch-neutral
   rtos/rtos-port.h        the RTOS seam contract (installed for port authors)
 src/<area>/               generic implementation, one function per file
   internal/               private headers (never installed)
-arch/<arch>/include/      arch-specific header pieces (__arch_*.h)
-arch/<arch>/src/<area>/   arch overrides (setjmp, fenv, crt, string, ...)
+arch/<family>/include/    arch-specific header pieces (__arch_*.h), one set per triple (D15)
+arch/<layer>/src/<area>/  arch overrides by ISA or FPU layer (setjmp, fenv, crt, string, ...), D17
 port/linux/               RTOS seam over Linux syscalls (test port)
 port/none/                single-thread, bare-metal default port (no-op locks, one static TLS block)
 libc/                     module that archives everything into libc.a (+ libm.a)
@@ -124,6 +128,7 @@ test/unit/                our own tests for gaps in libc-test (C23 additions, th
 test/bench/               Phase 3 benchmarks
 toolchain/crosstool-ng/   Phase 4: crosstool-NG libc backend, sample configs, patches
 third-party/libc-test     git submodule (test suite only, never linked into libc)
+docs/standard/            C23 standard text (N3220 clause 7, Annex B)
 docs/plan/                this plan and the phase task lists
 docs/research/            per-algorithm research notes (D2)
 docs/size/, docs/perf/    baselines and reports (Phase 2, Phase 3)
@@ -209,4 +214,5 @@ decisions here, and commit.
 | Q6 | Time zone support for `localtime`/`mktime`: UTC only, or the POSIX `TZ` string from `getenv("TZ")`? | POSIX `TZ` string, no tzdata files |
 | Q7 | Is extending `tools/makefiles` with new files (arch toolchains, `libc.mk`) acceptable, as long as existing files keep their structure? | Yes |
 | Q8 | Must the Phase 4 toolchain include C++ (`libstdc++`)? `libstdc++` expects `<wchar.h>`/`<wctype.h>`, which are out of scope, so it would need `--disable-wchar_t`, a C-only toolchain, or a scope change. | C-only toolchain (`--enable-languages=c`); C++ is a later decision |
-| Q9 | "cross-ng" is taken to mean **crosstool-NG**. Where does the integration live: patches in this repo (`toolchain/crosstool-ng/`), a crosstool-NG fork, or the existing `red-rocket-computing/cross-dev` toolchain build that `tools/makefiles/setup.mk` downloads from? Which multilib set: GCC's `rmprofile` list, or a custom list limited to the three ARM arches? | Patches in this repo; custom multilib list (v6-m, v7e-m+fp, v8-m.main+fp, plus their soft-float variants) |
+| Q9 | "cross-ng" is taken to mean **crosstool-NG**. Where does the integration live: patches in this repo (`toolchain/crosstool-ng/`), a crosstool-NG fork, or the existing `red-rocket-computing/cross-dev` toolchain build that `tools/makefiles/setup.mk` downloads from? Which multilib set: GCC's `rmprofile` list, or a custom list limited to the ARM arches in the target matrix? | Patches in this repo; custom multilib list (v6-m, v7e-m+fp, v7e-m+fp.dp, v8-m.main+fp, plus their soft-float variants) |
+| Q10 | Beyond the Cortex-M7 DP unit, should the Armv8.1-M cores with an optional DP FPU and MVE (Cortex-M55/M85, `armv8.1-m.main+fp.dp+mve.fp`) be a target too? With D17 that would add an `armv8.1-m.main` layer and reuse `fpv5-dp`. | No; add later if needed |

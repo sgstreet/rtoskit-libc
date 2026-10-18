@@ -36,8 +36,8 @@ outside the repo.
 - [ ] Write the research note `docs/research/crosstool-ng-integration.md`.
 
 ## P4.02 — Make the libc build multilib-ready (in-tree)
-- [ ] Generic multilib toolchain mode: `tools/makefiles/arm-none-eabi.mk`, where the arch flags come from `MULTILIB_FLAGS` and `MULTIDIR` (D16). The existing `armv6-m`/`armv7e-m`/`armv8-m.main` files become thin presets over it.
-- [ ] Map each multilib to an `arch/<arch>/src` code directory (e.g. the v7e-m soft-float multilib reuses the v7e-m code with the soft-float `fenv`). Multilibs outside the optimization matrix (if the list includes them) fall back to generic C, plus the minimal arch files they need (`setjmp`, `fenv`, crt).
+- [ ] Generic multilib toolchain mode: `tools/makefiles/arm-none-eabi.mk`, where the arch flags come from `MULTILIB_FLAGS` and `MULTIDIR` (D16). The existing `armv6-m`/`armv7e-m`/`armv7e-m-dp`/`armv8-m.main` files become thin presets over it.
+- [ ] Map each multilib to an `arch/<arch>/src` code directory (e.g. the v7e-m soft-float multilib reuses the v7e-m code with the soft-float `fenv`, and the `thumb/v7e-m+dp/hard` multilib maps to the `armv7e-m-dp` layers). Multilibs outside the optimization matrix (if the list includes them) fall back to generic C, plus the minimal arch files they need (`setjmp`, `fenv`, crt).
 - [ ] `install` target: headers to `${PREFIX}/include`; and `libc.a`, `libm.a`, `crt0.o`, `librtos-none.a`, `librtos-linux.a` and the `.specs` files to `${PREFIX}/lib/${MULTIDIR}`.
 - [ ] `install-headers` target (headers only, no compiler needed beyond the preprocessor).
 - [ ] Header audit for D15: one header set compiles and gives identical `sizeof`/`alignof` for every type across all multilib flag sets (an automated test).
