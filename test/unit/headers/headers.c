@@ -444,8 +444,10 @@ static void check(bool ok, const char *what)
 static int sum(...)
 {
 	va_list ap;
+
 	va_start(ap);
 	int total = 0;
+
 	for (int value = va_arg(ap, int); value != 0; value = va_arg(ap, int))
 		total += value;
 	va_end(ap);
@@ -456,9 +458,11 @@ static int sum(...)
 static long long sum_copy(int count, ...)
 {
 	va_list ap, copy;
+
 	va_start(ap, count);
 	va_copy(copy, ap);
 	long long total = 0;
+
 	for (int i = 0; i < count; ++i)
 		total += va_arg(ap, long long) + va_arg(copy, long long);
 	va_end(copy);

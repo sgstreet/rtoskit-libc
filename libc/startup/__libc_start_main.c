@@ -14,11 +14,7 @@
 #include <stdlib.h>
 #include <rtos/rtos-port.h>
 
-/* Constructor tables delimited by the linker (provided by the default GNU ld and lld scripts) */
-extern void (*const __preinit_array_start[])(void);
-extern void (*const __preinit_array_end[])(void);
-extern void (*const __init_array_start[])(void);
-extern void (*const __init_array_end[])(void);
+#include "internal/sections.h"
 
 static void run_array(void (*const *start)(void), void (*const *end)(void))
 {

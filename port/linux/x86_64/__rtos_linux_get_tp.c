@@ -17,6 +17,7 @@
 void *__rtos_linux_get_tp(void)
 {
 	void *tp;
+
 	__asm__ volatile("mov %%fs:0, %0" : "=r"(tp));
 	return tp;
 }

@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __rtos_none_h
-#define __rtos_none_h
+#ifndef _RTOS_NONE_H
+#define _RTOS_NONE_H
 
 #include <stddef.h>
 
@@ -23,4 +23,4 @@
  */
 void __rtos_none_output(const void *buffer, size_t count);
 
-#endif
+#endif /* _RTOS_NONE_H */

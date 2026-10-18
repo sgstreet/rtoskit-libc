@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __float_h
-#define __float_h
+#ifndef _FLOAT_H
+#define _FLOAT_H
 
 /* C23 7.7, 5.2.5.3.3 and 5.2.5.3.4, built from the compiler's predefined macros (PLAN D8) */
 #define __STDC_VERSION_FLOAT_H__ 202311L
@@ -76,4 +76,4 @@ int __flt_rounds(void);
 #define LDBL_IS_IEC_60559 __LDBL_IS_IEC_60559__
 #define LDBL_SNAN (__builtin_nansl(""))
 
-#endif
+#endif /* _FLOAT_H */

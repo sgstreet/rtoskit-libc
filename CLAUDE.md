@@ -95,14 +95,13 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
 - **One external function per `.c` file**, with the file named after the
   function (D6). Internal helpers shared between files go in
   `libc/internal/*.h` with `__libc_` names, declared `static inline` or hidden.
-- **Lowercase only (D25):** identifiers, macros, include guards and file names
-  are lowercase unless the standard requires otherwise (`_Exit`, `FILE`,
-  `EOF`, `INT32_MAX`, `EDOM` and additional `E*` errno macros, which C23 7.5p4
-  requires to start with `E` plus an uppercase letter). Compiler- and
-  toolchain-defined names (`__SIZE_TYPE__`, `.note.GNU-stack`) are exempt.
-  Prefer `static constexpr` constants to macros. Include guards are `__<name>_h`.
-  A file defining a standard function with uppercase letters gets a lowercase
-  file name (`_Exit` lives in `libc/stdlib/_exit.c`).
+- **Naming (D26, Linux kernel style as in pi-pico):** identifiers and file names
+  are `lower_case_with_underscores`; macros and enum constants are `ALL_CAPS`;
+  include guards are `#ifndef _NAME_H` / `#define _NAME_H` /
+  `#endif /* _NAME_H */`, with a leading underscore so public guards stay in the
+  reserved namespace. Names the standard fixes keep its spelling (`_Exit`,
+  `FILE`, `INT32_MAX`). A file defining a standard function with uppercase
+  letters gets a lowercase file name (`_Exit` lives in `libc/stdlib/_exit.c`).
 - **Reserved names only:** internal symbols use `__libc_*`, the seam uses
   `__rtos_*`, and arch/port header pieces are named `__arch_*.h` / `rtos-port-types.h`.
   No non-standard identifier may leak from public headers unless it is reserved
@@ -138,9 +137,24 @@ Any exception needs a PLAN.md decision entry.
 
 ### Style
 
-- Format with `tools/clang-format` (tabs, width 4, function braces on their own
-  line, `PointerAlignment: Right`). Check:
-  `clang-format --style=file:tools/clang-format --dry-run <files>`.
+- **Linux kernel coding style** (`Documentation/process/coding-style.rst`), as
+  pi-pico applies it:
+  - Long lines are allowed (`ColumnLimit: 0`).
+  - K&R braces, with function braces on their own line.
+  - `/* */` comments only; never `//`.
+  - No alignment padding (never align `=`, fields or trailing comments).
+  - `while (true)` for endless loops; never `for (;;)`.
+  - Name status-return variables `status`.
+  - No new typedefs except where the standard requires them.
+  - A blank line after declarations.
+  - No `extern` declarations in `.c` files; put them in a header.
+- **Formatting:** run `clang-format -i` (`.clang-format` → `tools/clang-format`)
+  on every C/H file you edit. It is authoritative for mechanical layout (tabs,
+  indented case labels, `while (true);`).
+- **Optional style check:** the kernel's `scripts/checkpatch.pl --no-tree --file
+  --max-line-length=255 --ignore SPDX_LICENSE_TAG`, kept outside the repo.
+  Findings that standard-mandated code causes are expected (the `<stdint.h>`
+  typedefs, `<iso646.h>`).
 - New files start with the MPL header from
   `tools/templates/mpl-c-code-header.txt`. Fill in `<filename>` and `<date>`;
   the author is Stephen Street.

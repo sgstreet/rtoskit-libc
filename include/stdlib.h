@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __stdlib_h
-#define __stdlib_h
+#ifndef _STDLIB_H
+#define _STDLIB_H
 
 /* C23 7.24 (partial: the remaining declarations arrive with P1.04 and P1.05) */
 #define __STDC_VERSION_STDLIB_H__ 202311L
@@ -30,4 +30,4 @@ typedef __WCHAR_TYPE__ wchar_t;
 [[noreturn]] void exit(int status);
 [[noreturn]] void _Exit(int status);
 
-#endif
+#endif /* _STDLIB_H */

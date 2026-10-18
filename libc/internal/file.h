@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __internal_file_h
-#define __internal_file_h
+#ifndef _INTERNAL_FILE_H
+#define _INTERNAL_FILE_H
 
 #include <stddef.h>
 #include <stdio.h>
@@ -24,4 +24,4 @@ struct __libc_file {
 
 size_t __libc_file_write(FILE *stream, const void *buffer, size_t count);
 
-#endif
+#endif /* _INTERNAL_FILE_H */

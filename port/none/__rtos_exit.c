@@ -16,6 +16,5 @@
 /* There is nothing to return to on bare metal; stop here */
 void __rtos_exit(int)
 {
-	for (;;) {
-	}
+	while (true);
 }

@@ -15,6 +15,5 @@
 
 void __rtos_abort(void)
 {
-	for (;;) {
-	}
+	while (true);
 }

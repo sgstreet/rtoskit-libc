@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __limits_h
-#define __limits_h
+#ifndef _LIMITS_H
+#define _LIMITS_H
 
 /* C23 7.10 and 5.2.5.3.2, built from the compiler's predefined macros (PLAN D8) */
 #define __STDC_VERSION_LIMITS_H__ 202311L
@@ -64,4 +64,4 @@
 #define LLONG_MAX __LONG_LONG_MAX__
 #define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
 
-#endif
+#endif /* _LIMITS_H */

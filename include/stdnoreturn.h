@@ -11,10 +11,10 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __stdnoreturn_h
-#define __stdnoreturn_h
+#ifndef _STDNORETURN_H
+#define _STDNORETURN_H
 
 /* C23 7.25: obsolescent, prefer the [[noreturn]] attribute */
 #define noreturn _Noreturn
 
-#endif
+#endif /* _STDNORETURN_H */

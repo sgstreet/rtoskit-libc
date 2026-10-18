@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __stdarg_h
-#define __stdarg_h
+#ifndef _STDARG_H
+#define _STDARG_H
 
 /* C23 7.16 */
 #define __STDC_VERSION_STDARG_H__ 202311L
@@ -25,4 +25,4 @@ typedef __builtin_va_list va_list;
 #define va_copy(dest, src) __builtin_va_copy(dest, src)
 #define va_end(ap) __builtin_va_end(ap)
 
-#endif
+#endif /* _STDARG_H */

@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __stdint_h
-#define __stdint_h
+#ifndef _STDINT_H
+#define _STDINT_H
 
 /*
  * C23 7.22. Every type and limit comes from the compiler's predefined macros,
@@ -166,4 +166,4 @@ typedef __UINTMAX_TYPE__ uintmax_t;
 #define INTMAX_C(value) __INTMAX_C(value)
 #define UINTMAX_C(value) __UINTMAX_C(value)
 
-#endif
+#endif /* _STDINT_H */

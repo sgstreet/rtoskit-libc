@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __errno_h
-#define __errno_h
+#ifndef _ERRNO_H
+#define _ERRNO_H
 
 /*
  * C23 7.5. The values follow the Linux numbering so the Linux test port can
@@ -29,4 +29,4 @@
 extern thread_local int errno;
 #define errno errno
 
-#endif
+#endif /* _ERRNO_H */

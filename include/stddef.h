@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __stddef_h
-#define __stddef_h
+#ifndef _STDDEF_H
+#define _STDDEF_H
 
 /* C23 7.21 */
 #define __STDC_VERSION_STDDEF_H__ 202311L
@@ -34,4 +34,4 @@ typedef struct {
 
 #define offsetof(type, member) __builtin_offsetof(type, member)
 
-#endif
+#endif /* _STDDEF_H */

@@ -24,6 +24,7 @@ size_t __libc_file_write(FILE *stream, const void *buffer, size_t count)
 
 	while (done < count) {
 		ptrdiff_t written = __rtos_write(stream->handle, next + done, count - done);
+
 		if (written < 0) {
 			errno = (int)-written;
 			break;

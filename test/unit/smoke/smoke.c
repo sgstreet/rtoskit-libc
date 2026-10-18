@@ -24,9 +24,7 @@
  */
 
 /* Linux port services used to build and switch to a second TLS block */
-extern struct __libc_tls_image __rtos_linux_tls_image;
-void __rtos_linux_set_tp(void *tp);
-void *__rtos_linux_get_tp(void);
+#include "rtos-linux.h"
 
 static thread_local int tdata_value = 42;
 static thread_local char tbss_buffer[64];
@@ -93,6 +91,7 @@ static bool equals(const char *a, const char *b)
 static int to_int(const char *s)
 {
 	int value = 0;
+
 	while (*s >= '0' && *s <= '9')
 		value = value * 10 + (*s++ - '0');
 	return value;
@@ -111,6 +110,7 @@ static void check_second_block(void)
 	static unsigned char block[4096];
 
 	size_t size = __libc_tls_block_size(&__rtos_linux_tls_image);
+
 	check(size <= sizeof(block), "TLS block fits the test buffer");
 	if (size > sizeof(block))
 		return;
@@ -121,6 +121,7 @@ static void check_second_block(void)
 	void *main_tp = __rtos_linux_get_tp();
 
 	void *tp = __libc_tls_init(block, &__rtos_linux_tls_image);
+
 	check((unsigned char *)tp >= block && (unsigned char *)tp < block + sizeof(block), "thread pointer inside the block");
 	__rtos_linux_set_tp(tp);
 

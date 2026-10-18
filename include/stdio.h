@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __stdio_h
-#define __stdio_h
+#ifndef _STDIO_H
+#define _STDIO_H
 
 /* C23 7.23 (partial: the streams are completed in P1.09) */
 #define __STDC_VERSION_STDIO_H__ 202311L
@@ -39,4 +39,4 @@ int puts(const char *s);
 /* Declared for the compiler's printf-to-puts folding; implemented in P1.09 */
 int printf(const char *restrict format, ...);
 
-#endif
+#endif /* _STDIO_H */

@@ -21,6 +21,8 @@ TARGET_OBJ_LIBS := port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_CROSS}
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
+CPPFLAGS += -I${PROJECT_ROOT}/port/${RTOS_PORT}
+
 all: ${CURDIR}/smoke.elf
 
 endif

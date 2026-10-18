@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __internal_tls_h
-#define __internal_tls_h
+#ifndef _INTERNAL_TLS_H
+#define _INTERNAL_TLS_H
 
 #include <stddef.h>
 #include <stdint.h>
@@ -42,6 +42,7 @@ static inline uintptr_t __libc_tls_align_up(uintptr_t value, size_t align)
 static inline size_t __libc_tls_variant2_offset(const struct __libc_tls_image *image)
 {
 	size_t align = __libc_tls_segment_align(image);
+
 	return image->size + ((-(uintptr_t)image->init - image->size) & (align - 1));
 }
 
@@ -53,6 +54,7 @@ static inline size_t __libc_tls_variant2_offset(const struct __libc_tls_image *i
 static inline size_t __libc_tls_variant1_offset(const struct __libc_tls_image *image, size_t tcb_size)
 {
 	size_t align = __libc_tls_segment_align(image);
+
 	return tcb_size + (((uintptr_t)image->init - tcb_size) & (align - 1));
 }
 
@@ -60,10 +62,11 @@ static inline size_t __libc_tls_variant1_offset(const struct __libc_tls_image *i
 static inline void __libc_tls_copy_image(unsigned char *data, const struct __libc_tls_image *image)
 {
 	const unsigned char *init = image->init;
+
 	for (size_t i = 0; i < image->init_size; ++i)
 		data[i] = init[i];
 	for (size_t i = image->init_size; i < image->size; ++i)
 		data[i] = 0;
 }
 
-#endif
+#endif /* _INTERNAL_TLS_H */

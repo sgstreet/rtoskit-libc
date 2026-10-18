@@ -11,10 +11,10 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __stdbool_h
-#define __stdbool_h
+#ifndef _STDBOOL_H
+#define _STDBOOL_H
 
 /* C23 7.19p1: bool, true and false are keywords; only the obsolescent macro remains */
 #define __bool_true_false_are_defined 1
 
-#endif
+#endif /* _STDBOOL_H */

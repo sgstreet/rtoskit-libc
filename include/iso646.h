@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __iso646_h
-#define __iso646_h
+#ifndef _ISO646_H
+#define _ISO646_H
 
 /* C23 7.9 */
 #define and &&
@@ -27,4 +27,4 @@
 #define xor ^
 #define xor_eq ^=
 
-#endif
+#endif /* _ISO646_H */

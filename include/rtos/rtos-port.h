@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __rtos_rtos_port_h
-#define __rtos_rtos_port_h
+#ifndef _RTOS_RTOS_PORT_H
+#define _RTOS_RTOS_PORT_H
 
 /*
  * The RTOS seam (PLAN D4, seam v0).
@@ -70,4 +70,4 @@ void *__libc_tls_init(void *block, const struct __libc_tls_image *image);
  */
 [[noreturn]] void __libc_start_main(int (*main)(int, char **), int argc, char **argv);
 
-#endif
+#endif /* _RTOS_RTOS_PORT_H */

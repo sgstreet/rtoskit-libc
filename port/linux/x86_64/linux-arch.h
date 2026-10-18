@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef __linux_arch_h
-#define __linux_arch_h
+#ifndef _LINUX_ARCH_H
+#define _LINUX_ARCH_H
 
 #include <stdint.h>
 
@@ -22,20 +22,21 @@
  * kernel clobbers rcx and r11. Errors are returned as -4095..-1.
  */
 
-static constexpr long __linux_sys_read = 0;
-static constexpr long __linux_sys_write = 1;
-static constexpr long __linux_sys_mmap = 9;
-static constexpr long __linux_sys_getpid = 39;
-static constexpr long __linux_sys_arch_prctl = 158;
-static constexpr long __linux_sys_gettid = 186;
-static constexpr long __linux_sys_exit_group = 231;
-static constexpr long __linux_sys_tgkill = 234;
+#define __LINUX_SYS_READ 0
+#define __LINUX_SYS_WRITE 1
+#define __LINUX_SYS_MMAP 9
+#define __LINUX_SYS_GETPID 39
+#define __LINUX_SYS_ARCH_PRCTL 158
+#define __LINUX_SYS_GETTID 186
+#define __LINUX_SYS_EXIT_GROUP 231
+#define __LINUX_SYS_TGKILL 234
 
-static constexpr long __linux_arch_set_fs = 0x1002;
+#define __LINUX_ARCH_SET_FS 0x1002
 
 static inline long __linux_syscall0(long number)
 {
 	long result;
+
 	__asm__ volatile("syscall" : "=a"(result) : "a"(number) : "rcx", "r11", "memory");
 	return result;
 }
@@ -43,6 +44,7 @@ static inline long __linux_syscall0(long number)
 static inline long __linux_syscall1(long number, long a)
 {
 	long result;
+
 	__asm__ volatile("syscall" : "=a"(result) : "a"(number), "D"(a) : "rcx", "r11", "memory");
 	return result;
 }
@@ -50,6 +52,7 @@ static inline long __linux_syscall1(long number, long a)
 static inline long __linux_syscall2(long number, long a, long b)
 {
 	long result;
+
 	__asm__ volatile("syscall" : "=a"(result) : "a"(number), "D"(a), "S"(b) : "rcx", "r11", "memory");
 	return result;
 }
@@ -57,6 +60,7 @@ static inline long __linux_syscall2(long number, long a, long b)
 static inline long __linux_syscall3(long number, long a, long b, long c)
 {
 	long result;
+
 	__asm__ volatile("syscall" : "=a"(result) : "a"(number), "D"(a), "S"(b), "d"(c) : "rcx", "r11", "memory");
 	return result;
 }
@@ -64,6 +68,7 @@ static inline long __linux_syscall3(long number, long a, long b, long c)
 static inline long __linux_syscall6(long number, long a, long b, long c, long d, long e, long f)
 {
 	long result;
+
 	register long r10 __asm__("r10") = d;
 	register long r8 __asm__("r8") = e;
 	register long r9 __asm__("r9") = f;
@@ -100,4 +105,4 @@ struct __linux_phdr {
 	uint64_t p_align;
 };
 
-#endif
+#endif /* _LINUX_ARCH_H */

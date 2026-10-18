@@ -18,5 +18,5 @@
 /* Linux error numbers match <errno.h> (PLAN D20), so results pass through */
 ptrdiff_t __rtos_read(int handle, void *buffer, size_t count)
 {
-	return __linux_syscall3(__linux_sys_read, handle, (long)buffer, (long)count);
+	return __linux_syscall3(__LINUX_SYS_READ, handle, (long)buffer, (long)count);
 }
