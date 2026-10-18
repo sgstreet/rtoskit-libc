@@ -21,7 +21,7 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 ---
 
 ## P2.01 — Measurement infrastructure
-- [ ] `tools/size-report` (a script like `tools/test-runner`): per-member `size`, `.su` stack data, and the reference program images, written as a committed JSON or Markdown baseline per arch (`docs/size/baseline-<arch>.json`).
+- [ ] `tools/size-report` (a script): per-member `size`, `.su` stack data, and the reference program images, written as a committed JSON or Markdown baseline per arch (`docs/size/baseline-<arch>.json`).
 - [ ] A diff tool that compares the current build against the baseline and highlights the biggest regressions.
 - [ ] Add `test/size/*` reference programs to the build.
 - [ ] Capture the Phase 1 baseline. Do a comparison run against picolibc and newlib-nano (the same reference programs) for context only.

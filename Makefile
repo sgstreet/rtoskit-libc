@@ -34,6 +34,12 @@ clean:
 	done
 .PHONY: clean
 
+check:
+	@for board in ${BOARDS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BOARD_TYPE=$$board check || exit $$?; \
+	done
+.PHONY: check
+
 else ifeq (${BUILD_TYPE},all)
 
 export INSTALL_ROOT := ${PREFIX}$(if ${BOARD_TYPE},/${BOARD_TYPE},)
@@ -50,6 +56,12 @@ clean:
 		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=$$build_type clean || exit $$?; \
 	done
 .PHONY: clean
+
+check:
+	@for build_type in ${BUILDS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=$$build_type check || exit $$?; \
+	done
+.PHONY: check
 
 else
 
@@ -68,12 +80,17 @@ include ${TOOLS_ROOT}/makefiles/tree.mk
 
 # Dependency ordering only active for full builds (all/clean/install)
 # Individual module targets (make libc, make test/unit/smoke) are dep-free
-ifneq ($(filter-out all target clean install,${MAKECMDGOALS}),)
+ifneq ($(filter-out all target clean install check,${MAKECMDGOALS}),)
 target:
 else
 example test: libc port
 target: example test
 endif
+
+# Build, then run every unit test; a test directory may provide <name>.run to drive its binary
+check: target
+	${PROJECT_ROOT}/test/unit/run-unit ${BUILD_ROOT}/test/unit
+.PHONY: check
 
 endif
 
@@ -107,6 +124,7 @@ help:
 	@echo "  all                    Build everything (full ordered build)"
 	@echo "  clean                  Clean all build artifacts"
 	@echo "  install                Install all build artifacts"
+	@echo "  check                  Build and run the tests"
 	@echo "  db                     Generate compilation database (bear)"
 	@echo "  setup                  Download and install host build tools"
 	@echo "  distclean              Delete all build artifacts and output directories"
@@ -117,9 +135,6 @@ help:
 	@echo "  <module>               Build a top-level module, e.g. libc, port, test"
 	@echo "  <module>/<submodule>   Build a nested module, e.g. libc/string, port/linux"
 	@echo "  test/unit/<name>       Build a single unit test, e.g. test/unit/smoke"
-	@echo ""
-	@echo "Running tests:"
-	@echo "  tools/test-runner build/linux-x86_64/debug/test/unit"
 	@echo ""
 	@echo "Configuration variables:"
 	@echo "  BOARD_TYPE=all         Which board(s): all (${BOARDS}), or a single board"

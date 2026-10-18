@@ -23,7 +23,7 @@ decision log D*, open questions Q*), then the active phase file
    standard text (`docs/standard/library-7.pdf`, `docs/standard/annex-b.pdf`; extract text with
    `pdftotext -layout`) and your own research notes.
 5. Implement, then build and validate on **every enabled arch** (see the phase
-   board): `make`, then `tools/test-runner` on the board's test directories.
+   board): `make` and `make check`.
 6. Update `test/libc-test/manifest.txt` and `test/libc-test/expected/<board>.txt`
    (improvements only; a PASS→FAIL is never accepted into the baseline).
 7. Tick the checkboxes, append any new decisions to the PLAN.md decision log
@@ -49,7 +49,8 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug test/unit/smoke
 make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug info
 make help | clean | distclean
 V=1 make ...                           # verbose
-tools/test-runner build/linux-x86_64/debug/test/unit     # run tests (an .elf or a directory)
+make check                             # build, then run the unit tests (+ libc-test from P1.02) for every board and build type
+make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
 ```
 
 - **Boards and toolchains:** `BOARD_TYPE` files (`tools/makefiles/linux-x86_64.mk`, ...)
@@ -145,9 +146,10 @@ Any exception needs a PLAN.md decision entry.
   at every step of every phase (PLAN §5). Run it natively on `linux-x86_64`
   through `port/linux`, and under `qemu-arm` (`TARGET_RUNNER`) for the ARM
   boards.
-- `tools/test-runner` runs test executables. A test passes when it exits with 0,
-  unless an executable `<name>.run` next to its source decides instead (see
-  `test/unit/smoke/smoke.run`).
+- `make check` builds, then runs every unit test through `test/unit/run-unit`. A
+  test passes when it exits with 0, unless an executable `<name>.run` next to
+  its source decides instead (see `test/unit/smoke/smoke.run`). `TARGET_RUNNER`
+  (e.g. qemu-arm) prefixes each execution.
 - `test/libc-test/manifest.txt` gives every libc-test file a status: `run`,
   `skip:<reason>` (out of scope: POSIX, wide chars, fork) or `pending:<step>`.
 - `test/libc-test/shim/` is test-only replacement code for libc-test's POSIX
@@ -175,7 +177,7 @@ port/<port>/       linux (test port), none (bare metal), rtoskit (future); port/
 test/              unit tests (test/unit/<name>/), libc-test glue, size, bench
 example/           examples
 toolchain/         Phase 4: crosstool-NG libc backend, multilib configs
-tools/             build system (makefiles, templates, scripts, test-runner)
+tools/             build system (makefiles, templates, scripts)
 docs/standard/     C23 standard text (N3220 clause 7, Annex B)
 docs/plan/         PLAN.md + phase task lists
 docs/research/     per-algorithm research notes
