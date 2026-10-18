@@ -11,15 +11,27 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
+#include <stdint.h>
 #include <string.h>
 
-/* C23 7.26.6.5 */
+#include "internal/word.h"
+
+/* C23 7.26.6.4 */
 size_t strlen(const char *s)
 {
-	const char *end = s;
+	const char *p = s;
 
-	while (*end)
-		++end;
+	while (!__libc_word_aligned(p)) {
+		if (*p == '\0')
+			return p - s;
+		++p;
+	}
 
-	return end - s;
+	while (!__libc_word_has_zero(__libc_word_load(p)))
+		p += __LIBC_WORD_SIZE;
+
+	while (*p != '\0')
+		++p;
+
+	return p - s;
 }

@@ -1,3 +1,4 @@
+api/assert PASS
 api/errno PASS
 api/float PASS
 api/iso646 PASS
@@ -5,5 +6,10 @@ api/stdarg PASS
 api/stdbool PASS
 api/stddef PASS
 api/stdint PASS
+functional/string_memcpy PASS
+functional/string_memset PASS
+functional/string_strchr PASS
+functional/string_strcspn PASS
+functional/string_strstr PASS
 functional/udiv PASS
 regression/printf-fmt-n PASS

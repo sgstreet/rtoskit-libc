@@ -22,6 +22,9 @@ TARGET_OBJ_LIBS := port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_CROSS}
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
+# Exercise the library, not the compiler's built-in versions of the functions
+CFLAGS += -fno-builtin
+
 all: ${CURDIR}/headers.elf
 
 endif

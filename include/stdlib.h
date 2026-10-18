@@ -30,4 +30,6 @@ typedef __WCHAR_TYPE__ wchar_t;
 [[noreturn]] void exit(int status);
 [[noreturn]] void _Exit(int status);
 
+size_t memalignment(const void *p);
+
 #endif /* _STDLIB_H */

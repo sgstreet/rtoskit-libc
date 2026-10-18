@@ -13,10 +13,10 @@
 # api/* tests are header tests: they pass when they compile (-pedantic-errors) and link.
 api/aio skip:posix
 api/arpa_inet skip:posix
-api/assert pending:P1.03
+api/assert run
 api/complex pending:P1.16
 api/cpio skip:posix
-api/ctype pending:P1.03
+api/ctype skip:posix # requires the XSI isascii/toascii unconditionally
 api/dirent skip:posix
 api/dlfcn skip:posix
 api/errno run
@@ -61,7 +61,7 @@ api/stddef run
 api/stdint run
 api/stdio pending:P1.09
 api/stdlib pending:P1.05
-api/string pending:P1.03
+api/string skip:posix # requires strsignal unconditionally
 api/strings skip:posix
 api/sys_ipc skip:posix
 api/sys_mman skip:posix
@@ -136,13 +136,13 @@ functional/sscanf pending:P1.10
 functional/sscanf_long skip:posix # setrlimit
 functional/stat skip:posix
 functional/strftime pending:P1.11 # calls setenv("TZ")
-functional/string pending:P1.03
-functional/string_memcpy pending:P1.03
+functional/string skip:posix # BSD strlcpy/strlcat used unconditionally
+functional/string_memcpy run
 functional/string_memmem skip:posix
-functional/string_memset pending:P1.03
-functional/string_strchr pending:P1.03
-functional/string_strcspn pending:P1.03
-functional/string_strstr pending:P1.03
+functional/string_memset run
+functional/string_strchr run
+functional/string_strcspn run
+functional/string_strstr run
 functional/strptime skip:posix
 functional/strtod pending:P1.07
 functional/strtod_long pending:P1.07
