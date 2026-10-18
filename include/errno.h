@@ -24,6 +24,8 @@
 
 /* Additional error numbers (C23 7.5p4) */
 #define EBADF 9
+#define EINVAL 22
+#define EOVERFLOW 75
 
 /* C23 7.5p2: a modifiable lvalue of type int with thread storage duration */
 extern thread_local int errno;

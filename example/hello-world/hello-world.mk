@@ -16,6 +16,7 @@ include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
 EXTRA_DEPS := ${SOURCE_DIR}/hello-world.mk
+EXTRA_ELF_DEPS := ${BUILD_ROOT}/libc/libc.a
 
 TARGET_OBJ_LIBS := port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_CROSS}
 

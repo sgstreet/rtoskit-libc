@@ -1,0 +1,437 @@
+# libc-test manifest: one line per test source in third-party/libc-test/src
+#
+# <suite>/<name> <status> [# note]
+#
+# status:
+#   run             built and run by make check; the outcome is compared with expected/<board>.txt
+#   pending:<step>  in scope, enabled by the named step of docs/plan/phase-1.md
+#   skip:posix      out of scope (PLAN.md section 1): POSIX, BSD or GNU interfaces
+#   skip:wide       out of scope: wide-character and multibyte interfaces
+#   skip:dso        out of scope: shared objects and dlopen (static embedded images only)
+#   harness         support code linked with other tests, not a test itself
+#
+# api/* tests are header tests: they pass when they compile (-pedantic-errors) and link.
+api/aio skip:posix
+api/arpa_inet skip:posix
+api/assert pending:P1.03
+api/complex pending:P1.16
+api/cpio skip:posix
+api/ctype pending:P1.03
+api/dirent skip:posix
+api/dlfcn skip:posix
+api/errno run
+api/fcntl skip:posix
+api/fenv pending:P1.13
+api/float run
+api/fmtmsg skip:posix
+api/fnmatch skip:posix
+api/ftw skip:posix
+api/glob skip:posix
+api/grp skip:posix
+api/iconv skip:posix
+api/inttypes pending:P1.05
+api/iso646 run
+api/langinfo skip:posix
+api/libgen skip:posix
+api/limits skip:posix # checks POSIX limits unconditionally; the ISO limits are in test/unit/headers
+api/locale pending:P1.11
+api/main harness # main() linked with every api test
+api/math pending:P1.13
+api/monetary skip:posix
+api/mqueue skip:posix
+api/ndbm skip:posix
+api/net_if skip:posix
+api/netdb skip:posix
+api/netinet_in skip:posix
+api/netinet_tcp skip:posix
+api/nl_types skip:posix
+api/poll skip:posix
+api/pthread skip:posix
+api/pwd skip:posix
+api/regex skip:posix
+api/sched skip:posix
+api/search skip:posix
+api/semaphore skip:posix
+api/setjmp pending:P1.05
+api/signal pending:P1.05
+api/spawn skip:posix
+api/stdarg run
+api/stdbool run
+api/stddef run
+api/stdint run
+api/stdio pending:P1.09
+api/stdlib pending:P1.05
+api/string pending:P1.03
+api/strings skip:posix
+api/sys_ipc skip:posix
+api/sys_mman skip:posix
+api/sys_msg skip:posix
+api/sys_resource skip:posix
+api/sys_select skip:posix
+api/sys_sem skip:posix
+api/sys_shm skip:posix
+api/sys_socket skip:posix
+api/sys_stat skip:posix
+api/sys_statvfs skip:posix
+api/sys_time skip:posix
+api/sys_times skip:posix
+api/sys_types skip:posix
+api/sys_uio skip:posix
+api/sys_un skip:posix
+api/sys_utsname skip:posix
+api/sys_wait skip:posix
+api/syslog skip:posix
+api/tar skip:posix
+api/termios skip:posix
+api/tgmath pending:P1.16
+api/time pending:P1.11
+api/unistd skip:posix
+api/utmpx skip:posix
+api/wchar skip:wide
+api/wctype skip:wide
+api/wordexp skip:posix
+functional/argv skip:posix # PATH_MAX
+functional/basename skip:posix
+functional/clocale_mbfuncs skip:wide
+functional/clock_gettime skip:posix
+functional/crypt skip:posix
+functional/dirname skip:posix
+functional/dlopen skip:dso
+functional/dlopen_dso skip:dso
+functional/env skip:posix # setenv/unsetenv
+functional/fcntl skip:posix
+functional/fdopen skip:posix
+functional/fnmatch skip:posix
+functional/fscanf skip:posix # pipe()
+functional/fwscanf skip:wide
+functional/iconv_open skip:posix
+functional/inet_pton skip:posix
+functional/ipc_msg skip:posix
+functional/ipc_sem skip:posix
+functional/ipc_shm skip:posix
+functional/mbc skip:wide
+functional/memstream skip:posix
+functional/mntent skip:posix
+functional/popen skip:posix
+functional/pthread_cancel skip:posix
+functional/pthread_cancel-points skip:posix
+functional/pthread_cond skip:posix
+functional/pthread_mutex skip:posix
+functional/pthread_mutex_pi skip:posix
+functional/pthread_robust skip:posix
+functional/pthread_tsd skip:posix
+functional/qsort pending:P1.05 # needs the t_rand* shim (common/rand.c)
+functional/random skip:posix
+functional/search_hsearch skip:posix
+functional/search_insque skip:posix
+functional/search_lsearch skip:posix
+functional/search_tsearch skip:posix
+functional/sem_init skip:posix
+functional/sem_open skip:posix
+functional/setjmp skip:posix # sigsetjmp/sigprocmask; setjmp is unit-tested (P1.05)
+functional/snprintf pending:P1.08
+functional/socket skip:posix
+functional/spawn skip:posix
+functional/sscanf pending:P1.10
+functional/sscanf_long skip:posix # setrlimit
+functional/stat skip:posix
+functional/strftime pending:P1.11 # calls setenv("TZ")
+functional/string pending:P1.03
+functional/string_memcpy pending:P1.03
+functional/string_memmem skip:posix
+functional/string_memset pending:P1.03
+functional/string_strchr pending:P1.03
+functional/string_strcspn pending:P1.03
+functional/string_strstr pending:P1.03
+functional/strptime skip:posix
+functional/strtod pending:P1.07
+functional/strtod_long pending:P1.07
+functional/strtod_simple pending:P1.07
+functional/strtof pending:P1.07
+functional/strtol pending:P1.05
+functional/strtold pending:P1.07
+functional/swprintf skip:wide
+functional/tgmath pending:P1.16
+functional/time pending:P1.11 # calls putenv("TZ")
+functional/tls_align skip:dso
+functional/tls_align_dlopen skip:dso
+functional/tls_align_dso skip:dso
+functional/tls_init skip:posix # pthread; thread TLS is unit-tested (P1.12)
+functional/tls_init_dlopen skip:dso
+functional/tls_init_dso skip:dso
+functional/tls_local_exec skip:posix # pthread; thread TLS is unit-tested (P1.12)
+functional/udiv run
+functional/ungetc pending:P1.09 # includes <unistd.h>
+functional/utime skip:posix
+functional/vfork skip:posix
+functional/wcsstr skip:wide
+functional/wcstol skip:wide
+functional/wordexp skip:posix
+math/acos pending:P1.15
+math/acosf pending:P1.15
+math/acosh pending:P1.15
+math/acoshf pending:P1.15
+math/acoshl pending:P1.15
+math/acosl pending:P1.15
+math/asin pending:P1.15
+math/asinf pending:P1.15
+math/asinh pending:P1.15
+math/asinhf pending:P1.15
+math/asinhl pending:P1.15
+math/asinl pending:P1.15
+math/atan pending:P1.15
+math/atan2 pending:P1.15
+math/atan2f pending:P1.15
+math/atan2l pending:P1.15
+math/atanf pending:P1.15
+math/atanh pending:P1.15
+math/atanhf pending:P1.15
+math/atanhl pending:P1.15
+math/atanl pending:P1.15
+math/cbrt pending:P1.14
+math/cbrtf pending:P1.14
+math/cbrtl pending:P1.14
+math/ceil pending:P1.13
+math/ceilf pending:P1.13
+math/ceill pending:P1.13
+math/copysign pending:P1.13
+math/copysignf pending:P1.13
+math/copysignl pending:P1.13
+math/cos pending:P1.15
+math/cosf pending:P1.15
+math/cosh pending:P1.15
+math/coshf pending:P1.15
+math/coshl pending:P1.15
+math/cosl pending:P1.15
+math/drem skip:posix # BSD drem
+math/dremf skip:posix # BSD drem
+math/erf pending:P1.16
+math/erfc pending:P1.16
+math/erfcf pending:P1.16
+math/erfcl pending:P1.16
+math/erff pending:P1.16
+math/erfl pending:P1.16
+math/exp pending:P1.14
+math/exp10 pending:P1.14
+math/exp10f pending:P1.14
+math/exp10l pending:P1.14
+math/exp2 pending:P1.14
+math/exp2f pending:P1.14
+math/exp2l pending:P1.14
+math/expf pending:P1.14
+math/expl pending:P1.14
+math/expm1 pending:P1.14
+math/expm1f pending:P1.14
+math/expm1l pending:P1.14
+math/fabs pending:P1.13
+math/fabsf pending:P1.13
+math/fabsl pending:P1.13
+math/fdim pending:P1.13
+math/fdimf pending:P1.13
+math/fdiml pending:P1.13
+math/fenv pending:P1.13
+math/floor pending:P1.13
+math/floorf pending:P1.13
+math/floorl pending:P1.13
+math/fma pending:P1.13
+math/fmaf pending:P1.13
+math/fmal pending:P1.13
+math/fmax pending:P1.13
+math/fmaxf pending:P1.13
+math/fmaxl pending:P1.13
+math/fmin pending:P1.13
+math/fminf pending:P1.13
+math/fminl pending:P1.13
+math/fmod pending:P1.13
+math/fmodf pending:P1.13
+math/fmodl pending:P1.13
+math/fpclassify pending:P1.13
+math/frexp pending:P1.13
+math/frexpf pending:P1.13
+math/frexpl pending:P1.13
+math/hypot pending:P1.14
+math/hypotf pending:P1.14
+math/hypotl pending:P1.14
+math/ilogb pending:P1.13
+math/ilogbf pending:P1.13
+math/ilogbl pending:P1.13
+math/isless pending:P1.13
+math/j0 skip:posix # XSI Bessel functions
+math/j0f skip:posix # XSI Bessel functions
+math/j1 skip:posix # XSI Bessel functions
+math/j1f skip:posix # XSI Bessel functions
+math/jn skip:posix # XSI Bessel functions
+math/jnf skip:posix # XSI Bessel functions
+math/ldexp pending:P1.13
+math/ldexpf pending:P1.13
+math/ldexpl pending:P1.13
+math/lgamma pending:P1.16
+math/lgamma_r skip:posix # reentrant lgamma
+math/lgammaf pending:P1.16
+math/lgammaf_r skip:posix # reentrant lgamma
+math/lgammal pending:P1.16
+math/lgammal_r skip:posix # reentrant lgamma
+math/llrint pending:P1.13
+math/llrintf pending:P1.13
+math/llrintl pending:P1.13
+math/llround pending:P1.13
+math/llroundf pending:P1.13
+math/llroundl pending:P1.13
+math/log pending:P1.14
+math/log10 pending:P1.14
+math/log10f pending:P1.14
+math/log10l pending:P1.14
+math/log1p pending:P1.14
+math/log1pf pending:P1.14
+math/log1pl pending:P1.14
+math/log2 pending:P1.14
+math/log2f pending:P1.14
+math/log2l pending:P1.14
+math/logb pending:P1.13
+math/logbf pending:P1.13
+math/logbl pending:P1.13
+math/logf pending:P1.14
+math/logl pending:P1.14
+math/lrint pending:P1.13
+math/lrintf pending:P1.13
+math/lrintl pending:P1.13
+math/lround pending:P1.13
+math/lroundf pending:P1.13
+math/lroundl pending:P1.13
+math/modf pending:P1.13
+math/modff pending:P1.13
+math/modfl pending:P1.13
+math/nearbyint pending:P1.13
+math/nearbyintf pending:P1.13
+math/nearbyintl pending:P1.13
+math/nextafter pending:P1.13
+math/nextafterf pending:P1.13
+math/nextafterl pending:P1.13
+math/nexttoward pending:P1.13
+math/nexttowardf pending:P1.13
+math/nexttowardl pending:P1.13
+math/pow pending:P1.14
+math/pow10 skip:posix # GNU extension
+math/pow10f skip:posix # GNU extension
+math/pow10l skip:posix # GNU extension
+math/powf pending:P1.14
+math/powl pending:P1.14
+math/remainder pending:P1.13
+math/remainderf pending:P1.13
+math/remainderl pending:P1.13
+math/remquo pending:P1.13
+math/remquof pending:P1.13
+math/remquol pending:P1.13
+math/rint pending:P1.13
+math/rintf pending:P1.13
+math/rintl pending:P1.13
+math/round pending:P1.13
+math/roundf pending:P1.13
+math/roundl pending:P1.13
+math/scalb skip:posix # obsolete XSI scalb
+math/scalbf skip:posix # obsolete XSI scalb
+math/scalbln pending:P1.13
+math/scalblnf pending:P1.13
+math/scalblnl pending:P1.13
+math/scalbn pending:P1.13
+math/scalbnf pending:P1.13
+math/scalbnl pending:P1.13
+math/sin pending:P1.15
+math/sincos skip:posix # GNU extension
+math/sincosf skip:posix # GNU extension
+math/sincosl skip:posix # GNU extension
+math/sinf pending:P1.15
+math/sinh pending:P1.15
+math/sinhf pending:P1.15
+math/sinhl pending:P1.15
+math/sinl pending:P1.15
+math/sqrt pending:P1.14
+math/sqrtf pending:P1.14
+math/sqrtl pending:P1.14
+math/tan pending:P1.15
+math/tanf pending:P1.15
+math/tanh pending:P1.15
+math/tanhf pending:P1.15
+math/tanhl pending:P1.15
+math/tanl pending:P1.15
+math/tgamma pending:P1.16
+math/tgammaf pending:P1.16
+math/tgammal pending:P1.16
+math/trunc pending:P1.13
+math/truncf pending:P1.13
+math/truncl pending:P1.13
+math/y0 skip:posix # XSI Bessel functions
+math/y0f skip:posix # XSI Bessel functions
+math/y1 skip:posix # XSI Bessel functions
+math/y1f skip:posix # XSI Bessel functions
+math/yn skip:posix # XSI Bessel functions
+math/ynf skip:posix # XSI Bessel functions
+regression/daemon-failure skip:posix
+regression/dn_expand-empty skip:posix
+regression/dn_expand-ptr-0 skip:posix
+regression/execle-env skip:posix
+regression/fflush-exit skip:posix # fork
+regression/fgets-eof skip:posix # fmemopen
+regression/fgetwc-buffering skip:wide
+regression/flockfile-list skip:posix
+regression/fpclassify-invalid-ld80 pending:P1.13
+regression/ftello-unflushed-append skip:posix
+regression/getpwnam_r-crash skip:posix
+regression/getpwnam_r-errno skip:posix
+regression/iconv-roundtrips skip:posix
+regression/inet_ntop-v4mapped skip:posix
+regression/inet_pton-empty-last-field skip:posix
+regression/iswspace-null skip:wide
+regression/lrand48-signextend skip:posix
+regression/lseek-large skip:posix
+regression/malloc-0 pending:P1.04
+regression/malloc-brk-fail skip:posix
+regression/malloc-oom pending:P1.04 # t_memfill needs an mmap-free shim
+regression/mbsrtowcs-overflow skip:wide
+regression/memmem-oob skip:posix
+regression/memmem-oob-read skip:posix
+regression/mkdtemp-failure skip:posix
+regression/mkstemp-failure skip:posix
+regression/printf-1e9-oob pending:P1.08
+regression/printf-fmt-g-round pending:P1.08
+regression/printf-fmt-g-zeros pending:P1.08
+regression/printf-fmt-n run
+regression/pthread-robust-detach skip:posix
+regression/pthread_atfork-errno-clobber skip:posix
+regression/pthread_cancel-sem_wait skip:posix
+regression/pthread_cond-smasher skip:posix
+regression/pthread_cond_wait-cancel_ignored skip:posix
+regression/pthread_condattr_setclock skip:posix
+regression/pthread_create-oom skip:posix
+regression/pthread_exit-cancel skip:posix
+regression/pthread_exit-dtor skip:posix
+regression/pthread_once-deadlock skip:posix
+regression/pthread_rwlock-ebusy skip:posix
+regression/putenv-doublefree skip:posix
+regression/raise-race skip:posix
+regression/regex-backref-0 skip:posix
+regression/regex-bracket-icase skip:posix
+regression/regex-ere-backref skip:posix
+regression/regex-escaped-high-byte skip:posix
+regression/regex-negated-range skip:posix
+regression/regexec-nosub skip:posix
+regression/rewind-clear-error skip:posix # dup()
+regression/rlimit-open-files skip:posix
+regression/scanf-bytes-consumed pending:P1.10
+regression/scanf-match-literal-eof pending:P1.10
+regression/scanf-nullbyte-char pending:P1.10
+regression/sem_close-unmap skip:posix
+regression/setenv-oom skip:posix
+regression/setvbuf-unget pending:P1.09
+regression/sigaltstack skip:posix
+regression/sigprocmask-internal skip:posix
+regression/sigreturn skip:posix
+regression/sscanf-eof pending:P1.10
+regression/statvfs skip:posix
+regression/strverscmp skip:posix
+regression/syscall-sign-extend skip:posix
+regression/tls_get_new-dtv skip:dso
+regression/tls_get_new-dtv_dso skip:dso
+regression/uselocale-0 skip:posix
+regression/wcsncpy-read-overflow skip:wide
+regression/wcsstr-false-negative skip:wide

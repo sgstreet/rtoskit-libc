@@ -39,15 +39,15 @@ Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-armv6
 - Follow-ups recorded for later steps: libc must provide `stdc-predef.h` (or an equivalent) for `__STDC_IEC_60559_BFP__` and the other Annex F/G macros, which GCC normally takes from glibc (P1.13/P1.17); and a TLS test with `p_vaddr % p_align != 0` (P1.12).
 - **DoD extra:** `example/hello-world` links against our libc only (`-nostdlib`) and runs, using a temporary `fputs` → `__rtos_write` path.
 
-## P1.02 — libc-test harness and formatted-output core
+## P1.02 — libc-test harness and formatted-output core  `[x]`
 - [x] Fetch the `third-party/libc-test` submodule at its pinned commit (Q2 resolved; run `git submodule update --init`). Rough survey: `src/functional` 85 files, `src/regression` 72, `src/math` 206 (tests and data tables), `src/api` 80 (POSIX-heavy, so curate the ISO subset), `src/common` 14. About 55 of the 146 functional+regression tests include POSIX headers or use pthread/fork.
-- [ ] Survey libc-test (`src/functional`, `src/regression`, `src/math`, `src/api`, `src/common`) and write `test/libc-test/manifest.txt` with a `run`/`skip:`/`pending:` status for every test.
-- [ ] `test/libc-test/shim/`: ISO/port replacements for libc-test's `src/common` pieces (`t_printf`, `t_error`, `t_status`, and the runtest equivalent without fork).
-- [ ] Build glue: one ELF per test through the tools build system (`test/libc-test/libc-test.mk` + `subdir.mk`), compiled with our headers only.
-- [ ] Runner `test/libc-test/run`: per-test timeout, qemu wrapper hook for cross arches, and a `results.txt` writer.
-- [ ] `make check`: also run the libc-test binaries and diff against `test/libc-test/expected/<board>.txt` (fail on regressions; print improvements).
-- [ ] Research `printf` engine designs (musl, picolibc tinystdio, newlib nano, mpaland/eyalroz printf, Linux `vsprintf`). Implement the format parser plus the integer, char, string, pointer and `%n` conversions; `snprintf`/`vsnprintf`/`sprintf`/`vsprintf`; and the C23 `%b`, `%wN` and `%wfN` length modifiers. Floating point is deferred to P1.08.
-- **DoD extra:** the baseline is committed. Running the harness twice gives identical results.
+- [x] Survey libc-test (`src/functional`, `src/regression`, `src/math`, `src/api`, `src/common`) and write `test/libc-test/manifest.txt` with a `run`/`skip:`/`pending:` status for every test. *424 sources: 9 run, 218 pending, 196 skip, 1 harness (`api/main`). `api/limits` is skipped because it checks POSIX limits unconditionally.*
+- [x] `test/libc-test/shim/`: ISO/port replacements for libc-test's `src/common` pieces (`t_printf`, `t_error`, `t_status`, and the runtest equivalent without fork). *`shim/include/test.h` replaces `test.h` (no `<unistd.h>`), `shim/include/options.h` is empty, `t_printf` writes through `__rtos_write`; the timeout lives in the runner (D27). Later shim work: `t_rand*` (compile `common/rand.c`) for `functional/qsort` in P1.05, an mmap-free `t_memfill` for `regression/malloc-oom` in P1.04, `mtest.c` for the math suite in P1.13.*
+- [x] Build glue: one ELF per test through the tools build system (`test/libc-test/libc-test.mk` + `subdir.mk`), compiled with our headers only. *Done as suite modules `test/libc-test/{api,functional,math,regression}` sharing `tools/makefiles/libc-test.mk` (D27); no `subdir.mk` was needed.*
+- [x] Runner `test/libc-test/run`: per-test timeout, qemu wrapper hook for cross arches, and a `results.txt` writer. *`LIBC_TEST_TIMEOUT` (default 10 s) and `TARGET_RUNNER`.*
+- [x] `make check`: also run the libc-test binaries and diff against `test/libc-test/expected/<board>.txt` (fail on regressions; print improvements). *Unrecorded failures also fail; `make check LIBC_TEST_UPDATE=1` records improvements and refuses when anything regressed.*
+- [x] Research `printf` engine designs (musl, picolibc tinystdio, newlib nano, mpaland/eyalroz printf, Linux `vsprintf`). Implement the format parser plus the integer, char, string, pointer and `%n` conversions; `snprintf`/`vsnprintf`/`sprintf`/`vsprintf`; and the C23 `%b`, `%wN` and `%wfN` length modifiers. Floating point is deferred to P1.08. *`docs/research/printf-engine.md` (newlib nano not reviewed); engine `libc/stdio/__libc_format.c` (D28), also `%B`; `test/unit/printf` covers the research vectors. Executables now relink when `libc.a` changes.*
+- **DoD extra:** the baseline is committed. Running the harness twice gives identical results. *Verified: identical `results.txt` across two runs and across debug/release.*
 
 ## P1.03 — `<string.h>`, `<ctype.h>`, `<assert.h>`, `<stdbit.h>`, `<stdckdint.h>`
 - [ ] Research generic word-at-a-time string algorithms (with aliasing-safe access in C23) and the known edge cases.
@@ -91,7 +91,7 @@ Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-armv6
 - [ ] Research shortest and fixed-precision binary-to-decimal conversion (Ryu and Ryu-printf, Grisu, Dragonbox, Steele–White/Dragon4, musl's big-integer approach, picolibc's dtoa). Think about table size versus speed now, because Phase 2 cares about it.
 - [ ] `%e`/`%E`, `%f`/`%F`, `%g`/`%G`, `%a`/`%A`; precision and flags; `inf`/`nan`; rounding modes.
 - [ ] `strfromd`, `strfromf`, `strfroml`.
-- [ ] Wire the float conversion in through a single internal symbol, so P2's no-float variant (D13) can replace it.
+- [ ] Wire the float conversion in through a single internal symbol, so P2's no-float variant (D13) can replace it. *P1.02 already calls `__libc_format_float()` (`libc/internal/format.h`); replace its stub in `libc/stdio/__libc_format_float.c`.*
 
 ## P1.09 — `<stdio.h>` streams
 - [ ] Research `FILE` designs (musl, picolibc tinystdio, newlib, BSD stdio) with RAM per stream as the main concern.

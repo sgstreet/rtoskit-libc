@@ -74,8 +74,9 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
   `all: ${CURDIR}/libX.a` (`libc/libc.mk`, `port/linux/linux.mk`). Register
   every new libc module or variant in `libc/libc.mk`.
 - **Executables:** list what they link in `TARGET_OBJ_LIBS`, e.g.
-  `port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_CROSS}`, then add
-  `all: ${CURDIR}/<name>.elf`.
+  `port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_CROSS}`, set
+  `EXTRA_ELF_DEPS := ${BUILD_ROOT}/libc/libc.a` so the executable relinks when
+  the library changes, then add `all: ${CURDIR}/<name>.elf`.
 - **Module order:** set in the top-level `Makefile` (`example test: libc port`).
 - **Extending the build system:** add board and toolchain files under
   `tools/makefiles/`. Do not restructure the existing tools makefiles.
@@ -175,6 +176,13 @@ Any exception needs a PLAN.md decision entry.
   (e.g. qemu-arm) prefixes each execution.
 - `test/libc-test/manifest.txt` gives every libc-test file a status: `run`,
   `skip:<reason>` (out of scope: POSIX, wide chars, fork) or `pending:<step>`.
+  Flipping a test to `run` is all it takes to build it: the suite modules
+  `test/libc-test/{api,functional,math,regression}` build one ELF per `run`
+  test through `tools/makefiles/libc-test.mk` (D27).
+- `make check` compares the libc-test results with
+  `test/libc-test/expected/<board>.txt` and fails on PASS→FAIL and on failures
+  missing from the baseline. Record improvements with
+  `make check LIBC_TEST_UPDATE=1` (it refuses while anything regressed).
 - `test/libc-test/shim/` is test-only replacement code for libc-test's POSIX
   helpers. It is never part of `libc.a`.
 - `test/unit/` holds our own tests for everything libc-test misses (the C23
