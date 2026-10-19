@@ -20,10 +20,11 @@
 #include "generic.h"
 
 /*
- * The FPU-layer functions (D46: VRINT*, VMAXNM/VMINNM, VFMA, VABS on
- * fpv5-sp/fpv5-dp, VFMA and VABS on fpv4-sp) against the generic C
- * versions: the same result bits (any NaN for a NaN) and the same exception
- * flags, in every rounding direction the core supports. Floats are sampled
+ * The FPU-layer functions (D46: VRINT*, VMAXNM/VMINNM, VFMA, VABS, VSQRT on
+ * fpv5-sp/fpv5-dp, VFMA, VABS and VSQRT on fpv4-sp, SQRTSD/SQRTSS on x86_64)
+ * against the generic C versions: the same result bits (any NaN for a NaN)
+ * and the same exception flags, in every rounding direction the core
+ * supports. Floats are sampled
  * through the whole encoding space with a prime stride, doubles at random,
  * both with the special and halfway values added.
  */
@@ -94,6 +95,7 @@ static const struct {
 	{ "ceilf", ceilf, generic_ceilf },
 	{ "roundf", roundf, generic_roundf },
 	{ "roundevenf", roundevenf, generic_roundevenf },
+	{ "sqrtf", sqrtf, generic_sqrtf },
 };
 
 static const struct {
@@ -109,6 +111,7 @@ static const struct {
 	{ "ceil", ceil, generic_ceil },
 	{ "round", round, generic_round },
 	{ "roundeven", roundeven, generic_roundeven },
+	{ "sqrt", sqrt, generic_sqrt },
 };
 
 /* Run f in a direction; the flags it raised */

@@ -1,0 +1,37 @@
+/*
+ * Copyright (C) 2026 Red Rocket Computing, LLC
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * log1p.c
+ *
+ * Created on: Oct 19, 2026
+ *     Author: Stephen Street (stephen@redrocketcomputing.com)
+ */
+
+#include <math.h>
+#include <stdint.h>
+
+#include "internal/math.h"
+
+/* C23 7.12.6.14: log1p(-1) is -infinity (divide-by-zero), below -1 a domain error */
+double log1p(double x)
+{
+	struct __libc_dd log;
+
+	if (isnan(x))
+		return x + x;
+	if (x == -1.0)
+		return __libc_math_divbyzero(-1.0);
+	if (x < -1.0)
+		return __libc_math_invalid();
+	if (isinf(x))
+		return x;
+	if (fabs(x) < 0x1p-60)
+		return __libc_math_tiny(x, -1.0);
+
+	log = __libc_log1p_core(x);
+	return log.hi + log.lo;
+}

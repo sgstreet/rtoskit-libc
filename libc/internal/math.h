@@ -14,6 +14,7 @@
 #ifndef _INTERNAL_MATH_H
 #define _INTERNAL_MATH_H
 
+#include <fenv.h>
 #include <float.h>
 #include <math.h>
 #include <stdint.h>
@@ -224,6 +225,170 @@ static inline uint64_t __libc_isqrt(uint64_t high, uint64_t low, int digits, boo
 
 	*inexact = remainder != 0;
 	return root;
+}
+
+/*
+ * Double-double arithmetic for the exponential and logarithm cores
+ * (docs/research/libm-exp-log.md): a value hi + lo with |lo| at most half an
+ * ulp of hi. The error-free transformations are exact only when rounding to
+ * nearest, so the cores select that direction (__libc_math_nearest, D47).
+ * Products split their factors (Veltkamp), so they need no fma; the factors
+ * must stay below 2^995.
+ */
+struct __libc_dd {
+	double hi;
+	double lo;
+};
+
+/* a + b exactly, for any a and b */
+static inline struct __libc_dd __libc_dd_sum(double a, double b)
+{
+	double sum = a + b;
+	double bb = sum - a;
+
+	return (struct __libc_dd){ .hi = sum, .lo = (a - (sum - bb)) + (b - bb) };
+}
+
+/* a + b exactly, when |a| >= |b| (or a is zero) */
+static inline struct __libc_dd __libc_dd_fast_sum(double a, double b)
+{
+	double sum = a + b;
+
+	return (struct __libc_dd){ .hi = sum, .lo = b - (sum - a) };
+}
+
+static inline void __libc_dd_split(double a, double *high, double *low)
+{
+	double c = 0x1.0000002p27 * a;
+
+	*high = c - (c - a);
+	*low = a - *high;
+}
+
+/* a * b exactly */
+static inline struct __libc_dd __libc_dd_product(double a, double b)
+{
+	double product = a * b;
+	double ah;
+	double al;
+	double bh;
+	double bl;
+
+	__libc_dd_split(a, &ah, &al);
+	__libc_dd_split(b, &bh, &bl);
+
+	return (struct __libc_dd){ .hi = product, .lo = ((ah * bh - product) + ah * bl + al * bh) + al * bl };
+}
+
+/* (a.hi + a.lo) * (b.hi + b.lo), to about 2^-100 */
+static inline struct __libc_dd __libc_dd_multiply(struct __libc_dd a, struct __libc_dd b)
+{
+	struct __libc_dd product = __libc_dd_product(a.hi, b.hi);
+
+	return __libc_dd_fast_sum(product.hi, product.lo + (a.hi * b.lo + a.lo * b.hi));
+}
+
+static inline struct __libc_dd __libc_dd_negate(struct __libc_dd a)
+{
+	return (struct __libc_dd){ .hi = -a.hi, .lo = -a.lo };
+}
+
+/* ln 2, ln 10, 1/ln 2, 1/ln 10 as double-double */
+#define __LIBC_LN2 ((struct __libc_dd){ .hi = 0x1.62e42fefa39efp-1, .lo = 0x1.abc9e3b39803fp-56 })
+#define __LIBC_LN10 ((struct __libc_dd){ .hi = 0x1.26bb1bbb55516p+1, .lo = -0x1.f48ad494ea3e9p-53 })
+#define __LIBC_INV_LN2 ((struct __libc_dd){ .hi = 0x1.71547652b82fep+0, .lo = 0x1.777d0ffda0d24p-56 })
+#define __LIBC_INV_LN10 ((struct __libc_dd){ .hi = 0x1.bcb7b1526e50ep-2, .lo = 0x1.95355baaafad3p-57 })
+
+/*
+ * exp(xh + xl) = 2^*exponent * (result.hi + result.lo), to about 2^-64,
+ * for |xh| below 746.
+ */
+struct __libc_dd __libc_exp_core(double xh, double xl, int *exponent);
+
+/* 2^exponent * (value.hi + value.lo), rounded once in the current direction (twice for subnormal results) */
+double __libc_exp_scale(struct __libc_dd value, int exponent);
+
+/* expm1(zh + zl) for finite zh in (-45, 710) */
+double __libc_expm1_core(double zh, double zl);
+
+/* log(x) for positive finite x, to about 2^-64 (relative near 1) */
+struct __libc_dd __libc_log_core(double x);
+
+/* log(1 + x) for finite x > -1 with |x| at least 2^-54 */
+struct __libc_dd __libc_log1p_core(double x);
+
+/* exp(n * (log.hi + log.lo)) for integer n, signed: the core of pown and compoundn */
+double __libc_pow_integer(struct __libc_dd log, long long n, bool negative);
+
+/* Exceptional results, raised by arithmetic: +-infinity with overflow, +-0 (or the smallest subnormal) with underflow, +-infinity with divide-by-zero */
+static inline double __libc_math_overflow(double sign)
+{
+	volatile double huge = 0x1p1023;
+
+	return sign * huge * huge;
+}
+
+static inline double __libc_math_underflow(double sign)
+{
+	volatile double tiny = 0x1p-1022;
+
+	return sign * tiny * tiny;
+}
+
+static inline double __libc_math_divbyzero(double sign)
+{
+	volatile double zero = 0.0;
+
+	return sign / zero;
+}
+
+/*
+ * The double-double algorithms (TwoSum, the exact product, the cores) are
+ * exact only when rounding to nearest: the cores switch to it and restore
+ * the caller's direction, which then decides the last rounding.
+ */
+static inline int __libc_math_nearest(void)
+{
+	int mode = fegetround();
+
+	if (mode != FE_TONEAREST)
+		fesetround(FE_TONEAREST);
+	return mode;
+}
+
+static inline void __libc_math_restore(int mode)
+{
+	if (mode != FE_TONEAREST)
+		fesetround(mode);
+}
+
+/*
+ * f(x) for a tiny x where f(x) = x + e, 0 < |e| < ulp(x) / 2 and e has the
+ * sign of direction: x scaled by 2^100, nudged by 2^-1074 toward f(x) and
+ * scaled back, so the current rounding direction picks x or its neighbour
+ * and raises inexact; underflow for a subnormal x (tininess before rounding).
+ */
+static inline double __libc_math_tiny(double x, double direction)
+{
+	if (x == 0)
+		return x;
+	if (fabs(x) < 0x1p-1022)
+		__libc_math_raise_underflow();
+
+	return (x * 0x1p100 + copysign(0x1p-1074, direction)) * 0x1p-100;
+}
+
+/*
+ * The float version, for |x| below 2^-30: the nudge of 2^-40 |x| is exact in
+ * double and well inside half a float ulp, so the conversion rounds in the
+ * current direction and raises inexact, and underflow for a subnormal result.
+ */
+static inline float __libc_math_tinyf(float x, double direction)
+{
+	if (x == 0)
+		return x;
+
+	return (float)(x + copysign(fabs((double)x) * 0x1p-40, direction));
 }
 
 #endif /* _INTERNAL_MATH_H */
