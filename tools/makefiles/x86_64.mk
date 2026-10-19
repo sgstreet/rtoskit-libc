@@ -39,7 +39,10 @@ ARFLAGS := cr
 ASFLAGS :=
 
 # -mlong-double-64 makes long double binary64 as on the ARM targets (PLAN D7)
-CFLAGS := ${CROSS_FLAGS} -pipe -feliminate-unused-debug-types -fmessage-length=0 -ffunction-sections -fdata-sections -fno-common -fno-pie -fno-stack-protector -Wall -Wunused -Wuninitialized -Wmissing-declarations -Werror -std=c23
+# -muclibc: the host compiler assumes glibc and would fuse sin and cos into sincos, which C does not
+# reserve and rtoskit-libc does not provide; uClibc is the GNU/Linux C library it knows without sincos (D51)
+# Frame sizes and call graphs for tools/scripts/size-report (D51)
+CFLAGS := ${CROSS_FLAGS} -muclibc -pipe -feliminate-unused-debug-types -fmessage-length=0 -ffunction-sections -fdata-sections -fno-common -fno-pie -fno-stack-protector -Wall -Wunused -Wuninitialized -Wmissing-declarations -Werror -std=c23 -fstack-usage -fcallgraph-info=su
 CXXFLAGS :=
 
 # Added by the modules that build the library and the ports

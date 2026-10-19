@@ -1,0 +1,780 @@
+#!/usr/bin/env python3
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# size-report
+#
+# Created on: Oct 19, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+# The phase 2 size measurements (PLAN D51, docs/research/size-measurement.md).
+# Run from the project root after a release build ("make BUILD_TYPE=release"):
+#
+#   tools/scripts/size-report report [--board B ...]     write docs/size/baseline-<arch>.json
+#   tools/scripts/size-report diff [--board B ...]       compare the build with the baselines;
+#                                                        exit status 1 when anything grew
+#   tools/scripts/size-report markdown --board B         print the summary of a baseline
+#   tools/scripts/size-report compare                    build test/size with picolibc and
+#                                                        newlib-nano; print a Markdown table
+#
+# Figures: per libc.a member, the bytes of each section class (text, rodata, unwind,
+# data, bss, tdata, tbss) from the ELF section flags; per test/size image, the same
+# classes and their split by origin (program, libc, port, libgcc, other) from the
+# link map; the frame of every function and the worst stack depth of selected entry
+# points from the -fcallgraph-info=su call graphs (.ci files).
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import shutil
+import struct
+import subprocess
+import sys
+import urllib.request
+
+BOARDS = ['linux-x86_64', 'linux-armv6-m', 'linux-armv6s-m', 'linux-armv7e-m', 'linux-armv7e-m-dp', 'linux-armv8-m.main']
+PROGRAMS = ['hello-puts', 'hello-printf-int', 'hello-printf-float', 'malloc-heavy', 'math-mix']
+CLASSES = ['text', 'rodata', 'unwind', 'data', 'bss', 'tdata', 'tbss']
+ORIGINS = ['program', 'libc', 'port', 'libgcc', 'other']
+
+# Entry points whose worst stack depth is recorded (those missing from an archive are skipped)
+KEY_FUNCTIONS = [
+	'printf', 'fprintf', 'snprintf', 'sscanf', 'fscanf', 'strtod', 'strtof', 'strtol',
+	'malloc', 'calloc', 'realloc', 'free', 'qsort', 'bsearch',
+	'strftime', 'mktime', 'localtime', 'gmtime',
+	'fopen', 'fclose', 'fputs', 'puts', 'fgets', 'fflush', 'exit', 'abort',
+	'thrd_create', 'mtx_lock', 'cnd_wait',
+	'exp', 'log', 'pow', 'sin', 'cos', 'tan', 'atan2', 'lgamma', 'tgamma', 'erfc', 'cpow',
+	'sinf', 'expf', 'powf',
+]
+
+# Comparison libraries: Ubuntu 24.04 (noble) packages, pinned by version and hash
+PACKAGES = {
+	'picolibc': ('http://archive.ubuntu.com/ubuntu/pool/universe/p/picolibc/picolibc-arm-none-eabi_1.8.6-2_all.deb',
+		     '13b40f6f2b82304a68fc27a7c2f93892582836af31f8199edca9ef9fac71bf9b'),
+	'newlib': ('http://archive.ubuntu.com/ubuntu/pool/universe/n/newlib/libnewlib-arm-none-eabi_4.4.0.20231231-2_all.deb',
+		   '9af508599193d07c9460897d01a36af46a2707765bd6941e27c6d0747859b0eb'),
+	'newlib-dev': ('http://archive.ubuntu.com/ubuntu/pool/universe/n/newlib/libnewlib-dev_4.4.0.20231231-2_all.deb',
+		       'f945b12c3abc844e76eebc28cf7d99e9aefd7caec39583116ef29556b3c52414'),
+}
+
+SHF_WRITE = 0x1
+SHF_ALLOC = 0x2
+SHF_EXECINSTR = 0x4
+SHF_TLS = 0x400
+SHT_NOBITS = 8
+
+
+def arch_of(board):
+	return board[len('linux-'):]
+
+
+def elf_headers(data):
+	"""(is64, byte order, section headers, section names) of an ELF image held in data."""
+	if data[:4] != b'\x7fELF':
+		return None
+	is64 = data[4] == 2
+	order = '<' if data[5] == 1 else '>'
+	if is64:
+		shoff, = struct.unpack_from(order + 'Q', data, 0x28)
+		shentsize, shnum, shstrndx = struct.unpack_from(order + 'HHH', data, 0x3a)
+		layout = order + 'IIQQQQIIQQ'
+	else:
+		shoff, = struct.unpack_from(order + 'I', data, 0x20)
+		shentsize, shnum, shstrndx = struct.unpack_from(order + 'HHH', data, 0x2e)
+		layout = order + 'IIIIIIIIII'
+	headers = [struct.unpack_from(layout, data, shoff + i * shentsize) for i in range(shnum)]
+	if not headers:
+		return None
+	strtab = headers[shstrndx]
+	return is64, order, headers, data[strtab[4]:strtab[4] + strtab[5]]
+
+
+def c_string(table, offset):
+	return table[offset:table.index(b'\0', offset)].decode()
+
+
+def elf_sections(data):
+	"""(name, type, flags, size) of every section of an ELF image held in data."""
+	parsed = elf_headers(data)
+	if parsed is None:
+		return []
+	is64, order, headers, names = parsed
+	return [(c_string(names, h[0]), h[1], h[2], h[5]) for h in headers]
+
+
+def elf_functions(data):
+	"""The names of the functions an ELF object defines (STT_FUNC symbols with a section)."""
+	parsed = elf_headers(data)
+	if parsed is None:
+		return set()
+	is64, order, headers, names = parsed
+	functions = set()
+	for header in headers:
+		if header[1] != 2:
+			continue
+		strings = headers[header[6]]
+		table = data[strings[4]:strings[4] + strings[5]]
+		layout = order + ('IBBHQQ' if is64 else 'IIIBBH')
+		entry = struct.calcsize(layout)
+		for offset in range(header[4], header[4] + header[5], entry):
+			fields = struct.unpack_from(layout, data, offset)
+			name, info, shndx = (fields[0], fields[1], fields[3]) if is64 else (fields[0], fields[3], fields[5])
+			if info & 0xf == 2 and shndx != 0:
+				functions.add(c_string(table, name))
+	return functions
+
+
+def section_class(name, sh_type, flags):
+	"""The size class of a section, or None when it takes no target memory."""
+	if not flags & SHF_ALLOC or name.startswith('.note'):
+		return None
+	if name.startswith(('.ARM.exidx', '.ARM.extab', '.eh_frame')):
+		return 'unwind'
+	if flags & SHF_TLS:
+		return 'tbss' if sh_type == SHT_NOBITS else 'tdata'
+	if flags & SHF_EXECINSTR:
+		return 'text'
+	if flags & SHF_WRITE:
+		return 'bss' if sh_type == SHT_NOBITS else 'data'
+	return 'rodata'
+
+
+def class_sizes(data):
+	sizes = dict.fromkeys(CLASSES, 0)
+	for name, sh_type, flags, size in elf_sections(data):
+		cls = section_class(name, sh_type, flags)
+		if cls:
+			sizes[cls] += size
+	return sizes
+
+
+def archive_members(path):
+	"""(name, bytes) of every member of a System V/GNU archive."""
+	with open(path, 'rb') as f:
+		data = f.read()
+	if data[:8] != b'!<arch>\n':
+		raise SystemExit(f'{path}: not an archive')
+	position = 8
+	long_names = b''
+	members = []
+	while position + 60 <= len(data):
+		header = data[position:position + 60]
+		name = header[:16].decode().rstrip()
+		size = int(header[48:58].decode().strip())
+		body = data[position + 60:position + 60 + size]
+		position += 60 + size + (size & 1)
+		if name == '/' or name == '/SYM64/':
+			continue
+		if name == '//':
+			long_names = body
+			continue
+		if name.startswith('/'):
+			offset = int(name[1:])
+			name = long_names[offset:long_names.index(b'/\n', offset)].decode()
+		else:
+			name = name.rstrip('/')
+		members.append((name, body))
+	return members
+
+
+def member_table(archive):
+	table = {}
+	for name, body in archive_members(archive):
+		key = name
+		count = 2
+		while key in table:
+			key = f'{name}#{count}'
+			count += 1
+		table[key] = class_sizes(body)
+	return table
+
+
+def add_sizes(total, sizes):
+	for cls in CLASSES:
+		total[cls] += sizes[cls]
+
+
+def map_origin(path, program_objects):
+	if path == '':
+		return 'other'
+	match = re.match(r'(.*)\((.*)\)$', path)
+	if match:
+		base = os.path.basename(match.group(1))
+		if base in ('libc.a', 'libm.a', 'libc_nano.a', 'libg_nano.a', 'libg.a'):
+			return 'libc'
+		if base.startswith('libgcc'):
+			return 'libgcc'
+		if base in ('libsemihost.a', 'libnosys.a', 'libdummyhost.a') or base.startswith('libcrt0'):
+			return 'port'
+		return 'other'
+	if os.path.realpath(path) in program_objects:
+		return 'program'
+	if '/port/' in path or os.path.basename(path).startswith('crt0'):
+		return 'port'
+	return 'other'
+
+
+def map_input_sections(map_path):
+	"""(output section, size, input file) of every input section in a GNU ld map."""
+	pieces = []
+	output = None
+	pending = None
+	started = False
+	hexpair = re.compile(r'^\s+0x([0-9a-fA-F]+)\s+0x([0-9a-fA-F]+)(?:\s+(.*))?$')
+	# A merged input section (duplicate constants, .rodata.cstN) carries the size of the whole merge
+	# and its own size on the next line
+	before = re.compile(r'^\s+0x([0-9a-fA-F]+) \(size before relaxing\)$')
+	with open(map_path) as f:
+		for line in f:
+			line = line.rstrip('\n')
+			if not started:
+				started = line.startswith('Linker script and memory map')
+				continue
+			if line.startswith('OUTPUT('):
+				break
+			if not line.strip():
+				pending = None
+				continue
+			if not line[0].isspace():
+				fields = line.split()
+				if fields[0] in ('LOAD', 'START', 'END', '/DISCARD/') or '=' in line:
+					output = None
+					pending = None
+					continue
+				output = fields[0]
+				pending = None
+				continue
+			if line.startswith(' ') and not line.startswith('  ') and not line.startswith(' *(') and output:
+				fields = line.split(None, 3)
+				name = fields[0]
+				if len(fields) == 1:
+					pending = name
+					continue
+				if len(fields) >= 3 and fields[1].startswith('0x') and fields[2].startswith('0x'):
+					size = int(fields[2], 16)
+					source = fields[3].strip() if len(fields) > 3 else ''
+					if name == '*fill*':
+						source = ''
+					pieces.append((output, size, source))
+				pending = None
+				continue
+			match = before.match(line)
+			if match and pieces:
+				output_name, _, source = pieces[-1]
+				pieces[-1] = (output_name, int(match.group(1), 16), source)
+				continue
+			match = hexpair.match(line)
+			if match and pending is not None and output:
+				pieces.append((output, int(match.group(2), 16), (match.group(3) or '').strip()))
+				pending = None
+	return pieces
+
+
+def analyze_image(elf_path, map_path, program_objects):
+	with open(elf_path, 'rb') as f:
+		data = f.read()
+	output_class = {}
+	output_size = {}
+	sizes = dict.fromkeys(CLASSES, 0)
+	for name, sh_type, flags, size in elf_sections(data):
+		cls = section_class(name, sh_type, flags)
+		if cls:
+			output_class[name] = cls
+			output_size[name] = output_size.get(name, 0) + size
+			sizes[cls] += size
+	origin = {o: dict.fromkeys(CLASSES, 0) for o in ORIGINS}
+	program_objects = {os.path.realpath(p) for p in program_objects}
+	shares = {}
+	for output, size, source in map_input_sections(map_path):
+		if output in output_class and size:
+			by_origin = shares.setdefault(output, dict.fromkeys(ORIGINS, 0))
+			by_origin[map_origin(source, program_objects)] += size
+	for output, by_origin in shares.items():
+		# Merging (duplicate constants and CIEs) leaves the output smaller than its inputs: scale the shares
+		actual = output_size[output]
+		listed = sum(by_origin.values())
+		if listed > actual:
+			by_origin = {o: n * actual // listed for o, n in by_origin.items()}
+		for o, n in by_origin.items():
+			origin[o][output_class[output]] += n
+	# Linker-made contents (veneers, the exidx terminator, alignment at section ends) count as other
+	for cls in CLASSES:
+		attributed = sum(origin[o][cls] for o in ORIGINS)
+		origin['other'][cls] += sizes[cls] - attributed
+	return {'sections': sizes, 'origin': origin}
+
+
+# Call graphs
+
+NODE = re.compile(r'node: \{ title: "([^"]+)" label: "([^"]*)"')
+EDGE = re.compile(r'edge: \{ sourcename: "([^"]+)" targetname: "([^"]+)"')
+FRAME = re.compile(r'(\d+) bytes \(([a-z,]+)\)')
+
+
+def function_name(title):
+	"""GCC names a static function <source path>:<name> and marks assembler names with *; keep the
+	path relative to the project and drop the mark."""
+	root = os.getcwd() + os.sep
+	title = title.lstrip('*')
+	return title[len(root):] if title.startswith(root) else title
+
+
+def read_callgraph(ci_path):
+	"""({function: (frame, kind)}, [(caller, callee)]) of one .ci file."""
+	nodes = {}
+	edges = []
+	with open(ci_path) as f:
+		for line in f:
+			match = NODE.search(line)
+			if match:
+				frame = FRAME.search(match.group(2))
+				if frame:
+					nodes[function_name(match.group(1))] = (int(frame.group(1)), frame.group(2))
+				continue
+			match = EDGE.search(line)
+			if match:
+				edges.append((function_name(match.group(1)), function_name(match.group(2))))
+	return nodes, edges
+
+
+class CallGraph:
+	def __init__(self):
+		self.units = []
+		self.global_defs = {}
+		# Functions of objects without a call graph (assembly)
+		self.assembly = set()
+
+	def add_unit(self, unit, ci_path):
+		if not os.path.exists(ci_path):
+			return
+		nodes, edges = read_callgraph(ci_path)
+		calls = {}
+		for caller, callee in edges:
+			calls.setdefault(caller, []).append(callee)
+		index = len(self.units)
+		self.units.append((unit, nodes, calls))
+		# Several definitions (link-time replacement, D13): the largest frame counts
+		for name, (frame, kind) in nodes.items():
+			best = self.global_defs.get(name)
+			if best is None or self.units[best[0]][1][name][0] < frame:
+				self.global_defs[name] = (index, name)
+
+	def extended(self, unit, ci_path):
+		"""A copy of the graph with one more unit, e.g. a program linked against the library."""
+		graph = CallGraph()
+		graph.units = list(self.units)
+		graph.global_defs = dict(self.global_defs)
+		graph.assembly = self.assembly
+		graph.add_unit(unit, ci_path)
+		return graph
+
+	def callee_kind(self, name):
+		"""Why a callee has no graph: assembly in the library or port, a libgcc helper, or unknown."""
+		if name in self.assembly:
+			return 'assembly'
+		if name.startswith('__aeabi_') or re.match(r'^__(clz|ctz|ffs|popcount|parity)[sdt]i2$|^__(mul|div)[sdxt]c3$|^__\w+[sdt][if][23]$', name):
+			return 'libgcc'
+		return 'unknown'
+
+	def frames(self):
+		result = {}
+		for unit, nodes, calls in self.units:
+			for name, (frame, kind) in nodes.items():
+				result[f'{unit}:{name}'] = frame
+		return result
+
+	def depth(self, name):
+		"""(depth, path, notes) of the worst call chain from the global function name."""
+		start = self.global_defs.get(name)
+		if start is None:
+			return None
+		memo = {}
+		active = set()
+		notes = set()
+
+		def visit(key):
+			if key in memo:
+				return memo[key]
+			if key in active:
+				notes.add('recursion')
+				return (0, [])
+			active.add(key)
+			unit_index, function = key
+			unit, nodes, calls = self.units[unit_index]
+			frame, kind = nodes[function]
+			# "dynamic,bounded" frames have a known size; plain "dynamic" ones (alloca, VLA) do not
+			if kind == 'dynamic':
+				notes.add('dynamic frame')
+			best = (0, [])
+			for callee in calls.get(function, []):
+				if callee == '__indirect_call':
+					notes.add('indirect call')
+					continue
+				if callee in nodes:
+					target = (unit_index, callee)
+				elif callee in self.global_defs:
+					target = self.global_defs[callee]
+				else:
+					notes.add(f'{self.callee_kind(callee)}: {callee}')
+					continue
+				result = visit(target)
+				if result[0] > best[0]:
+					best = result
+			active.discard(key)
+			memo[key] = (frame + best[0], [function] + best[1])
+			return memo[key]
+
+		depth, path = visit(start)
+		return {'depth': depth, 'path': path, 'notes': sorted(notes)}
+
+
+def sha1(data):
+	return hashlib.sha1(data).hexdigest()
+
+
+def object_index(root):
+	index = {}
+	for directory, _, files in os.walk(root):
+		for name in files:
+			if name.endswith('.o'):
+				path = os.path.join(directory, name)
+				with open(path, 'rb') as f:
+					index[sha1(f.read())] = path
+	return index
+
+
+def library_graph(build, archive):
+	"""The call graph of the archive members plus the port objects."""
+	graph = CallGraph()
+	index = object_index(os.path.join(build, 'libc'))
+	objects = []
+	for name, body in archive_members(archive):
+		path = index.get(sha1(body))
+		objects.append((name, path, body))
+	port = os.path.join(build, 'port')
+	for directory, _, files in sorted(os.walk(port)):
+		if os.path.relpath(directory, port).split(os.sep)[0] != 'linux':
+			continue
+		for name in sorted(files):
+			if name.endswith('.o'):
+				path = os.path.join(directory, name)
+				with open(path, 'rb') as f:
+					objects.append(('port/' + name, path, f.read()))
+	for name, path, body in objects:
+		if path and os.path.exists(path[:-2] + '.ci'):
+			graph.add_unit(name, path[:-2] + '.ci')
+		else:
+			graph.assembly |= elf_functions(body)
+	return graph
+
+
+def measure(board, build_type):
+	build = os.path.join('build', board, build_type)
+	archive = os.path.join(build, 'libc', 'libc.a')
+	if not os.path.exists(archive):
+		raise SystemExit(f'{archive}: missing; build first (make BOARD_TYPE={board} BUILD_TYPE={build_type})')
+	members = member_table(archive)
+	totals = dict.fromkeys(CLASSES, 0)
+	for sizes in members.values():
+		add_sizes(totals, sizes)
+	graph = library_graph(build, archive)
+	depths = {}
+	for name in KEY_FUNCTIONS:
+		result = graph.depth(name)
+		if result:
+			depths[name] = result
+	images = {}
+	for program in PROGRAMS:
+		directory = os.path.join(build, 'test', 'size', program)
+		elf = os.path.join(directory, program + '.elf')
+		if not os.path.exists(elf):
+			raise SystemExit(f'{elf}: missing; build first')
+		obj = os.path.join(directory, program + '.o')
+		image = analyze_image(elf, os.path.join(directory, program + '.map'), [obj])
+		image['main'] = graph.extended(program, obj[:-2] + '.ci').depth('main')
+		images[program] = image
+	return {
+		'board': board,
+		'arch': arch_of(board),
+		'build_type': build_type,
+		'libc': {'totals': totals, 'members': members},
+		'images': images,
+		'stack': {'depths': depths, 'frames': graph.frames()},
+	}
+
+
+def baseline_path(directory, board):
+	return os.path.join(directory, f'baseline-{arch_of(board)}.json')
+
+
+def command_report(args):
+	for board in args.board:
+		result = measure(board, args.build_type)
+		path = baseline_path(args.baseline_dir, board)
+		with open(path, 'w') as f:
+			json.dump(result, f, indent=1, sort_keys=True)
+			f.write('\n')
+		print(f'{path}: {len(result["libc"]["members"])} members, {len(result["images"])} images, {len(result["stack"]["frames"])} frames')
+	return 0
+
+
+def total(sizes, classes=CLASSES):
+	return sum(sizes[c] for c in classes)
+
+
+def signed(value):
+	return f'{value:+d}' if value else '0'
+
+
+def command_diff(args):
+	grew = False
+	for board in args.board:
+		path = baseline_path(args.baseline_dir, board)
+		with open(path) as f:
+			old = json.load(f)
+		new = measure(board, args.build_type)
+		print(f'== {board} (against {path})')
+		old_totals = old['libc']['totals']
+		new_totals = new['libc']['totals']
+		print('libc.a  ' + '  '.join(f'{c} {new_totals[c]} ({signed(new_totals[c] - old_totals[c])})' for c in CLASSES))
+
+		changes = []
+		old_members = old['libc']['members']
+		new_members = new['libc']['members']
+		for name in sorted(set(old_members) | set(new_members)):
+			before = total(old_members[name]) if name in old_members else 0
+			after = total(new_members[name]) if name in new_members else 0
+			if before != after:
+				state = 'added' if name not in old_members else 'removed' if name not in new_members else ''
+				changes.append((after - before, name, before, after, state))
+		growth = sorted((c for c in changes if c[0] > 0), reverse=True)
+		shrink = sorted(c for c in changes if c[0] < 0)
+		if growth:
+			grew = True
+			print(f'members grown ({len(growth)}):')
+			for delta, name, before, after, state in growth[:args.top]:
+				print(f'  {name:40} {before:7} -> {after:7} ({delta:+d}) {state}')
+		if shrink:
+			print(f'members reduced ({len(shrink)}, {sum(c[0] for c in shrink):+d} bytes):')
+			for delta, name, before, after, state in shrink[:args.top]:
+				print(f'  {name:40} {before:7} -> {after:7} ({delta:+d}) {state}')
+
+		print('images (text+rodata+unwind / data+bss / tdata+tbss; libc share in brackets):')
+		for program in PROGRAMS:
+			o = old['images'][program]
+			n = new['images'][program]
+			parts = []
+			for group in (['text', 'rodata', 'unwind'], ['data', 'bss'], ['tdata', 'tbss']):
+				before = total(o['sections'], group)
+				after = total(n['sections'], group)
+				share = total(n['origin']['libc'], group) - total(o['origin']['libc'], group)
+				if after > before:
+					grew = True
+				parts.append(f'{after} ({signed(after - before)}) [{signed(share)}]')
+			print(f'  {program:20} ' + ' / '.join(parts))
+
+		print('stack depth of entry points:')
+		depth_changes = 0
+		rows = [(name, old['stack']['depths'].get(name), new['stack']['depths'].get(name)) for name in KEY_FUNCTIONS]
+		rows += [(f'main of {p}', old['images'][p]['main'], new['images'][p]['main']) for p in PROGRAMS]
+		for name, before, after in rows:
+			before_depth = before['depth'] if before else 0
+			after_depth = after['depth'] if after else 0
+			if before_depth != after_depth:
+				depth_changes += 1
+				if after_depth > before_depth:
+					grew = True
+				print(f'  {name:28} {before_depth:6} -> {after_depth:6} ({after_depth - before_depth:+d})')
+		if not depth_changes:
+			print('  unchanged')
+
+		frame_changes = []
+		old_frames = old['stack']['frames']
+		new_frames = new['stack']['frames']
+		for name in set(old_frames) | set(new_frames):
+			delta = new_frames.get(name, 0) - old_frames.get(name, 0)
+			if delta > 0:
+				frame_changes.append((delta, name))
+		if frame_changes:
+			print(f'frames grown ({len(frame_changes)}):')
+			for delta, name in sorted(frame_changes, reverse=True)[:args.top]:
+				print(f'  {name:50} {old_frames.get(name, 0):5} -> {new_frames[name]:5} ({delta:+d})')
+		print()
+	if grew:
+		print('size-report: something grew; justify it in the step notes (phase 2 DoD)')
+	return 1 if grew else 0
+
+
+def command_markdown(args):
+	for board in args.board:
+		with open(baseline_path(args.baseline_dir, board)) as f:
+			data = json.load(f)
+		print_markdown(data, args.top)
+	return 0
+
+
+def bound_mark(notes):
+	if any(not n.startswith(('assembly:', 'libgcc:')) for n in notes):
+		return '+'
+	return '*' if notes else ''
+
+
+def print_markdown(data, top):
+	totals = data['libc']['totals']
+	print(f'`libc.a` ({len(data["libc"]["members"])} members), {data["build_type"]} build:\n')
+	print('| ' + ' | '.join(CLASSES) + ' |')
+	print('|' + '---:|' * len(CLASSES))
+	print('| ' + ' | '.join(str(totals[c]) for c in CLASSES) + ' |')
+	print('\nReference images (`test/size`): code is text+rodata+unwind, RAM is data+bss, TLS is tdata+tbss per thread; the libc and port shares come from the link map:\n')
+	print('| Program | code | RAM | TLS | libc code | libc RAM | libc TLS | port code | libgcc code | main stack |')
+	print('|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|')
+	code = ['text', 'rodata', 'unwind']
+	ram = ['data', 'bss']
+	tls = ['tdata', 'tbss']
+	for program in PROGRAMS:
+		image = data['images'][program]
+		s = image['sections']
+		o = image['origin']
+		main = image['main']
+		stack = f'{main["depth"]}{bound_mark(main["notes"])}'
+		print(f'| {program} | {total(s, code)} | {total(s, ram)} | {total(s, tls)} | {total(o["libc"], code)} | {total(o["libc"], ram)} | {total(o["libc"], tls)} | {total(o["port"], code)} | {total(o["libgcc"], code)} | {stack} |')
+	print('\nWorst stack depth in bytes. `*`: without the frames of assembly or libgcc helpers (leaf routines that push a few registers); `+`: a lower bound because of an indirect call, recursion, a dynamic frame or an unknown callee:\n')
+	print('| Function | depth | Function | depth | Function | depth |')
+	print('|---|---:|---|---:|---|---:|')
+	cells = []
+	for name in KEY_FUNCTIONS:
+		entry = data['stack']['depths'].get(name)
+		if entry:
+			cells.append(f'`{name}` | {entry["depth"]}{bound_mark(entry["notes"])}')
+	for i in range(0, len(cells), 3):
+		row = cells[i:i + 3]
+		row += [' | '] * (3 - len(row))
+		print('| ' + ' | '.join(row) + ' |')
+	print(f'\nLargest members (text+rodata+unwind+data+bss+tdata+tbss), top {top}:\n')
+	print('| Member | ' + ' | '.join(CLASSES) + ' |')
+	print('|---|' + '---:|' * len(CLASSES))
+	members = sorted(data['libc']['members'].items(), key=lambda item: -total(item[1]))
+	for name, sizes in members[:top]:
+		print(f'| `{name}` | ' + ' | '.join(str(sizes[c]) for c in CLASSES) + ' |')
+
+
+# Comparison with picolibc and newlib-nano
+
+def cross_flags(arch):
+	with open(os.path.join('tools', 'makefiles', arch + '.mk')) as f:
+		match = re.search(r'^CROSS_FLAGS \?= (.*)$', f.read(), re.M)
+	return match.group(1).split()
+
+
+def fetch_packages(work):
+	roots = {}
+	for key, (url, expected) in PACKAGES.items():
+		name = os.path.basename(url)
+		deb = os.path.join(work, name)
+		if not os.path.exists(deb):
+			print(f'DOWNLOADING {url}', file=sys.stderr)
+			with urllib.request.urlopen(url) as response, open(deb + '.part', 'wb') as out:
+				shutil.copyfileobj(response, out)
+			os.replace(deb + '.part', deb)
+		with open(deb, 'rb') as f:
+			digest = hashlib.sha256(f.read()).hexdigest()
+		if digest != expected:
+			raise SystemExit(f'{deb}: SHA-256 {digest}, expected {expected}')
+		root = os.path.join(work, key)
+		if not os.path.isdir(root):
+			os.makedirs(root + '.part', exist_ok=True)
+			subprocess.run(['dpkg-deb', '-x', deb, root + '.part'], check=True)
+			os.replace(root + '.part', root)
+		roots[key] = os.path.abspath(root)
+	return roots
+
+
+def run(command):
+	result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+	if result.returncode != 0:
+		raise SystemExit(' '.join(command) + '\n' + result.stdout)
+
+
+def build_with(library, roots, arch, program, work):
+	gcc = os.path.abspath('local/bin/arm-none-eabi-gcc')
+	# gnu23: picolibc 1.8.6 predates C23 and declares strdup only outside strict ISO mode
+	flags = cross_flags(arch) + ['-Os', '-ffunction-sections', '-fdata-sections', '-std=gnu23']
+	source = os.path.join('test', 'size', program, program + '.c')
+	directory = os.path.join(work, library, arch)
+	os.makedirs(directory, exist_ok=True)
+	obj = os.path.join(directory, program + '.o')
+	elf = os.path.join(directory, program + '.elf')
+	map_path = os.path.join(directory, program + '.map')
+	multilib = subprocess.run([gcc] + flags + ['-print-multi-directory'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+	if library == 'picolibc':
+		prefix = os.path.join(roots['picolibc'], 'usr')
+		specs = [f'--specs={prefix}/lib/picolibc/arm-none-eabi/picolibc.specs', f'--picolibc-prefix={prefix}']
+		run([gcc] + flags + specs + ['-c', source, '-o', obj])
+		run([gcc] + flags + specs + ['--oslib=semihost', '-Wl,--gc-sections', '-Wl,--no-warn-rwx-segments', '-Wl,-Map,' + map_path, '-o', elf, obj, '-lm'])
+	else:
+		usr = os.path.join(roots['newlib'], 'usr')
+		include = os.path.join(roots['newlib-dev'], 'usr', 'include', 'newlib')
+		libdir = os.path.join(usr, 'lib', 'arm-none-eabi', 'newlib', multilib)
+		gcc_include = subprocess.run([gcc, '-print-file-name=include'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+		run([gcc] + flags + ['-nostdinc', '-isystem', include + '/nano', '-isystem', include, '-isystem', gcc_include, '-c', source, '-o', obj])
+
+		def crt(name):
+			return subprocess.run([gcc] + flags + [f'-print-file-name={name}'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+
+		extra = ['-u', '_printf_float'] if program == 'hello-printf-float' else []
+		run([gcc] + flags + ['-nostdlib', '-Wl,--gc-sections', '-Wl,--no-warn-rwx-segments', '-Wl,-Map,' + map_path, '-o', elf] + extra +
+		    [crt('crti.o'), crt('crtbegin.o'), os.path.join(libdir, 'crt0.o'), obj, '-L' + libdir,
+		     '-Wl,--start-group', '-lc_nano', '-lm', '-lnosys', '-lgcc', '-Wl,--end-group', crt('crtend.o'), crt('crtn.o')])
+	return analyze_image(elf, map_path, [obj])
+
+
+def command_compare(args):
+	work = args.work
+	os.makedirs(work, exist_ok=True)
+	roots = fetch_packages(work)
+	code = ['text', 'rodata', 'unwind']
+	ram = ['data', 'bss', 'tdata', 'tbss']
+	print('| Arch | Program | rtoskit libc code | picolibc libc code | newlib-nano libc code | rtoskit libc RAM | picolibc libc RAM | newlib-nano libc RAM | rtoskit image code | picolibc image code | newlib-nano image code |')
+	print('|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|')
+	for board in BOARDS[1:]:
+		arch = arch_of(board)
+		for program in PROGRAMS:
+			directory = os.path.join('build', board, args.build_type, 'test', 'size', program)
+			ours = analyze_image(os.path.join(directory, program + '.elf'), os.path.join(directory, program + '.map'), [os.path.join(directory, program + '.o')])
+			pico = build_with('picolibc', roots, arch, program, work)
+			nano = build_with('newlib', roots, arch, program, work)
+			images = [ours, pico, nano]
+			cells = [str(total(i['origin']['libc'], code)) for i in images]
+			cells += [str(total(i['origin']['libc'], ram)) for i in images]
+			cells += [str(total(i['sections'], code)) for i in images]
+			print(f'| {arch} | {program} | ' + ' | '.join(cells) + ' |')
+	return 0
+
+
+def main():
+	parser = argparse.ArgumentParser(description='Phase 2 size measurements (PLAN D51)')
+	parser.add_argument('--build-type', default='release')
+	parser.add_argument('--baseline-dir', default=os.path.join('docs', 'size'))
+	sub = parser.add_subparsers(dest='command', required=True)
+	for name in ('report', 'diff', 'markdown'):
+		p = sub.add_parser(name)
+		p.add_argument('--board', action='append', choices=BOARDS)
+		p.add_argument('--top', type=int, default=20)
+	p = sub.add_parser('compare')
+	p.add_argument('--work', default=os.path.join('tmp', 'size-compare'))
+	args = parser.parse_args()
+	if getattr(args, 'board', None) is None:
+		args.board = BOARDS
+	commands = {'report': command_report, 'diff': command_diff, 'markdown': command_markdown, 'compare': command_compare}
+	return commands[args.command](args)
+
+
+if __name__ == '__main__':
+	sys.exit(main())

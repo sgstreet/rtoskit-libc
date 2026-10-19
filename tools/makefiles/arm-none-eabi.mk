@@ -36,7 +36,8 @@ ARFLAGS := cr
 # Assembler sources are preprocessed by the compiler driver, which needs the target selection too
 ASFLAGS := ${CROSS_FLAGS}
 
-CFLAGS := ${CROSS_FLAGS} -pipe -feliminate-unused-debug-types -fmessage-length=0 -ffunction-sections -fdata-sections -fno-common -Wall -Wunused -Wuninitialized -Wmissing-declarations -Werror -std=c23
+# Frame sizes and call graphs for tools/scripts/size-report (D51)
+CFLAGS := ${CROSS_FLAGS} -pipe -feliminate-unused-debug-types -fmessage-length=0 -ffunction-sections -fdata-sections -fno-common -Wall -Wunused -Wuninitialized -Wmissing-declarations -Werror -std=c23 -fstack-usage -fcallgraph-info=su
 CXXFLAGS :=
 
 # Added by the modules that build the library and the ports

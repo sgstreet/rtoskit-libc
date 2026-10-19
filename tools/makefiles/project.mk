@@ -51,7 +51,7 @@ all: ${EXTRA_TARGETS} ${OBJ}
 
 clean:
 	@echo "CLEANING ${CURDIR} ${EXTRA_CLEAN}"
-	${RM} ${CURDIR}/*.bin ${CURDIR}/*.elf ${CURDIR}/*.map ${CURDIR}/*.smap ${CURDIR}/*.dis ${OBJ} ${OBJ:%.o=%.d} ${OBJ:%.o=%.dis} ${OBJ:%.o=%.o.lst} ${EXTRA_CLEAN}
+	${RM} ${CURDIR}/*.bin ${CURDIR}/*.elf ${CURDIR}/*.map ${CURDIR}/*.smap ${CURDIR}/*.dis ${OBJ} ${OBJ:%.o=%.d} ${OBJ:%.o=%.dis} ${OBJ:%.o=%.o.lst} ${CURDIR}/*.su ${CURDIR}/*.ci ${EXTRA_CLEAN}
 
 distclean:
 

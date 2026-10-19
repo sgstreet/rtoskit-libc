@@ -38,7 +38,7 @@ ifneq (${LIBC_TEST_COMMON},)
 # After the shim, so its test.h replaces src/common's; mtest.h is found here
 LIBC_TEST_CPPFLAGS += -I${LIBC_TEST_ROOT}/src/common
 endif
-LIBC_TEST_CFLAGS := $(filter-out -Werror -Wmissing-declarations,${CFLAGS}) -fno-builtin -frounding-math -Wno-unused-function -Wno-missing-braces -Wno-unused -Wno-overflow -Wno-unknown-pragmas -Werror=implicit-function-declaration -Werror=implicit-int -Werror=pointer-sign -Werror=pointer-arith
+LIBC_TEST_CFLAGS := $(filter-out -Werror -Wmissing-declarations -fstack-usage -fcallgraph-info=su,${CFLAGS}) -fno-builtin -frounding-math -Wno-unused-function -Wno-missing-braces -Wno-unused -Wno-overflow -Wno-unknown-pragmas -Werror=implicit-function-declaration -Werror=implicit-int -Werror=pointer-sign -Werror=pointer-arith
 ifeq (${LIBC_TEST_SUITE},api)
 LIBC_TEST_CFLAGS += -pedantic-errors -Werror -Wno-unused
 endif
