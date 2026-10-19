@@ -11,6 +11,7 @@ api/stdint PASS
 functional/qsort PASS
 functional/snprintf PASS
 functional/sscanf PASS
+functional/strftime PASS
 functional/string_memcpy PASS
 functional/string_memset PASS
 functional/string_strchr PASS
@@ -21,6 +22,7 @@ functional/strtod_long PASS
 functional/strtof PASS
 functional/strtol PASS
 functional/strtold PASS
+functional/time PASS
 functional/udiv PASS
 functional/ungetc PASS
 regression/malloc-0 PASS

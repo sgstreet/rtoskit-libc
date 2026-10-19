@@ -34,7 +34,7 @@ api/iso646 run
 api/langinfo skip:posix
 api/libgen skip:posix
 api/limits skip:posix # checks POSIX limits unconditionally; the ISO limits are in test/unit/headers
-api/locale pending:P1.11
+api/locale skip:posix # needs POSIX locale_t and LC_*_MASK unconditionally
 api/main harness # main() linked with every api test
 api/math pending:P1.13
 api/monetary skip:posix
@@ -84,7 +84,7 @@ api/syslog skip:posix
 api/tar skip:posix
 api/termios skip:posix
 api/tgmath pending:P1.16
-api/time pending:P1.11
+api/time skip:posix # needs POSIX TIMER_ABSTIME unconditionally
 api/unistd skip:posix
 api/utmpx skip:posix
 api/wchar skip:wide
@@ -135,7 +135,7 @@ functional/spawn skip:posix
 functional/sscanf run
 functional/sscanf_long skip:posix # setrlimit
 functional/stat skip:posix
-functional/strftime pending:P1.11 # calls setenv("TZ")
+functional/strftime run # setenv from the shim
 functional/string skip:posix # BSD strlcpy/strlcat used unconditionally
 functional/string_memcpy run
 functional/string_memmem skip:posix
@@ -152,7 +152,7 @@ functional/strtol run
 functional/strtold run
 functional/swprintf skip:wide
 functional/tgmath pending:P1.16
-functional/time pending:P1.11 # calls putenv("TZ")
+functional/time run # putenv and tzset from the shim
 functional/tls_align skip:dso
 functional/tls_align_dlopen skip:dso
 functional/tls_align_dso skip:dso

@@ -36,6 +36,10 @@
 #define __LINUX_SYS_WRITE 4
 
 /* Files beyond 2 GiB need the flag on a 32-bit kernel interface */
+/* The _time64 calls, which take a 64-bit struct timespec */
+#define __LINUX_SYS_CLOCK_GETTIME 403
+#define __LINUX_SYS_CLOCK_GETRES 406
+
 #define __LINUX_O_LARGEFILE 0x20000
 
 /* mmap2: the offset is in 4096-byte units, which makes no difference for the offset 0 used here */

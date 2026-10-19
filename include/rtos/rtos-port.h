@@ -16,7 +16,8 @@
 
 /*
  * The RTOS seam (PLAN D4; process and I/O from P1.01, heap and locks from P1.04,
- * environment from P1.05, files and the stream locks from P1.09).
+ * environment from P1.05, files and the stream locks from P1.09, clocks from
+ * P1.11).
  *
  * The library reaches the operating system only through the __rtos_*
  * functions below. Exactly one port library (librtos-<port>.a) defines them;
@@ -29,6 +30,7 @@
 
 #include <stddef.h>
 #include <stdint.h>
+#include <time.h>
 
 /* Process control */
 
@@ -88,6 +90,15 @@ int __rtos_rename(const char *old_path, const char *new_path);
  * returns 0 or a negated errno. Names for different indices differ.
  */
 int __rtos_tmpname(char *buffer, size_t size, unsigned int index);
+
+/*
+ * Clocks (P1.11). base is TIME_UTC (calendar time since the epoch),
+ * TIME_MONOTONIC, TIME_ACTIVE (the program's processor time, which clock
+ * reports) or TIME_THREAD_ACTIVE (the calling thread's). Return 0 or a
+ * negated errno (-EINVAL for an unsupported base, -ENOSYS without a clock).
+ */
+int __rtos_clock_gettime(int base, struct timespec *ts);
+int __rtos_clock_getres(int base, struct timespec *res);
 
 /*
  * Heap (PLAN D31). libc's allocator asks for its memory once, at the first
