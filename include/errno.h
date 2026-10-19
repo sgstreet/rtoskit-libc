@@ -23,9 +23,20 @@
 #define EILSEQ 84
 
 /* Additional error numbers (C23 7.5p4) */
+#define ENOENT 2
+#define EIO 5
 #define EBADF 9
 #define ENOMEM 12
+#define EACCES 13
+#define EEXIST 17
+#define ENOTDIR 20
+#define EISDIR 21
 #define EINVAL 22
+#define EMFILE 24
+#define ENOSPC 28
+#define ESPIPE 29
+#define ENAMETOOLONG 36
+#define ENOSYS 38
 #define EOVERFLOW 75
 
 /* C23 7.5p2: a modifiable lvalue of type int with thread storage duration */

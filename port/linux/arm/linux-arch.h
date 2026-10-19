@@ -23,12 +23,20 @@
  * out-of-line __rtos_linux_syscall.
  */
 
+#define __LINUX_SYS_CLOSE 6
 #define __LINUX_SYS_EXIT_GROUP 248
 #define __LINUX_SYS_GETPID 20
 #define __LINUX_SYS_GETTID 224
+#define __LINUX_SYS_LLSEEK 140
+#define __LINUX_SYS_OPENAT 322
 #define __LINUX_SYS_READ 3
+#define __LINUX_SYS_RENAMEAT 329
 #define __LINUX_SYS_TGKILL 268
+#define __LINUX_SYS_UNLINKAT 328
 #define __LINUX_SYS_WRITE 4
+
+/* Files beyond 2 GiB need the flag on a 32-bit kernel interface */
+#define __LINUX_O_LARGEFILE 0x20000
 
 /* mmap2: the offset is in 4096-byte units, which makes no difference for the offset 0 used here */
 #define __LINUX_SYS_MMAP 192
@@ -64,6 +72,15 @@ static inline long __linux_syscall3(long number, long a, long b, long c)
 static inline long __linux_syscall6(long number, long a, long b, long c, long d, long e, long f)
 {
 	return __rtos_linux_syscall(a, b, c, d, e, f, number);
+}
+
+/* _llseek takes the offset in two halves and stores the 64-bit result */
+static inline long long __linux_seek(int handle, long long offset, int whence)
+{
+	long long result;
+	long status = __linux_syscall6(__LINUX_SYS_LLSEEK, handle, (long)(offset >> 32), (long)(offset & 0xffffffff), (long)&result, whence, 0);
+
+	return status < 0 ? status : result;
 }
 
 /* ELF32 file and program headers, only the fields startup reads are meaningful */

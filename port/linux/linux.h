@@ -26,6 +26,18 @@
 
 #define __LINUX_SIGABRT 6
 
+/* openat flags and arguments; the values are the same on every architecture except O_LARGEFILE */
+#define __LINUX_O_RDONLY 0
+#define __LINUX_O_WRONLY 1
+#define __LINUX_O_RDWR 2
+#define __LINUX_O_CREAT 0x40
+#define __LINUX_O_EXCL 0x80
+#define __LINUX_O_TRUNC 0x200
+#define __LINUX_O_APPEND 0x400
+#define __LINUX_O_CLOEXEC 0x80000
+#define __LINUX_AT_FDCWD -100
+#define __LINUX_CREATE_MODE 0666
+
 /* The heap: reserved address space, committed by the kernel page by page as it is touched */
 #define __LINUX_HEAP_SIZE (64UL << 20)
 

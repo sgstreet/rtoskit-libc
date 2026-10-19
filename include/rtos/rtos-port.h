@@ -16,7 +16,7 @@
 
 /*
  * The RTOS seam (PLAN D4; process and I/O from P1.01, heap and locks from P1.04,
- * environment from P1.05).
+ * environment from P1.05, files and the stream locks from P1.09).
  *
  * The library reaches the operating system only through the __rtos_*
  * functions below. Exactly one port library (librtos-<port>.a) defines them;
@@ -56,6 +56,40 @@ ptrdiff_t __rtos_read(int handle, void *buffer, size_t count);
 ptrdiff_t __rtos_write(int handle, const void *buffer, size_t count);
 
 /*
+ * Files (P1.09, docs/research/stdio.md). __rtos_open returns a new handle or
+ * a negated errno. The flags combine the values below: READ and/or WRITE;
+ * APPEND makes every write go to the end; CREATE creates a missing file,
+ * EXCLUSIVE fails if it exists; TRUNCATE empties it; TEMPORARY files are
+ * removed when closed. A port without a file system returns -ENOSYS.
+ */
+#define __RTOS_OPEN_READ 0x01
+#define __RTOS_OPEN_WRITE 0x02
+#define __RTOS_OPEN_APPEND 0x04
+#define __RTOS_OPEN_CREATE 0x08
+#define __RTOS_OPEN_TRUNCATE 0x10
+#define __RTOS_OPEN_EXCLUSIVE 0x20
+#define __RTOS_OPEN_TEMPORARY 0x40
+
+int __rtos_open(const char *path, unsigned int flags);
+
+/* Returns 0 or a negated errno */
+int __rtos_close(int handle);
+
+/* whence is SEEK_SET, SEEK_CUR or SEEK_END (0, 1, 2); returns the new offset or a negated errno */
+long long __rtos_seek(int handle, long long offset, int whence);
+
+/* Return 0 or a negated errno */
+int __rtos_remove(const char *path);
+int __rtos_rename(const char *old_path, const char *new_path);
+
+/*
+ * Store candidate name number index for a temporary file (tmpnam, tmpfile)
+ * in buffer, at most size bytes including the terminator (size is L_tmpnam);
+ * returns 0 or a negated errno. Names for different indices differ.
+ */
+int __rtos_tmpname(char *buffer, size_t size, unsigned int index);
+
+/*
  * Heap (PLAN D31). libc's allocator asks for its memory once, at the first
  * allocation, by calling this with index 0, 1, 2, ... until it returns false
  * (at most 8 regions). Each region is a fixed block of memory the allocator
@@ -79,6 +113,12 @@ extern struct __rtos_lock __rtos_malloc_lock;
 
 /* Serialises the atexit and at_quick_exit tables */
 extern struct __rtos_lock __rtos_atexit_lock;
+
+/* The standard streams' locks, and the lock of the list of open streams (P1.09) */
+extern struct __rtos_lock __rtos_stdin_lock;
+extern struct __rtos_lock __rtos_stdout_lock;
+extern struct __rtos_lock __rtos_stderr_lock;
+extern struct __rtos_lock __rtos_stdio_lock;
 
 void __rtos_lock_acquire(struct __rtos_lock *lock);
 void __rtos_lock_release(struct __rtos_lock *lock);

@@ -24,12 +24,20 @@
 
 #define __LINUX_SYS_READ 0
 #define __LINUX_SYS_WRITE 1
+#define __LINUX_SYS_CLOSE 3
+#define __LINUX_SYS_LSEEK 8
 #define __LINUX_SYS_MMAP 9
 #define __LINUX_SYS_GETPID 39
 #define __LINUX_SYS_ARCH_PRCTL 158
 #define __LINUX_SYS_GETTID 186
 #define __LINUX_SYS_EXIT_GROUP 231
 #define __LINUX_SYS_TGKILL 234
+#define __LINUX_SYS_OPENAT 257
+#define __LINUX_SYS_UNLINKAT 263
+#define __LINUX_SYS_RENAMEAT 264
+
+/* 64-bit offsets are the default on a 64-bit kernel */
+#define __LINUX_O_LARGEFILE 0
 
 #define __LINUX_ARCH_SET_FS 0x1002
 
@@ -74,6 +82,12 @@ static inline long __linux_syscall6(long number, long a, long b, long c, long d,
 	register long r9 __asm__("r9") = f;
 	__asm__ volatile("syscall" : "=a"(result) : "a"(number), "D"(a), "S"(b), "d"(c), "r"(r10), "r"(r8), "r"(r9) : "rcx", "r11", "memory");
 	return result;
+}
+
+/* lseek takes and returns a 64-bit offset */
+static inline long long __linux_seek(int handle, long long offset, int whence)
+{
+	return __linux_syscall3(__LINUX_SYS_LSEEK, handle, offset, whence);
 }
 
 /* ELF64 file and program headers, only the fields startup reads are meaningful */

@@ -59,7 +59,7 @@ api/stdarg run
 api/stdbool run
 api/stddef run
 api/stdint run
-api/stdio pending:P1.09
+api/stdio skip:posix # requires ctermid, dprintf, fdopen, fileno, getline, popen, ... unconditionally
 api/stdlib skip:posix # declares getsubopt, posix_memalign, mkstemp, ... unconditionally
 api/string skip:posix # requires strsignal unconditionally
 api/strings skip:posix
@@ -161,7 +161,7 @@ functional/tls_init_dlopen skip:dso
 functional/tls_init_dso skip:dso
 functional/tls_local_exec skip:posix # pthread; thread TLS is unit-tested (P1.12)
 functional/udiv run
-functional/ungetc pending:P1.09 # includes <unistd.h>
+functional/ungetc pending:P1.10 # needs fscanf; includes <unistd.h>
 functional/utime skip:posix
 functional/vfork skip:posix
 functional/wcsstr skip:wide
@@ -422,7 +422,7 @@ regression/scanf-match-literal-eof pending:P1.10
 regression/scanf-nullbyte-char pending:P1.10
 regression/sem_close-unmap skip:posix
 regression/setenv-oom skip:posix
-regression/setvbuf-unget pending:P1.09
+regression/setvbuf-unget run
 regression/sigaltstack skip:posix
 regression/sigprocmask-internal skip:posix
 regression/sigreturn skip:posix
