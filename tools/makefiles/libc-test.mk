@@ -15,7 +15,8 @@
 # status in test/libc-test/manifest.txt is "run". Included by the suite modules
 # under test/libc-test after project.mk. ${LIBC_TEST_EXTRA} names extra sources
 # of the suite linked into every test (api/main.c); ${LIBC_TEST_COMMON} names
-# sources of libc-test's src/common linked the same way (math/mtest.c).
+# sources of libc-test's src/common linked the same way (math/mtest.c);
+# ${LIBC_TEST_INCLUDE} names shim headers forced into every test of the suite.
 
 LIBC_TEST_ROOT := ${PROJECT_ROOT}/third-party/libc-test
 LIBC_TEST_MANIFEST := ${PROJECT_ROOT}/test/libc-test/manifest.txt
@@ -31,6 +32,8 @@ LIBC_TEST_PORT_OBJ := $(foreach dir,port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_F
 # libc-test's own warning set (config.mak.def), without -Werror for the test code; the api tests add theirs
 # M_PI is an XSI extension functional/snprintf takes from <math.h> under _XOPEN_SOURCE; ISO C's <math.h> has no such name
 LIBC_TEST_CPPFLAGS := ${CPPFLAGS} -I${PROJECT_ROOT}/test/libc-test/shim/include -DM_PI=3.14159265358979323846
+# Headers a suite forces into every test (${LIBC_TEST_INCLUDE}, found in the shim), e.g. math's signgam.h
+LIBC_TEST_CPPFLAGS += $(addprefix -include ,${LIBC_TEST_INCLUDE})
 ifneq (${LIBC_TEST_COMMON},)
 # After the shim, so its test.h replaces src/common's; mtest.h is found here
 LIBC_TEST_CPPFLAGS += -I${LIBC_TEST_ROOT}/src/common
