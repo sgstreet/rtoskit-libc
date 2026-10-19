@@ -11,11 +11,13 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
+#include <signal.h>
 #include <stdlib.h>
 #include <rtos/rtos-port.h>
 
-/* C23 7.24.4.1 */
+/* C23 7.24.4.1: abnormal termination by raise(SIGABRT), even when a handler returns */
 void abort(void)
 {
+	raise(SIGABRT);
 	__rtos_abort();
 }

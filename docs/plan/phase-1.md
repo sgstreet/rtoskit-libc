@@ -65,13 +65,14 @@ Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-armv6
 - [x] `strdup` and `strndup`.
 - [x] Unit and stress tests: alignment, exhaustion returning `NULL` with `errno == ENOMEM`, and a randomized alloc/free fuzz test with a heap consistency checker. *`test/unit/malloc`, built once per allocator (20 000-step fuzz with `__libc_malloc_check()` after every step, plus a leak check against the fresh heap's largest allocation; injected faults in both allocators were caught). libc-test `regression/malloc-0` and `regression/malloc-oom` run, the latter with the new shim `t_memfill`.*
 
-## P1.05 — `<stdlib.h>` part 2, `<inttypes.h>`, `<setjmp.h>`, `<signal.h>`
-- [ ] Research `strtol`-family edge cases (bases, overflow, the C23 `0b` prefix), `qsort` (research introsort vs smoothsort vs heapsort; stack use matters), and PRNG choices for `rand`.
-- [ ] `atoi`/`atol`/`atoll`, `strtol`/`strtoll`/`strtoul`/`strtoull`, `abs`/`labs`/`llabs`, `div`/`ldiv`/`lldiv`, `qsort`, `bsearch` (C23 qualifier-preserving macro), `rand`/`srand` (`thread_local` state).
-- [ ] `exit`, `atexit` (≥ 32 entries, no malloc required), `at_quick_exit`, `quick_exit`, `_Exit`, `abort`, `getenv` (via the seam), `system`, and `mblen`/`mbtowc`/`wctomb`/`mbstowcs`/`wcstombs` (C locale).
-- [ ] `<inttypes.h>`: the format macros, `strtoimax`/`strtoumax`, `imaxabs`, `imaxdiv`.
-- [ ] `<setjmp.h>`: `setjmp`/`longjmp` in `arch/x86_64/src/setjmp/*.S`, with the `jmp_buf` layout in `arch/x86_64/include/__arch_setjmp.h`.
-- [ ] `<signal.h>`: a software `signal`/`raise` (a handler table with `SIG_DFL`/`SIG_IGN` semantics). No OS signals.
+## P1.05 — `<stdlib.h>` part 2, `<inttypes.h>`, `<setjmp.h>`, `<signal.h>`  `[x]`
+- [x] Research `strtol`-family edge cases (bases, overflow, the C23 `0b` prefix), `qsort` (research introsort vs smoothsort vs heapsort; stack use matters), and PRNG choices for `rand`. *`docs/research/stdlib-part2.md`: heapsort, PCG32 (D33). newlib's qsort source was unreachable; its documented design is cited.*
+- [x] `atoi`/`atol`/`atoll`, `strtol`/`strtoll`/`strtoul`/`strtoull`, `abs`/`labs`/`llabs`, `div`/`ldiv`/`lldiv`, `qsort`, `bsearch` (C23 qualifier-preserving macro), `rand`/`srand` (`thread_local` state).
+- [x] `exit`, `atexit` (≥ 32 entries, no malloc required), `at_quick_exit`, `quick_exit`, `_Exit`, `abort`, `getenv` (via the seam), `system`, and `mblen`/`mbtowc`/`wctomb`/`mbstowcs`/`wcstombs` (C locale). *New seam pieces `__rtos_getenv`, `__rtos_system`, `__rtos_atexit_lock`; `exit` also runs `.fini_array`; stream flushing joins in P1.09.*
+- [x] `<inttypes.h>`: the format macros, `strtoimax`/`strtoumax`, `imaxabs`, `imaxdiv`. *Macros use `wN`/`wfN`; `wcstoimax`/`wcstoumax` are out of scope (wide).*
+- [x] `<setjmp.h>`: `setjmp`/`longjmp` in `arch/x86_64/src/setjmp/*.S`, with the `jmp_buf` layout in `arch/x86_64/include/__arch_setjmp.h`. *Done as `libc/setjmp/x86_64/*.S` (D22 layout); `jmp_buf` is sized for every target by one expression in `<setjmp.h>`, so no arch header (D33).*
+- [x] `<signal.h>`: a software `signal`/`raise` (a handler table with `SIG_DFL`/`SIG_IGN` semantics). No OS signals.
+- *Tests: `test/unit/{stdlib,exit,setjmp,signal,inttypes}` (with `stdlib.run`, `exit.run`, `signal.run` drivers); injected faults in exit and raise were caught. libc-test: `api/setjmp`, `api/signal`, `functional/qsort` (shim `t_rand*`), `functional/strtol` run and pass; `api/stdlib` moves to P1.07 (it declares `strtod`), `api/inttypes` is skipped (wide functions).*
 
 ## P1.06 — ARM cross bring-up (armv6-m, armv7e-m, armv7e-m-dp, armv8-m.main)
 - [ ] Toolchain files `tools/makefiles/armv6-m.mk` (`-march=armv6-m`), `armv7e-m.mk` (`-march=armv7e-m+fp -mfloat-abi=hard`), `armv7e-m-dp.mk` (`-march=armv7e-m+fp.dp -mfloat-abi=hard`, D18) and `armv8-m.main.mk` (`-march=armv8-m.main+fp+dsp -mfloat-abi=hard`), all `-mthumb` with no `-mcpu` (D24); `LIBC_FPU` set for shared FPU subdirectories (D22). Board files `linux-<arch>.mk` with `RTOS_PORT := linux`, plus a `TARGET_RUNNER` for qemu-arm; add them to `BOARDS`.

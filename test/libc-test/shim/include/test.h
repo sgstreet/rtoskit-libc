@@ -14,6 +14,7 @@
 #ifndef _TEST_H
 #define _TEST_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 /*
@@ -32,5 +33,12 @@ int t_printf(const char *s, ...);
 
 /* Uses up the heap (P1.04) */
 int t_memfill(void);
+
+/* Pseudo-random helpers (P1.05) */
+void t_randseed(uint64_t s);
+uint64_t t_randn(uint64_t n);
+uint64_t t_randint(uint64_t a, uint64_t b);
+void t_shuffle(uint64_t *p, size_t n);
+void t_randrange(uint64_t *p, size_t n);
 
 #endif /* _TEST_H */

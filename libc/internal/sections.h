@@ -20,4 +20,8 @@ extern void (*const __preinit_array_end[])(void);
 extern void (*const __init_array_start[])(void);
 extern void (*const __init_array_end[])(void);
 
+/* Destructor table, run in reverse by exit */
+extern void (*const __fini_array_start[])(void);
+extern void (*const __fini_array_end[])(void);
+
 #endif /* _INTERNAL_SECTIONS_H */

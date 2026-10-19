@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# signal.run
+#
+# Created on: Oct 18, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+
+# Usage: signal.run <signal.elf>
+
+elf=$1
+status=0
+
+expect() {
+	local mode=$1 want_status=$2 want_output=$3 output code
+	output=$(${TARGET_RUNNER:-} "${elf}" ${mode} 2>/dev/null)
+	code=$?
+	output=$(echo -n "${output}" | tr '\n' ' ')
+	if [[ ${code} -ne ${want_status} || ${output} != "${want_output}" ]]; then
+		echo "fail: '${mode}': status ${code}, output '${output}', want ${want_status}, '${want_output}'"
+		status=1
+	fi
+}
+
+expect "" 0 "pass: signal"
+expect term 143 ""
+expect abort 134 "handler"
+expect ignored-abort 134 ""
+
+[[ ${status} -eq 0 ]] && echo "pass: signal.run"
+exit ${status}
