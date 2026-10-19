@@ -104,9 +104,10 @@ Enabled boards: `linux-x86_64` from P1.01, and the five ARM boards (`linux-armv6
 - [x] Finish the I/O part of the seam in `port/linux` (`open`/`close`/`read`/`write`/`seek`/`remove`/`rename`). In `port/none`, only the standard streams go to a byte sink. *Also `__rtos_tmpname`; `port/none` returns `-ENOSYS` for files and `-ESPIPE` for seeks. `<errno.h>` gained the file-system error numbers and `strerror` their messages (and the missing `ENOMEM`).*
 - *Tests: `test/unit/stdio` with a `stdio.run` driver (files through every function, positioning around buffered data and pushback, buffering modes with user buffers, the indicators, `remove`/`rename`/`tmpfile`/`tmpnam`/`freopen`, and modes for exit flushing, `perror`, `stdin` from a pipe, a prompt before input, and `stderr` ordering); eight injected faults were caught. libc-test: `regression/setvbuf-unget` runs and passes; `functional/ungetc` moves to P1.10 (it needs `fscanf`); `api/stdio` is skipped (it requires POSIX functions unconditionally).*
 
-## P1.10 — `scanf` family
-- [ ] Research `scanf` implementations and their edge cases (the `%[` scanset, `%n`, width, input failure vs matching failure, one-character pushback limits).
-- [ ] `scanf`, `fscanf`, `sscanf`, `vscanf`, `vfscanf`, `vsscanf`, including the C23 `%b` and `%wN`/`%wfN`; floating point through P1.07's core (behind a replaceable symbol, D13).
+## P1.10 — `scanf` family  `[x]`
+- [x] Research `scanf` implementations and their edge cases (the `%[` scanset, `%n`, width, input failure vs matching failure, one-character pushback limits). *`docs/research/scanf.md` (musl, FreeBSD, glibc behaviour); D41.*
+- [x] `scanf`, `fscanf`, `sscanf`, `vscanf`, `vfscanf`, `vsscanf`, including the C23 `%b` and `%wN`/`%wfN`; floating point through P1.07's core (behind a replaceable symbol, D13). *`libc/stdio/__libc_scan.c`, `__libc_scan_float.c`.*
+- *Tests: `test/unit/scanf` with 90 table cases (glibc-generated, seven corrected to the C23 input-item rule, plus hand-written C23 cases), typed modifiers, long float inputs against `strtod`, and `fscanf` on a file; nine injected faults were caught. libc-test: `functional/sscanf`, `functional/ungetc` (with an empty test-shim `<unistd.h>`), `regression/scanf-bytes-consumed`, `scanf-match-literal-eof`, `scanf-nullbyte-char`, `sscanf-eof` run and pass. The first `functional/ungetc` run found the engine using the stream's pushback slot; it now pushes back into the read window.*
 
 ## P1.11 — `<time.h>`, `<locale.h>`, `strerror` completion
 - [ ] Research civil-from-days algorithms (e.g. Howard Hinnant's paper; clean-room) and POSIX `TZ` string parsing (Q6).

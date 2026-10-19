@@ -14,7 +14,7 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
-/* C23 7.23 (the scanf family arrives with P1.10) */
+/* C23 7.23 */
 #define __STDC_VERSION_STDIO_H__ 202311L
 
 typedef __SIZE_TYPE__ size_t;
@@ -74,13 +74,19 @@ int setvbuf(FILE *restrict stream, char *restrict buf, int mode, size_t size);
 
 /* Formatted input/output functions (7.23.6) */
 int fprintf(FILE *restrict stream, const char *restrict format, ...);
+int fscanf(FILE *restrict stream, const char *restrict format, ...);
 int printf(const char *restrict format, ...);
+int scanf(const char *restrict format, ...);
 int snprintf(char *restrict s, size_t n, const char *restrict format, ...);
 int sprintf(char *restrict s, const char *restrict format, ...);
+int sscanf(const char *restrict s, const char *restrict format, ...);
 int vfprintf(FILE *restrict stream, const char *restrict format, __builtin_va_list arg);
+int vfscanf(FILE *restrict stream, const char *restrict format, __builtin_va_list arg);
 int vprintf(const char *restrict format, __builtin_va_list arg);
+int vscanf(const char *restrict format, __builtin_va_list arg);
 int vsnprintf(char *restrict s, size_t n, const char *restrict format, __builtin_va_list arg);
 int vsprintf(char *restrict s, const char *restrict format, __builtin_va_list arg);
+int vsscanf(const char *restrict s, const char *restrict format, __builtin_va_list arg);
 
 /* Character input/output functions (7.23.7) */
 int fgetc(FILE *stream);

@@ -132,7 +132,7 @@ functional/setjmp skip:posix # sigsetjmp/sigprocmask; setjmp is unit-tested (P1.
 functional/snprintf run
 functional/socket skip:posix
 functional/spawn skip:posix
-functional/sscanf pending:P1.10
+functional/sscanf run
 functional/sscanf_long skip:posix # setrlimit
 functional/stat skip:posix
 functional/strftime pending:P1.11 # calls setenv("TZ")
@@ -161,7 +161,7 @@ functional/tls_init_dlopen skip:dso
 functional/tls_init_dso skip:dso
 functional/tls_local_exec skip:posix # pthread; thread TLS is unit-tested (P1.12)
 functional/udiv run
-functional/ungetc pending:P1.10 # needs fscanf; includes <unistd.h>
+functional/ungetc run
 functional/utime skip:posix
 functional/vfork skip:posix
 functional/wcsstr skip:wide
@@ -417,16 +417,16 @@ regression/regex-negated-range skip:posix
 regression/regexec-nosub skip:posix
 regression/rewind-clear-error skip:posix # dup()
 regression/rlimit-open-files skip:posix
-regression/scanf-bytes-consumed pending:P1.10
-regression/scanf-match-literal-eof pending:P1.10
-regression/scanf-nullbyte-char pending:P1.10
+regression/scanf-bytes-consumed run
+regression/scanf-match-literal-eof run
+regression/scanf-nullbyte-char run
 regression/sem_close-unmap skip:posix
 regression/setenv-oom skip:posix
 regression/setvbuf-unget run
 regression/sigaltstack skip:posix
 regression/sigprocmask-internal skip:posix
 regression/sigreturn skip:posix
-regression/sscanf-eof pending:P1.10
+regression/sscanf-eof run
 regression/statvfs skip:posix
 regression/strverscmp skip:posix
 regression/syscall-sign-extend skip:posix
