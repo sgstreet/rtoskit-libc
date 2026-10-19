@@ -203,6 +203,11 @@ Any exception needs a PLAN.md decision entry.
   additions, `<threads.h>`, thread-local state, the seam, `port/none`).
   Unit-test modules add `CFLAGS += -fno-builtin` after `project.mk` so the
   library, not the compiler's built-in folding, is what runs.
+- **Size (phase 2, D51):** `test/size/` holds the reference programs (built, not
+  run). After a release build, `tools/scripts/size-report diff` compares the
+  members, images and stack depths with `docs/size/baseline-<arch>.json` and
+  exits 1 on any growth; `size-report report` rewrites the baselines once a
+  step's reductions are recorded in `docs/size/<arch>.md`.
 - Never skip, disable or weaken a test to get green. Fix the code, or record a
   justified `skip:` that refers to the scope in PLAN.md §1.
 
