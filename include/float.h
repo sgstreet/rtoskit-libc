@@ -76,4 +76,14 @@ int __flt_rounds(void);
 #define LDBL_IS_IEC_60559 __LDBL_IS_IEC_60559__
 #define LDBL_SNAN (__builtin_nansl(""))
 
+/*
+ * C23 Annex F.5: decimal conversions with at most CR_DECIMAL_DIG significant
+ * digits are correctly rounded. strtod, scanf and printf are correctly
+ * rounded for any length (D38, D39): 800 is the digit count the converter
+ * keeps exactly, beyond which a sticky flag still rounds correctly.
+ */
+#ifdef __STDC_WANT_IEC_60559_EXT__
+#define CR_DECIMAL_DIG 800
+#endif
+
 #endif /* _FLOAT_H */
