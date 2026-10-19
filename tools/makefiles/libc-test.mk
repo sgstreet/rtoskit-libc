@@ -28,7 +28,8 @@ LIBC_TEST_SHIM_OBJ := $(patsubst ${PROJECT_ROOT}/%.c,${BUILD_ROOT}/%.o,$(wildcar
 LIBC_TEST_PORT_OBJ := $(foreach dir,port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_FAMILY},$(wildcard ${BUILD_ROOT}/${dir}/*.o))
 
 # libc-test's own warning set (config.mak.def), without -Werror for the test code; the api tests add theirs
-LIBC_TEST_CPPFLAGS := ${CPPFLAGS} -I${PROJECT_ROOT}/test/libc-test/shim/include
+# M_PI is an XSI extension functional/snprintf takes from <math.h> under _XOPEN_SOURCE; ISO C's <math.h> has no such name
+LIBC_TEST_CPPFLAGS := ${CPPFLAGS} -I${PROJECT_ROOT}/test/libc-test/shim/include -DM_PI=3.14159265358979323846
 LIBC_TEST_CFLAGS := $(filter-out -Werror -Wmissing-declarations,${CFLAGS}) -fno-builtin -frounding-math -Wno-unused-function -Wno-missing-braces -Wno-unused -Wno-overflow -Wno-unknown-pragmas -Werror=implicit-function-declaration -Werror=implicit-int -Werror=pointer-sign -Werror=pointer-arith
 ifeq (${LIBC_TEST_SUITE},api)
 LIBC_TEST_CFLAGS += -pedantic-errors -Werror -Wno-unused

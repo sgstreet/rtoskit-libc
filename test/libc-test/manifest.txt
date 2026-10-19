@@ -129,7 +129,7 @@ functional/search_tsearch skip:posix
 functional/sem_init skip:posix
 functional/sem_open skip:posix
 functional/setjmp skip:posix # sigsetjmp/sigprocmask; setjmp is unit-tested (P1.05)
-functional/snprintf pending:P1.08
+functional/snprintf run
 functional/socket skip:posix
 functional/spawn skip:posix
 functional/sscanf pending:P1.10
@@ -392,9 +392,9 @@ regression/memmem-oob skip:posix
 regression/memmem-oob-read skip:posix
 regression/mkdtemp-failure skip:posix
 regression/mkstemp-failure skip:posix
-regression/printf-1e9-oob pending:P1.08
-regression/printf-fmt-g-round pending:P1.08
-regression/printf-fmt-g-zeros pending:P1.08
+regression/printf-1e9-oob run
+regression/printf-fmt-g-round run
+regression/printf-fmt-g-zeros run
 regression/printf-fmt-n run
 regression/pthread-robust-detach skip:posix
 regression/pthread_atfork-errno-clobber skip:posix

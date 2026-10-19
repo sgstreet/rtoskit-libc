@@ -14,7 +14,7 @@
 #ifndef _STDLIB_H
 #define _STDLIB_H
 
-/* C23 7.24 (strfrom* arrive with P1.08, call_once with P1.12) */
+/* C23 7.24 (call_once arrives with P1.12) */
 #define __STDC_VERSION_STDLIB_H__ 202311L
 
 typedef __SIZE_TYPE__ size_t;
@@ -54,6 +54,9 @@ long long int atoll(const char *nptr);
 double strtod(const char *restrict nptr, char **restrict endptr);
 float strtof(const char *restrict nptr, char **restrict endptr);
 long double strtold(const char *restrict nptr, char **restrict endptr);
+int strfromd(char *restrict s, size_t n, const char *restrict format, double fp);
+int strfromf(char *restrict s, size_t n, const char *restrict format, float fp);
+int strfroml(char *restrict s, size_t n, const char *restrict format, long double fp);
 long int strtol(const char *restrict nptr, char **restrict endptr, int base);
 long long int strtoll(const char *restrict nptr, char **restrict endptr, int base);
 unsigned long int strtoul(const char *restrict nptr, char **restrict endptr, int base);
