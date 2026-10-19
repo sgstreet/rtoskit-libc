@@ -37,6 +37,8 @@
 #define fmaxf generic_fmaxf
 #define fmin generic_fmin
 #define fminf generic_fminf
+#define sqrt generic_sqrt
+#define sqrtf generic_sqrtf
 
 #include <math.h>
 
@@ -62,3 +64,5 @@
 #include "math/fmaxf.c"
 #include "math/fmin.c"
 #include "math/fminf.c"
+#include "math/sqrt.c"
+#include "math/sqrtf.c"

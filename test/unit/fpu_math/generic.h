@@ -37,5 +37,7 @@ double generic_fmax(double x, double y);
 float generic_fmaxf(float x, float y);
 double generic_fmin(double x, double y);
 float generic_fminf(float x, float y);
+double generic_sqrt(double x);
+float generic_sqrtf(float x);
 
 #endif /* _GENERIC_H */
