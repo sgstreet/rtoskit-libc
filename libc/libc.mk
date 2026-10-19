@@ -23,11 +23,14 @@ TARGET_OBJ_LIBS += libc/atomic
 TARGET_OBJ_LIBS += libc/ctype
 TARGET_OBJ_LIBS += libc/decimal
 TARGET_OBJ_LIBS += libc/errno
-TARGET_OBJ_LIBS += libc/fenv/${ARCH_CROSS}
+TARGET_OBJ_LIBS += libc/fenv
+TARGET_OBJ_LIBS += libc/fenv/${LIBC_FENV}
 TARGET_OBJ_LIBS += libc/inttypes
 TARGET_OBJ_LIBS += libc/locale
 TARGET_OBJ_LIBS += libc/malloc
 TARGET_OBJ_LIBS += libc/malloc/${LIBC_MALLOC}
+TARGET_OBJ_LIBS += libc/math
+TARGET_OBJ_LIBS += $(addprefix libc/math/,${LIBC_MATH_LAYERS})
 TARGET_OBJ_LIBS += libc/setjmp/${ARCH_CROSS}
 TARGET_OBJ_LIBS += libc/signal
 TARGET_OBJ_LIBS += libc/startup
@@ -45,7 +48,17 @@ LIBC_HEADERS := $(patsubst ${PROJECT_ROOT}/include/%,${INSTALL_ROOT}/include/%,$
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
-all: ${INSTALL_ROOT}/lib/libc.a ${LIBC_HEADERS}
+all: ${INSTALL_ROOT}/lib/libc.a ${INSTALL_ROOT}/lib/libm.a ${LIBC_HEADERS}
+
+# libm is part of libc.a (D46); an empty libm.a keeps "-lm" working
+${CURDIR}/libm.a: ${EXTRA_DEPS}
+	@echo "ARCHIVING ${@}"
+	rm -f $@
+	$(AR) ${ARFLAGS} $@
+
+${INSTALL_ROOT}/lib/libm.a: ${CURDIR}/libm.a
+	@echo "INSTALLING ${@}"
+	$(INSTALL) -m 644 -D ${<} ${@}
 
 ${INSTALL_ROOT}/lib/libc.a: ${CURDIR}/libc.a
 	@echo "INSTALLING ${@}"

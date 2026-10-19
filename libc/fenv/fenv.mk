@@ -7,15 +7,19 @@
 #
 # fenv.mk
 #
-# Created on: Oct 18, 2026
+# Created on: Oct 19, 2026
 #     Author: Stephen Street (stephen@redrocketcomputing.com)
 #
 
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
-SUBDIRS := ${ARCH_CROSS}
+SUBDIRS := ${LIBC_FENV}
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
+
+# The generic functions use the ${LIBC_FENV} variant's register access (fenv-arch.h)
+CPPFLAGS += -I${PROJECT_ROOT}/libc -I${SOURCE_DIR}/${LIBC_FENV}
+CFLAGS += ${LIBC_CFLAGS}
 
 endif

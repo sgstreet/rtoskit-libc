@@ -16,6 +16,8 @@ include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
 LIBC_TEST_SUITE := math
+# ulperr and the rounding/exception names of the table-driven tests
+LIBC_TEST_COMMON := mtest
 EXTRA_ELF_DEPS := ${BUILD_ROOT}/libc/libc.a
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk

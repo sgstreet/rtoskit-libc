@@ -60,7 +60,8 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
   file (`tools/makefiles/x86_64.mk`, `armv6-m.mk`, `armv6s-m.mk`, `armv7e-m.mk`, `armv7e-m-dp.mk`,
   `armv8-m.main.mk`; architecture names, `-march` not `-mcpu`, D24) sets the
   toolchain and all flags, including `LIBC_CFLAGS` for library code, and exports
-  `ARCH_FAMILY` (`x86_64`, `arm`) and, on Arm, `LIBC_FPU` (D34). The Arm files
+  `ARCH_FAMILY` (`x86_64`, `arm`), on Arm `LIBC_FPU` (D34), `LIBC_FENV` (the `<fenv.h>`
+  variant, D44) and `LIBC_MATH_LAYERS` (libm FPU layers, D46). The Arm files
   share `arm-none-eabi.mk`. It also links `libc.a` from the build tree through
   `LDLIBS`.
 - **Arm toolchain:** arm-none-eabi GCC 16.2 lives in `local/` (gitignored). The
