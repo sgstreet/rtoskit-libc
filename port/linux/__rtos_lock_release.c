@@ -7,7 +7,7 @@
  *
  * __rtos_lock_release.c
  *
- * Created on: Oct 18, 2026
+ * Created on: Oct 19, 2026
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
@@ -15,11 +15,15 @@
 
 #include "linux.h"
 
-/* Releasing a lock that is not held is a libc bug; fail loudly */
 void __rtos_lock_release(struct __rtos_lock *lock)
 {
-	if (lock->depth == 0)
+	if (__atomic_load_n(&lock->owner, __ATOMIC_RELAXED) != __rtos_thread_self() || lock->depth == 0)
 		__rtos_abort();
 
-	--lock->depth;
+	if (--lock->depth != 0)
+		return;
+
+	__atomic_store_n(&lock->owner, nullptr, __ATOMIC_RELAXED);
+	if (__atomic_exchange_n(&lock->state, 0, __ATOMIC_RELEASE) == 2)
+		__rtos_futex_wake(&lock->state, 1);
 }

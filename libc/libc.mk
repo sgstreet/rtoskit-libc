@@ -19,6 +19,7 @@ else
 # and the allocator variant named by ${LIBC_MALLOC} (set by the board file, PLAN D32)
 $(if $(wildcard ${PROJECT_ROOT}/libc/malloc/${LIBC_MALLOC}/${LIBC_MALLOC}.mk),,$(error LIBC_MALLOC='${LIBC_MALLOC}' is not an allocator in libc/malloc))
 TARGET_OBJ_LIBS := libc/assert
+TARGET_OBJ_LIBS += libc/atomic
 TARGET_OBJ_LIBS += libc/ctype
 TARGET_OBJ_LIBS += libc/decimal
 TARGET_OBJ_LIBS += libc/errno
@@ -34,6 +35,7 @@ TARGET_OBJ_LIBS += libc/stdbit
 TARGET_OBJ_LIBS += libc/stdio
 TARGET_OBJ_LIBS += libc/stdlib
 TARGET_OBJ_LIBS += libc/string
+TARGET_OBJ_LIBS += libc/threads
 TARGET_OBJ_LIBS += libc/time
 TARGET_OBJ_LIBS += libc/tls/${ARCH_FAMILY}
 

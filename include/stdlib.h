@@ -14,7 +14,7 @@
 #ifndef _STDLIB_H
 #define _STDLIB_H
 
-/* C23 7.24 (call_once arrives with P1.12) */
+/* C23 7.24 */
 #define __STDC_VERSION_STDLIB_H__ 202311L
 
 typedef __SIZE_TYPE__ size_t;
@@ -30,6 +30,9 @@ typedef __WCHAR_TYPE__ wchar_t;
 
 /* The "C" locale is single-byte (C23 7.24p3) */
 #define MB_CUR_MAX ((size_t)1)
+
+/* once_flag, ONCE_FLAG_INIT and call_once (7.24p2, also in <threads.h>) */
+#include <__once_flag.h>
 
 typedef struct {
 	int quot;

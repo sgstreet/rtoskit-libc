@@ -12,10 +12,13 @@
 #
 
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
+SUBDIRS := ${ARCH_FAMILY}
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
-# librtos-none.a: the bare-metal single-threaded port
+# librtos-none.a: the bare-metal single-threaded port, generic part plus the ${ARCH_FAMILY} variant
+TARGET_OBJ_LIBS := port/none/${ARCH_FAMILY}
+
 EXTRA_DEPS := ${SOURCE_DIR}/none.mk
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
