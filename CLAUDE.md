@@ -53,13 +53,18 @@ make check                             # build, then run the unit tests (+ libc-
 make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
 ```
 
-- **Boards and toolchains:** `BOARD_TYPE` files (`tools/makefiles/linux-x86_64.mk`, ...)
-  export `ARCH_CROSS` and `RTOS_PORT`. The `ARCH_CROSS` file
-  (`tools/makefiles/x86_64.mk`, later `armv6-m.mk`, `armv7e-m.mk`,
-  `armv7e-m-dp.mk`, `armv8-m.main.mk`; architecture names, `-march` not
-  `-mcpu`, D24) sets the toolchain and all flags, including
-  `LIBC_CFLAGS` for library code. It also links `libc.a` from the build tree
-  through `LDLIBS`.
+- **Boards and toolchains:** `BOARD_TYPE` files (`tools/makefiles/linux-x86_64.mk`,
+  `linux-armv6-m.mk`, `linux-armv6s-m.mk`, `linux-armv7e-m.mk`, `linux-armv7e-m-dp.mk`,
+  `linux-armv8-m.main.mk`) export `ARCH_CROSS`, `RTOS_PORT`, and for the Arm boards
+  `TARGET_RUNNER` (`qemu-arm -cpu max`, D36) and `BOARD_LDFLAGS`. The `ARCH_CROSS`
+  file (`tools/makefiles/x86_64.mk`, `armv6-m.mk`, `armv6s-m.mk`, `armv7e-m.mk`, `armv7e-m-dp.mk`,
+  `armv8-m.main.mk`; architecture names, `-march` not `-mcpu`, D24) sets the
+  toolchain and all flags, including `LIBC_CFLAGS` for library code, and exports
+  `ARCH_FAMILY` (`x86_64`, `arm`) and, on Arm, `LIBC_FPU` (D34). The Arm files
+  share `arm-none-eabi.mk`. It also links `libc.a` from the build tree through
+  `LDLIBS`.
+- **Arm toolchain:** arm-none-eabi GCC 16.2 lives in `local/` (gitignored). The
+  first build downloads it (`make setup`, `tools/makefiles/setup.mk`).
 - **Allocator:** `LIBC_MALLOC` picks the allocator built into `libc.a`:
   `nano` (default, set in the board file) or `tlsf`
   (`make LIBC_MALLOC=tlsf ...`; run `make clean` after changing it). Both
@@ -71,21 +76,25 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
   compiles in place. A directory holding only sub-modules is a tree node.
   Library modules add `CPPFLAGS += -I${PROJECT_ROOT}/libc` and
   `CFLAGS += ${LIBC_CFLAGS}` after including `project.mk`.
-- **Arch variants:** put them in a subdirectory named after `ARCH_CROSS`
-  (`libc/tls/x86_64/`). The parent module selects it with
-  `SUBDIRS := ${ARCH_CROSS}` in its target branch.
+- **Arch variants:** put code that depends on the core (ISA, FPU) in a
+  subdirectory named after `ARCH_CROSS` (`libc/setjmp/armv7e-m/`), and code
+  shared by every core of a target triple in one named after `ARCH_FAMILY`
+  (`libc/tls/arm/`, `port/linux/arm/`, D34). The parent module selects it with
+  `SUBDIRS := ${ARCH_CROSS}` (or `${ARCH_FAMILY}`) in its target branch. A test
+  that only applies to some targets selects its sources in a `subdir.mk`
+  (`test/unit/fpv5`).
 - **Archives:** a parent module lists its children in `TARGET_OBJ_LIBS` and adds
   `all: ${CURDIR}/libX.a` (`libc/libc.mk`, `port/linux/linux.mk`). Register
   every new libc module or variant in `libc/libc.mk`.
 - **Executables:** list what they link in `TARGET_OBJ_LIBS`, e.g.
-  `port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_CROSS}`, set
+  `port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_FAMILY}`, set
   `EXTRA_ELF_DEPS := ${BUILD_ROOT}/libc/libc.a` so the executable relinks when
   the library changes, then add `all: ${CURDIR}/<name>.elf`.
 - **Module order:** set in the top-level `Makefile` (`example test: libc port`).
 - **Extending the build system:** add board and toolchain files under
   `tools/makefiles/`. Do not restructure the existing tools makefiles.
 - **Toolchain floor:** GCC ≥ 14 / Clang ≥ 19 (D9). On Ubuntu 24.04:
-  `apt-get install -y gcc-14 qemu-user`.
+  `apt-get install -y gcc-14 qemu-user`; arm-none-eabi GCC 16.2 from `make setup`.
 
 ## Code rules
 
@@ -172,8 +181,8 @@ Any exception needs a PLAN.md decision entry.
 
 - **libc-test** (`third-party/libc-test`, a submodule) is the conformance gate
   at every step of every phase (PLAN §5). Run it natively on `linux-x86_64`
-  through `port/linux`, and under `qemu-arm` (`TARGET_RUNNER`) for the ARM
-  boards.
+  through `port/linux`, and under `qemu-arm -cpu max` (`TARGET_RUNNER`) for the
+  five ARM boards (D36, D37).
 - `make check` builds, then runs every unit test through `test/unit/run-unit`. A
   test passes when it exits with 0, unless an executable `<name>.run` next to
   its source decides instead (see `test/unit/smoke/smoke.run`). `TARGET_RUNNER`
@@ -209,8 +218,9 @@ Any exception needs a PLAN.md decision entry.
 include/           public headers (no .mk; + include/rtos/rtos-port.h seam contract)
 libc/              libc.a: libc/<area>/ modules, one function per file
 libc/<area>/<arch>/ ARCH_CROSS variant subdirectory (SUBDIRS := ${ARCH_CROSS})
+libc/<area>/<family>/ ARCH_FAMILY variant shared by a triple's cores (libc/tls/arm/)
 libc/internal/     private headers (no .mk)
-port/<port>/       linux (test port), none (bare metal), rtoskit (future); port/<port>/<arch>/ variants
+port/<port>/       linux (test port), none (bare metal), rtoskit (future); port/<port>/<family>/ variants
 test/              unit tests (test/unit/<name>/), libc-test glue, size, bench
 example/           examples
 toolchain/         Phase 4: crosstool-NG libc backend, multilib configs

@@ -15,6 +15,8 @@
 
 CROSS_FLAGS ?= -mlong-double-64
 
+export ARCH_FAMILY := x86_64
+
 CC := gcc-14
 CXX := g++-14
 LD := gcc-14
