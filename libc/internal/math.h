@@ -471,4 +471,14 @@ struct __libc_dd __libc_sinh_core(double x);
 struct __libc_dd __libc_cosh_core(double x);
 struct __libc_dd __libc_exp_dd(double x);
 
+/* Special functions (docs/research/libm-special.md); rounding to nearest is expected */
+
+/* erf(x) for |x| < 1/2, erfc(x) for 15/32 <= x < 129/32 (from a table), and erfc(x) = 2^*exponent * result for 4 <= x < 27.3 */
+struct __libc_dd __libc_erf_series(double x);
+struct __libc_dd __libc_erfc_table(double x);
+struct __libc_dd __libc_erfc_tail(double x, int *exponent);
+
+/* log|gamma(x)| for finite x that is not a pole (zero or a negative integer) and below 2^60; *sign is the sign of gamma(x) */
+struct __libc_dd __libc_lgamma_core(double x, int *sign);
+
 #endif /* _INTERNAL_MATH_H */

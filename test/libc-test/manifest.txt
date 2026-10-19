@@ -14,7 +14,7 @@
 api/aio skip:posix
 api/arpa_inet skip:posix
 api/assert run
-api/complex pending:P1.16
+api/complex run
 api/cpio skip:posix
 api/ctype skip:posix # requires the XSI isascii/toascii unconditionally
 api/dirent skip:posix
@@ -36,7 +36,7 @@ api/libgen skip:posix
 api/limits skip:posix # checks POSIX limits unconditionally; the ISO limits are in test/unit/headers
 api/locale skip:posix # needs POSIX locale_t and LC_*_MASK unconditionally
 api/main harness # main() linked with every api test
-api/math pending:P1.16 # takes the address of every <math.h> function
+api/math run
 api/monetary skip:posix
 api/mqueue skip:posix
 api/ndbm skip:posix
@@ -83,7 +83,7 @@ api/sys_wait skip:posix
 api/syslog skip:posix
 api/tar skip:posix
 api/termios skip:posix
-api/tgmath pending:P1.16
+api/tgmath run
 api/time skip:posix # needs POSIX TIMER_ABSTIME unconditionally
 api/unistd skip:posix
 api/utmpx skip:posix
@@ -151,7 +151,7 @@ functional/strtof run
 functional/strtol run
 functional/strtold run
 functional/swprintf skip:wide
-functional/tgmath pending:P1.16
+functional/tgmath run
 functional/time run # putenv and tzset from the shim
 functional/tls_align skip:dso
 functional/tls_align_dlopen skip:dso
@@ -205,12 +205,12 @@ math/coshl run
 math/cosl run
 math/drem skip:posix # BSD drem
 math/dremf skip:posix # BSD drem
-math/erf pending:P1.16
-math/erfc pending:P1.16
-math/erfcf pending:P1.16
-math/erfcl pending:P1.16
-math/erff pending:P1.16
-math/erfl pending:P1.16
+math/erf run
+math/erfc run
+math/erfcf run
+math/erfcl run
+math/erff run
+math/erfl run
 math/exp run
 math/exp10 run
 math/exp10f run
@@ -265,11 +265,11 @@ math/jnf skip:posix # XSI Bessel functions
 math/ldexp run
 math/ldexpf run
 math/ldexpl run
-math/lgamma pending:P1.16
+math/lgamma run
 math/lgamma_r skip:posix # reentrant lgamma
-math/lgammaf pending:P1.16
+math/lgammaf run
 math/lgammaf_r skip:posix # reentrant lgamma
-math/lgammal pending:P1.16
+math/lgammal run
 math/lgammal_r skip:posix # reentrant lgamma
 math/llrint run
 math/llrintf run
@@ -354,9 +354,9 @@ math/tanh run
 math/tanhf run
 math/tanhl run
 math/tanl run
-math/tgamma pending:P1.16
-math/tgammaf pending:P1.16
-math/tgammal pending:P1.16
+math/tgamma run
+math/tgammaf run
+math/tgammal run
 math/trunc run
 math/truncf run
 math/truncl run
