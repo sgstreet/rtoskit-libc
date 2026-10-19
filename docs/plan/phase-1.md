@@ -18,7 +18,7 @@ in order unless a step says otherwise.
 6. This file's checkboxes are updated, any new decisions are appended to
    PLAN.md, and the work is committed.
 
-Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-armv6-m`, `linux-armv7e-m`, `linux-armv7e-m-dp`, `linux-armv8-m.main`) from P1.06 on (PLAN target matrix, D22, D24).
+Enabled boards: `linux-x86_64` from P1.01, and the five ARM boards (`linux-armv6-m`, `linux-armv6s-m`, `linux-armv7e-m`, `linux-armv7e-m-dp`, `linux-armv8-m.main`) from P1.06 on (PLAN target matrix, D22, D24).
 
 ---
 
@@ -74,14 +74,15 @@ Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-armv6
 - [x] `<signal.h>`: a software `signal`/`raise` (a handler table with `SIG_DFL`/`SIG_IGN` semantics). No OS signals.
 - *Tests: `test/unit/{stdlib,exit,setjmp,signal,inttypes}` (with `stdlib.run`, `exit.run`, `signal.run` drivers); injected faults in exit and raise were caught. libc-test: `api/setjmp`, `api/signal`, `functional/qsort` (shim `t_rand*`), `functional/strtol` run and pass; `api/stdlib` moves to P1.07 (it declares `strtod`), `api/inttypes` is skipped (wide functions).*
 
-## P1.06 — ARM cross bring-up (armv6-m, armv7e-m, armv7e-m-dp, armv8-m.main)
-- [ ] Toolchain files `tools/makefiles/armv6-m.mk` (`-march=armv6-m`), `armv7e-m.mk` (`-march=armv7e-m+fp -mfloat-abi=hard`), `armv7e-m-dp.mk` (`-march=armv7e-m+fp.dp -mfloat-abi=hard`, D18) and `armv8-m.main.mk` (`-march=armv8-m.main+fp+dsp -mfloat-abi=hard`), all `-mthumb` with no `-mcpu` (D24); `LIBC_FPU` set for shared FPU subdirectories (D22). Board files `linux-<arch>.mk` with `RTOS_PORT := linux`, plus a `TARGET_RUNNER` for qemu-arm; add them to `BOARDS`.
-- [ ] Linux port for ARM: Thumb `_start`, `svc 0` syscalls, TLS via `set_tls` and a port-provided `__aeabi_read_tp`.
-- [ ] `libc/setjmp/<arch>/*.S` variant subdirectories for each ARM arch (Thumb-1 for v6-m; the VFP registers for the hard-float variants; the `fpv5-dp` code saves d8–d15, which is the same storage as s16–s31). One shared `arch/arm/include/` with `jmp_buf` sized for the largest variant (D15).
-- [ ] Runner: `qemu-arm -cpu max` wrapper. Verify that v6-m and v7e-m code runs correctly under qemu-user, and document any instruction caveats.
-- [ ] Check that `qemu-arm` executes FPv5-D16 double-precision code correctly (`qemu-arm -cpu max`), including `VRINT`/`VMAXNM`/`VFMA.F64`.
-- [ ] Baselines `expected/armv6-m.txt`, `armv7e-m.txt`, `armv7e-m-dp.txt` and `armv8-m.main.txt` match x86_64, apart from documented differences.
-- **DoD extra:** from here on, every step gates on all five arches.
+## P1.06 — ARM cross bring-up (armv6-m, armv7e-m, armv7e-m-dp, armv8-m.main)  `[x]`
+- [x] Toolchain files `tools/makefiles/armv6-m.mk` (`-march=armv6-m`), `armv7e-m.mk` (`-march=armv7e-m+fp -mfloat-abi=hard`), `armv7e-m-dp.mk` (`-march=armv7e-m+fp.dp -mfloat-abi=hard`, D18) and `armv8-m.main.mk` (`-march=armv8-m.main+fp+dsp -mfloat-abi=hard`), all `-mthumb` with no `-mcpu` (D24); `LIBC_FPU` set for shared FPU subdirectories (D22). Board files `linux-<arch>.mk` with `RTOS_PORT := linux`, plus a `TARGET_RUNNER` for qemu-arm; add them to `BOARDS`. *armv6-m builds with `-march=armv6-m`, and a fifth Arm arch `armv6s-m` (`-march=armv6s-m`, board `linux-armv6s-m`) was added (D37, superseding D35). The files share `arm-none-eabi.mk` and also export `ARCH_FAMILY := arm` (D34); `LIBC_FPU` is `nofp`/`fpv4-sp`/`fpv5-dp`/`fpv5-sp`. arm-none-eabi GCC 16.2 is fetched into `local/` by `make setup`, which the first build triggers. The boards add `port/linux/arm/headers.ld` through `BOARD_LDFLAGS`.*
+- [x] Linux port for ARM: Thumb `_start`, `svc 0` syscalls, TLS via `set_tls` and a port-provided `__aeabi_read_tp`. *`port/linux/arm/`, shared by the Arm arches; one out-of-line Thumb-1 syscall function (`svc` as raw bits so it assembles for plain Armv6-M); `__aeabi_read_tp` reads TPIDRURO. `libc/tls/arm/` lays out TLS variant I.*
+- [x] `libc/setjmp/<arch>/*.S` variant subdirectories for each ARM arch (Thumb-1 for v6-m; the VFP registers for the hard-float variants; the `fpv5-dp` code saves d8–d15, which is the same storage as s16–s31). One shared `arch/arm/include/` with `jmp_buf` sized for the largest variant (D15). *`jmp_buf` was already sized for Arm by one expression in `<setjmp.h>` (D33), so no arch header. Also `libc/fenv/<arch>/__flt_rounds.c` (FPSCR.RMode; 1 on armv6-m).*
+- [x] Runner: `qemu-arm -cpu max` wrapper. Verify that v6-m and v7e-m code runs correctly under qemu-user, and document any instruction caveats. *`TARGET_RUNNER` in the board files (D36). Caveats in `docs/research/arm-bring-up.md`: the M-profile CPU models fault on the CP15 thread-pointer read, and `-cpu max` does not reject instructions outside the selected arch.*
+- [x] Check that `qemu-arm` executes FPv5-D16 double-precision code correctly (`qemu-arm -cpu max`), including `VRINT`/`VMAXNM`/`VFMA.F64`. *`test/unit/fpv5` (built for `LIBC_FPU = fpv5-dp`), validated by fault injection.*
+- [x] Baselines `expected/armv6-m.txt`, `armv7e-m.txt`, `armv7e-m-dp.txt` and `armv8-m.main.txt` match x86_64, apart from documented differences. *Named `expected/linux-<arch>.txt` after the boards (plus `linux-armv6s-m.txt`); identical to x86_64 (21/21).*
+- *Also: the `_BitInt` checks moved to `test/unit/bitint` (GCC 15 lacked `_BitInt` on 32-bit Arm; GCC 16.2 has it, so it runs everywhere, Q12). `test/unit/setjmp` now checks the callee-saved registers (faults injected in the armv6-m, armv7e-m-dp and x86_64 `longjmp` were caught). Fixed along the way: the libc-test shim builds with `-fno-builtin` (GCC 15 turned `t_memfill` into an endless loop), and `libc-test.mk` deletes the output of a failed link.*
+- **DoD extra:** from here on, every step gates on all six arches (x86_64 and the five Arm ones).
 
 ## P1.07 — Floating-point parsing: `strtod`, `strtof`, `strtold`, `atof`
 - [ ] Research correctly rounded decimal-to-binary conversion (Clinger, Gay's `strtod`, Eisel–Lemire with a big-integer fallback, musl's `floatscan`, the fast_float paper). Hexadecimal floats, `INF`/`NAN(n-char-seq)`, rounding modes (`FLT_ROUNDS`), and `errno` on overflow/underflow.

@@ -25,7 +25,7 @@ LIBC_TEST_OBJ := $(addprefix ${CURDIR}/,$(addsuffix .o,${LIBC_TEST_NAMES}))
 LIBC_TEST_EXTRA_OBJ := $(addprefix ${CURDIR}/,$(addsuffix .o,${LIBC_TEST_EXTRA}))
 LIBC_TEST_ELF := $(LIBC_TEST_OBJ:.o=.elf)
 LIBC_TEST_SHIM_OBJ := $(patsubst ${PROJECT_ROOT}/%.c,${BUILD_ROOT}/%.o,$(wildcard ${PROJECT_ROOT}/test/libc-test/shim/*.c))
-LIBC_TEST_PORT_OBJ := $(foreach dir,port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_CROSS},$(wildcard ${BUILD_ROOT}/${dir}/*.o))
+LIBC_TEST_PORT_OBJ := $(foreach dir,port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_FAMILY},$(wildcard ${BUILD_ROOT}/${dir}/*.o))
 
 # libc-test's own warning set (config.mak.def), without -Werror for the test code; the api tests add theirs
 LIBC_TEST_CPPFLAGS := ${CPPFLAGS} -I${PROJECT_ROOT}/test/libc-test/shim/include
@@ -35,6 +35,9 @@ LIBC_TEST_CFLAGS += -pedantic-errors -Werror -Wno-unused
 endif
 
 EXTRA_CLEAN += ${LIBC_TEST_OBJ} ${LIBC_TEST_EXTRA_OBJ} $(LIBC_TEST_OBJ:.o=.d) $(LIBC_TEST_EXTRA_OBJ:.o=.d) $(LIBC_TEST_OBJ:.o=.o.lst) $(LIBC_TEST_EXTRA_OBJ:.o=.o.lst)
+
+# A link that fails must not leave an empty executable that looks up to date
+.DELETE_ON_ERROR:
 
 all: ${LIBC_TEST_ELF}
 

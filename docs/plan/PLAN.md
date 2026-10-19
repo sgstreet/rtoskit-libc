@@ -120,6 +120,10 @@ supersedes it; do not edit history.
 | D31 | **Allocator and the heap/lock seam** (P1.04, `docs/research/malloc.md`; refines D11): a clean-room TLSF allocator (O(1) `malloc`/`free`, 16 second-level lists, payloads aligned to `2 * sizeof(size_t)`, one word of overhead per used block, control block carved from the largest region, `__libc_malloc_check()` for tests). Heap seam: `bool __rtos_heap_region(index, &base, &size)`, called until false at the first allocation (≤ 8 fixed regions), not `__rtos_sbrk`. Lock seam: opaque port-defined `struct __rtos_lock`, recursive `__rtos_lock_acquire/release`, `__rtos_lock_create/destroy` for run-time locks, and statically allocated locks named by libc and defined by the port (`__rtos_malloc_lock` now), so `libc.a` never depends on a port's lock size (this replaces the port-defined lock type header that D4 sketched). `port/none`: no-op locks and one heap region between the weak `__rtos_none_heap_start`/`__rtos_none_heap_end` linker symbols; `port/linux`: a 64 MiB `MAP_NORESERVE` region and depth-checking single-thread locks until P1.12. `malloc(0)` and `realloc(p, 0)` give a unique minimum block; failures set `ENOMEM` (12). | Deterministic timing and bounded fragmentation suit an RTOS; fixed regions match MCU memory maps; opaque locks keep one library per target. |
 | D32 | **Two allocators, chosen at build time** (amends D31; `docs/research/malloc.md`): `libc/malloc/nano` (the default: first fit over an address-ordered free list with merging, written from the design of picolibc's allocator, 838 B of Thumb-2 for the full set on armv6-m) and `libc/malloc/tlsf` (O(1), 1532 B). The board file sets `LIBC_MALLOC ?= nano`; `make LIBC_MALLOC=tlsf` overrides it. Both variants are always built and `libc.a` takes `libc/malloc/${LIBC_MALLOC}` (a variant subdirectory, D22, no `#if`); `libc/malloc` holds the shared `calloc`, `free_sized`, `free_aligned_sized`. `test/unit/malloc` links one executable per variant so `make check` tests both. Changing `LIBC_MALLOC` in an existing build tree needs `make clean`, since archives are updated in place. | The user wants the small allocator by default and a choice; TLSF stays for bounded-time systems. |
 | D33 | **`<stdlib.h>` part 2, `<inttypes.h>`, `<setjmp.h>`, `<signal.h>`** (P1.05, `docs/research/stdlib-part2.md`): one `__libc_strtoint()` core for the `strtol`/`strtoimax` family (C23 `0b` prefix, `EINVAL` for a bad base); heapsort `qsort` (smallest, O(n log n) worst case, no recursion; a speed flavour may follow in P3); `bsearch` with the const-preserving generic macro; `rand` is PCG32 with `thread_local` state and `RAND_MAX` 0x7fffffff; `atexit`/`at_quick_exit` use fixed 32-entry tables under the new seam lock `__rtos_atexit_lock`; `exit` runs the handlers then `.fini_array`; new seam functions `__rtos_getenv` and `__rtos_system`; multibyte functions for a single-byte "C" locale mapping bytes to the same wide value; `<inttypes.h>` `PRI`/`SCN` macros built on the C23 `wN`/`wfN` modifiers (`t` for `PTR`, asserted equal to `ptrdiff_t`), so the header has no per-target length letters; `jmp_buf` sized by one expression (`10 * sizeof(void *) + 64` bytes) that fits x86_64 and Arm, x86_64 `setjmp`/`longjmp` in `libc/setjmp/x86_64/`; software `signal`/`raise` with handler reset and default actions `__rtos_abort` (SIGABRT) or `_Exit(128 + sig)`. `call_once`/`once_flag` (also in `<stdlib.h>` in C23) wait for P1.12, `wcstoimax`/`wcstoumax` are out of scope (wide characters). | Standard text plus the reviewed libcs; small code, no `#if`, one header set per triple (D15). |
+| D34 | **Shared arch code and board link options** (P1.06, amends D22): besides `ARCH_CROSS`, every toolchain file exports `ARCH_FAMILY` (`x86_64`, `arm`), the target triple's family. Code that is the same for every core of the family lives in a `${ARCH_FAMILY}` variant subdirectory: `port/linux/arm/` (Thumb-1 entry, out-of-line `svc` system calls, `set_tls`, `__aeabi_read_tp`) and `libc/tls/arm/` (variant I); executables link `port/${RTOS_PORT}/${ARCH_FAMILY}`. Code that depends on the core (ISA or FPU) stays in `${ARCH_CROSS}` subdirectories: `libc/setjmp/<arch>/`, `libc/fenv/<arch>/`. The Arm toolchain files also export `LIBC_FPU` (`nofp`, `fpv4-sp`, `fpv5-dp`, `fpv5-sp`) for FPU-shared code (first user: `test/unit/fpv5`; libm from P1.13). The Arm toolchain files share `tools/makefiles/arm-none-eabi.mk`, and a board passes link options through `BOARD_LDFLAGS` (the Linux Arm boards add `port/linux/arm/headers.ld`, which makes ld load the ELF headers so `__ehdr_start` exists). | The four Arm architectures share one Linux ABI and one TLS ABI; copying that code four times would be worse than one more variable. |
+| D35 | **`armv6-m` builds with `-march=armv6s-m`** (amends D24): Armv6-M without the S extension has no `SVC`, which GAS rejects; every Cortex-M0/M0+ implements Armv6S-M, `-mcpu=cortex-m0` selects it, and GCC's `thumb/v6-m/nofp` multilib is built for it. The `ARCH_CROSS`, board and multilib names stay `armv6-m`. | Matches the real cores and the multilib exactly. |
+| D36 | **The Arm boards run under `qemu-arm -cpu max`** (`TARGET_RUNNER` in `tools/makefiles/linux-<arch>.mk`; `docs/research/arm-bring-up.md`). The Linux port's `__aeabi_read_tp` reads TPIDRURO (CP15), which qemu's M-profile CPU models fault on, so the A-profile `max` model is required; it executes everything the four architectures use, including FPv5-D16 `VRINT`/`VMAXNM`/`VFMA.F64` (checked by `test/unit/fpv5`). Instruction-set conformance comes from the compiler and assembler `-march`, not from qemu. The toolchain is arm-none-eabi GCC 15.2 from `make setup` (D9), installed in `local/`. | The only way to have per-thread TLS in a Linux process under qemu-user; real M-profile ports supply their own `__aeabi_read_tp`. |
+| D37 | **`armv6-m` and `armv6s-m` are separate architectures; the Arm toolchain is GCC 16.2** (supersedes D35, amends D36 and D9): `armv6-m.mk` builds with `-march=armv6-m` (no `SVC`) and the new `armv6s-m.mk` with `-march=armv6s-m` (Cortex-M0/M0+, Armv6-M with the OS extension); both use GCC's `thumb/v6-m/nofp` multilib, and each has a `linux-<arch>` board, a baseline and `${ARCH_CROSS}` variant subdirectories (`libc/setjmp/armv6s-m/`, `libc/fenv/armv6s-m/`, the same code as `armv6-m`). The shared Linux port emits `svc #0` as raw bits (`.inst.n 0xdf00`) so it assembles for plain Armv6-M. `make setup` installs arm-none-eabi GCC 16.2 (red-rocket-computing/cross-dev v0.3.0); its `setup.mk` target is the versioned driver, so a version change reinstalls `local/`. GCC 16.2 implements `_BitInt` on Arm, so `test/unit/bitint` builds on every board (Q12 resolved). | User direction: both architectures are targets, and the newer toolchain closes the `_BitInt` gap. |
 
 ---
 
@@ -130,14 +134,16 @@ CLAUDE.md
 Makefile                  top-level: BOARDS x BUILDS loop, module ordering (D22)
 tools/                    build system (extend, don't restructure)
   makefiles/<board>.mk    BOARD_TYPE: exports ARCH_CROSS and RTOS_PORT (linux-x86_64, ...)
-  makefiles/<arch>.mk     ARCH_CROSS toolchain + flags (x86_64, armv6-m, armv7e-m, armv7e-m-dp, armv8-m.main)
+  makefiles/<arch>.mk     ARCH_CROSS toolchain + flags (x86_64, armv6-m, armv6s-m, armv7e-m, armv7e-m-dp, armv8-m.main;
+                          the Arm ones include arm-none-eabi.mk)
 include/                  public headers (no .mk)
   rtos/rtos-port.h        the RTOS seam contract (installed for port authors)
 libc/libc.mk              tree node; archives its children into libc.a (+ libm.a)
 libc/<area>/              one module per area, one function per file
-libc/<area>/<arch>/       ARCH_CROSS variant subdirectory, selected with SUBDIRS (setjmp, fenv, tls, ...)
+libc/<area>/<arch>/       ARCH_CROSS variant subdirectory, selected with SUBDIRS (setjmp, fenv)
+libc/<area>/<family>/     ARCH_FAMILY variant subdirectory shared by a triple's cores (tls/arm, D34)
 libc/internal/            private headers (never installed, no .mk)
-port/linux/               RTOS seam over Linux syscalls (test port) + port/linux/<arch>/ variants
+port/linux/               RTOS seam over Linux syscalls (test port) + port/linux/<family>/ variants (x86_64, arm)
 port/none/                single-thread, bare-metal default port (no-op locks, one static TLS block)
 test/libc-test/           build glue, shim, runner, manifests, expected results per arch
 test/unit/                our own tests for gaps in libc-test (C23 additions, threads.h, seam)
@@ -189,7 +195,7 @@ user-replaceable byte sink. That way a bare-metal image works with no RTOS at al
     pieces (for example `t_printf` built on `write`, and `runtest` built on
     fork/exec) with ISO/port equivalents. This is test-only code.
   - The runner `test/libc-test/run` runs each test binary with a timeout (under
-    `qemu-arm -cpu …` for ARM) and writes `build/<board>/<type>/test/libc-test/results.txt`.
+    `qemu-arm -cpu max` for ARM, D36) and writes `build/<board>/<type>/test/libc-test/results.txt`.
   - `test/libc-test/expected/<board>.txt` holds the committed baseline. The libc-test runner
     fails on any PASS→FAIL regression and reports FAIL→PASS improvements. A
     step updates the baseline only to record improvements.
@@ -201,10 +207,12 @@ user-replaceable byte sink. That way a bare-metal image works with no RTOS at al
 - **Header audit** (P1.17): a generated check that every identifier and macro in
   Annex B is declared with the right type, and that every `__STDC_VERSION_*_H__` is
   `202311L`.
-- **qemu-user caveat:** `qemu-arm` runs M-profile *instruction subsets* on an
-  A-profile CPU model. That is fine for libc code (no system registers), but
-  ports must not use M-profile-only instructions in the Linux test port. An
-  optional semihosted `qemu-system-arm` (mps2-an385/an505) gate can be added later.
+- **qemu-user caveat:** `qemu-arm -cpu max` runs M-profile *instruction subsets* on an
+  A-profile CPU model (D36). That is fine for libc code (no system registers), but
+  ports must not use M-profile-only instructions in the Linux test port, and qemu
+  does not reject instructions outside the selected architecture (the compiler and
+  assembler `-march` do). An optional semihosted `qemu-system-arm` (mps2-an385/an505)
+  gate can be added later.
 
 ---
 
@@ -232,3 +240,4 @@ decisions here, and commit.
 | Q9 | "cross-ng" is taken to mean **crosstool-NG**. Where does the integration live: patches in this repo (`toolchain/crosstool-ng/`), a crosstool-NG fork, or the existing `red-rocket-computing/cross-dev` toolchain build that `tools/makefiles/setup.mk` downloads from? Which multilib set: GCC's `rmprofile` list, or a custom list limited to the ARM arches in the target matrix? | Patches in this repo; custom multilib list (v6-m, v7e-m+fp, v7e-m+fp.dp, v8-m.main+fp, plus their soft-float variants) |
 | Q10 | Beyond the Cortex-M7 DP unit, should the Armv8.1-M cores with an optional DP FPU and MVE (Cortex-M55/M85, `armv8.1-m.main+fp.dp+mve.fp`) be a target too? With D17 that would add an `armv8.1-m.main` layer and reuse `fpv5-dp`. | No; add later if needed |
 | Q11 | When Clang is enabled (D9), `<stdbit.h>` needs a path for compilers without `__builtin_stdc_*` (Clang 19 has `__builtin_clzg`/`ctzg`/`popcountg` only). A conditional on the compiler is outside the allowed `#if` uses: accept an exception, require a Clang with the builtins, or write the generic macros with `_Generic` over the typed functions? | GCC only; decide when Clang is enabled |
+| Q12 | ~~GCC 15.2 does not implement `_BitInt` for 32-bit Arm.~~ **Resolved by D37:** the Arm toolchain is GCC 16.2, which implements it (`__BITINT_MAXWIDTH__` 65535); `test/unit/bitint` runs on every board. | — |

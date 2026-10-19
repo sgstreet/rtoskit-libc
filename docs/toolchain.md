@@ -1,6 +1,6 @@
 # Toolchain
 
-Recorded in P1.01 (2026-10-18), Ubuntu 24.04 cloud container.
+Recorded in P1.01 (2026-10-18), Ubuntu 24.04 cloud container; the Arm toolchain was added in P1.06 (2026-10-19).
 
 | Tool | Version | Source | Used for |
 |---|---|---|---|
@@ -8,9 +8,9 @@ Recorded in P1.01 (2026-10-18), Ubuntu 24.04 cloud container.
 | binutils | 2.42 | apt (default) | x86_64 `as`, `ld`, `ar` |
 | qemu-user | 8.2.2 | apt `qemu-user` | runs ARM test binaries from P1.06 |
 | clang-format | 18.1.3 | apt `clang-format` | formatting with `tools/clang-format` |
-| arm-none-eabi GCC | 15.2 (planned) | `make setup` (the `setup.mk` sketch, red-rocket-computing/cross-dev release v0.2.0), or Arm GNU Toolchain 14.3.rel1 | ARM targets from P1.06. Both download URLs were reachable on 2026-10-18. The apt `gcc-arm-none-eabi` (13.2) is too old for `-std=c23`. |
+| arm-none-eabi GCC | 16.2.0 (crosstool-NG 1.29.0, binutils with it) | `make setup` downloads red-rocket-computing/cross-dev release v0.3.0 into `local/` (`tools/makefiles/setup.mk`); the first `make` does it through the `libc port: setup-tools` dependency | the five Arm boards (D9, D36, D37). Multilibs used: `thumb/v6-m/nofp` (armv6-m and armv6s-m), `thumb/v7e-m+fp/hard`, `thumb/v7e-m+dp/hard`, `thumb/v8-m.main+fp/hard`. The apt `gcc-arm-none-eabi` (13.2) is too old for `-std=c23`. |
 
-Cloud sessions install the apt packages through `.claude/hooks/session-start.sh`.
+Cloud sessions install the apt packages through `.claude/hooks/session-start.sh`; the Arm toolchain comes from `make setup` (about 180 MB, unpacked into `local/`, which `make realclean` removes).
 
 ## Notes
 
@@ -18,9 +18,18 @@ Cloud sessions install the apt packages through `.claude/hooks/session-start.sh`
   `__SIG_ATOMIC_MIN__`, `__WCHAR_MIN__`, `__WINT_MIN__`, ...). Clang 18 lacks
   some of them (it has `__INT64_C_SUFFIX__` instead). Verify the Clang version
   that provides them before enabling Clang builds (D9).
-- The `linux-x86_64` board uses `tools/makefiles/x86_64.mk`. ARM toolchain
-  files follow pi-pico's toolchain-file pattern (`CROSS_COMPILE`, `CROSS_FLAGS`) but are
-  named after the architecture and use `-march`, not `-mcpu` (D24).
+- The `linux-x86_64` board uses `tools/makefiles/x86_64.mk`. The Arm toolchain
+  files (`armv6-m.mk`, `armv6s-m.mk`, `armv7e-m.mk`, `armv7e-m-dp.mk`, `armv8-m.main.mk`) follow
+  pi-pico's toolchain-file pattern (`CROSS_COMPILE`, `CROSS_FLAGS`) but are named after
+  the architecture and use `-march`, not `-mcpu` (D24); they share `arm-none-eabi.mk`
+  and export `ARCH_FAMILY` and `LIBC_FPU` (D34). `armv6-m` is plain Armv6-M (no `SVC`);
+  `armv6s-m` adds the OS extension (D37).
+- The Arm boards (`linux-<arch>.mk`) run the tests with `qemu-arm -cpu max` (D36) and
+  link with `port/linux/arm/headers.ld` so the ELF headers are loaded.
+- GCC 15.2 did not implement `_BitInt` for 32-bit Arm; GCC 16.2 does
+  (`__BITINT_MAXWIDTH__` is 65535), which is one reason for the 16.2 toolchain (D37).
+- The arm-none-eabi objects have no `.note.GNU-stack`; the link passes
+  `-z noexecstack` instead of letting ld warn about an executable stack.
 - `__builtin_flt_rounds` does not exist in GCC 14, so `FLT_ROUNDS` calls the
   library function `__flt_rounds()`.
 - Ubuntu's GCC enables PIE, `-fstack-protector-strong` and CET by default.
@@ -32,5 +41,5 @@ Cloud sessions install the apt packages through `.claude/hooks/session-start.sh`
 ## Formatting check
 
 ```sh
-clang-format --style=file:tools/clang-format --dry-run $(find src arch port include test/unit -name '*.[ch]')
+clang-format --style=file:tools/clang-format --dry-run $(find libc port include test/unit test/libc-test/shim example -name '*.[ch]')
 ```

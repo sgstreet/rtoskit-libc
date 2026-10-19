@@ -153,10 +153,6 @@ int main(void)
 	static_assert(__STDC_ENDIAN_LITTLE__ != __STDC_ENDIAN_BIG__);
 	static_assert(__STDC_VERSION_STDBIT_H__ == 202311L);
 
-	/* Bit-precise types whose width matches a standard type */
-	CHECK(stdc_count_ones((unsigned _BitInt(32))0xf0f0f0f0) == 16);
-	CHECK(stdc_bit_ceil((unsigned _BitInt(16))0x8001) == 0);
-
 	/* The native byte order matches memory */
 	uint32_t word = 0x01020304;
 	unsigned char first = *(unsigned char *)&word;

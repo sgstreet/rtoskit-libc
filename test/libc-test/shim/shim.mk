@@ -21,4 +21,8 @@ include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
 CPPFLAGS += -I${SOURCE_DIR}/include
 
+# As the libc-test code itself: call the library, never the compiler's model of it (GCC 15 otherwise
+# elides the unused allocations in t_memfill and turns its loop into an endless one)
+CFLAGS += -fno-builtin
+
 endif

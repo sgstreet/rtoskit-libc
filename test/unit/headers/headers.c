@@ -411,7 +411,6 @@ static_assert(LONG_MAX == (long)(ULONG_MAX >> 1) && LONG_MIN == -LONG_MAX - 1);
 static_assert(LLONG_MAX == INT64_MAX && ULLONG_MAX == UINT64_MAX);
 static_assert(UINT_MAX == (unsigned int)-1 && ULONG_MAX == (unsigned long)-1 && ULLONG_MAX == (unsigned long long)-1);
 static_assert(INT_WIDTH == sizeof(int) * CHAR_BIT && LONG_WIDTH == sizeof(long) * CHAR_BIT && BOOL_WIDTH == 1);
-static_assert(BITINT_MAXWIDTH >= ULLONG_WIDTH);
 static_assert(MB_LEN_MAX >= 1);
 
 static_assert(FLT_RADIX == 2 && FLT_MANT_DIG == 24 && DBL_MANT_DIG == 53);

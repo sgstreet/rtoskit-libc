@@ -3,7 +3,7 @@ ifeq (${MAKECMDGOALS},)
 MAKECMDGOALS := all
 endif
 
-BOARDS ?= linux-x86_64
+BOARDS ?= linux-x86_64 linux-armv6-m linux-armv6s-m linux-armv7e-m linux-armv7e-m-dp linux-armv8-m.main
 BUILDS ?= debug release
 
 export BOARD_TYPE ?= all
@@ -83,6 +83,8 @@ include ${TOOLS_ROOT}/makefiles/tree.mk
 ifneq ($(filter-out all target clean install check,${MAKECMDGOALS}),)
 target:
 else
+# The cross toolchain is downloaded into local/ on first use (tools/makefiles/setup.mk)
+libc port: setup-tools
 example test: libc port
 target: example test
 endif
@@ -109,6 +111,8 @@ realclean: distclean
 
 info:
 	@echo "ARCH_CROSS=${ARCH_CROSS}"
+	@echo "ARCH_FAMILY=${ARCH_FAMILY}"
+	@echo "LIBC_FPU=${LIBC_FPU}"
 	@echo "RTOS_PORT=${RTOS_PORT}"
 	@echo "CROSS_COMPILE=${CROSS_COMPILE}"
 	@echo "BOARD_TYPE=${BOARD_TYPE}"

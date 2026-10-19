@@ -12,18 +12,18 @@
 #
 
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
-SUBDIRS := ${ARCH_CROSS}
+SUBDIRS := ${ARCH_FAMILY}
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
-# librtos-linux.a: the Linux test port, generic part plus the ${ARCH_CROSS} variant
-TARGET_OBJ_LIBS := port/linux/${ARCH_CROSS}
+# librtos-linux.a: the Linux test port, generic part plus the ${ARCH_FAMILY} variant
+TARGET_OBJ_LIBS := port/linux/${ARCH_FAMILY}
 
 EXTRA_DEPS := ${SOURCE_DIR}/linux.mk
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
-CPPFLAGS += -I${SOURCE_DIR}/${ARCH_CROSS}
+CPPFLAGS += -I${SOURCE_DIR}/${ARCH_FAMILY}
 CFLAGS += ${LIBC_CFLAGS}
 
 all: ${INSTALL_ROOT}/lib/librtos-linux.a

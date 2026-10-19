@@ -12,7 +12,7 @@
 #
 
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
-SUBDIRS := ${ARCH_CROSS}
+SUBDIRS := ${ARCH_FAMILY}
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
