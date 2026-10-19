@@ -17,5 +17,9 @@ CROSS_FLAGS ?= -mthumb -march=armv7e-m+fp.dp -mfloat-abi=hard
 
 export ARCH_FAMILY := arm
 export LIBC_FPU := fpv5-dp
+# <fenv.h> implementation: x86_64, fpv5-dp (every floating type in the FPU), or soft (D44)
+export LIBC_FENV := fpv5-dp
+# libm functions in FPU instructions: libc/math/<layer> replaces the generic files of the same name (D46)
+export LIBC_MATH_LAYERS := fpv5-sp fpv5-dp
 
 include ${PROJECT_ROOT}/tools/makefiles/arm-none-eabi.mk

@@ -7,24 +7,18 @@
  *
  * __flt_rounds.c
  *
- * Created on: Oct 18, 2026
+ * Created on: Oct 19, 2026
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
 #include <float.h>
 
-/*
- * The MXCSR rounding control field (bits 13-14) governs SSE arithmetic, which
- * is all float, double and (with -mlong-double-64) long double use. Its
- * encodings 0..3 are nearest, down, up and toward zero; FLT_ROUNDS uses
- * 1, 3, 2 and 0 for the same modes (C23 5.2.5.3.3).
- */
+#include "fenv-arch.h"
+
+/* C23 5.2.5.3.3p8: -1 indeterminable, 0 toward zero, 1 nearest, 2 upward, 3 downward */
 int __flt_rounds(void)
 {
-	static const int flt_rounds[4] = { 1, 3, 2, 0 };
-	unsigned int mxcsr;
+	static const int flt_rounds[4] = { 1, 2, 3, 0 };
 
-	__asm__ volatile("stmxcsr %0" : "=m"(mxcsr));
-
-	return flt_rounds[(mxcsr >> 13) & 3];
+	return flt_rounds[__libc_fenv_round(__libc_fenv_read())];
 }

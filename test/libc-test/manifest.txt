@@ -21,7 +21,7 @@ api/dirent skip:posix
 api/dlfcn skip:posix
 api/errno run
 api/fcntl skip:posix
-api/fenv pending:P1.13
+api/fenv run
 api/float run
 api/fmtmsg skip:posix
 api/fnmatch skip:posix
@@ -36,7 +36,7 @@ api/libgen skip:posix
 api/limits skip:posix # checks POSIX limits unconditionally; the ISO limits are in test/unit/headers
 api/locale skip:posix # needs POSIX locale_t and LC_*_MASK unconditionally
 api/main harness # main() linked with every api test
-api/math pending:P1.13
+api/math pending:P1.16 # takes the address of every <math.h> function
 api/monetary skip:posix
 api/mqueue skip:posix
 api/ndbm skip:posix
@@ -191,12 +191,12 @@ math/atanl pending:P1.15
 math/cbrt pending:P1.14
 math/cbrtf pending:P1.14
 math/cbrtl pending:P1.14
-math/ceil pending:P1.13
-math/ceilf pending:P1.13
-math/ceill pending:P1.13
-math/copysign pending:P1.13
-math/copysignf pending:P1.13
-math/copysignl pending:P1.13
+math/ceil run
+math/ceilf run
+math/ceill run
+math/copysign run
+math/copysignf run
+math/copysignl run
 math/cos pending:P1.15
 math/cosf pending:P1.15
 math/cosh pending:P1.15
@@ -223,60 +223,60 @@ math/expl pending:P1.14
 math/expm1 pending:P1.14
 math/expm1f pending:P1.14
 math/expm1l pending:P1.14
-math/fabs pending:P1.13
-math/fabsf pending:P1.13
-math/fabsl pending:P1.13
-math/fdim pending:P1.13
-math/fdimf pending:P1.13
-math/fdiml pending:P1.13
-math/fenv pending:P1.13
-math/floor pending:P1.13
-math/floorf pending:P1.13
-math/floorl pending:P1.13
-math/fma pending:P1.13
-math/fmaf pending:P1.13
-math/fmal pending:P1.13
-math/fmax pending:P1.13
-math/fmaxf pending:P1.13
-math/fmaxl pending:P1.13
-math/fmin pending:P1.13
-math/fminf pending:P1.13
-math/fminl pending:P1.13
-math/fmod pending:P1.13
-math/fmodf pending:P1.13
-math/fmodl pending:P1.13
-math/fpclassify pending:P1.13
-math/frexp pending:P1.13
-math/frexpf pending:P1.13
-math/frexpl pending:P1.13
+math/fabs run
+math/fabsf run
+math/fabsl run
+math/fdim run
+math/fdimf run
+math/fdiml run
+math/fenv run
+math/floor run
+math/floorf run
+math/floorl run
+math/fma run
+math/fmaf run
+math/fmal run
+math/fmax run
+math/fmaxf run
+math/fmaxl run
+math/fmin run
+math/fminf run
+math/fminl run
+math/fmod run
+math/fmodf run
+math/fmodl run
+math/fpclassify run
+math/frexp run
+math/frexpf run
+math/frexpl run
 math/hypot pending:P1.14
 math/hypotf pending:P1.14
 math/hypotl pending:P1.14
-math/ilogb pending:P1.13
-math/ilogbf pending:P1.13
-math/ilogbl pending:P1.13
-math/isless pending:P1.13
+math/ilogb run
+math/ilogbf run
+math/ilogbl run
+math/isless run
 math/j0 skip:posix # XSI Bessel functions
 math/j0f skip:posix # XSI Bessel functions
 math/j1 skip:posix # XSI Bessel functions
 math/j1f skip:posix # XSI Bessel functions
 math/jn skip:posix # XSI Bessel functions
 math/jnf skip:posix # XSI Bessel functions
-math/ldexp pending:P1.13
-math/ldexpf pending:P1.13
-math/ldexpl pending:P1.13
+math/ldexp run
+math/ldexpf run
+math/ldexpl run
 math/lgamma pending:P1.16
 math/lgamma_r skip:posix # reentrant lgamma
 math/lgammaf pending:P1.16
 math/lgammaf_r skip:posix # reentrant lgamma
 math/lgammal pending:P1.16
 math/lgammal_r skip:posix # reentrant lgamma
-math/llrint pending:P1.13
-math/llrintf pending:P1.13
-math/llrintl pending:P1.13
-math/llround pending:P1.13
-math/llroundf pending:P1.13
-math/llroundl pending:P1.13
+math/llrint run
+math/llrintf run
+math/llrintl run
+math/llround run
+math/llroundf run
+math/llroundl run
 math/log pending:P1.14
 math/log10 pending:P1.14
 math/log10f pending:P1.14
@@ -287,55 +287,55 @@ math/log1pl pending:P1.14
 math/log2 pending:P1.14
 math/log2f pending:P1.14
 math/log2l pending:P1.14
-math/logb pending:P1.13
-math/logbf pending:P1.13
-math/logbl pending:P1.13
+math/logb run
+math/logbf run
+math/logbl run
 math/logf pending:P1.14
 math/logl pending:P1.14
-math/lrint pending:P1.13
-math/lrintf pending:P1.13
-math/lrintl pending:P1.13
-math/lround pending:P1.13
-math/lroundf pending:P1.13
-math/lroundl pending:P1.13
-math/modf pending:P1.13
-math/modff pending:P1.13
-math/modfl pending:P1.13
-math/nearbyint pending:P1.13
-math/nearbyintf pending:P1.13
-math/nearbyintl pending:P1.13
-math/nextafter pending:P1.13
-math/nextafterf pending:P1.13
-math/nextafterl pending:P1.13
-math/nexttoward pending:P1.13
-math/nexttowardf pending:P1.13
-math/nexttowardl pending:P1.13
+math/lrint run
+math/lrintf run
+math/lrintl run
+math/lround run
+math/lroundf run
+math/lroundl run
+math/modf run
+math/modff run
+math/modfl run
+math/nearbyint run
+math/nearbyintf run
+math/nearbyintl run
+math/nextafter run
+math/nextafterf run
+math/nextafterl run
+math/nexttoward run
+math/nexttowardf run
+math/nexttowardl run
 math/pow pending:P1.14
 math/pow10 skip:posix # GNU extension
 math/pow10f skip:posix # GNU extension
 math/pow10l skip:posix # GNU extension
 math/powf pending:P1.14
 math/powl pending:P1.14
-math/remainder pending:P1.13
-math/remainderf pending:P1.13
-math/remainderl pending:P1.13
-math/remquo pending:P1.13
-math/remquof pending:P1.13
-math/remquol pending:P1.13
-math/rint pending:P1.13
-math/rintf pending:P1.13
-math/rintl pending:P1.13
-math/round pending:P1.13
-math/roundf pending:P1.13
-math/roundl pending:P1.13
+math/remainder run
+math/remainderf run
+math/remainderl run
+math/remquo run
+math/remquof run
+math/remquol run
+math/rint run
+math/rintf run
+math/rintl run
+math/round run
+math/roundf run
+math/roundl run
 math/scalb skip:posix # obsolete XSI scalb
 math/scalbf skip:posix # obsolete XSI scalb
-math/scalbln pending:P1.13
-math/scalblnf pending:P1.13
-math/scalblnl pending:P1.13
-math/scalbn pending:P1.13
-math/scalbnf pending:P1.13
-math/scalbnl pending:P1.13
+math/scalbln run
+math/scalblnf run
+math/scalblnl run
+math/scalbn run
+math/scalbnf run
+math/scalbnl run
 math/sin pending:P1.15
 math/sincos skip:posix # GNU extension
 math/sincosf skip:posix # GNU extension
@@ -357,9 +357,9 @@ math/tanl pending:P1.15
 math/tgamma pending:P1.16
 math/tgammaf pending:P1.16
 math/tgammal pending:P1.16
-math/trunc pending:P1.13
-math/truncf pending:P1.13
-math/truncl pending:P1.13
+math/trunc run
+math/truncf run
+math/truncl run
 math/y0 skip:posix # XSI Bessel functions
 math/y0f skip:posix # XSI Bessel functions
 math/y1 skip:posix # XSI Bessel functions
@@ -374,7 +374,7 @@ regression/fflush-exit skip:posix # fork
 regression/fgets-eof skip:posix # fmemopen
 regression/fgetwc-buffering skip:wide
 regression/flockfile-list skip:posix
-regression/fpclassify-invalid-ld80 pending:P1.13
+regression/fpclassify-invalid-ld80 run
 regression/ftello-unflushed-append skip:posix
 regression/getpwnam_r-crash skip:posix
 regression/getpwnam_r-errno skip:posix
