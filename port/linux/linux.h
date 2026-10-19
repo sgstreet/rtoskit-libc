@@ -14,6 +14,8 @@
 #ifndef _LINUX_H
 #define _LINUX_H
 
+#include <time.h>
+
 #include "linux-arch.h"
 
 #define __LINUX_PT_TLS 7
@@ -37,6 +39,34 @@
 #define __LINUX_O_CLOEXEC 0x80000
 #define __LINUX_AT_FDCWD -100
 #define __LINUX_CREATE_MODE 0666
+
+/* Clock IDs for the time bases, and the kernel's 64-bit timespec */
+#define __LINUX_CLOCK_REALTIME 0
+#define __LINUX_CLOCK_MONOTONIC 1
+#define __LINUX_CLOCK_PROCESS_CPUTIME_ID 2
+#define __LINUX_CLOCK_THREAD_CPUTIME_ID 3
+
+struct __linux_timespec {
+	long long tv_sec;
+	long long tv_nsec;
+};
+
+/* The kernel clock for a TIME_* base, or -1 */
+static inline int __linux_clock(int base)
+{
+	switch (base) {
+		case TIME_UTC:
+			return __LINUX_CLOCK_REALTIME;
+		case TIME_MONOTONIC:
+			return __LINUX_CLOCK_MONOTONIC;
+		case TIME_ACTIVE:
+			return __LINUX_CLOCK_PROCESS_CPUTIME_ID;
+		case TIME_THREAD_ACTIVE:
+			return __LINUX_CLOCK_THREAD_CPUTIME_ID;
+		default:
+			return -1;
+	}
+}
 
 /* The heap: reserved address space, committed by the kernel page by page as it is touched */
 #define __LINUX_HEAP_SIZE (64UL << 20)
@@ -67,9 +97,6 @@ extern const struct __linux_ehdr __ehdr_start;
 
 /* The program's entry point, called through __libc_start_main */
 extern int main(int argc, char **argv);
-
-/* The environment passed by the kernel, kept for __rtos_getenv */
-extern char **__rtos_linux_environ;
 
 [[noreturn]] void __rtos_linux_start(long *stack);
 

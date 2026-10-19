@@ -109,11 +109,12 @@ Enabled boards: `linux-x86_64` from P1.01, and the five ARM boards (`linux-armv6
 - [x] `scanf`, `fscanf`, `sscanf`, `vscanf`, `vfscanf`, `vsscanf`, including the C23 `%b` and `%wN`/`%wfN`; floating point through P1.07's core (behind a replaceable symbol, D13). *`libc/stdio/__libc_scan.c`, `__libc_scan_float.c`.*
 - *Tests: `test/unit/scanf` with 90 table cases (glibc-generated, seven corrected to the C23 input-item rule, plus hand-written C23 cases), typed modifiers, long float inputs against `strtod`, and `fscanf` on a file; nine injected faults were caught. libc-test: `functional/sscanf`, `functional/ungetc` (with an empty test-shim `<unistd.h>`), `regression/scanf-bytes-consumed`, `scanf-match-literal-eof`, `scanf-nullbyte-char`, `sscanf-eof` run and pass. The first `functional/ungetc` run found the engine using the stream's pushback slot; it now pushes back into the read window.*
 
-## P1.11 — `<time.h>`, `<locale.h>`, `strerror` completion
-- [ ] Research civil-from-days algorithms (e.g. Howard Hinnant's paper; clean-room) and POSIX `TZ` string parsing (Q6).
-- [ ] `time`, `clock`, `difftime`, `mktime` (normalization), `timegm`, `timespec_get`, `timespec_getres`, `gmtime`/`gmtime_r`, `localtime`/`localtime_r`, `asctime`, `ctime` (the static results are `thread_local`), and `strftime` (all conversions in the C locale).
-- [ ] `<locale.h>`: `setlocale` (`"C"` and `""` → `"C"`), `localeconv`.
-- [ ] Time seam (`__rtos_clock_gettime`, `__rtos_clock_getres`, `__rtos_cpu_time`).
+## P1.11 — `<time.h>`, `<locale.h>`, `strerror` completion `[x]`
+- [x] Research civil-from-days algorithms (e.g. Howard Hinnant's paper; clean-room) and POSIX `TZ` string parsing (Q6). *`docs/research/time-locale.md`; D42, Q6 resolved.*
+- [x] `time`, `clock`, `difftime`, `mktime` (normalization), `timegm`, `timespec_get`, `timespec_getres`, `gmtime`/`gmtime_r`, `localtime`/`localtime_r`, `asctime`, `ctime` (the static results are `thread_local`), and `strftime` (all conversions in the C locale). *`libc/time/`; the POSIX `TZ` string is read at every conversion; `strftime` also has the POSIX flags and widths libc-test checks.*
+- [x] `<locale.h>`: `setlocale` (`"C"` and `""` → `"C"`), `localeconv`. *`libc/locale/`. Also `strerror` completion: `<errno.h>` now defines the POSIX error numbers (Linux values) and each has a message.*
+- [x] Time seam (`__rtos_clock_gettime`, `__rtos_clock_getres`, `__rtos_cpu_time`). *`__rtos_cpu_time` is not needed: `clock` reads the `TIME_ACTIVE` base. `port/linux` uses `clock_gettime`/`clock_getres` (the time64 calls on Arm); `port/none` has no clock (`-ENOSYS`).*
+- *Tests: `test/unit/time`: gmtime/timegm vectors and a ±2^40 s sweep, the `int` year limits (`EOVERFLOW`), `mktime` normalisation, 39 `TZ` cases with instants from the IANA zones (gaps, overlaps, southern rules, `Jn`, `n`, negative and >24 h rule times, invalid strings), every `strftime` conversion on four dates (ISO week edges), the clocks, the "C" locale and every `strerror` message; 19 injected faults were caught. libc-test: `functional/strftime` and `functional/time` run and pass with `setenv`/`putenv`/`tzset` from the test shim; `api/time` and `api/locale` are skipped (POSIX names required unconditionally).*
 
 ## P1.12 — `<threads.h>`, `<stdatomic.h>`, real locks, `port/none`
 - [ ] Research how musl, Bionic, picolibc/newlib retarget locking and the RTOS libc layers (Zephyr, FreeRTOS+newlib) handle threads, `tss` destructors, `call_once` and static TLS allocation.

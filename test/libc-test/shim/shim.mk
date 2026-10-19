@@ -19,7 +19,7 @@ EXTRA_DEPS := ${SOURCE_DIR}/shim.mk
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
-CPPFLAGS += -I${SOURCE_DIR}/include
+CPPFLAGS += -I${SOURCE_DIR}/include -I${PROJECT_ROOT}/port/linux
 
 # As the libc-test code itself: call the library, never the compiler's model of it (GCC 15 otherwise
 # elides the unused allocations in t_memfill and turns its loop into an endless one)

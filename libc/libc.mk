@@ -24,6 +24,7 @@ TARGET_OBJ_LIBS += libc/decimal
 TARGET_OBJ_LIBS += libc/errno
 TARGET_OBJ_LIBS += libc/fenv/${ARCH_CROSS}
 TARGET_OBJ_LIBS += libc/inttypes
+TARGET_OBJ_LIBS += libc/locale
 TARGET_OBJ_LIBS += libc/malloc
 TARGET_OBJ_LIBS += libc/malloc/${LIBC_MALLOC}
 TARGET_OBJ_LIBS += libc/setjmp/${ARCH_CROSS}
@@ -33,6 +34,7 @@ TARGET_OBJ_LIBS += libc/stdbit
 TARGET_OBJ_LIBS += libc/stdio
 TARGET_OBJ_LIBS += libc/stdlib
 TARGET_OBJ_LIBS += libc/string
+TARGET_OBJ_LIBS += libc/time
 TARGET_OBJ_LIBS += libc/tls/${ARCH_FAMILY}
 
 EXTRA_DEPS := ${SOURCE_DIR}/libc.mk

@@ -37,6 +37,10 @@
 #define __LINUX_SYS_RENAMEAT 264
 
 /* 64-bit offsets are the default on a 64-bit kernel */
+/* clock_gettime and clock_getres with a 64-bit struct timespec */
+#define __LINUX_SYS_CLOCK_GETTIME 228
+#define __LINUX_SYS_CLOCK_GETRES 229
+
 #define __LINUX_O_LARGEFILE 0
 
 #define __LINUX_ARCH_SET_FS 0x1002

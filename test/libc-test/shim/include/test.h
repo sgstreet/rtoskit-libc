@@ -41,4 +41,12 @@ uint64_t t_randint(uint64_t a, uint64_t b);
 void t_shuffle(uint64_t *p, size_t n);
 void t_randrange(uint64_t *p, size_t n);
 
+/* POSIX environment functions (P1.11); tzset has nothing to do, as the library reads TZ at every conversion */
+int setenv(const char *name, const char *value, int overwrite);
+int putenv(char *string);
+void tzset(void);
+
+/* Adds or replaces the environment entry "name=value" held by entry */
+int t_setenv(char *entry, size_t name_length, int overwrite);
+
 #endif /* _TEST_H */
