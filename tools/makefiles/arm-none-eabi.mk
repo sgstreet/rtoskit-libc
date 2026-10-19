@@ -29,7 +29,8 @@ NM := ${CROSS_COMPILE}nm
 INSTALL := install
 INSTALL_STRIP := install --strip-program=${CROSS_COMPILE}strip -s
 
-CPPFLAGS := -nostdinc -isystem ${PROJECT_ROOT}/include
+# The predefined feature macros a hosted compiler would take from <stdc-predef.h> (D50)
+CPPFLAGS := -nostdinc -isystem ${PROJECT_ROOT}/include -include ${PROJECT_ROOT}/include/stdc-predef.h
 ARFLAGS := cr
 
 # Assembler sources are preprocessed by the compiler driver, which needs the target selection too

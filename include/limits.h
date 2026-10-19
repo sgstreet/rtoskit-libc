@@ -18,6 +18,7 @@
 #define __STDC_VERSION_LIMITS_H__ 202311L
 
 #define BOOL_WIDTH 1
+#define BOOL_MAX 1
 #define CHAR_BIT __CHAR_BIT__
 #define CHAR_WIDTH __CHAR_BIT__
 #define SCHAR_WIDTH __SCHAR_WIDTH__

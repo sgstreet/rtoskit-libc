@@ -12,6 +12,7 @@
  */
 
 #include <errno.h>
+#include <fenv.h>
 #include <float.h>
 #include <iso646.h>
 #include <limits.h>
@@ -29,6 +30,14 @@
  * <limits.h> and <stdint.h> limit must be usable in #if (C23 5.2.5.3.2,
  * 7.22.2) and agree with the types it describes.
  */
+
+/* D50: Annex F (<stdc-predef.h>) is claimed exactly where <fenv.h> has every rounding direction */
+#if defined(FE_UPWARD) != defined(__STDC_IEC_60559_BFP__) || defined(FE_UPWARD) != defined(__STDC_IEC_559__)
+#error the Annex F claim disagrees with <fenv.h>
+#endif
+#if defined(__STDC_IEC_60559_COMPLEX__) || defined(__STDC_IEC_60559_DFP__)
+#error Annex G and decimal floating point are not claimed
+#endif
 
 /* Each limit must be an integer constant expression usable in #if */
 #if !(CHAR_BIT == CHAR_BIT)
