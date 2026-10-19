@@ -60,7 +60,7 @@ api/stdbool run
 api/stddef run
 api/stdint run
 api/stdio pending:P1.09
-api/stdlib pending:P1.07 # declares strtod/strtof/strtold/atof
+api/stdlib skip:posix # declares getsubopt, posix_memalign, mkstemp, ... unconditionally
 api/string skip:posix # requires strsignal unconditionally
 api/strings skip:posix
 api/sys_ipc skip:posix
@@ -144,12 +144,12 @@ functional/string_strchr run
 functional/string_strcspn run
 functional/string_strstr run
 functional/strptime skip:posix
-functional/strtod pending:P1.07
-functional/strtod_long pending:P1.07
-functional/strtod_simple pending:P1.07
-functional/strtof pending:P1.07
+functional/strtod run
+functional/strtod_long run
+functional/strtod_simple pending:P1.15 # needs sin() and printf %.300f
+functional/strtof run
 functional/strtol run
-functional/strtold pending:P1.07
+functional/strtold run
 functional/swprintf skip:wide
 functional/tgmath pending:P1.16
 functional/time pending:P1.11 # calls putenv("TZ")

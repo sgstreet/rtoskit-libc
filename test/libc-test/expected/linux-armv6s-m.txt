@@ -14,7 +14,11 @@ functional/string_memset PASS
 functional/string_strchr PASS
 functional/string_strcspn PASS
 functional/string_strstr PASS
+functional/strtod PASS
+functional/strtod_long PASS
+functional/strtof PASS
 functional/strtol PASS
+functional/strtold PASS
 functional/udiv PASS
 regression/malloc-0 PASS
 regression/malloc-oom PASS
