@@ -16,16 +16,12 @@
 
 #include <stdint.h>
 
+#include "internal/decimal.h"
+
 /*
  * Decimal and hexadecimal text to binary floating point (C23 7.24.1.5),
  * shared by strtof, strtod and strtold; docs/research/strtod.md.
  */
-
-/* FLT_ROUNDS values (C23 5.2.5.3.3) */
-#define __LIBC_ROUND_TOWARD_ZERO 0
-#define __LIBC_ROUND_NEAREST 1
-#define __LIBC_ROUND_UPWARD 2
-#define __LIBC_ROUND_DOWNWARD 3
 
 /* An IEEE 754 binary interchange format, and its exact fast path */
 struct __libc_float_format {
@@ -39,9 +35,6 @@ struct __libc_float_format {
 	/* significand * 10^exponent10 in one correctly rounded operation, as format bits; significand <= 2^precision, |exponent10| <= max_pow10 */
 	uint64_t (*exact)(uint64_t significand, int exponent10);
 };
-
-/* Decimal digits the slow path keeps; a binary64 rounding boundary has at most 767 significant digits */
-#define __LIBC_DECIMAL_DIGITS 800
 
 /*
  * Parse nptr as strtod does and return the bit pattern of the result in the

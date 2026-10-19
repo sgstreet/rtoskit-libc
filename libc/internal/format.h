@@ -49,10 +49,12 @@ int __libc_format(struct __libc_format_sink *sink, const char *format, va_list a
 
 /*
  * Formats one a/A/e/E/f/F/g/G conversion of value to the sink and returns the
- * number of characters produced, or a negative value with errno set. A single
- * replaceable symbol so a no-float flavour can drop it (PLAN D13).
+ * number of characters produced, or a negative value with errno set: EOVERFLOW,
+ * before anything is written, when the field would take the count of
+ * characters already written past INT_MAX. A single replaceable symbol so a
+ * no-float flavour can drop it (PLAN D13).
  */
-int __libc_format_float(struct __libc_format_sink *sink, const struct __libc_format_spec *spec, long double value);
+int __libc_format_float(struct __libc_format_sink *sink, const struct __libc_format_spec *spec, long double value, size_t count);
 
 void __libc_format_buffer_write(struct __libc_format_sink *sink, const char *s, size_t n);
 

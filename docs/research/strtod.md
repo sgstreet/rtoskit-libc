@@ -112,7 +112,8 @@ libc-test need; the rest of the header comes with libm (P1.13+).
 ## Cost
 
 - Code (armv6-m, `-Os`): `__libc_strtofloat` 1105 B, `__libc_decimal_to_float`
-  866 B, `__libc_float_pack` 664 B, `strtod` 276 B (with its 23 powers of
+  866 B (528 B since P1.08 moved the decimal arithmetic into the shared
+  `libc/decimal/` module, D39), `__libc_float_pack` 664 B, `strtod` 276 B (with its 23 powers of
   ten), `strtof` 136 B: about 3 KB, plus libgcc's soft-float multiply and
   divide for the fast path on armv6-m.
 - Stack: the slow path's `struct decimal` is ≈ 820 bytes; the fast path and

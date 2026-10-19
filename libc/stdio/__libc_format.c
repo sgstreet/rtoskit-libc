@@ -485,12 +485,9 @@ static bool format_string(struct output *out, const struct __libc_format_spec *s
 
 static bool format_float(struct output *out, const struct __libc_format_spec *spec, long double value)
 {
-	int status = __libc_format_float(out->sink, spec, value);
+	int status = __libc_format_float(out->sink, spec, value, out->count);
 
 	if (status < 0)
-		return false;
-
-	if (!reserve(out, status))
 		return false;
 	out->count += status;
 
