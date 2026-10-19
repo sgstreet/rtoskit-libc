@@ -12,4 +12,6 @@ functional/string_strchr PASS
 functional/string_strcspn PASS
 functional/string_strstr PASS
 functional/udiv PASS
+regression/malloc-0 PASS
+regression/malloc-oom PASS
 regression/printf-fmt-n PASS

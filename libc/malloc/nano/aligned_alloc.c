@@ -1,0 +1,72 @@
+/*
+ * Copyright (C) 2026 Red Rocket Computing, LLC
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * aligned_alloc.c
+ *
+ * Created on: Oct 18, 2026
+ *     Author: Stephen Street (stephen@redrocketcomputing.com)
+ */
+
+#include <errno.h>
+#include <stdbit.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <rtos/rtos-port.h>
+
+#include "nano.h"
+
+/*
+ * C23 7.24.3.1: any power of two is a valid alignment. Over-allocate by the
+ * alignment plus a minimum chunk, free the gap before the aligned payload (it
+ * is either empty or big enough to be a chunk) and trim the tail.
+ */
+void *aligned_alloc(size_t alignment, size_t size)
+{
+	size_t stride = __libc_nano_request(size);
+	uintptr_t address;
+	void *p = nullptr;
+
+	if (!stdc_has_single_bit(alignment)) {
+		errno = EINVAL;
+		return nullptr;
+	}
+	if (alignment <= __LIBC_NANO_ALIGN)
+		return malloc(size);
+
+	if (stride == 0 || stride > SIZE_MAX - alignment - __LIBC_NANO_MIN_STRIDE) {
+		errno = ENOMEM;
+		return nullptr;
+	}
+
+	__rtos_lock_acquire(&__rtos_malloc_lock);
+	__libc_nano_init();
+	p = __libc_nano_allocate(stride + alignment + __LIBC_NANO_MIN_STRIDE);
+	if (p != nullptr) {
+		address = ((uintptr_t)p + alignment - 1) & ~(uintptr_t)(alignment - 1);
+
+		/* A gap smaller than a chunk cannot be freed; the next aligned address leaves at least alignment */
+		if (address != (uintptr_t)p && address - (uintptr_t)p < __LIBC_NANO_MIN_STRIDE)
+			address += alignment;
+
+		if (address != (uintptr_t)p) {
+			size_t gap = address - (uintptr_t)p;
+
+			*__libc_nano_header((void *)address) = *__libc_nano_header(p) - gap;
+			*__libc_nano_header(p) = gap;
+			__libc_nano_release(p);
+			p = (void *)address;
+		}
+
+		__libc_nano_trim(p, stride);
+	}
+	__rtos_lock_release(&__rtos_malloc_lock);
+
+	if (p == nullptr)
+		errno = ENOMEM;
+
+	return p;
+}

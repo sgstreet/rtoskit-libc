@@ -60,6 +60,10 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
   `-mcpu`, D24) sets the toolchain and all flags, including
   `LIBC_CFLAGS` for library code. It also links `libc.a` from the build tree
   through `LDLIBS`.
+- **Allocator:** `LIBC_MALLOC` picks the allocator built into `libc.a`:
+  `nano` (default, set in the board file) or `tlsf`
+  (`make LIBC_MALLOC=tlsf ...`; run `make clean` after changing it). Both
+  variants under `libc/malloc/` are always built and tested (D32).
 - **Output:** `build/<board>/<build-type>/<module path>/`; installs go to
   `images/<board>/<build-type>/`.
 - **Modules:** every source directory is a module with its own `<dirname>.mk`

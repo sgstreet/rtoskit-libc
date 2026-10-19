@@ -24,6 +24,7 @@
 
 /* Additional error numbers (C23 7.5p4) */
 #define EBADF 9
+#define ENOMEM 12
 #define EINVAL 22
 #define EOVERFLOW 75
 

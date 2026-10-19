@@ -26,7 +26,9 @@ void *memcpy(void *restrict s1, const void *restrict s2, size_t n);
 void *memccpy(void *restrict s1, const void *restrict s2, int c, size_t n);
 void *memmove(void *s1, const void *s2, size_t n);
 char *strcpy(char *restrict s1, const char *restrict s2);
+char *strdup(const char *s);
 char *strncpy(char *restrict s1, const char *restrict s2, size_t n);
+char *strndup(const char *s, size_t size);
 
 /* Concatenation functions (C23 7.26.3) */
 char *strcat(char *restrict s1, const char *restrict s2);

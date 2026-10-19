@@ -15,3 +15,6 @@
 
 export ARCH_CROSS := x86_64
 export RTOS_PORT := linux
+
+# The allocator built into libc.a: nano (small, the default) or tlsf (constant time); PLAN D32
+export LIBC_MALLOC ?= nano

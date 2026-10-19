@@ -15,7 +15,7 @@
 #define _RTOS_RTOS_PORT_H
 
 /*
- * The RTOS seam (PLAN D4, seam v0).
+ * The RTOS seam (PLAN D4; process and I/O from P1.01, heap and locks from P1.04).
  *
  * The library reaches the operating system only through the __rtos_*
  * functions below. Exactly one port library (librtos-<port>.a) defines them;
@@ -44,6 +44,35 @@ ptrdiff_t __rtos_read(int handle, void *buffer, size_t count);
 
 /* Write up to count bytes; returns the number written or a negated errno */
 ptrdiff_t __rtos_write(int handle, const void *buffer, size_t count);
+
+/*
+ * Heap (PLAN D31). libc's allocator asks for its memory once, at the first
+ * allocation, by calling this with index 0, 1, 2, ... until it returns false
+ * (at most 8 regions). Each region is a fixed block of memory the allocator
+ * owns from then on; it needs no particular alignment. A port without heap
+ * memory returns false for index 0, and every allocation then fails.
+ */
+bool __rtos_heap_region(unsigned int index, void **base, size_t *size);
+
+/*
+ * Locks (PLAN D31). The port defines struct __rtos_lock; libc only handles
+ * pointers to it, so one libc.a serves every port. Locks are recursive: the
+ * owning thread may acquire a lock it holds, and must release it as often.
+ * libc names the statically allocated locks below, which the port defines;
+ * __rtos_lock_create and __rtos_lock_destroy serve locks libc creates at run
+ * time. A single-threaded port implements them all as no-ops.
+ */
+struct __rtos_lock;
+
+/* Serialises the memory management functions */
+extern struct __rtos_lock __rtos_malloc_lock;
+
+void __rtos_lock_acquire(struct __rtos_lock *lock);
+void __rtos_lock_release(struct __rtos_lock *lock);
+
+/* Returns 0 and stores a new lock, or a negated errno */
+int __rtos_lock_create(struct __rtos_lock **lock);
+void __rtos_lock_destroy(struct __rtos_lock *lock);
 
 /*
  * Thread-local storage (PLAN D10). A port describes the TLS initialization

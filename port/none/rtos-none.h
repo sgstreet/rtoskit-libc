@@ -23,4 +23,17 @@
  */
 void __rtos_none_output(const void *buffer, size_t count);
 
+/*
+ * The heap is the memory between these symbols, which the board's linker
+ * script defines. They are weak: without them there is no heap, and a board
+ * may instead replace __rtos_heap_region itself to describe several regions.
+ */
+[[gnu::weak]] extern char __rtos_none_heap_start[];
+[[gnu::weak]] extern char __rtos_none_heap_end[];
+
+/* Single-threaded: locks need no state */
+struct __rtos_lock {
+	char unused;
+};
+
 #endif /* _RTOS_NONE_H */

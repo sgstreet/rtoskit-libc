@@ -58,12 +58,12 @@ Enabled boards: `linux-x86_64` from P1.01, and the four ARM boards (`linux-armv6
 - [x] `<stdckdint.h>`: `ckd_add`/`ckd_sub`/`ckd_mul` via `__builtin_*_overflow`.
 - [x] Unit tests for `memset_explicit`, `memccpy`, `<stdbit.h>` and `<stdckdint.h>`. *Plus `test/unit/string` (alignment sweeps, overlaps, Two-Way against a naive search), `test/unit/ctype`, and `test/unit/assert` with an `assert.run` driver. libc-test: `api/assert` and five `functional/string_*` tests now run; `api/ctype`, `api/string` and `functional/string` are skipped because they need POSIX/BSD functions unconditionally.*
 
-## P1.04 — Memory allocator (`<stdlib.h>` part 1)
-- [ ] Research allocators for embedded systems (TLSF, dlmalloc, musl mallocng/oldmalloc, picolibc nano-malloc, umm_malloc, FreeRTOS heap_4/heap_5). Choose for determinism and fragmentation, write a size estimate, and record the decision in PLAN.md.
-- [ ] Finalise the heap seam (`__rtos_heap_region` vs `__rtos_sbrk`) and the lock seam (`__rtos_lock_*`, with a no-op implementation in `port/none` and a futex-free single-thread version in `port/linux` until P1.12).
-- [ ] `malloc`, `calloc` (with overflow check), `realloc` (C23 semantics for size 0), `free`, `aligned_alloc`, `free_sized`, `free_aligned_sized`.
-- [ ] `strdup` and `strndup`.
-- [ ] Unit and stress tests: alignment, exhaustion returning `NULL` with `errno == ENOMEM`, and a randomized alloc/free fuzz test with a heap consistency checker.
+## P1.04 — Memory allocator (`<stdlib.h>` part 1)  `[x]`
+- [x] Research allocators for embedded systems (TLSF, dlmalloc, musl mallocng/oldmalloc, picolibc nano-malloc, umm_malloc, FreeRTOS heap_4/heap_5). Choose for determinism and fragmentation, write a size estimate, and record the decision in PLAN.md. *`docs/research/malloc.md`: TLSF first (D31); after review against picolibc's allocator, two variants selected with `LIBC_MALLOC` (D32): `nano` (default, 838 B Thumb-2 on armv6-m) and `tlsf` (1532 B). Sizes measured with the Arm GNU Toolchain 14.3. The TLSF paper PDFs were unreachable; the note says what it rests on.*
+- [x] Finalise the heap seam (`__rtos_heap_region` vs `__rtos_sbrk`) and the lock seam (`__rtos_lock_*`, with a no-op implementation in `port/none` and a futex-free single-thread version in `port/linux` until P1.12). *`__rtos_heap_region(index, ...)`; opaque recursive locks with port-defined named locks (`__rtos_malloc_lock`) and `__rtos_lock_create/destroy`. The Linux locks count depth and abort on unbalanced use.*
+- [x] `malloc`, `calloc` (with overflow check), `realloc` (C23 semantics for size 0), `free`, `aligned_alloc`, `free_sized`, `free_aligned_sized`. *`realloc(p, 0)` (undefined in C23) shrinks to a minimum block; `ENOMEM` (12) added to `<errno.h>`.*
+- [x] `strdup` and `strndup`.
+- [x] Unit and stress tests: alignment, exhaustion returning `NULL` with `errno == ENOMEM`, and a randomized alloc/free fuzz test with a heap consistency checker. *`test/unit/malloc`, built once per allocator (20 000-step fuzz with `__libc_malloc_check()` after every step, plus a leak check against the fresh heap's largest allocation; injected faults in both allocators were caught). libc-test `regression/malloc-0` and `regression/malloc-oom` run, the latter with the new shim `t_memfill`.*
 
 ## P1.05 — `<stdlib.h>` part 2, `<inttypes.h>`, `<setjmp.h>`, `<signal.h>`
 - [ ] Research `strtol`-family edge cases (bases, overflow, the C23 `0b` prefix), `qsort` (research introsort vs smoothsort vs heapsort; stack use matters), and PRNG choices for `rand`.

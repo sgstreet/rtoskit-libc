@@ -22,8 +22,25 @@
 #define __LINUX_PROT_WRITE 0x2
 #define __LINUX_MAP_PRIVATE 0x02
 #define __LINUX_MAP_ANONYMOUS 0x20
+#define __LINUX_MAP_NORESERVE 0x4000
 
 #define __LINUX_SIGABRT 6
+
+/* The heap: reserved address space, committed by the kernel page by page as it is touched */
+#define __LINUX_HEAP_SIZE (64UL << 20)
+
+/* Locks the port can create at run time (until thread support, P1.12) */
+#define __LINUX_LOCK_POOL_SIZE 32
+
+/*
+ * Until thread support (P1.12) the program is single-threaded, so a lock only
+ * tracks its recursion depth; releasing a lock that is not held aborts, which
+ * makes unbalanced locking visible in the tests.
+ */
+struct __rtos_lock {
+	unsigned int depth;
+	bool allocated;
+};
 
 /* Kernel results in this range are negated error numbers */
 static inline bool __linux_is_error(long result)

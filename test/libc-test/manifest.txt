@@ -384,9 +384,9 @@ regression/inet_pton-empty-last-field skip:posix
 regression/iswspace-null skip:wide
 regression/lrand48-signextend skip:posix
 regression/lseek-large skip:posix
-regression/malloc-0 pending:P1.04
+regression/malloc-0 run
 regression/malloc-brk-fail skip:posix
-regression/malloc-oom pending:P1.04 # t_memfill needs an mmap-free shim
+regression/malloc-oom run # with the shim's t_memfill
 regression/mbsrtowcs-overflow skip:wide
 regression/memmem-oob skip:posix
 regression/memmem-oob-read skip:posix
