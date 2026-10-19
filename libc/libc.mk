@@ -16,10 +16,14 @@ include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
 # libc.a collects the objects of every libc module, including the ${ARCH_CROSS} variants
+# and the allocator variant named by ${LIBC_MALLOC} (set by the board file, PLAN D32)
+$(if $(wildcard ${PROJECT_ROOT}/libc/malloc/${LIBC_MALLOC}/${LIBC_MALLOC}.mk),,$(error LIBC_MALLOC='${LIBC_MALLOC}' is not an allocator in libc/malloc))
 TARGET_OBJ_LIBS := libc/assert
 TARGET_OBJ_LIBS += libc/ctype
 TARGET_OBJ_LIBS += libc/errno
 TARGET_OBJ_LIBS += libc/fenv/${ARCH_CROSS}
+TARGET_OBJ_LIBS += libc/malloc
+TARGET_OBJ_LIBS += libc/malloc/${LIBC_MALLOC}
 TARGET_OBJ_LIBS += libc/startup
 TARGET_OBJ_LIBS += libc/stdbit
 TARGET_OBJ_LIBS += libc/stdio

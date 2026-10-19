@@ -30,4 +30,7 @@ extern volatile int t_status;
 
 int t_printf(const char *s, ...);
 
+/* Uses up the heap (P1.04) */
+int t_memfill(void);
+
 #endif /* _TEST_H */

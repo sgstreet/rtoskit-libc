@@ -30,6 +30,16 @@ typedef __WCHAR_TYPE__ wchar_t;
 [[noreturn]] void exit(int status);
 [[noreturn]] void _Exit(int status);
 
+/* Memory management functions (C23 7.24.3) */
+void *aligned_alloc(size_t alignment, size_t size);
+void *calloc(size_t nmemb, size_t size);
+void free(void *ptr);
+void free_sized(void *ptr, size_t size);
+void free_aligned_sized(void *ptr, size_t alignment, size_t size);
+void *malloc(size_t size);
+void *realloc(void *ptr, size_t size);
+
+/* Alignment of memory (C23 7.24.9) */
 size_t memalignment(const void *p);
 
 #endif /* _STDLIB_H */
