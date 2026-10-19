@@ -14,7 +14,7 @@
 #ifndef _STDLIB_H
 #define _STDLIB_H
 
-/* C23 7.24 (strtod and strfrom* arrive with P1.07 and P1.08, call_once with P1.12) */
+/* C23 7.24 (strfrom* arrive with P1.08, call_once with P1.12) */
 #define __STDC_VERSION_STDLIB_H__ 202311L
 
 typedef __SIZE_TYPE__ size_t;
@@ -47,9 +47,13 @@ typedef struct {
 } lldiv_t;
 
 /* Numeric conversion functions (C23 7.24.1) */
+double atof(const char *nptr);
 int atoi(const char *nptr);
 long int atol(const char *nptr);
 long long int atoll(const char *nptr);
+double strtod(const char *restrict nptr, char **restrict endptr);
+float strtof(const char *restrict nptr, char **restrict endptr);
+long double strtold(const char *restrict nptr, char **restrict endptr);
 long int strtol(const char *restrict nptr, char **restrict endptr, int base);
 long long int strtoll(const char *restrict nptr, char **restrict endptr, int base);
 unsigned long int strtoul(const char *restrict nptr, char **restrict endptr, int base);
