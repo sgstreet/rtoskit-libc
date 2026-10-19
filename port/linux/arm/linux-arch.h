@@ -40,6 +40,14 @@
 #define __LINUX_SYS_CLOCK_GETTIME 403
 #define __LINUX_SYS_CLOCK_GETRES 406
 
+/* Threads (P1.12): the time64 futex and clock_nanosleep take the 64-bit timespec */
+#define __LINUX_SYS_EXIT 1
+#define __LINUX_SYS_MUNMAP 91
+#define __LINUX_SYS_CLONE 120
+#define __LINUX_SYS_SCHED_YIELD 158
+#define __LINUX_SYS_CLOCK_NANOSLEEP 407
+#define __LINUX_SYS_FUTEX 422
+
 #define __LINUX_O_LARGEFILE 0x20000
 
 /* mmap2: the offset is in 4096-byte units, which makes no difference for the offset 0 used here */
@@ -52,6 +60,17 @@ long __rtos_linux_syscall(long a, long b, long c, long d, long e, long f, long n
 
 /* Provided by the port for thread_local access (PLAN D10) */
 void *__aeabi_read_tp(void);
+
+/*
+ * The kernel's compare-and-swap helper (Documentation/arm/kernel_user_helpers.rst):
+ * returns 0 when *address held expected and now holds desired. Barriers included.
+ */
+static inline int __linux_kuser_cmpxchg(unsigned int expected, unsigned int desired, volatile unsigned int *address)
+{
+	int (*cmpxchg)(unsigned int, unsigned int, volatile unsigned int *) = (int (*)(unsigned int, unsigned int, volatile unsigned int *))0xffff0fc0;
+
+	return cmpxchg(expected, desired, address);
+}
 
 static inline long __linux_syscall0(long number)
 {

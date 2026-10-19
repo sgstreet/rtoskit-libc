@@ -7,7 +7,7 @@
  *
  * __rtos_lock_create.c
  *
- * Created on: Oct 18, 2026
+ * Created on: Oct 19, 2026
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
@@ -16,14 +16,18 @@
 
 #include "linux.h"
 
-/* A fixed pool: the allocator cannot be used, since it takes a lock itself */
 static struct __rtos_lock pool[__LINUX_LOCK_POOL_SIZE];
 
+/* Claim a free pool entry; claiming is atomic so threads may create locks concurrently */
 int __rtos_lock_create(struct __rtos_lock **lock)
 {
 	for (unsigned int i = 0; i < __LINUX_LOCK_POOL_SIZE; ++i) {
-		if (!pool[i].allocated) {
-			pool[i] = (struct __rtos_lock){ .depth = 0, .allocated = true };
+		unsigned int allocated = 0;
+
+		if (__atomic_compare_exchange_n(&pool[i].allocated, &allocated, 1, false, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED)) {
+			pool[i].state = 0;
+			pool[i].depth = 0;
+			pool[i].owner = nullptr;
 			*lock = &pool[i];
 			return 0;
 		}

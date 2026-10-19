@@ -7,7 +7,7 @@
  *
  * __rtos_lock_destroy.c
  *
- * Created on: Oct 18, 2026
+ * Created on: Oct 19, 2026
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
@@ -15,11 +15,10 @@
 
 #include "linux.h"
 
-/* Destroying a held lock is a libc bug */
 void __rtos_lock_destroy(struct __rtos_lock *lock)
 {
 	if (lock->depth != 0)
 		__rtos_abort();
 
-	lock->allocated = false;
+	__atomic_store_n(&lock->allocated, 0, __ATOMIC_RELEASE);
 }

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# none.run
+#
+# Created on: Oct 19, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+
+# Usage: none.run <none.elf>
+#
+# The port/none program reports its checks from an atexit handler, which
+# only runs if thrd_exit in main ended the program as exit(EXIT_SUCCESS).
+
+elf=$1
+
+output=$(${TARGET_RUNNER:-} "${elf}")
+status=$?
+echo "${output}"
+if [[ ${status} -ne 0 ]]; then
+	echo "fail: status ${status}, want 0"
+	exit 1
+fi
+[[ ${output} == "pass: none" ]]

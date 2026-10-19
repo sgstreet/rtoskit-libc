@@ -17,7 +17,7 @@
 /*
  * The RTOS seam (PLAN D4; process and I/O from P1.01, heap and locks from P1.04,
  * environment from P1.05, files and the stream locks from P1.09, clocks from
- * P1.11).
+ * P1.11, threads, futexes and the atomics critical section from P1.12).
  *
  * The library reaches the operating system only through the __rtos_*
  * functions below. Exactly one port library (librtos-<port>.a) defines them;
@@ -137,6 +137,56 @@ void __rtos_lock_release(struct __rtos_lock *lock);
 /* Returns 0 and stores a new lock, or a negated errno */
 int __rtos_lock_create(struct __rtos_lock **lock);
 void __rtos_lock_destroy(struct __rtos_lock *lock);
+
+/*
+ * Threads (P1.12, docs/research/threads.md). The port defines struct
+ * __rtos_thread; <threads.h> identifies a thread by a pointer to it. A new
+ * thread runs entry(arg) with its own stack and TLS block (initialised with
+ * __libc_tls_init); if entry returns, the thread ends with its result.
+ * __rtos_thread_self works in every thread, the initial one included.
+ * Functions returning int give 0 or a negated errno; __rtos_thread_sleep
+ * returns -EINTR, with the time left in remaining when that is not null, if
+ * a signal ends the sleep early.
+ */
+struct __rtos_thread;
+
+int __rtos_thread_create(struct __rtos_thread **thread, int (*entry)(void *), void *arg);
+[[noreturn]] void __rtos_thread_exit(int result);
+int __rtos_thread_join(struct __rtos_thread *thread, int *result);
+int __rtos_thread_detach(struct __rtos_thread *thread);
+struct __rtos_thread *__rtos_thread_self(void);
+void __rtos_thread_yield(void);
+int __rtos_thread_sleep(const struct timespec *duration, struct timespec *remaining);
+
+/*
+ * Wait and wake on an address (P1.12). __rtos_futex_wait blocks the caller
+ * while *address equals expected, until a wake for that address, the
+ * TIME_UTC deadline (null: none) or an unspecified reason; it returns 0
+ * after a wake or early return, -EAGAIN if *address differed on entry and
+ * -ETIMEDOUT once the deadline passed. __rtos_futex_wake unblocks up to
+ * count waiters (UINT_MAX: all) and returns how many, or a negated errno.
+ * libc builds mutexes, condition variables and call_once on these.
+ */
+int __rtos_futex_wait(unsigned int *address, unsigned int expected, const struct timespec *deadline);
+int __rtos_futex_wake(unsigned int *address, unsigned int count);
+
+/*
+ * Support for the __atomic_* library functions libc provides for operations
+ * the compiler cannot inline (P1.12, docs/research/threads.md).
+ *
+ * __rtos_atomic_cas atomically replaces *address by desired if it holds
+ * expected, and reports whether it did. It must be atomic against the plain
+ * loads and stores the compiler inlines for 4-byte atomics (on armv6-m, an
+ * interrupt mask on one core, or the kernel's helper under Linux).
+ *
+ * The critical section serves 8-byte and odd-sized atomics, which only the
+ * library accesses: while it is held no other such operation may run, in
+ * any thread or interrupt handler; it does not nest. enter returns a state
+ * that exit restores (e.g. the interrupt mask).
+ */
+bool __rtos_atomic_cas(volatile unsigned int *address, unsigned int expected, unsigned int desired);
+unsigned long __rtos_atomic_enter(void);
+void __rtos_atomic_exit(unsigned long state);
 
 /*
  * Thread-local storage (PLAN D10). A port describes the TLS initialization

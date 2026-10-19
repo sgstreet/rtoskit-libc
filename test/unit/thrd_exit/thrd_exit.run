@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# thrd_exit.run
+#
+# Created on: Oct 19, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+
+# Usage: thrd_exit.run <thrd_exit.elf>
+#
+# The initial thread calls thrd_exit while a worker runs: the program must
+# end with status 0 (EXIT_SUCCESS, not the thread's result 3) after the
+# worker, with the atexit handler run and all output flushed.
+
+elf=$1
+expected=$'main exiting\nworker done\natexit handler ran'
+
+output=$(${TARGET_RUNNER:-} "${elf}")
+status=$?
+if [[ ${status} -ne 0 ]]; then
+	echo "fail: status ${status}, want 0"
+	exit 1
+fi
+if [[ ${output} != "${expected}" ]]; then
+	echo "fail: output:"
+	echo "${output}"
+	exit 1
+fi
+echo "pass: thrd_exit.run"

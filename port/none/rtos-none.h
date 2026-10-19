@@ -14,6 +14,7 @@
 #ifndef _RTOS_NONE_H
 #define _RTOS_NONE_H
 
+#include <rtos/rtos-port.h>
 #include <stddef.h>
 
 /*
@@ -35,5 +36,31 @@ void __rtos_none_output(const void *buffer, size_t count);
 struct __rtos_lock {
 	char unused;
 };
+
+/* The one thread (P1.12) */
+struct __rtos_thread {
+	char unused;
+};
+
+/*
+ * Program start (P1.12, docs/research/threads.md). The board's reset code
+ * initialises memory, describes the TLS image from its linker script
+ * symbols and calls __rtos_none_start, which places the thread's TLS block
+ * in a static buffer of __RTOS_NONE_TLS_BLOCK_SIZE bytes (aborting if the
+ * image needs more), installs the thread pointer and runs main through
+ * __libc_start_main.
+ */
+#define __RTOS_NONE_TLS_BLOCK_SIZE 1024
+
+[[noreturn]] void __rtos_none_start(const struct __libc_tls_image *tls);
+
+/*
+ * Installs the thread pointer: on Arm a variable __aeabi_read_tp returns,
+ * on x86_64 the %fs base (wrfsbase, which the board must enable).
+ */
+void __rtos_none_set_tp(void *tp);
+
+/* The program */
+extern int main(int argc, char **argv);
 
 #endif /* _RTOS_NONE_H */
