@@ -7,10 +7,13 @@
  *
  * __libc_stdout.c
  *
- * Created on: Oct 18, 2026
+ * Created on: Oct 19, 2026
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
+#include <rtos/rtos-port.h>
+
 #include "internal/file.h"
 
-FILE __libc_stdout = { .handle = 1 };
+/* Line buffered: whether it is interactive is unknown, and C23 7.23.3p7 allows full buffering only when it can be determined not to be */
+FILE __libc_stdout = { .handle = 1, .flags = __LIBC_FILE_WRITE | __LIBC_FILE_LINE, .lock = &__rtos_stdout_lock };

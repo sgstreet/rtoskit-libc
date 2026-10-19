@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# stdio.run
+#
+# Created on: Oct 19, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+
+# Usage: stdio.run <stdio.elf>
+
+elf=$1
+status=0
+
+# expect <name> <want status> <want stdout> <want stderr> <stdin> <mode>
+expect() {
+	local name=$1 want_status=$2 want_out=$3 want_err=$4 input=$5 mode=$6 out err code
+	err=$(mktemp)
+	out=$(printf '%b' "${input}" | ${TARGET_RUNNER:-} "${elf}" ${mode} 2> "${err}")
+	code=$?
+	err_text=$(cat "${err}")
+	rm -f "${err}"
+	if [[ ${code} -ne ${want_status} || ${out} != "${want_out}" || ${err_text} != "${want_err}" ]]; then
+		echo "fail: ${name}: status ${code}, stdout '${out}', stderr '${err_text}'; want ${want_status}, '${want_out}', '${want_err}'"
+		status=1
+	fi
+}
+
+# The file tests
+expect files 0 "pass: stdio" "" "" ""
+expect exit 3 "partial 7" "" "" exit
+expect perror 0 "" "$(printf 'open: No such file or directory\nInvalid argument\nNumerical result out of range')" "" perror
+expect stdin 0 "4 lines 34 characters eof" "" "first line\nsecond line is longer\nx" stdin
+expect empty-stdin 0 "0 lines 0 characters eof" "" "" stdin
+expect prompt 0 "name? [s]" "" "stephen\n" prompt
+
+# Both streams to one pipe: the unbuffered stderr text comes first
+order=$(${TARGET_RUNNER:-} "${elf}" order 2>&1)
+if [[ ${order} != "errout" ]]; then
+	echo "fail: order: '${order}', want 'errout'"
+	status=1
+fi
+
+[[ ${status} -eq 0 ]] && echo "pass: stdio.run"
+exit ${status}

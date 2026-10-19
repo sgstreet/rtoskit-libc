@@ -7,10 +7,13 @@
  *
  * __libc_stderr.c
  *
- * Created on: Oct 18, 2026
+ * Created on: Oct 19, 2026
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
+#include <rtos/rtos-port.h>
+
 #include "internal/file.h"
 
-FILE __libc_stderr = { .handle = 2 };
+/* Not fully buffered (C23 7.23.3p7); unbuffered, so messages are never held back */
+FILE __libc_stderr = { .handle = 2, .flags = __LIBC_FILE_WRITE | __LIBC_FILE_UNBUFFERED, .lock = &__rtos_stderr_lock };

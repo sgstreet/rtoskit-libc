@@ -7,7 +7,7 @@
  *
  * fputs.c
  *
- * Created on: Oct 18, 2026
+ * Created on: Oct 19, 2026
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
@@ -20,6 +20,11 @@
 int fputs(const char *restrict s, FILE *restrict stream)
 {
 	size_t length = strlen(s);
+	size_t written;
 
-	return __libc_file_write(stream, s, length) == length ? 0 : EOF;
+	__libc_file_lock(stream);
+	written = __libc_file_write(stream, s, length);
+	__libc_file_unlock(stream);
+
+	return written == length ? 0 : EOF;
 }

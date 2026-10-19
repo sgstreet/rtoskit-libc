@@ -27,3 +27,4 @@ regression/printf-1e9-oob PASS
 regression/printf-fmt-g-round PASS
 regression/printf-fmt-g-zeros PASS
 regression/printf-fmt-n PASS
+regression/setvbuf-unget PASS
