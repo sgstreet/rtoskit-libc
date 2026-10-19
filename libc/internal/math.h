@@ -387,8 +387,88 @@ static inline float __libc_math_tinyf(float x, double direction)
 {
 	if (x == 0)
 		return x;
+	/*
+	 * At +-FLT_MIN a nudge toward zero is tiny before rounding (Arm's rule)
+	 * even when it rounds back to FLT_MIN: return x with inexact only, unless
+	 * the direction (FLT_ROUNDS: 0 toward zero, 1 nearest, 2 up, 3 down)
+	 * takes the result below FLT_MIN.
+	 */
+	if (fabsf(x) == FLT_MIN && signbit(x) != signbit(direction) && (FLT_ROUNDS == 1 || FLT_ROUNDS == (x > 0 ? 2 : 3))) {
+		__libc_math_raise_inexact();
+		return x;
+	}
 
 	return (float)(x + copysign(fabs((double)x) * 0x1p-40, direction));
 }
+
+/* (a.hi + a.lo) + (b.hi + b.lo), to about 2^-105 */
+static inline struct __libc_dd __libc_dd_add(struct __libc_dd a, struct __libc_dd b)
+{
+	struct __libc_dd sum = __libc_dd_sum(a.hi, b.hi);
+
+	return __libc_dd_fast_sum(sum.hi, sum.lo + a.lo + b.lo);
+}
+
+/* (a.hi + a.lo) / (b.hi + b.lo), to about 2^-100: the quotient corrected by the exact remainder */
+static inline struct __libc_dd __libc_dd_divide(struct __libc_dd a, struct __libc_dd b)
+{
+	double quotient = a.hi / b.hi;
+	struct __libc_dd product = __libc_dd_product(quotient, b.hi);
+
+	return __libc_dd_fast_sum(quotient, ((((a.hi - product.hi) - product.lo) + a.lo) - quotient * b.lo) / b.hi);
+}
+
+/* sqrt(a.hi + a.lo) for a non-negative a, corrected by the residual (a - s^2)/(2s) */
+static inline struct __libc_dd __libc_dd_sqrt(struct __libc_dd a)
+{
+	double root = sqrt(a.hi);
+	struct __libc_dd square = __libc_dd_product(root, root);
+
+	if (root == 0)
+		return (struct __libc_dd){ .hi = 0.0, .lo = 0.0 };
+
+	return __libc_dd_fast_sum(root, (((a.hi - square.hi) - square.lo) + a.lo) / (2.0 * root));
+}
+
+/* pi, pi/2 and 1/pi as double-double */
+#define __LIBC_PI ((struct __libc_dd){ .hi = 0x1.921fb54442d18p+1, .lo = 0x1.1a62633145c07p-53 })
+#define __LIBC_PI_2 ((struct __libc_dd){ .hi = 0x1.921fb54442d18p+0, .lo = 0x1.1a62633145c07p-54 })
+#define __LIBC_INV_PI ((struct __libc_dd){ .hi = 0x1.45f306dc9c883p-2, .lo = -0x1.6b01ec5417056p-56 })
+
+/*
+ * Trigonometric and hyperbolic cores (docs/research/libm-trig.md). They
+ * expect rounding to nearest (__libc_math_nearest), as the callers set it.
+ */
+
+/* x = n pi/2 + r with |r| about pi/4 at most; returns n mod 4 and r as a double-double, for finite x */
+int __libc_rem_pio2(double x, struct __libc_dd *r);
+
+/* sin and cos of r.hi + r.lo for |r| at most about pi/4, to about 2^-60 */
+struct __libc_dd __libc_sin_core(struct __libc_dd r);
+struct __libc_dd __libc_cos_core(struct __libc_dd r);
+
+/* The angle of (x, y) in [-pi, pi] for finite, not both zero, double-double coordinates below 2^990 */
+struct __libc_dd __libc_atan2_core(struct __libc_dd y, struct __libc_dd x);
+
+/* log(1 + u) for a double-double u > -1 */
+struct __libc_dd __libc_log1p_dd(struct __libc_dd u);
+
+/* x * c rounded once in the current direction, also when the product is subnormal */
+static inline double __libc_dd_scale_product(double x, struct __libc_dd c)
+{
+	struct __libc_dd product;
+	int mode = __libc_math_nearest();
+
+	product = __libc_dd_product(x * 0x1p200, c.hi);
+	product = __libc_dd_fast_sum(product.hi, product.lo + x * 0x1p200 * c.lo);
+	__libc_math_restore(mode);
+
+	return __libc_exp_scale(product, -200);
+}
+
+/* sinh and cosh of |x| < 1, and exp(x) for |x| <= 40, as double-doubles (rounding to nearest expected) */
+struct __libc_dd __libc_sinh_core(double x);
+struct __libc_dd __libc_cosh_core(double x);
+struct __libc_dd __libc_exp_dd(double x);
 
 #endif /* _INTERNAL_MATH_H */
