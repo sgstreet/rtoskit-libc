@@ -29,7 +29,7 @@ api/ftw skip:posix
 api/glob skip:posix
 api/grp skip:posix
 api/iconv skip:posix
-api/inttypes pending:P1.05
+api/inttypes skip:wide # requires the wide-character wcstoimax/wcstoumax
 api/iso646 run
 api/langinfo skip:posix
 api/libgen skip:posix
@@ -52,15 +52,15 @@ api/regex skip:posix
 api/sched skip:posix
 api/search skip:posix
 api/semaphore skip:posix
-api/setjmp pending:P1.05
-api/signal pending:P1.05
+api/setjmp run
+api/signal run
 api/spawn skip:posix
 api/stdarg run
 api/stdbool run
 api/stddef run
 api/stdint run
 api/stdio pending:P1.09
-api/stdlib pending:P1.05
+api/stdlib pending:P1.07 # declares strtod/strtof/strtold/atof
 api/string skip:posix # requires strsignal unconditionally
 api/strings skip:posix
 api/sys_ipc skip:posix
@@ -120,7 +120,7 @@ functional/pthread_mutex skip:posix
 functional/pthread_mutex_pi skip:posix
 functional/pthread_robust skip:posix
 functional/pthread_tsd skip:posix
-functional/qsort pending:P1.05 # needs the t_rand* shim (common/rand.c)
+functional/qsort run # with the shim t_rand*
 functional/random skip:posix
 functional/search_hsearch skip:posix
 functional/search_insque skip:posix
@@ -148,7 +148,7 @@ functional/strtod pending:P1.07
 functional/strtod_long pending:P1.07
 functional/strtod_simple pending:P1.07
 functional/strtof pending:P1.07
-functional/strtol pending:P1.05
+functional/strtol run
 functional/strtold pending:P1.07
 functional/swprintf skip:wide
 functional/tgmath pending:P1.16

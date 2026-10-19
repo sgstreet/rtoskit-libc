@@ -15,7 +15,8 @@
 #define _RTOS_RTOS_PORT_H
 
 /*
- * The RTOS seam (PLAN D4; process and I/O from P1.01, heap and locks from P1.04).
+ * The RTOS seam (PLAN D4; process and I/O from P1.01, heap and locks from P1.04,
+ * environment from P1.05).
  *
  * The library reaches the operating system only through the __rtos_*
  * functions below. Exactly one port library (librtos-<port>.a) defines them;
@@ -36,6 +37,15 @@
 
 /* Terminate the program abnormally (abort); never returns */
 [[noreturn]] void __rtos_abort(void);
+
+/*
+ * Environment (P1.05). __rtos_getenv returns the value of an environment
+ * variable or a null pointer; the string belongs to the port. __rtos_system
+ * runs a command as system() does: for a null pointer it returns nonzero
+ * only if a command processor exists.
+ */
+char *__rtos_getenv(const char *name);
+int __rtos_system(const char *command);
 
 /* I/O. Handles 0, 1 and 2 are the standard input, output and error streams */
 
@@ -66,6 +76,9 @@ struct __rtos_lock;
 
 /* Serialises the memory management functions */
 extern struct __rtos_lock __rtos_malloc_lock;
+
+/* Serialises the atexit and at_quick_exit tables */
+extern struct __rtos_lock __rtos_atexit_lock;
 
 void __rtos_lock_acquire(struct __rtos_lock *lock);
 void __rtos_lock_release(struct __rtos_lock *lock);
