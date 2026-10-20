@@ -476,3 +476,129 @@ alignment first and a longer exit, as on Thumb-2 (D74).
     pointers, the empty-byte check;
   - the `memset` block test, its byte tail and its replication;
   - the `strcmp` terminator test and its index step.
+
+## P3.02d: the x86-64 SSE2 kernels
+
+### Sources reviewed
+
+- **Intel SDM vol. 2** and the System V x86-64 psABI, which define the
+  baseline (SSE2 everywhere, `%xmm0`–`%xmm15` caller-saved):
+  - `MOVDQU`/`MOVDQA` are unaligned and aligned 16-byte moves;
+  - `PCMPEQB` sets 0xff per equal byte;
+  - `PMOVMSKB` gathers the byte sign bits into a 16-bit mask;
+  - `PMINUB` is the unsigned byte minimum;
+  - `PSHUFD`/`PUNPCKL*` broadcast a value;
+  - `BSF` finds the lowest set bit.
+- **The page argument:** a 16-byte *aligned* load never crosses a 4 KB page,
+  so a scan may read the bytes of its block before the string and after
+  its terminator. An unaligned load may cross, so it is only safe at most
+  4080 bytes into a page. glibc's and Bionic's x86-64 string functions, and
+  the Linux kernel's word-at-a-time `strscpy`, rest on the same reasoning.
+- **The overlapping head/tail technique for short copies:**
+  - Load the first and last k bytes, for the k with k ≤ n ≤ 2k, then store
+    both.
+  - It covers every size with two loads and two stores and no loop.
+  - Loading everything before storing makes it safe for an overlapping
+    forward `memmove` too.
+  - Seen in Arm's optimized-routines AArch64 `memcpy` and LLVM libc's
+    `memory_utils`.
+
+### Kernels (`libc/string/x86_64`, speed flavour only)
+
+The size flavour stays the generic C code, as before.
+
+**`memcpy`:**
+- 0–15 bytes: head and tail loads of 8, 4, 2 or 1 bytes;
+- 16–32 bytes: two unaligned 16-byte loads and stores;
+- above 32: the first and last 16 bytes are loaded first and stored last;
+  between them the destination is aligned to 16 and 32 bytes go per
+  iteration (unaligned loads, aligned stores), then 16 at a time up to the
+  tail.
+
+Every path loads before it stores whatever a later load could read, so
+`memmove` uses it for forward copies and for anything up to 32 bytes.
+
+**`memmove`:** above 32 bytes and overlapping with the destination above
+the source, it mirrors `memcpy` downwards.
+
+**`memset`:**
+- zero bytes return at once;
+- the byte is replicated by a multiply by 0x0101010101010101 and moved
+  into an XMM register;
+- the same shapes as `memcpy`, with stores only.
+
+**`strlen`:**
+- an empty string returns before the setup;
+- then aligned 16-byte blocks through `PCMPEQB`/`PMOVMSKB`;
+- the mask bits below the string's start are shifted out of the first
+  block.
+
+**`strchr`:**
+- the first two bytes are tested one at a time;
+- then aligned blocks compared against zero and against the broadcast
+  character (`POR` of the two masks);
+- the first marked byte is the character, or the terminator (a null
+  pointer unless the character is `'\0'`).
+
+**`strcmp`:**
+- The first 8 byte pairs are compared one at a time, 5 instructions a pair
+  (`CMPB` against memory).
+- Then 16 bytes of each string per iteration through unaligned loads,
+  provided both pointers are at most 4080 bytes into their page; nearer a
+  page end, one byte pair goes first.
+- `PCMPEQB` gives 0xff for equal bytes. `PMINUB` with the first block turns
+  that into the byte where equal and 0 where not, so one `PCMPEQB` against
+  zero marks exactly "differs or ends here" (8 instructions a block).
+  Separate equal and zero masks would take 10.
+
+### Measured trade-offs
+
+The first versions regressed tiny cases, as on Arm:
+- `strcmp` of 0–2 characters went from 35–49 instructions to 52, and that
+  made `qsort` of short strings 13 % slower;
+- `strchr`, `strlen` and `memset` of 0 or 1 bytes were 3–8 slower.
+
+The byte prologues and the early returns fixed them. The prologue length
+had to be measured:
+- with 4 bytes, `strcmp` of 4 characters regressed (63 against 78), the
+  switch point problem of D74;
+- with 8 bytes at 5 instructions each, plus the `PMINUB` block and a
+  shorter exit, the switch at 8 costs exactly what the C code does (91).
+
+### Results (x86-64, instructions per call; cycles for context)
+
+| Case | size (C) | speed (SSE2) | cycles size → speed |
+|---|---:|---:|---|
+| `memcpy` 7 B | 97 | 38 | 21.5 → 6.6 |
+| `memcpy` 64 B | 143 | 56 | 29 → 14 |
+| `memcpy` 1024 B aligned | 1463 | 296 | 298 → 60 |
+| `memcpy` 1024 B misaligned | 6184 | 303 | 1199 → 61 |
+| `memmove` up 1024 B misaligned | 6191 | 336 | 1191 → 68 |
+| `memset` 1024 B | 817 | 203 | 241 → 54 |
+| `strlen` 1024 B | 1064 | 426 | 455 → 113 |
+| `strchr` 1024 B | 1879 | 627 | 423 → 123 |
+| `strcmp` 1024 B | 7203 | 1288 | 1083 → 596 |
+| `mix/memcpy` (per call) | 338 | 40 | 86 → 11 |
+| `mix/strlen` (per call) | 103 | 50 | 37 → 13 |
+| `qsort` of 256 strings | 706 | 617 | |
+
+- 483 cases are faster and none is slower beyond the gate.
+- The kernels are 231 + 141 + 168 + 76 + 178 + 338 bytes. x86-64 has no
+  size budget: it is the reference flavour only.
+
+### Validation
+
+`test/unit/string_kernels` now covers more, on every board and build type:
+- source and destination offsets modulo 16;
+- strings that start up to 31 bytes before a page boundary and run across
+  it (`strlen`, `strchr`, `strcmp` equal and different);
+- zero bytes and the searched character in the 16 bytes before a string.
+
+The last addition kills a mutant that kept the bits below the start in
+the first block. Of 18 mutants:
+- 14 fail the test;
+- 4 survive, three of them with no observable effect: a loop bound or a
+  16-byte step that only shifts where the final overlapping stores fall,
+  and a byte stored twice;
+- the fourth disables the page-end check of `strcmp`, which only a guard
+  page could expose. The library has no `mprotect` for a test to make one.

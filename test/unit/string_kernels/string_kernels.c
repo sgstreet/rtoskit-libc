@@ -17,8 +17,8 @@
 
 /*
  * Exhaustive alignment and length tests for the word-at-a-time string
- * kernels and their hand-written Arm versions (P2.06): every source and
- * destination offset modulo 8, every length up to 80 plus a few longer ones,
+ * kernels and their hand-written versions (P2.06, P3.02): every source and
+ * destination offset modulo 16 (the SSE2 block), every length up to 80 plus a few longer ones,
  * guard bytes on both sides, the return values; memmove in both directions
  * over every overlap; strlen and strcmp with bytes that trip a careless
  * zero-byte test (0x01, 0x80, 0xff) around the terminator and the
@@ -30,11 +30,14 @@
 
 #define SIZE 320
 #define LIMIT 80
+#define OFFSETS 16
+#define PAGE 4096
 
 static int failures;
-static unsigned char source[SIZE] __attribute__((aligned(8)));
-static unsigned char target[SIZE] __attribute__((aligned(8)));
-static unsigned char expected[SIZE] __attribute__((aligned(8)));
+static unsigned char source[SIZE] __attribute__((aligned(16)));
+static unsigned char target[SIZE] __attribute__((aligned(16)));
+static unsigned char expected[SIZE] __attribute__((aligned(16)));
+static unsigned char pages[3 * PAGE] __attribute__((aligned(PAGE)));
 
 static const size_t long_lengths[] = { 127, 128, 129, 255, 256, 257 };
 
@@ -119,6 +122,13 @@ static void check_strlen(size_t d, size_t n)
 		if (strlen((const char *)target + 16 + d) != n)
 			fail("strlen", d, seed, n);
 	}
+
+	/* Zero bytes just before the string, in the block a vector kernel reads first */
+	make_string(target, d, n, 0);
+	for (size_t k = 1; k <= 16; ++k)
+		target[16 + d - k] = '\0';
+	if (strlen((const char *)target + 16 + d) != n)
+		fail("strlen (zeros before)", d, 0, n);
 }
 
 static int sign(int value)
@@ -199,14 +209,61 @@ static void check_strchr(size_t d, size_t n)
 			target[16 + d + at] = saved;
 		}
 	}
+
+	/* Zero bytes and the character just before the string must not count */
+	make_string(target, d, n, 0);
+	for (size_t k = 1; k <= 16; ++k)
+		target[16 + d - k] = (k & 1) != 0 ? '\0' : 0x55;
+	if ((const unsigned char *)strchr((const char *)target + 16 + d, 0x55) != reference_strchr(target + 16 + d, 0x55))
+		fail("strchr (before)", d, 0, n);
+}
+
+/*
+ * Strings that start up to 31 bytes before a page boundary and run across
+ * it: kernels that read ahead in blocks must neither miss the terminator
+ * nor misread a byte where their block or page-end handling changes
+ */
+static void check_page_end(void)
+{
+	static const unsigned char tricky[] = { 0x01, 0x80, 0xff, 0x7f, 0x81, 0xfe, 0x41 };
+
+	for (size_t i = 0; i < sizeof(pages); ++i)
+		pages[i] = tricky[i % 7];
+	for (size_t a = 1; a <= 32; ++a) {
+		for (size_t n = 0; n <= 48; ++n) {
+			unsigned char *first = pages + PAGE - a;
+			unsigned char *second = pages + 2 * PAGE - (a * 7 % 33 + 1);
+			unsigned char saved_first = first[n];
+			unsigned char saved_second = second[n];
+
+			for (size_t i = 0; i < n; ++i)
+				second[i] = first[i];
+			first[n] = '\0';
+			second[n] = '\0';
+			if (strlen((const char *)first) != n)
+				fail("strlen (page end)", a, 0, n);
+			if (n > 0 && (const unsigned char *)strchr((const char *)first, first[n - 1]) != reference_strchr(first, first[n - 1]))
+				fail("strchr (page end)", a, 0, n);
+			if (strcmp((const char *)first, (const char *)second) != 0)
+				fail("strcmp (page end, equal)", a, 0, n);
+			if (n > 0) {
+				second[n - 1] ^= 0x40;
+				if (sign(strcmp((const char *)first, (const char *)second)) != reference_strcmp(first, second))
+					fail("strcmp (page end, difference)", a, 0, n);
+				second[n - 1] ^= 0x40;
+			}
+			first[n] = saved_first;
+			second[n] = saved_second;
+		}
+	}
 }
 
 int main(void)
 {
 	static const int values[] = { 0, 0xff, 0x5a, 0x1a5, 0x15a, 0x7fffff00, -1 };
 
-	for (size_t s = 0; s < 8; ++s) {
-		for (size_t d = 0; d < 8; ++d) {
+	for (size_t s = 0; s < OFFSETS; ++s) {
+		for (size_t d = 0; d < OFFSETS; ++d) {
 			for (size_t n = 0; n <= LIMIT; ++n)
 				check_copy(s, d, n);
 			for (size_t i = 0; i < sizeof(long_lengths) / sizeof(long_lengths[0]); ++i)
@@ -218,23 +275,24 @@ int main(void)
 		for (size_t d = 0; d < 24; ++d)
 			for (size_t n = 0; n <= LIMIT; ++n)
 				check_overlap(s, d, n);
-	for (size_t d = 0; d < 8; ++d) {
+	for (size_t d = 0; d < OFFSETS; ++d) {
 		for (size_t n = 0; n <= LIMIT; ++n)
 			for (size_t i = 0; i < sizeof(values) / sizeof(values[0]); ++i)
 				check_set(d, n, values[i]);
 		for (size_t i = 0; i < sizeof(long_lengths) / sizeof(long_lengths[0]); ++i)
 			check_set(d, long_lengths[i], 0xa5);
 	}
-	for (size_t d = 0; d < 8; ++d)
+	for (size_t d = 0; d < OFFSETS; ++d)
 		for (size_t n = 0; n <= LIMIT; ++n)
 			check_strlen(d, n);
-	for (size_t a = 0; a < 8; ++a)
-		for (size_t b = 0; b < 8; ++b)
+	for (size_t a = 0; a < OFFSETS; ++a)
+		for (size_t b = 0; b < OFFSETS; ++b)
 			for (size_t n = 0; n <= 40; ++n)
 				check_strcmp(a, b, n);
-	for (size_t d = 0; d < 8; ++d)
+	for (size_t d = 0; d < OFFSETS; ++d)
 		for (size_t n = 0; n <= LIMIT; ++n)
 			check_strchr(d, n);
+	check_page_end();
 
 	fputs(failures == 0 ? "string_kernels: pass\n" : "string_kernels: FAIL\n", stdout);
 	return failures == 0 ? 0 : 1;

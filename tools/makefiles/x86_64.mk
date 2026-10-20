@@ -20,6 +20,12 @@ export ARCH_FAMILY := x86_64
 export LIBC_FENV := x86_64
 # libm layers: libc/math/<layer> replaces the generic files of the same name and may add helpers (D46, D55)
 export LIBC_MATH_LAYERS := x86_64
+# Hand-written string kernels (libc/string/<kernels>; the first directory with a function wins)
+# per flavour: the speed build type sets LIBC_FLAVOUR (PLAN D73, D76); the size flavour is the C code
+LIBC_FLAVOUR ?= size
+LIBC_STRING_KERNELS_size :=
+LIBC_STRING_KERNELS_speed := x86_64
+export LIBC_STRING_KERNELS = ${LIBC_STRING_KERNELS_${LIBC_FLAVOUR}}
 
 CC := gcc-14
 CXX := g++-14
