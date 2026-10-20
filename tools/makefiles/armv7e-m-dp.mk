@@ -21,5 +21,7 @@ export LIBC_FPU := fpv5-dp
 export LIBC_FENV := fpv5-dp
 # libm layers: libc/math/<layer> replaces the generic files of the same name and may add helpers (D46, D55)
 export LIBC_MATH_LAYERS := sp fpv5-sp fpv5-dp
+# Hand-written string kernels (libc/string/<kernels>), PLAN D69
+export LIBC_STRING_KERNELS := thumb1
 
 include ${PROJECT_ROOT}/tools/makefiles/arm-none-eabi.mk

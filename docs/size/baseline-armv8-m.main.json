@@ -72,9 +72,11 @@
   },
   "hello-printf-float": {
    "main": {
-    "depth": 1292,
+    "depth": 1276,
     "notes": [
      "assembly: __rtos_linux_syscall",
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call",
      "libgcc: __aeabi_ddiv",
      "libgcc: __aeabi_dmul",
@@ -87,8 +89,7 @@
      "__libc_format",
      "__libc_format_float",
      "__libc_decimal_set",
-     "__libc_decimal_shift_left",
-     "memmove"
+     "__libc_decimal_shift_right"
     ]
    },
    "origin": {
@@ -98,7 +99,7 @@
      "rodata": 185,
      "tbss": 4,
      "tdata": 0,
-     "text": 6354,
+     "text": 6206,
      "unwind": 0
     },
     "libgcc": {
@@ -144,15 +145,17 @@
     "rodata": 198,
     "tbss": 8,
     "tdata": 0,
-    "text": 9100,
+    "text": 8952,
     "unwind": 0
    }
   },
   "hello-printf-int": {
    "main": {
-    "depth": 1276,
+    "depth": 1260,
     "notes": [
      "assembly: __rtos_linux_syscall",
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call"
     ],
     "path": [
@@ -162,8 +165,7 @@
      "__libc_format",
      "__libc_format_float",
      "__libc_decimal_set",
-     "__libc_decimal_shift_left",
-     "memmove"
+     "__libc_decimal_shift_right"
     ]
    },
    "origin": {
@@ -173,7 +175,7 @@
      "rodata": 185,
      "tbss": 4,
      "tdata": 0,
-     "text": 6354,
+     "text": 6206,
      "unwind": 0
     },
     "libgcc": {
@@ -219,15 +221,17 @@
     "rodata": 201,
     "tbss": 8,
     "tdata": 0,
-    "text": 7112,
+    "text": 6964,
     "unwind": 0
    }
   },
   "hello-printf-int-minimal": {
    "main": {
-    "depth": 1276,
+    "depth": 1260,
     "notes": [
      "assembly: __rtos_linux_syscall",
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call"
     ],
     "path": [
@@ -237,8 +241,7 @@
      "__libc_format",
      "__libc_format_float",
      "__libc_decimal_set",
-     "__libc_decimal_shift_left",
-     "memmove"
+     "__libc_decimal_shift_right"
     ]
    },
    "origin": {
@@ -248,7 +251,7 @@
      "rodata": 95,
      "tbss": 4,
      "tdata": 0,
-     "text": 3376,
+     "text": 3336,
      "unwind": 0
     },
     "libgcc": {
@@ -294,15 +297,17 @@
     "rodata": 111,
     "tbss": 8,
     "tdata": 0,
-    "text": 4132,
+    "text": 4092,
     "unwind": 0
    }
   },
   "hello-printf-int-nofloat": {
    "main": {
-    "depth": 1276,
+    "depth": 1260,
     "notes": [
      "assembly: __rtos_linux_syscall",
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call"
     ],
     "path": [
@@ -312,8 +317,7 @@
      "__libc_format",
      "__libc_format_float",
      "__libc_decimal_set",
-     "__libc_decimal_shift_left",
-     "memmove"
+     "__libc_decimal_shift_right"
     ]
    },
    "origin": {
@@ -323,7 +327,7 @@
      "rodata": 95,
      "tbss": 4,
      "tdata": 0,
-     "text": 3612,
+     "text": 3572,
      "unwind": 0
     },
     "libgcc": {
@@ -369,7 +373,7 @@
     "rodata": 111,
     "tbss": 8,
     "tdata": 0,
-    "text": 4368,
+    "text": 4328,
     "unwind": 0
    }
   },
@@ -377,7 +381,9 @@
    "main": {
     "depth": 128,
     "notes": [
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "assembly: memcpy",
+     "assembly: strlen"
     ],
     "path": [
      "main",
@@ -396,7 +402,7 @@
      "rodata": 2,
      "tbss": 4,
      "tdata": 0,
-     "text": 1168,
+     "text": 1138,
      "unwind": 0
     },
     "libgcc": {
@@ -414,7 +420,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 12,
+     "text": 10,
      "unwind": 0
     },
     "port": {
@@ -442,7 +448,7 @@
     "rodata": 15,
     "tbss": 8,
     "tdata": 0,
-    "text": 1900,
+    "text": 1868,
     "unwind": 0
    }
   },
@@ -450,7 +456,10 @@
    "main": {
     "depth": 184,
     "notes": [
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "assembly: memcpy",
+     "assembly: memset",
+     "assembly: strlen"
     ],
     "path": [
      "main",
@@ -467,7 +476,7 @@
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 1060,
+     "text": 1010,
      "unwind": 0
     },
     "libgcc": {
@@ -485,7 +494,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 10,
+     "text": 8,
      "unwind": 0
     },
     "port": {
@@ -513,7 +522,7 @@
     "rodata": 0,
     "tbss": 8,
     "tdata": 0,
-    "text": 1966,
+    "text": 1914,
     "unwind": 0
    }
   },
@@ -521,7 +530,10 @@
    "main": {
     "depth": 184,
     "notes": [
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "assembly: memcpy",
+     "assembly: memset",
+     "assembly: strlen"
     ],
     "path": [
      "main",
@@ -538,7 +550,7 @@
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 1000,
+     "text": 950,
      "unwind": 0
     },
     "libgcc": {
@@ -556,7 +568,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 10,
+     "text": 8,
      "unwind": 0
     },
     "port": {
@@ -584,7 +596,7 @@
     "rodata": 0,
     "tbss": 8,
     "tdata": 0,
-    "text": 1906,
+    "text": 1854,
     "unwind": 0
    }
   },
@@ -661,6 +673,7 @@
    "main": {
     "depth": 896,
     "notes": [
+     "assembly: memset",
      "libgcc: __aeabi_d2iz",
      "libgcc: __aeabi_dadd",
      "libgcc: __aeabi_dcmpeq",
@@ -691,7 +704,7 @@
      "rodata": 3700,
      "tbss": 0,
      "tdata": 0,
-     "text": 20402,
+     "text": 20382,
      "unwind": 0
     },
     "libgcc": {
@@ -709,7 +722,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 46,
+     "text": 42,
      "unwind": 0
     },
     "port": {
@@ -737,7 +750,7 @@
     "rodata": 3700,
     "tbss": 0,
     "tdata": 0,
-    "text": 23556,
+    "text": 23532,
     "unwind": 0
    }
   }
@@ -5376,7 +5389,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 80,
+    "text": 60,
     "unwind": 0
    },
    "memmove.o": {
@@ -5385,7 +5398,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 168,
+    "text": 60,
     "unwind": 0
    },
    "memset.o": {
@@ -5394,7 +5407,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 68,
+    "text": 48,
     "unwind": 0
    },
    "memset_explicit.o": {
@@ -7095,7 +7108,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 54,
+    "text": 44,
     "unwind": 0
    },
    "strncat.o": {
@@ -7798,7 +7811,7 @@
    "rodata": 9982,
    "tbss": 358,
    "tdata": 8,
-   "text": 143376,
+   "text": 143218,
    "unwind": 0
   }
  },
@@ -7852,7 +7865,8 @@
    "calloc": {
     "depth": 88,
     "notes": [
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "assembly: memset"
     ],
     "path": [
      "calloc",
@@ -7876,6 +7890,7 @@
    "cos": {
     "depth": 320,
     "notes": [
+     "assembly: memset",
      "libgcc: __aeabi_d2iz",
      "libgcc: __aeabi_dadd",
      "libgcc: __aeabi_dcmpeq",
@@ -7896,6 +7911,7 @@
    "cpow": {
     "depth": 1568,
     "notes": [
+     "assembly: memset",
      "libgcc: __aeabi_d2iz",
      "libgcc: __aeabi_dadd",
      "libgcc: __aeabi_dcmpeq",
@@ -8026,7 +8042,8 @@
    "fopen": {
     "depth": 120,
     "notes": [
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "assembly: memset"
     ],
     "path": [
      "fopen",
@@ -8038,9 +8055,11 @@
     ]
    },
    "fprintf": {
-    "depth": 1256,
+    "depth": 1240,
     "notes": [
      "assembly: __rtos_linux_syscall",
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call"
     ],
     "path": [
@@ -8049,14 +8068,15 @@
      "__libc_format",
      "__libc_format_float",
      "__libc_decimal_set",
-     "__libc_decimal_shift_left",
-     "memmove"
+     "__libc_decimal_shift_right"
     ]
    },
    "fputs": {
     "depth": 120,
     "notes": [
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "assembly: memcpy",
+     "assembly: strlen"
     ],
     "path": [
      "fputs",
@@ -8082,6 +8102,8 @@
     "depth": 3176,
     "notes": [
      "assembly: __rtos_linux_syscall",
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call"
     ],
     "path": [
@@ -8135,7 +8157,11 @@
    },
    "localtime": {
     "depth": 300,
-    "notes": [],
+    "notes": [
+     "assembly: memcpy",
+     "assembly: memset",
+     "assembly: strlen"
+    ],
     "path": [
      "localtime",
      "localtime_r",
@@ -8180,7 +8206,11 @@
    },
    "mktime": {
     "depth": 408,
-    "notes": [],
+    "notes": [
+     "assembly: memcpy",
+     "assembly: memset",
+     "assembly: strlen"
+    ],
     "path": [
      "mktime",
      "localtime_r",
@@ -8236,9 +8266,11 @@
     ]
    },
    "printf": {
-    "depth": 1260,
+    "depth": 1244,
     "notes": [
      "assembly: __rtos_linux_syscall",
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call"
     ],
     "path": [
@@ -8247,14 +8279,15 @@
      "__libc_format",
      "__libc_format_float",
      "__libc_decimal_set",
-     "__libc_decimal_shift_left",
-     "memmove"
+     "__libc_decimal_shift_right"
     ]
    },
    "puts": {
     "depth": 120,
     "notes": [
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "assembly: memcpy",
+     "assembly: strlen"
     ],
     "path": [
      "puts",
@@ -8279,7 +8312,8 @@
    "realloc": {
     "depth": 88,
     "notes": [
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "assembly: memcpy"
     ],
     "path": [
      "realloc",
@@ -8291,6 +8325,7 @@
    "sin": {
     "depth": 320,
     "notes": [
+     "assembly: memset",
      "libgcc: __aeabi_d2iz",
      "libgcc: __aeabi_dadd",
      "libgcc: __aeabi_dcmpeq",
@@ -8319,8 +8354,10 @@
     ]
    },
    "snprintf": {
-    "depth": 1252,
+    "depth": 1236,
     "notes": [
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call"
     ],
     "path": [
@@ -8329,14 +8366,15 @@
      "__libc_format",
      "__libc_format_float",
      "__libc_decimal_set",
-     "__libc_decimal_shift_left",
-     "memmove"
+     "__libc_decimal_shift_right"
     ]
    },
    "sscanf": {
     "depth": 3168,
     "notes": [
      "assembly: __rtos_linux_syscall",
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call"
     ],
     "path": [
@@ -8354,6 +8392,9 @@
    "strftime": {
     "depth": 400,
     "notes": [
+     "assembly: memcpy",
+     "assembly: memset",
+     "assembly: strlen",
      "recursion"
     ],
     "path": [
@@ -8369,6 +8410,8 @@
    "strtod": {
     "depth": 1084,
     "notes": [
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call"
     ],
     "path": [
@@ -8382,6 +8425,8 @@
    "strtof": {
     "depth": 1084,
     "notes": [
+     "assembly: memmove",
+     "assembly: memset",
      "indirect call"
     ],
     "path": [
@@ -8404,6 +8449,7 @@
    "tan": {
     "depth": 368,
     "notes": [
+     "assembly: memset",
      "libgcc: __aeabi_d2iz",
      "libgcc: __aeabi_dadd",
      "libgcc: __aeabi_dcmpeq",
@@ -8452,7 +8498,8 @@
     "depth": 104,
     "notes": [
      "assembly: __rtos_linux_clone",
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "assembly: memset"
     ],
     "path": [
      "thrd_create",
@@ -9168,9 +9215,6 @@
    "memccpy.o:memccpy": 12,
    "memchr.o:memchr": 12,
    "memcmp.o:memcmp": 8,
-   "memcpy.o:memcpy": 16,
-   "memmove.o:memmove": 20,
-   "memset.o:memset": 20,
    "memset_explicit.o:memset_explicit": 8,
    "mktime.o:mktime": 112,
    "modf.o:modf": 32,
@@ -9391,7 +9435,6 @@
    "stdc_trailing_zeros_us.o:stdc_trailing_zeros_us": 0,
    "strcat.o:strcat": 16,
    "strchr.o:strchr": 8,
-   "strcmp.o:strcmp": 0,
    "strcoll.o:strcoll": 0,
    "strcpy.o:strcpy": 16,
    "strcspn.o:strcspn": 48,
@@ -9412,7 +9455,6 @@
    "strftime.o:libc/time/strftime.c:render": 24,
    "strftime.o:libc/time/strftime.c:zone": 16,
    "strftime.o:strftime": 128,
-   "strlen.o:strlen": 0,
    "strncat.o:strncat": 24,
    "strncmp.o:strncmp": 8,
    "strncpy.o:strncpy": 24,
