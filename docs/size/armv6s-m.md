@@ -563,3 +563,26 @@ Members that grew or are new, justified:
 - `expm1f.o` 432 → 588 (+156): the exact-square expm1 series inlined.
 - `exp10m1f.o` 560 → 690 (+130): the exact-square expm1 series inlined.
 - Reduced: 5 members, -1276 bytes; the largest: `asinhf.o` 984 → 100, `clogf.o` 1384 → 1196, `__libc_exp2f_core.o` 864 → 768, `__libc_atan2f_core.o` 1324 → 1260.
+
+## P2.06a — Thumb-1 string kernels
+
+Decision D69, `docs/research/string-asm.md`. Before → after, release build.
+
+`libc.a`: code 167320 → 167130 (-190), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 2211 → 2163 | 380 → 380 | 1428 → 1380 | 0 → 0 |
+| hello-printf-int | 7945 → 7769 | 380 → 380 | 6709 → 6533 | 420 → 420 |
+| hello-printf-float | 10550 → 10374 | 380 → 380 | 6709 → 6533 | 2984 → 2984 |
+| malloc-heavy | 2286 → 2214 | 80 → 80 | 1346 → 1274 | 0 → 0 |
+| math-mix | 34176 → 34116 | 20 → 20 | 25706 → 25646 | 7752 → 7752 |
+| float-exact | 3908 → 3908 | 20 → 20 | 1444 → 1444 | 1946 → 1946 |
+| math-float | 9640 → 9640 | 20 → 20 | 6504 → 6504 | 2708 → 2708 |
+| hello-printf-int-nofloat | 5047 → 4987 | 380 → 380 | 3811 → 3751 | 420 → 420 |
+| hello-printf-int-minimal | 4779 → 4719 | 380 → 380 | 3593 → 3533 | 372 → 372 |
+| malloc-heavy-tiny | 2206 → 2134 | 76 → 76 | 1266 → 1194 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- Reduced: 5 members, -190 bytes; the largest: `memmove.o` 176 → 60, `memcpy.o` 96 → 60, `memset.o` 72 → 48, `strlen.o` 60 → 48.

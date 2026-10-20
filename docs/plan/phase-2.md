@@ -119,10 +119,17 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows; re-derive the table sizes with the size/accuracy trade-off documented.
   *f/d kernels stay apart on the single-precision cores (D57); asinhf/clogf share the D67 cores; an exact square in the expm1 series lets the exp2 table go 32 → 8 with better accuracy, atan2 17 → 9, the lgamma expansions lose c7; log2 and sin tables kept (measured). 312 bytes of tables less; 7 mutants (3 caught, 4 below the test's resolution, documented) (D68).*
 
-## P2.06 — Per-arch hand-written size kernels
-- [ ] armv6-m Thumb-1: `memcpy`, `memset`, `memmove`, `strlen`, `strcmp`, `setjmp`, written for size (the arch `size/` flavour, D12).
-- [ ] armv7e-m, armv7e-m-dp and v8-m.main Thumb-2: the same set (one shared Thumb-2 subdirectory), if they beat the compiler output.
-- [ ] Each assembly file has a research note and goes through libc-test plus our own exhaustive alignment/length tests.
+## P2.06 — Per-arch hand-written size kernels (split into P2.06a–b)
+- armv6-m Thumb-1: `memcpy`, `memset`, `memmove`, `strlen`, `strcmp`, `setjmp`, written for size (the arch `size/` flavour, D12).
+- armv7e-m, armv7e-m-dp and v8-m.main Thumb-2: the same set (one shared Thumb-2 subdirectory), if they beat the compiler output.
+- Each assembly file has a research note and goes through libc-test plus our own exhaustive alignment/length tests.
+
+## P2.06a — Thumb-1 kernels, the selection mechanism and the exhaustive test  `[x]`
+- [x] `LIBC_STRING_KERNELS` and `libc/string/thumb1` (armv6-m, armv6s-m): `memcpy`, `memmove`, `memset`, `strlen`, `strcmp`; `setjmp` reviewed.
+  *96/176/72/60/22 → 60/60/48/48/20 bytes with the word-at-a-time algorithms kept; setjmp/longjmp already minimal. `test/unit/string_kernels` on every board; 12 mutants (10 caught, 2 equivalent: speed only) (D69).*
+
+## P2.06b — Thumb-2 kernels
+- [ ] `libc/string/thumb2` for armv7e-m, armv7e-m-dp and armv8-m.main, where it beats the compiler; `setjmp` reviewed.
 
 ## P2.07 — Phase wrap-up
 - [ ] Final size report against the Phase 1 baseline and against the picolibc/newlib-nano comparison.
