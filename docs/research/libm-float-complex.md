@@ -146,3 +146,81 @@ Thirteen mutants (x86_64), all caught:
 - 1/ln 2's low part dropped;
 - `cargf` with its arguments swapped;
 - `cexpf(−∞ + iy)` without the signs of zero.
+
+## e3b: trigonometric and hyperbolic functions
+
+- **Helpers (libm `sp-nearest`):**
+  - `__libc_ff_round_product(a, b, e)`: 2^e · a · b rounded once.
+    - A factor below 2^−60 is scaled by 2^64 first, so sinh of a tiny x,
+      or sin of a tiny y, keeps its relative accuracy in its part.
+    - A zero factor gives the plain product's signed zero: the float-float
+      sums would turn −0 into +0.
+    - `__libc_exp2f_times` now ends in it.
+  - `__libc_sinhcoshf_core(x)`: sinh x and cosh x as float-float for
+    |x| < 16:
+    - x and 1 + x²/2 below 2^−20;
+    - the odd series of sinh (as `sinhf`) and √(1 + sinh²) below ¼;
+    - the exp pair (D62) above.
+    - The first version stopped the identity at 2^−12. Its x²/6 relative
+      error (2^−27) was enough for `sinhf`'s single rounding, but not for a
+      float-float factor: 0.53 ulp parts.
+- **`csinhf`, `ccoshf`:**
+  - sinh x cos y + i cosh x sin y (and the cosh form), each part one
+    rounded float-float product.
+  - From |x| = 16, e^−|x| is below 2^−46 of e^|x|. The parts are then
+    ±e^|x|/2 · cos y and e^|x|/2 · sin y through `__libc_exp2f_times`, so a
+    finite part beyond `sinhf`'s overflow survives without the double
+    function's halving.
+  - The Annex G special cases mirror the double functions'.
+- **`ctanhf`:** (sinh x cosh x + i sin y cos y)/(sinh² x + cos² y), all in
+  float-float.
+  - This is Kahan's (b r s + i t)/(1 + b s²) multiplied through by cos² y.
+    The denominator is a sum of two squares, so it cannot cancel, and
+    cos² y of a float y is never below about 2^−60.
+  - From |x| = 16 the real part is ±1 and the imaginary part
+    4 sin y cos y e^−2|x| (relative error 2e^−2|x| < 2^−44). A zero y keeps
+    its sign.
+  - The first cutoff, 9, was the right one for the real part alone, but
+    Re tanh − 1 reaches ±4e^−2|x| on either side of 1. The imaginary
+    approximation needs 16: 10 still left 0.52-ulp parts.
+- **`csinf`, `ccosf`, `ctanf`:** the rotations −i csinh(iz), ccosh(iz)
+  and −i ctanh(iz), with float versions of the exact rotation helpers
+  (`__libc_times_if`, `__libc_times_minus_if`).
+- **A bug in the double functions:** beyond |x| = 709, `csinh` and `ccosh`
+  (P1.16) applied e^|x|/2 in two halves with `copysign(…, x)`. That forced
+  the sign of x on the real (`csinh`) or imaginary (`ccosh`) part and lost
+  the sign of cos y (sin y).
+  - csinh(710 + 2i) came out with a positive real part, while
+    sinh(710) cos 2 < 0.
+  - Both now multiply by the sign of x. `test/unit/complex` checks the four
+    sign combinations against 0.5 e^710 cos 2 (sin 2).
+
+| Function | normwise max (ulp) | parts max, own ulp | not correctly rounded |
+|---|---:|---:|---:|
+| `csinhf` | 0.500 | 0.5 | 3 |
+| `ccoshf` | 0.500 | 0.5 | 2 |
+| `ctanhf` | 0.500 | 0.5 | 5 |
+| `csinf` | 0.500 | 0.5 | 2 |
+| `ccosf` | 0.500 | 0.5 | 3 |
+| `ctanf` | 0.500 | 0.5 | 2 |
+
+Of 262 144 arguments each (x86_64): x in [−110, 110] (ctanh [−20, 20])
+and y anywhere, or the reverse for the trigonometric forms.
+
+Fourteen mutants:
+- caught:
+  - the zero check of the rounded product removed;
+  - its prescaling disabled;
+  - the sinh identity up to 2^−12;
+  - cosh without the reciprocal's low part;
+  - `csinhf`'s exp2 path from 8;
+  - its sign dropped;
+  - `ccoshf`'s factor ½ dropped;
+  - `ctanhf`'s denominator with sin² y;
+  - its cutoff at 10;
+  - its zero-y case removed;
+  - the wrong rotation in `csinf`;
+  - the wrong rotation in `ctanf`;
+  - `ccoshf(±∞ ± i0)` without the sign of zero.
+- insignificant: 1/6's low part dropped in the sinh series. That is
+  2^−32 relative at ¼ (2^−9 ulp), as for `sinhf` (D62).

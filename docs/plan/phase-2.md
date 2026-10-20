@@ -107,8 +107,9 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] The `libc/complex/sp-nearest` layer and its accuracy test; `cabsf`, `cargf`, `cexpf`, `clogf`, `cpowf`, `csqrtf`.
   *0.500 ulp normwise, 0.5 ulp per part (cpowf 1.95); the test bounds 0.52 normwise and per part where the layer is linked. 13 mutants caught (D65).*
 
-## P2.05e3b — Trigonometric and hyperbolic functions
-- [ ] `csinhf`, `ccoshf`, `ctanhf`, `csinf`, `ccosf`, `ctanf`.
+## P2.05e3b — Trigonometric and hyperbolic functions  `[x]`
+- [x] `csinhf`, `ccoshf`, `ctanhf`, `csinf`, `ccosf`, `ctanf`.
+  *All 0.500 ulp normwise and 0.5 per part; fixed the sign of the double `csinh`/`ccosh` beyond |x| = 709; 14 mutants (13 caught, 1 insignificant) (D66).*
 
 ## P2.05e3c — Inverse functions
 - [ ] `casinhf`, `cacoshf`, `catanhf`, `casinf`, `cacosf`, `catanf`.

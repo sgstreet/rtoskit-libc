@@ -18,7 +18,8 @@
 
 /*
  * C23 7.3.6.5, G.6.2.5: sinh x cos y + i cosh x sin y, the special cases
- * first; beyond |x| = 709 the factor e^|x|/2 is applied in two halves.
+ * first; beyond |x| = 709 the factor e^|x|/2 is applied in two halves and
+ * the sign of sinh x multiplies the real part (cos y keeps its own sign).
  */
 double complex csinh(double complex z)
 {
@@ -38,7 +39,7 @@ double complex csinh(double complex z)
 		return CMPLX(y - y, y - y);
 	if (fabs(x) > 709.0) {
 		e = exp(0.5 * fabs(x));
-		return CMPLX(copysign(0.5 * e * cos(y) * e, x), 0.5 * e * sin(y) * e);
+		return CMPLX(copysign(1.0, x) * (0.5 * e * cos(y) * e), 0.5 * e * sin(y) * e);
 	}
 
 	return CMPLX(sinh(x) * cos(y), cosh(x) * sin(y));

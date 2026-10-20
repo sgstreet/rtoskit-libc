@@ -88,6 +88,12 @@ static const struct unary unary[] = {
 	{ "clogf", clogf, clog, nullptr, nullptr, -FLT_MAX, FLT_MAX, -FLT_MAX, FLT_MAX, ANY },
 	{ "clogf near |z| = 1", clogf, clog, nullptr, nullptr, -1.0f, 1.0f, -1.0f, 1.0f, UNIT },
 	{ "csqrtf", csqrtf, csqrt, nullptr, nullptr, -FLT_MAX, FLT_MAX, -FLT_MAX, FLT_MAX, ANY },
+	{ "csinhf", csinhf, csinh, nullptr, nullptr, -110.0f, 110.0f, -FLT_MAX, FLT_MAX, ANY },
+	{ "ccoshf", ccoshf, ccosh, nullptr, nullptr, -110.0f, 110.0f, -FLT_MAX, FLT_MAX, ANY },
+	{ "ctanhf", ctanhf, ctanh, nullptr, nullptr, -20.0f, 20.0f, -FLT_MAX, FLT_MAX, ANY },
+	{ "csinf", csinf, csin, nullptr, nullptr, -FLT_MAX, FLT_MAX, -110.0f, 110.0f, ANY },
+	{ "ccosf", ccosf, ccos, nullptr, nullptr, -FLT_MAX, FLT_MAX, -110.0f, 110.0f, ANY },
+	{ "ctanf", ctanf, ctan, nullptr, nullptr, -FLT_MAX, FLT_MAX, -20.0f, 20.0f, ANY },
 	{ "cabsf", nullptr, nullptr, cabsf_complex, cabs_complex, -FLT_MAX, FLT_MAX, -FLT_MAX, FLT_MAX, ANY },
 	{ "cargf", nullptr, nullptr, cargf_complex, carg_complex, -FLT_MAX, FLT_MAX, -FLT_MAX, FLT_MAX, ANY },
 };

@@ -2552,7 +2552,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 392,
+    "text": 400,
     "unwind": 0
    },
    "ccoshf.o": {
@@ -3029,7 +3029,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 352,
+    "text": 360,
     "unwind": 0
    },
    "csinhf.o": {
@@ -7602,7 +7602,7 @@
    "rodata": 8406,
    "tbss": 358,
    "tdata": 8,
-   "text": 78526,
+   "text": 78542,
    "unwind": 0
   }
  },

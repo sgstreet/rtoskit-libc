@@ -478,3 +478,32 @@ Members that grew or are new, justified:
 - `__libc_exp2f_times.o` 0 → 372 (+372): new: 2^z m rounded once, shared by the complex functions.
 - `__libc_sincosf_core.o` 0 → 246 (+246): new: float-float sin and cos of a float-float angle, shared by the complex functions.
 - Reduced: 2 members, -58 bytes; the largest: `cabsf.o` 40 → 8, `cargf.o` 40 → 14.
+
+## P2.05e3b — float complex trigonometric and hyperbolic functions
+
+Decision D66, `docs/research/libm-float-complex.md`. Before → after, release build.
+
+`libc.a`: code 157014 → 160268 (+3254), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 2211 → 2211 | 380 → 380 | 1428 → 1428 | 0 → 0 |
+| hello-printf-int | 7945 → 7945 | 380 → 380 | 6709 → 6709 | 420 → 420 |
+| hello-printf-float | 10550 → 10550 | 380 → 380 | 6709 → 6709 | 2984 → 2984 |
+| malloc-heavy | 2286 → 2286 | 80 → 80 | 1346 → 1346 | 0 → 0 |
+| math-mix | 34272 → 34272 | 20 → 20 | 25802 → 25802 | 7752 → 7752 |
+| float-exact | 3908 → 3908 | 20 → 20 | 1444 → 1444 | 1946 → 1946 |
+| math-float | 9736 → 9736 | 20 → 20 | 6600 → 6600 | 2708 → 2708 |
+| hello-printf-int-nofloat | 5047 → 5047 | 380 → 380 | 3811 → 3811 | 420 → 420 |
+| hello-printf-int-minimal | 4779 → 4779 | 380 → 380 | 3593 → 3593 | 372 → 372 |
+| malloc-heavy-tiny | 2206 → 2206 | 76 → 76 | 1266 → 1266 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `ctanhf.o` 68 → 1136 (+1068): computed in float (the complex `sp-nearest` layer) instead of a wrapper of the double function.
+- `__libc_sinhcoshf_core.o` 0 → 912 (+912): new: float-float sinh and cosh, shared by csinhf, ccoshf and ctanhf.
+- `ccoshf.o` 68 → 724 (+656): computed in float (the complex `sp-nearest` layer) instead of a wrapper of the double function.
+- `csinhf.o` 68 → 664 (+596): computed in float (the complex `sp-nearest` layer) instead of a wrapper of the double function.
+- `__libc_ff_round_product.o` 0 → 376 (+376): new: a float-float product rounded once with tiny factors prescaled, shared by the complex functions.
+- `csinh.o` 572 → 596 (+24): the sign fix beyond 709 (one multiply).
+- Reduced: 5 members, -378 bytes; the largest: `__libc_exp2f_times.o` 372 → 96, `ccosf.o` 68 → 34, `csinf.o` 68 → 36, `ctanf.o` 68 → 36.

@@ -16,7 +16,11 @@
 
 #include "internal/complex.h"
 
-/* C23 7.3.6.4, G.6.2.4: cosh x cos y + i sinh x sin y, the special cases first */
+/*
+ * C23 7.3.6.4, G.6.2.4: cosh x cos y + i sinh x sin y, the special cases
+ * first; beyond |x| = 709 the factor e^|x|/2 is applied in two halves and
+ * the sign of sinh x multiplies the imaginary part (sin y keeps its own sign).
+ */
 double complex ccosh(double complex z)
 {
 	double x = __libc_re(z);
@@ -35,7 +39,7 @@ double complex ccosh(double complex z)
 		return CMPLX(y - y, y - y);
 	if (fabs(x) > 709.0) {
 		e = exp(0.5 * fabs(x));
-		return CMPLX(0.5 * e * cos(y) * e, copysign(0.5 * e * sin(y) * e, x));
+		return CMPLX(0.5 * e * cos(y) * e, copysign(1.0, x) * (0.5 * e * sin(y) * e));
 	}
 
 	return CMPLX(cosh(x) * cos(y), sinh(x) * sin(y));
