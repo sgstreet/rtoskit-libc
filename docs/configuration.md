@@ -30,7 +30,7 @@ Each board builds two optimised libraries (D73):
 | Build type | Install | What it is |
 |---|---|---|
 | `release` | `images/<board>/release/` | the size flavour: the smallest code, the default |
-| `speed` | `images/<board>/speed/` | the speed flavour: the same `-Os` library with faster kernels (on the Thumb-2 cores, `memcpy`/`memmove`/`memset` that copy 32 bytes per iteration and use unaligned word access, and word-at-a-time `strcmp`/`strchr`), within 10 % of the size flavour's code size (`docs/size/budget.json`) |
+| `speed` | `images/<board>/speed/` | the speed flavour: the same `-Os` library with faster kernels (on the Thumb-2 cores, `memcpy`/`memmove`/`memset` that copy 32 bytes per iteration and use unaligned word access, and word-at-a-time `strcmp`/`strchr`; on Armv6-M, block copies and shift-merged misaligned copies), within 10 % of the size flavour's code size (`docs/size/budget.json`) |
 
 Both flavours ship the same headers and archives (`libc.a`, the flavour
 archives, `libm.a`). The speed flavour's Thumb-2 kernels use unaligned
@@ -45,7 +45,7 @@ automatically; there is nothing to configure per function.
 
 | Core (`ARCH_CROSS`) | FPU | `<fenv.h>` | libm layers (D46, D56, D57) | String kernels (D69, D70, D73) |
 |---|---|---|---|---|
-| `armv6-m`, `armv6s-m` | none | soft: round to nearest, no flags | `sp sp-nearest nofp` | `thumb1` |
+| `armv6-m`, `armv6s-m` | none | soft: round to nearest, no flags | `sp sp-nearest nofp` | `thumb1`; speed: `thumb1-speed thumb1` |
 | `armv7e-m` | FPv4-SP | soft | `sp sp-nearest fpv4-sp` | `thumb1`; speed: `thumb2 thumb1` |
 | `armv8-m.main` | FPv5-SP | soft | `sp sp-nearest fpv5-sp` | `thumb1`; speed: `thumb2 thumb1` |
 | `armv7e-m-dp` | FPv5-DP | full: every direction and flag | `sp fpv5-sp fpv5-dp` | `thumb1`; speed: `thumb2 thumb1` |

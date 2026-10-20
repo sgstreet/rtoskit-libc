@@ -366,3 +366,113 @@ is unchanged.
   2 down the word path, where unaligned LDR still gives the right answer on
   these cores: it only gives up the guarantee of never reading past the
   word holding the terminator, which no test without guard pages can see.
+
+## P3.02c: the Armv6-M speed kernels
+
+### Constraints and sources
+
+The Armv6-M ARM (DDI 0419) sets the limits:
+
+- 16-bit Thumb with a few 32-bit instructions (`BL`, `MRS`, `MSR`, the
+  barriers);
+- no unaligned access at all (A3.2), and no IT;
+- no `CBZ`, no `CLZ`;
+- no post-indexed or negative-offset loads;
+- 8-bit immediates;
+- `LDM`/`STM` on the low registers r0–r7 only, always with writeback and
+  always aligned.
+
+On a Cortex-M0+ (TRM DDI 0484), LDM/STM of N registers take 1 + N cycles,
+LDR/STR 2, and a taken branch 2. The LLVM libc `inline_memcpy.h` separates
+these cores (no unaligned access) from the Armv7-M ones. Newlib's
+`memcpy` for v6-M copies words when the phases agree and bytes otherwise.
+
+### Kernels
+
+All four live in `libc/string/thumb1-speed`; the speed kernel list for
+armv6-m and armv6s-m is `thumb1-speed thumb1`.
+
+**`memcpy`:**
+- **Equal phases** (any size): bytes to a word boundary, 16 bytes per
+  iteration through `LDMIA`/`STMIA` of r3–r6, then words, then bytes.
+- **Different phases** below 24 bytes: the byte loop with a negative index
+  (4 instructions a byte).
+- **Different phases** from 24 bytes: the destination is aligned, and
+  aligned source words are merged.
+  - With the source k bytes past a boundary, each destination word is
+    `(w >> 8k) | (x << (32 - 8k))` of two consecutive source words.
+  - Two words per iteration with the registers alternating: 13 instructions
+    per 8 bytes, against 32 for bytes.
+  - Every source word read holds a byte the copy needs, so nothing past the
+    source is touched.
+  - The threshold of 24 is where merging starts to pay: at 16 bytes the
+    setup costs more than the bytes it saves.
+
+**`memmove`:**
+- A forward copy goes to `memcpy` through a register (a Thumb-1 `B`
+  reaches only 2 KB).
+- Backwards, the count of bytes left is the index from both starts, as in
+  the size flavour (`LDRB`/`STRB [rn, r2]`, 4 instructions a byte).
+- Equal phases add 16-byte blocks at start + index (no `LDMDB` on Thumb-1)
+  and words.
+- Different phases from 24 bytes merge from the ends:
+  `(p >> 8k) | (w << (32 - 8k))` of the word w holding the last k source
+  bytes and the word p below it.
+- A first version stepped pointers down byte by byte. That took 7–9
+  instructions a byte and made small backward moves 20–35 % slower; the
+  indexed form removed every regression.
+
+**`memset`:**
+- r12 keeps the return value; the destination is aligned by bytes.
+- Registers are saved only for the block path: from 32 bytes, two `STMIA`s
+  of four registers per iteration, then one more for a remaining 16.
+- Then a 3-instruction word loop (`STMIA`, `SUBS`, `BHS`), which pays back
+  the block test after one word, and the size flavour's byte tail.
+
+**`strcmp`:**
+- The size flavour's byte loop with one index register for both strings:
+  7 instructions a byte against 8, 12 % faster at every length.
+- A word loop, as on Thumb-2, would need a byte search at its exit (no
+  `CLZ`) and an entry that short strings would pay for.
+
+**`strlen`** stays the size flavour's word loop (5 instructions a word).
+Two words per `LDM` save one instruction a word, but they need 8-byte
+alignment first and a longer exit, as on Thumb-2 (D74).
+
+### Results (armv6-m, instructions per call)
+
+| Case | size | speed |
+|---|---:|---:|
+| `memcpy` 16 B aligned | 54 | 40 |
+| `memcpy` 64 B aligned | 114 | 52 |
+| `memcpy` 64 B, phases differ | 285 | 187 |
+| `memcpy` 1024 B aligned | 1314 | 292 |
+| `memcpy` 1024 B, phases differ | 4125 | 1867 |
+| `memmove` up 1024 B aligned | 1313 | 420 |
+| `memmove` up 1024 B, phases differ | 5147 | 2371 |
+| `memset` 1024 B | 1054 | 169 |
+| `strcmp` 1024 B | 8221 | 7198 |
+| `mix/memcpy` (per call) | 223 | 136 |
+| `mix/memset` (per call) | 96 | 60 |
+
+- 260 cases are faster, and none is slower beyond the gate. The first
+  version had 49 regressions:
+  - a 16-byte threshold that also sent small equal-phase copies to bytes;
+  - `memset`'s extra test;
+  - the stepped backward loops.
+- The kernels are 148 + 172 + 84 + 22 bytes, against 60 + 60 + 48 + 20.
+  Every speed `test/size` image of armv6-m and armv6s-m is within the
+  budget + 10 %.
+
+### Validation
+
+- `test/unit/string_kernels` passes on the armv6-m and armv6s-m speed
+  builds. `qemu-arm -cpu max` faults an unaligned `LDM`/`STM` as the core
+  would (SIGBUS), so alignment mistakes show.
+- Mutation check: all 14 mutants fail or crash the test. They covered:
+  - the shift count, the source pointer after the merge, a stored register
+    list, the word remainder, the merge threshold;
+  - in `memmove`: the block address, a merge shift direction, the rest
+    pointers, the empty-byte check;
+  - the `memset` block test, its byte tail and its replication;
+  - the `strcmp` terminator test and its index step.
