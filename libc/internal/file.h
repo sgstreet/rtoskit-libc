@@ -21,9 +21,10 @@
 /*
  * The stream object (docs/research/stdio.md). One buffer window serves both
  * directions: while reading, [pos, end) holds unread input; while writing,
- * [buffer, pos) holds pending output. The buffer is set up at the first
+ * [buffer, pos) holds pending output. stdin and stdout start with a static
+ * buffer in their own objects; other streams get theirs at the first
  * transfer (malloc'd BUFSIZ bytes, a setvbuf buffer, or the one-byte
- * "single" for unbuffered streams).
+ * "single" for unbuffered streams). PLAN D53.
  */
 
 /* Access, given by the mode */
@@ -43,6 +44,8 @@
 #define __LIBC_FILE_UNGOT 0x0200
 /* The FILE itself came from malloc (fopen, tmpfile) */
 #define __LIBC_FILE_ALLOCATED 0x0400
+/* The buffer is the caller's, from setvbuf */
+#define __LIBC_FILE_USER_BUFFER 0x0800
 
 struct __libc_file {
 	unsigned char *buffer;
@@ -51,14 +54,13 @@ struct __libc_file {
 	size_t size;
 	struct __rtos_lock *lock;
 	struct __libc_file *next;
-	struct __libc_file *prev;
 	int handle;
 	unsigned short flags;
 	unsigned char ungot;
 	unsigned char single;
 };
 
-/* The streams fopen and tmpfile created, linked under __rtos_stdio_lock */
+/* The streams fopen and tmpfile created, singly linked under __rtos_stdio_lock */
 extern struct __libc_file *__libc_files;
 
 static inline void __libc_file_lock(FILE *stream)
@@ -76,7 +78,7 @@ static inline void __libc_file_unlock(FILE *stream)
  * Failures set the error indicator and errno.
  */
 
-/* Set up the buffer if needed (falls back to unbuffered when malloc fails) */
+/* Set up the buffer if needed (falls back to unbuffered when malloc fails or is not linked) */
 void __libc_file_setup(FILE *stream);
 
 /* Write out pending output, or give back unread input; returns 0 or EOF */

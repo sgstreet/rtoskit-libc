@@ -18,10 +18,7 @@
 void __libc_file_link(FILE *stream)
 {
 	__rtos_lock_acquire(&__rtos_stdio_lock);
-	stream->prev = nullptr;
 	stream->next = __libc_files;
-	if (__libc_files != nullptr)
-		__libc_files->prev = stream;
 	__libc_files = stream;
 	__rtos_lock_release(&__rtos_stdio_lock);
 }

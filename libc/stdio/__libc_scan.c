@@ -27,27 +27,6 @@
  * first one that does not, the one character of pushback a stream allows.
  */
 
-/* Length modifiers (p11), kept so each store uses the exact type */
-enum length {
-	LENGTH_NONE,
-	LENGTH_HH,
-	LENGTH_H,
-	LENGTH_L,
-	LENGTH_LL,
-	LENGTH_J,
-	LENGTH_Z,
-	LENGTH_T,
-	LENGTH_W8,
-	LENGTH_W16,
-	LENGTH_W32,
-	LENGTH_W64,
-	LENGTH_WF8,
-	LENGTH_WF16,
-	LENGTH_WF32,
-	LENGTH_WF64,
-	LENGTH_BIG_L,
-};
-
 /* The outcome of one directive */
 enum result {
 	RESULT_OK,
@@ -58,33 +37,33 @@ enum result {
 /* No field width: limited only by size_t */
 #define NO_WIDTH SIZE_MAX
 
-static bool parse_length(const char **format, enum length *length)
+static bool parse_length(const char **format, enum __libc_length *length)
 {
 	const char *s = *format;
 
 	switch (*s) {
 		case 'h':
-			*length = s[1] == 'h' ? LENGTH_HH : LENGTH_H;
+			*length = s[1] == 'h' ? __LIBC_LENGTH_HH : __LIBC_LENGTH_H;
 			s += s[1] == 'h' ? 2 : 1;
 			break;
 		case 'l':
-			*length = s[1] == 'l' ? LENGTH_LL : LENGTH_L;
+			*length = s[1] == 'l' ? __LIBC_LENGTH_LL : __LIBC_LENGTH_L;
 			s += s[1] == 'l' ? 2 : 1;
 			break;
 		case 'j':
-			*length = LENGTH_J;
+			*length = __LIBC_LENGTH_J;
 			++s;
 			break;
 		case 'z':
-			*length = LENGTH_Z;
+			*length = __LIBC_LENGTH_Z;
 			++s;
 			break;
 		case 't':
-			*length = LENGTH_T;
+			*length = __LIBC_LENGTH_T;
 			++s;
 			break;
 		case 'L':
-			*length = LENGTH_BIG_L;
+			*length = __LIBC_LENGTH_BIG_L;
 			++s;
 			break;
 		case 'w': {
@@ -99,16 +78,16 @@ static bool parse_length(const char **format, enum length *length)
 				bits = bits * 10 + (*s++ - '0');
 			switch (bits) {
 				case 8:
-					*length = fast ? LENGTH_WF8 : LENGTH_W8;
+					*length = fast ? __LIBC_LENGTH_WF8 : __LIBC_LENGTH_W8;
 					break;
 				case 16:
-					*length = fast ? LENGTH_WF16 : LENGTH_W16;
+					*length = fast ? __LIBC_LENGTH_WF16 : __LIBC_LENGTH_W16;
 					break;
 				case 32:
-					*length = fast ? LENGTH_WF32 : LENGTH_W32;
+					*length = fast ? __LIBC_LENGTH_WF32 : __LIBC_LENGTH_W32;
 					break;
 				case 64:
-					*length = fast ? LENGTH_WF64 : LENGTH_W64;
+					*length = fast ? __LIBC_LENGTH_WF64 : __LIBC_LENGTH_W64;
 					break;
 				default:
 					return false;
@@ -116,67 +95,12 @@ static bool parse_length(const char **format, enum length *length)
 			break;
 		}
 		default:
-			*length = LENGTH_NONE;
+			*length = __LIBC_LENGTH_NONE;
 			break;
 	}
 
 	*format = s;
 	return true;
-}
-
-/* Converts value to the type the modifier names; out-of-range values wrap as the conversion does */
-static void store_integer(va_list *ap, enum length length, uintmax_t value)
-{
-	switch (length) {
-		case LENGTH_HH:
-			*va_arg(*ap, unsigned char *) = (unsigned char)value;
-			break;
-		case LENGTH_H:
-			*va_arg(*ap, unsigned short *) = (unsigned short)value;
-			break;
-		case LENGTH_L:
-			*va_arg(*ap, unsigned long *) = (unsigned long)value;
-			break;
-		case LENGTH_LL:
-			*va_arg(*ap, unsigned long long *) = (unsigned long long)value;
-			break;
-		case LENGTH_J:
-			*va_arg(*ap, uintmax_t *) = value;
-			break;
-		case LENGTH_Z:
-			*va_arg(*ap, size_t *) = (size_t)value;
-			break;
-		case LENGTH_T:
-			*va_arg(*ap, ptrdiff_t *) = (ptrdiff_t)value;
-			break;
-		case LENGTH_W8:
-			*va_arg(*ap, uint_least8_t *) = (uint_least8_t)value;
-			break;
-		case LENGTH_W16:
-			*va_arg(*ap, uint_least16_t *) = (uint_least16_t)value;
-			break;
-		case LENGTH_W32:
-			*va_arg(*ap, uint_least32_t *) = (uint_least32_t)value;
-			break;
-		case LENGTH_W64:
-			*va_arg(*ap, uint_least64_t *) = (uint_least64_t)value;
-			break;
-		case LENGTH_WF8:
-			*va_arg(*ap, uint_fast8_t *) = (uint_fast8_t)value;
-			break;
-		case LENGTH_WF16:
-			*va_arg(*ap, uint_fast16_t *) = (uint_fast16_t)value;
-			break;
-		case LENGTH_WF32:
-			*va_arg(*ap, uint_fast32_t *) = (uint_fast32_t)value;
-			break;
-		case LENGTH_WF64:
-			*va_arg(*ap, uint_fast64_t *) = (uint_fast64_t)value;
-			break;
-		default:
-			*va_arg(*ap, unsigned int *) = (unsigned int)value;
-			break;
-	}
 }
 
 static unsigned int digit_value(int c)
@@ -344,7 +268,7 @@ int __libc_scan(struct __libc_scan_input *in, const char *format, va_list ap)
 		/* A conversion specification: *, width, length, conversion */
 		bool suppress = false;
 		size_t width = NO_WIDTH;
-		enum length length;
+		enum __libc_length length;
 
 		++format;
 		if (*format == '*') {
@@ -370,15 +294,15 @@ int __libc_scan(struct __libc_scan_input *in, const char *format, va_list ap)
 		switch (conversion) {
 			case 'n':
 				/* p12: no input consumed, not counted as an assignment */
-				if (!suppress)
-					store_integer(&args, length, in->count);
+				if (!suppress && !__libc_scan_count(&args, length, in->count))
+					result = RESULT_MATCHING_FAILURE;
 				continue;
 
 			case 'c':
 			case 's':
 			case '[': {
 				/* Wide characters are out of scope (PLAN §1) */
-				if (length != LENGTH_NONE) {
+				if (length != __LIBC_LENGTH_NONE) {
 					errno = EILSEQ;
 					result = RESULT_MATCHING_FAILURE;
 					continue;
@@ -439,10 +363,10 @@ int __libc_scan(struct __libc_scan_input *in, const char *format, va_list ap)
 			case 'F':
 			case 'g':
 			case 'G': {
-				char kind = length == LENGTH_L ? 'l' : length == LENGTH_BIG_L ? 'L' :
-																				0;
+				char kind = length == __LIBC_LENGTH_L ? 'l' : length == __LIBC_LENGTH_BIG_L ? 'L' :
+																							  0;
 
-				if (length != LENGTH_NONE && length != LENGTH_L && length != LENGTH_BIG_L) {
+				if (length != __LIBC_LENGTH_NONE && length != __LIBC_LENGTH_L && length != __LIBC_LENGTH_BIG_L) {
 					errno = EINVAL;
 					result = RESULT_MATCHING_FAILURE;
 					continue;
@@ -504,8 +428,10 @@ int __libc_scan(struct __libc_scan_input *in, const char *format, va_list ap)
 		if (!suppress) {
 			if (conversion == 'p')
 				*va_arg(args, void **) = (void *)(uintptr_t)value;
-			else
-				store_integer(&args, length, value);
+			else if (!__libc_scan_store(&args, length, value)) {
+				result = RESULT_MATCHING_FAILURE;
+				continue;
+			}
 			++assigned;
 		}
 		++completed;

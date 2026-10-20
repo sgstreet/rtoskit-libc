@@ -32,12 +32,12 @@
    },
    "origin": {
     "libc": {
-     "bss": 16,
-     "data": 40,
+     "bss": 260,
+     "data": 36,
      "rodata": 185,
      "tbss": 4,
      "tdata": 0,
-     "text": 6654,
+     "text": 6446,
      "unwind": 0
     },
     "libgcc": {
@@ -59,12 +59,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 100,
+     "bss": 84,
      "data": 0,
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 808,
+     "text": 744,
      "unwind": 0
     },
     "program": {
@@ -78,12 +78,12 @@
     }
    },
    "sections": {
-    "bss": 116,
-    "data": 40,
+    "bss": 344,
+    "data": 36,
     "rodata": 198,
     "tbss": 8,
     "tdata": 0,
-    "text": 10860,
+    "text": 10588,
     "unwind": 8
    }
   },
@@ -113,12 +113,12 @@
    },
    "origin": {
     "libc": {
-     "bss": 16,
-     "data": 40,
+     "bss": 260,
+     "data": 36,
      "rodata": 185,
      "tbss": 4,
      "tdata": 0,
-     "text": 6654,
+     "text": 6446,
      "unwind": 0
     },
     "libgcc": {
@@ -140,12 +140,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 100,
+     "bss": 84,
      "data": 0,
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 808,
+     "text": 744,
      "unwind": 0
     },
     "program": {
@@ -159,12 +159,174 @@
     }
    },
    "sections": {
-    "bss": 116,
-    "data": 40,
+    "bss": 344,
+    "data": 36,
     "rodata": 201,
     "tbss": 8,
     "tdata": 0,
-    "text": 8312,
+    "text": 8040,
+    "unwind": 8
+   }
+  },
+  "hello-printf-int-minimal": {
+   "main": {
+    "depth": 1336,
+    "notes": [
+     "assembly: __rtos_linux_syscall",
+     "indirect call",
+     "libgcc: __aeabi_idiv",
+     "libgcc: __aeabi_llsl",
+     "libgcc: __aeabi_llsr",
+     "libgcc: __aeabi_uidiv",
+     "libgcc: __aeabi_uidivmod",
+     "libgcc: __aeabi_uldivmod"
+    ],
+    "path": [
+     "main",
+     "printf",
+     "vfprintf",
+     "__libc_format",
+     "__libc_format_float",
+     "__libc_decimal_set",
+     "__libc_decimal_shift_left",
+     "memmove"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 260,
+     "data": 36,
+     "rodata": 95,
+     "tbss": 4,
+     "tdata": 0,
+     "text": 3498,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 372,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 1,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 14,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 84,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 4,
+     "tdata": 0,
+     "text": 744,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 15,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 40,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 344,
+    "data": 36,
+    "rodata": 111,
+    "tbss": 8,
+    "tdata": 0,
+    "text": 4668,
+    "unwind": 0
+   }
+  },
+  "hello-printf-int-nofloat": {
+   "main": {
+    "depth": 1336,
+    "notes": [
+     "assembly: __rtos_linux_syscall",
+     "indirect call",
+     "libgcc: __aeabi_idiv",
+     "libgcc: __aeabi_llsl",
+     "libgcc: __aeabi_llsr",
+     "libgcc: __aeabi_uidiv",
+     "libgcc: __aeabi_uidivmod",
+     "libgcc: __aeabi_uldivmod"
+    ],
+    "path": [
+     "main",
+     "printf",
+     "vfprintf",
+     "__libc_format",
+     "__libc_format_float",
+     "__libc_decimal_set",
+     "__libc_decimal_shift_left",
+     "memmove"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 260,
+     "data": 36,
+     "rodata": 95,
+     "tbss": 4,
+     "tdata": 0,
+     "text": 3640,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 792,
+     "unwind": 8
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 1,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 16,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 84,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 4,
+     "tdata": 0,
+     "text": 744,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 15,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 40,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 344,
+    "data": 36,
+    "rodata": 111,
+    "tbss": 8,
+    "tdata": 0,
+    "text": 5232,
     "unwind": 8
    }
   },
@@ -189,12 +351,12 @@
    },
    "origin": {
     "libc": {
-     "bss": 16,
-     "data": 40,
+     "bss": 260,
+     "data": 36,
      "rodata": 2,
      "tbss": 4,
      "tdata": 0,
-     "text": 1728,
+     "text": 1426,
      "unwind": 0
     },
     "libgcc": {
@@ -212,16 +374,16 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 12,
+     "text": 10,
      "unwind": 0
     },
     "port": {
-     "bss": 100,
+     "bss": 84,
      "data": 0,
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 808,
+     "text": 744,
      "unwind": 0
     },
     "program": {
@@ -235,12 +397,12 @@
     }
    },
    "sections": {
-    "bss": 116,
-    "data": 40,
+    "bss": 344,
+    "data": 36,
     "rodata": 15,
     "tbss": 8,
     "tdata": 0,
-    "text": 2564,
+    "text": 2196,
     "unwind": 0
    }
   },
@@ -776,7 +938,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 132,
+    "text": 128,
     "unwind": 0
    },
    "__libc_file_link.o": {
@@ -785,7 +947,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 44,
+    "text": 36,
     "unwind": 0
    },
    "__libc_file_mode.o": {
@@ -839,7 +1001,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 74,
+    "text": 80,
     "unwind": 0
    },
    "__libc_file_unlink.o": {
@@ -848,7 +1010,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 64,
+    "text": 60,
     "unwind": 0
    },
    "__libc_file_write.o": {
@@ -881,10 +1043,19 @@
    "__libc_format.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 96,
+    "rodata": 62,
     "tbss": 0,
     "tdata": 0,
-    "text": 2042,
+    "text": 1730,
+    "unwind": 0
+   },
+   "__libc_format_argument.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 194,
     "unwind": 0
    },
    "__libc_format_buffer_write.o": {
@@ -894,6 +1065,24 @@
     "tbss": 0,
     "tdata": 0,
     "text": 38,
+    "unwind": 0
+   },
+   "__libc_format_count.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 60,
+    "unwind": 0
+   },
+   "__libc_format_digits.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 34,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 152,
     "unwind": 0
    },
    "__libc_format_float.o": {
@@ -1100,7 +1289,16 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 1714,
+    "text": 1658,
+    "unwind": 0
+   },
+   "__libc_scan_count.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 10,
     "unwind": 0
    },
    "__libc_scan_float.o": {
@@ -1109,7 +1307,16 @@
     "rodata": 25,
     "tbss": 0,
     "tdata": 0,
-    "text": 1122,
+    "text": 1118,
+    "unwind": 0
+   },
+   "__libc_scan_store.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 62,
     "unwind": 0
    },
    "__libc_secs_to_tm.o": {
@@ -1150,7 +1357,7 @@
    },
    "__libc_stderr.o": {
     "bss": 0,
-    "data": 36,
+    "data": 32,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
@@ -1158,8 +1365,8 @@
     "unwind": 0
    },
    "__libc_stdin.o": {
-    "bss": 0,
-    "data": 36,
+    "bss": 256,
+    "data": 32,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
@@ -1176,8 +1383,8 @@
     "unwind": 0
    },
    "__libc_stdout.o": {
-    "bss": 0,
-    "data": 36,
+    "bss": 256,
+    "data": 32,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
@@ -3116,7 +3323,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 26,
+    "text": 24,
     "unwind": 0
    },
    "feraiseexcept.o": {
@@ -3134,7 +3341,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 26,
+    "text": 24,
     "unwind": 0
    },
    "fesetenv.o": {
@@ -5501,7 +5708,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 116,
+    "text": 164,
     "unwind": 0
    },
    "signal.o": {
@@ -7013,7 +7220,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 84,
+    "text": 80,
     "unwind": 0
    },
    "vfprintf.o": {
@@ -7099,12 +7306,12 @@
    }
   },
   "totals": {
-   "bss": 672,
-   "data": 120,
+   "bss": 1184,
+   "data": 108,
    "rodata": 8789,
    "tbss": 358,
    "tdata": 8,
-   "text": 113086,
+   "text": 113222,
    "unwind": 0
   }
  },
@@ -8112,7 +8319,10 @@
    "__libc_format.o:libc/stdio/__libc_format.c:format_integer": 120,
    "__libc_format.o:libc/stdio/__libc_format.c:format_text": 32,
    "__libc_format.o:libc/stdio/__libc_format.c:parse_decimal": 32,
+   "__libc_format_argument.o:__libc_format_argument": 16,
    "__libc_format_buffer_write.o:__libc_format_buffer_write": 12,
+   "__libc_format_count.o:__libc_format_count": 12,
+   "__libc_format_digits.o:__libc_format_digits": 24,
    "__libc_format_float.o:__libc_format_float": 1048,
    "__libc_format_float.o:libc/stdio/__libc_format_float.c:add_fill.constprop.0": 0,
    "__libc_format_float.o:libc/stdio/__libc_format_float.c:format_exponent": 32,
@@ -8149,10 +8359,11 @@
    "__libc_scan.o:libc/stdio/__libc_scan.c:__libc_scan_get": 8,
    "__libc_scan.o:libc/stdio/__libc_scan.c:__libc_scan_unget": 8,
    "__libc_scan.o:libc/stdio/__libc_scan.c:skip_space": 16,
-   "__libc_scan.o:libc/stdio/__libc_scan.c:store_integer": 16,
+   "__libc_scan_count.o:__libc_scan_count": 8,
    "__libc_scan_float.o:__libc_scan_float": 1920,
    "__libc_scan_float.o:libc/stdio/__libc_scan_float.c:__libc_scan_get": 8,
    "__libc_scan_float.o:libc/stdio/__libc_scan_float.c:__libc_scan_unget": 8,
+   "__libc_scan_store.o:__libc_scan_store": 16,
    "__libc_secs_to_tm.o:__libc_secs_to_tm": 64,
    "__libc_sin_core.o:__libc_sin_core": 120,
    "__libc_sin_core.o:libc/math/__libc_sin_core.c:__libc_dd_product": 56,

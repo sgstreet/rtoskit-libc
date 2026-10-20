@@ -16,6 +16,9 @@
 
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdint.h>
+
+#include "internal/length.h"
 
 /* Conversion flags (C23 7.23.6.1p6) */
 #define __LIBC_FORMAT_LEFT 0x01
@@ -46,6 +49,21 @@ struct __libc_format_spec {
 
 /* Returns the number of characters produced, or a negative value with errno set */
 int __libc_format(struct __libc_format_sink *sink, const char *format, va_list ap);
+
+/*
+ * The parts of an integer conversion that the minimal flavour replaces
+ * (libc-minimal-printf.a, PLAN D53). Each returns false with errno EINVAL
+ * for what its flavour leaves out.
+ */
+
+/* The argument of a d/i (is_signed) or b/B/o/u/x/X conversion: its magnitude, with the sign apart */
+bool __libc_format_argument(va_list *ap, enum __libc_length length, bool is_signed, uintmax_t *magnitude, bool *negative);
+
+/* Writes the digits of value backwards, ending at end; returns the first digit */
+char *__libc_format_digits(char *end, uintmax_t value, char conversion);
+
+/* n (C23 7.23.6.1p8): stores count through the pointer type the length modifier names */
+bool __libc_format_count(va_list *ap, enum __libc_length length, size_t count);
 
 /*
  * Formats one a/A/e/E/f/F/g/G conversion of value to the sink and returns the

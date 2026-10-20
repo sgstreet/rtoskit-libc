@@ -41,6 +41,7 @@ if [[ $(cat stdio-exit-file.txt 2>/dev/null) != "kept" ]]; then
 	status=1
 fi
 rm -f stdio-exit-file.txt
+expect unbuffered-stdout 0 "first second" "" "" unbuffered-stdout
 expect perror 0 "" "$(printf 'open: No such file or directory\nInvalid argument\nNumerical result out of range')" "" perror
 expect stdin 0 "4 lines 34 characters eof" "" "first line\nsecond line is longer\nx" stdin
 expect empty-stdin 0 "0 lines 0 characters eof" "" "" stdin

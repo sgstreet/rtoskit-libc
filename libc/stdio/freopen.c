@@ -25,7 +25,7 @@
  */
 FILE *freopen(const char *restrict filename, const char *restrict mode, FILE *restrict stream)
 {
-	unsigned short keep = __LIBC_FILE_LINE | __LIBC_FILE_UNBUFFERED | __LIBC_FILE_OWN_BUFFER | __LIBC_FILE_ALLOCATED;
+	unsigned short keep = __LIBC_FILE_LINE | __LIBC_FILE_UNBUFFERED | __LIBC_FILE_OWN_BUFFER | __LIBC_FILE_USER_BUFFER | __LIBC_FILE_ALLOCATED;
 	unsigned int open_flags;
 	unsigned short stream_flags;
 	int error = 0;

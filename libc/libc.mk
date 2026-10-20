@@ -50,6 +50,27 @@ LIBC_HEADERS := $(patsubst ${PROJECT_ROOT}/include/%,${INSTALL_ROOT}/include/%,$
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
 all: ${INSTALL_ROOT}/lib/libc.a ${INSTALL_ROOT}/lib/libm.a ${LIBC_HEADERS}
+all: ${INSTALL_ROOT}/lib/libc-nofloat.a ${INSTALL_ROOT}/lib/libc-minimal-printf.a
+
+# Flavour archives (PLAN D13, D53): libc.a with members replaced by the objects of a variant
+# module of the same name, chosen by linking the archive instead of libc.a
+LIBC_NOFLOAT_OBJ := $(wildcard ${BUILD_ROOT}/libc/stdio/nofloat/*.o)
+LIBC_MINIMAL_OBJ := ${LIBC_NOFLOAT_OBJ} $(wildcard ${BUILD_ROOT}/libc/stdio/minimal/*.o)
+libc_flavour = $(filter-out $(addprefix %/,$(notdir ${1})),${TARGET_OBJ}) ${1}
+
+${CURDIR}/libc-nofloat.a: ${TARGET_OBJ} ${LIBC_NOFLOAT_OBJ} ${EXTRA_DEPS}
+	@echo "ARCHIVING ${@}"
+	${RM} $@
+	$(AR) ${ARFLAGS} $@ $(call libc_flavour,${LIBC_NOFLOAT_OBJ})
+
+${CURDIR}/libc-minimal-printf.a: ${TARGET_OBJ} ${LIBC_MINIMAL_OBJ} ${EXTRA_DEPS}
+	@echo "ARCHIVING ${@}"
+	${RM} $@
+	$(AR) ${ARFLAGS} $@ $(call libc_flavour,${LIBC_MINIMAL_OBJ})
+
+${INSTALL_ROOT}/lib/libc-%.a: ${CURDIR}/libc-%.a
+	@echo "INSTALLING ${@}"
+	$(INSTALL) -m 644 -D ${<} ${@}
 
 # libm is part of libc.a (D46); an empty libm.a keeps "-lm" working
 ${CURDIR}/libm.a: ${EXTRA_DEPS}

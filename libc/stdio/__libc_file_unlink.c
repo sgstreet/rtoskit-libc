@@ -15,20 +15,23 @@
 
 #include "internal/file.h"
 
-/* Only allocated streams are linked; the standard streams are not */
+/*
+ * Only allocated streams are linked; the standard streams are not. The list
+ * is singly linked: at most FOPEN_MAX entries are searched, and each FILE
+ * saves a pointer (PLAN D53).
+ */
 void __libc_file_unlink(FILE *stream)
 {
 	if (!(stream->flags & __LIBC_FILE_ALLOCATED))
 		return;
 
 	__rtos_lock_acquire(&__rtos_stdio_lock);
-	if (stream->prev != nullptr)
-		stream->prev->next = stream->next;
-	else
-		__libc_files = stream->next;
-	if (stream->next != nullptr)
-		stream->next->prev = stream->prev;
+	for (FILE **link = &__libc_files; *link != nullptr; link = &(*link)->next) {
+		if (*link == stream) {
+			*link = stream->next;
+			break;
+		}
+	}
 	stream->next = nullptr;
-	stream->prev = nullptr;
 	__rtos_lock_release(&__rtos_stdio_lock);
 }
