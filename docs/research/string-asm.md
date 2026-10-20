@@ -105,6 +105,45 @@ libc-test's string tests and `test/unit/string` run as before.
   loop relied on, but dst = src is not. The overlap test found it, and
   equal pointers now return at once.
 
+## Thumb-2 cores (P2.06b)
+
+The Thumb-1 kernels are valid Thumb-2: unified syntax, and every 16-bit
+encoding exists on Armv7-M and Armv8-M Mainline. They need no unaligned
+word access, which an RTOS may trap there with `CCR.UNALIGN_TRP`.
+
+Measured on armv7e-m (armv7e-m-dp and armv8-m.main are the same):
+
+| Function | C, `-Os` Thumb-2 (bytes) | Thumb-1 kernel (bytes) |
+|---|---:|---:|
+| `memcpy` | 80 | 60 |
+| `memmove` | 168 | 60 |
+| `memset` | 68 | 48 |
+| `strlen` | 54 | 44 |
+| `strcmp` | 22 | 22 |
+
+The Thumb-2-only encodings were weighed function by function:
+- `b.w memcpy` instead of the load through r3 would save 4 bytes in
+  `memmove`, because B.W reaches 16 MB and gets a veneer from the linker.
+- IT blocks and CBZ/CBNZ save nothing in these loops: the flag-setting
+  16-bit forms already test the counts, and CBZ branches forwards only.
+- Post-indexed `ldrb r3, [r1], #1` is a 32-bit encoding, the same 4 bytes as
+  `ldrb` plus `adds`.
+- A high-register `tst.w` would let `strlen` skip saving r4: 2 bytes.
+
+A second directory for 4–6 bytes was not worth maintaining. The arch files
+of all five Arm cores name `thumb1`. That is the "one shared subdirectory"
+of the step, under the name of the instruction set it is written in.
+`setjmp`/`longjmp` (14/18 bytes on these cores) are already minimal Thumb-2
+assembly.
+
+## Not in this step
+
+P2.05a pointed at "hand-written Thumb-1 kernels" for libgcc's soft-float
+comparisons and division. That is a soft-fp rewrite with its own
+correctness surface (every rounding and special case of the IEEE
+operations), not a string kernel. It is recorded as PLAN Q14 rather than
+folded into P2.06.
+
 Note: a stale `strlen.o` from the C file stayed in the build tree once
 `strlen.S` existed, and the archive took the C one. That is the D57
 stale-object hazard again. Kernel changes are measured after

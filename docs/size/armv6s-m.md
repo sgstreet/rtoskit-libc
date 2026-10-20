@@ -586,3 +586,26 @@ Decision D69, `docs/research/string-asm.md`. Before → after, release build.
 Members that grew or are new, justified:
 
 - Reduced: 5 members, -190 bytes; the largest: `memmove.o` 176 → 60, `memcpy.o` 96 → 60, `memset.o` 72 → 48, `strlen.o` 60 → 48.
+
+## P2.06b — the string kernels on the Thumb-2 cores
+
+Decision D70, `docs/research/string-asm.md`. Before → after, release build.
+
+`libc.a`: code 167130 → 167130 (+0), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 2163 → 2163 | 380 → 380 | 1380 → 1380 | 0 → 0 |
+| hello-printf-int | 7769 → 7769 | 380 → 380 | 6533 → 6533 | 420 → 420 |
+| hello-printf-float | 10374 → 10374 | 380 → 380 | 6533 → 6533 | 2984 → 2984 |
+| malloc-heavy | 2214 → 2214 | 80 → 80 | 1274 → 1274 | 0 → 0 |
+| math-mix | 34116 → 34116 | 20 → 20 | 25646 → 25646 | 7752 → 7752 |
+| float-exact | 3908 → 3908 | 20 → 20 | 1444 → 1444 | 1946 → 1946 |
+| math-float | 9640 → 9640 | 20 → 20 | 6504 → 6504 | 2708 → 2708 |
+| hello-printf-int-nofloat | 4987 → 4987 | 380 → 380 | 3751 → 3751 | 420 → 420 |
+| hello-printf-int-minimal | 4719 → 4719 | 380 → 380 | 3533 → 3533 | 372 → 372 |
+| malloc-heavy-tiny | 2134 → 2134 | 76 → 76 | 1194 → 1194 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- Reduced: 0 members, 0 bytes; the largest: .
