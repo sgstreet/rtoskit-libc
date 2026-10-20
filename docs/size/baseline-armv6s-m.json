@@ -629,6 +629,105 @@
     "unwind": 0
    }
   },
+  "math-float": {
+   "main": {
+    "depth": 416,
+    "notes": [
+     "libgcc: __aeabi_d2f",
+     "libgcc: __aeabi_d2iz",
+     "libgcc: __aeabi_dadd",
+     "libgcc: __aeabi_dcmpeq",
+     "libgcc: __aeabi_dcmpge",
+     "libgcc: __aeabi_dcmpgt",
+     "libgcc: __aeabi_dcmple",
+     "libgcc: __aeabi_dcmplt",
+     "libgcc: __aeabi_dcmpun",
+     "libgcc: __aeabi_ddiv",
+     "libgcc: __aeabi_dmul",
+     "libgcc: __aeabi_f2d",
+     "libgcc: __aeabi_f2iz",
+     "libgcc: __aeabi_fadd",
+     "libgcc: __aeabi_fcmpeq",
+     "libgcc: __aeabi_fcmpge",
+     "libgcc: __aeabi_fcmpgt",
+     "libgcc: __aeabi_fcmplt",
+     "libgcc: __aeabi_fcmpun",
+     "libgcc: __aeabi_fmul",
+     "libgcc: __aeabi_i2d",
+     "libgcc: __aeabi_i2f",
+     "libgcc: __aeabi_lasr",
+     "libgcc: __aeabi_llsl",
+     "libgcc: __aeabi_llsr",
+     "libgcc: __aeabi_lmul",
+     "libgcc: __aeabi_ul2d",
+     "libgcc: __clzdi2"
+    ],
+    "path": [
+     "main",
+     "powf",
+     "pow",
+     "__libc_log_core",
+     "libc/math/__libc_log_core.c:__libc_dd_product",
+     "__aeabi_dsub"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 2912,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 13482,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 7472,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 14,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 20,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 256,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 160,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 20,
+    "data": 0,
+    "rodata": 2912,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 21384,
+    "unwind": 0
+   }
+  },
   "math-mix": {
    "main": {
     "depth": 576,
@@ -645,10 +744,12 @@
      "libgcc: __aeabi_ddiv",
      "libgcc: __aeabi_dmul",
      "libgcc: __aeabi_f2d",
+     "libgcc: __aeabi_f2iz",
      "libgcc: __aeabi_fadd",
      "libgcc: __aeabi_fcmpeq",
      "libgcc: __aeabi_fcmpge",
      "libgcc: __aeabi_fcmpgt",
+     "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
      "libgcc: __aeabi_fmul",
      "libgcc: __aeabi_i2d",
@@ -673,10 +774,10 @@
     "libc": {
      "bss": 0,
      "data": 0,
-     "rodata": 3184,
+     "rodata": 3440,
      "tbss": 0,
      "tdata": 0,
-     "text": 16548,
+     "text": 17738,
      "unwind": 0
     },
     "libgcc": {
@@ -685,7 +786,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 7412,
+     "text": 7472,
      "unwind": 0
     },
     "other": {
@@ -694,7 +795,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 16,
+     "text": 14,
      "unwind": 0
     },
     "port": {
@@ -719,10 +820,10 @@
    "sections": {
     "bss": 20,
     "data": 0,
-    "rodata": 3184,
+    "rodata": 3440,
     "tbss": 0,
     "tdata": 0,
-    "text": 24680,
+    "text": 25928,
     "unwind": 0
    }
   }
@@ -1051,6 +1152,33 @@
     "tbss": 0,
     "tdata": 0,
     "text": 48,
+    "unwind": 0
+   },
+   "__libc_exp2f_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 256,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 608,
+    "unwind": 0
+   },
+   "__libc_exp2f_scale.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 172,
+    "unwind": 0
+   },
+   "__libc_exp2m1f_scale.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 132,
     "unwind": 0
    },
    "__libc_exp_core.o": {
@@ -3336,7 +3464,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 316,
     "unwind": 0
    },
    "exp10l.o": {
@@ -3360,10 +3488,10 @@
    "exp10m1f.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 0,
+    "rodata": 16,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 544,
     "unwind": 0
    },
    "exp10m1l.o": {
@@ -3390,7 +3518,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 100,
     "unwind": 0
    },
    "exp2l.o": {
@@ -3417,7 +3545,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 496,
     "unwind": 0
    },
    "exp2m1l.o": {
@@ -3435,7 +3563,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 300,
     "unwind": 0
    },
    "expl.o": {
@@ -3462,7 +3590,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 164,
+    "text": 432,
     "unwind": 0
    },
    "expm1l.o": {
@@ -7618,10 +7746,10 @@
   "totals": {
    "bss": 1184,
    "data": 108,
-   "rodata": 8342,
+   "rodata": 8614,
    "tbss": 358,
    "tdata": 8,
-   "text": 113438,
+   "text": 116294,
    "unwind": 0
   }
  },
@@ -7808,25 +7936,21 @@
     ]
    },
    "expf": {
-    "depth": 208,
+    "depth": 160,
     "notes": [
-     "libgcc: __aeabi_d2f",
-     "libgcc: __aeabi_d2iz",
-     "libgcc: __aeabi_dadd",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_dmul",
-     "libgcc: __aeabi_f2d",
-     "libgcc: __aeabi_llsr"
+     "libgcc: __aeabi_f2iz",
+     "libgcc: __aeabi_fadd",
+     "libgcc: __aeabi_fcmpge",
+     "libgcc: __aeabi_fcmpgt",
+     "libgcc: __aeabi_fcmplt",
+     "libgcc: __aeabi_fcmpun",
+     "libgcc: __aeabi_fmul"
     ],
     "path": [
      "expf",
-     "exp",
-     "__libc_exp_core",
-     "floor"
+     "__libc_exp2f_core",
+     "libc/math/sp-nearest/__libc_exp2f_core.c:__libc_ff_product",
+     "__aeabi_fsub"
     ]
    },
    "fclose": {
@@ -8574,6 +8698,10 @@
    "__libc_exact_to_float.o:__libc_exact_to_float": 56,
    "__libc_exit_register.o:__libc_exit_register": 16,
    "__libc_exit_run.o:__libc_exit_run": 16,
+   "__libc_exp2f_core.o:__libc_exp2f_core": 64,
+   "__libc_exp2f_core.o:libc/math/sp-nearest/__libc_exp2f_core.c:__libc_ff_product": 32,
+   "__libc_exp2f_scale.o:__libc_exp2f_scale": 48,
+   "__libc_exp2m1f_scale.o:__libc_exp2m1f_scale": 40,
    "__libc_exp_core.o:__libc_exp_core": 112,
    "__libc_exp_dd.o:__libc_exp_dd": 56,
    "__libc_exp_scale.o:__libc_exp_scale": 80,
@@ -8871,21 +8999,23 @@
    "exit.o:exit": 16,
    "exp.o:exp": 64,
    "exp10.o:exp10": 104,
-   "exp10f.o:exp10f": 8,
+   "exp10f.o:exp10f": 56,
    "exp10l.o:exp10l": 8,
    "exp10m1.o:exp10m1": 80,
-   "exp10m1f.o:exp10m1f": 8,
+   "exp10m1f.o:exp10m1f": 40,
+   "exp10m1f.o:libc/math/sp-nearest/exp10m1f.c:__libc_ff_scale": 48,
    "exp10m1l.o:exp10m1l": 8,
    "exp2.o:exp2": 104,
-   "exp2f.o:exp2f": 8,
+   "exp2f.o:exp2f": 32,
    "exp2l.o:exp2l": 8,
    "exp2m1.o:exp2m1": 80,
-   "exp2m1f.o:exp2m1f": 8,
+   "exp2m1f.o:exp2m1f": 40,
+   "exp2m1f.o:libc/math/sp-nearest/exp2m1f.c:__libc_ff_scale.constprop.0": 32,
    "exp2m1l.o:exp2m1l": 8,
-   "expf.o:expf": 8,
+   "expf.o:expf": 56,
    "expl.o:expl": 8,
    "expm1.o:expm1": 40,
-   "expm1f.o:expm1f": 16,
+   "expm1f.o:expm1f": 56,
    "expm1l.o:expm1l": 8,
    "fabs.o:fabs": 12,
    "fabsf.o:fabsf": 0,

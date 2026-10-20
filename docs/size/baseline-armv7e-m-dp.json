@@ -586,6 +586,75 @@
     "unwind": 0
    }
   },
+  "math-float": {
+   "main": {
+    "depth": 288,
+    "notes": [],
+    "path": [
+     "main",
+     "sinf",
+     "sin",
+     "__libc_rem_pio2",
+     "libc/math/__libc_rem_pio2.c:__libc_dd_product"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 2672,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 6396,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 38,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 20,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 248,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 156,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 20,
+    "data": 0,
+    "rodata": 2672,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 6838,
+    "unwind": 0
+   }
+  },
   "math-mix": {
    "main": {
     "depth": 672,

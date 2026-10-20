@@ -572,6 +572,76 @@
     "unwind": 0
    }
   },
+  "math-float": {
+   "main": {
+    "depth": 344,
+    "notes": [],
+    "path": [
+     "main",
+     "powf",
+     "pow",
+     "fma",
+     "__libc_exact_to_double",
+     "__libc_u64_to_double"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 3324,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 9165,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 12,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 40,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 301,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 24,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 219,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 40,
+    "data": 0,
+    "rodata": 3360,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 9685,
+    "unwind": 0
+   }
+  },
   "math-mix": {
    "main": {
     "depth": 408,
