@@ -1,0 +1,330 @@
+#!/usr/bin/env python3
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# bench-runner
+#
+# Created on: Oct 20, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+# The phase 3 benchmark measurements (PLAN D72, docs/research/benchmarks.md).
+# Run from the project root after a release build and "make setup-bench"
+# ("make bench" does all three):
+#
+#   tools/scripts/bench-runner run [--board B ...]       measure; write results.json in the build
+#   tools/scripts/bench-runner diff [--board B ...]      compare results.json with docs/perf/baseline-<arch>.json;
+#                                                        exit status 1 when a case regressed
+#   tools/scripts/bench-runner report [--board B ...]    write the baselines from results.json
+#   tools/scripts/bench-runner markdown --board B [--previous REF]
+#                                                        print the summary tables of a baseline, against
+#                                                        the baseline at git revision REF if given
+#
+# Figures: per case of each test/bench program, the guest instructions per
+# operation counted by the qemu plugin tools/qemu-plugins/bench-roi.c (on
+# every board; x86_64 runs under qemu-x86_64 for this), and on x86_64 the
+# time stamp counter cycles per operation of a native run (the fastest of 15, see
+# test/bench/harness/bench.h). Instruction counts are exact and repeatable,
+# so they are what diff gates; cycles are reported, not gated.
+
+import argparse
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+BOARDS = ['linux-x86_64', 'linux-armv6-m', 'linux-armv6s-m', 'linux-armv7e-m', 'linux-armv7e-m-dp', 'linux-armv8-m.main']
+PROGRAMS = ['string', 'stdio', 'strto', 'malloc', 'malloc-tiny', 'qsort', 'math', 'threads']
+QEMU_VERSION = '8.2.2'
+QEMU_ROOT = os.path.join('local', f'qemu-{QEMU_VERSION}')
+PLUGIN = os.path.join(QEMU_ROOT, 'lib', 'bench-roi.so')
+
+# A case regresses when its count grows by more than both of these
+REGRESSION_RATIO = 0.01
+REGRESSION_INSNS = 2.0
+
+# The string sweep is summarised at these sizes; the full sweep stays in the JSON
+SUMMARY_SIZES = [0, 1, 4, 16, 64, 256, 1024]
+STRING_FUNCTIONS = ['memcpy', 'memmove-down', 'memmove-up', 'memset', 'memcmp', 'memchr', 'strlen', 'strchr', 'strcmp', 'strcpy']
+
+
+def arch_of(board):
+	return board[len('linux-'):]
+
+
+def is_arm(board):
+	return arch_of(board) != 'x86_64'
+
+
+def program_path(build, program):
+	return os.path.join(build, 'test', 'bench', program, f'bench-{program}.elf')
+
+
+def results_path(build):
+	return os.path.join(build, 'test', 'bench', 'results.json')
+
+
+def baseline_path(directory, board):
+	return os.path.join(directory, f'baseline-{arch_of(board)}.json')
+
+
+def symbol_addresses(board, elf, names):
+	nm = os.path.join('local', 'bin', 'arm-none-eabi-nm') if is_arm(board) else 'nm'
+	output = subprocess.run([nm, elf], check=True, capture_output=True, text=True).stdout
+	addresses = {}
+	for line in output.splitlines():
+		fields = line.split()
+		if len(fields) == 3 and fields[2] in names:
+			addresses[fields[2]] = int(fields[0], 16)
+	if is_arm(board):
+		# A Thumb function symbol has bit 0 set; its first instruction is at the even address
+		addresses = {name: address & ~1 for name, address in addresses.items()}
+	missing = set(names) - set(addresses)
+	if missing:
+		raise SystemExit(f'{elf}: no symbol {", ".join(sorted(missing))}')
+	return addresses
+
+
+def parse_cases(text, elf):
+	cases = []
+	for line in text.splitlines():
+		match = re.fullmatch(r'bench (\S+) (\d+) (\d+)', line)
+		if match:
+			cases.append((match.group(1), int(match.group(2)), int(match.group(3))))
+	if not cases or cases[0][0] != '@overhead':
+		raise SystemExit(f'{elf}: no calibration case in the output')
+	names = [name for name, _, _ in cases]
+	duplicates = sorted({name for name in names if names.count(name) > 1})
+	if duplicates:
+		raise SystemExit(f'{elf}: case names used twice: {", ".join(duplicates)}')
+	return cases
+
+
+def count_instructions(board, elf):
+	addresses = symbol_addresses(board, elf, ['bench_roi_begin', 'bench_roi_end'])
+	qemu = os.path.join(QEMU_ROOT, 'bin', 'qemu-arm' if is_arm(board) else 'qemu-x86_64')
+	plugin = f'{PLUGIN},begin={addresses["bench_roi_begin"]:#x},end={addresses["bench_roi_end"]:#x}'
+	command = [qemu] + (['-cpu', 'max'] if is_arm(board) else []) + ['-plugin', plugin, '-d', 'plugin', elf, 'count']
+	run = subprocess.run(command, capture_output=True, text=True, timeout=1800)
+	if run.returncode != 0:
+		raise SystemExit(f'{elf}: exit status {run.returncode}\n{run.stderr}')
+	cases = parse_cases(run.stdout, elf)
+	counts = [int(m) for m in re.findall(r'^bench-roi (\d+)$', run.stderr, re.MULTILINE)]
+	if len(counts) != len(cases):
+		raise SystemExit(f'{elf}: {len(cases)} cases but {len(counts)} regions')
+	overhead = counts[0]
+	return {name: round((count - overhead) / operations, 2) for (name, operations, _), count in zip(cases[1:], counts[1:])}
+
+
+def time_cycles(elf):
+	# Pinned to one CPU when taskset exists, so the time stamp counter and the caches stay put
+	command = (['taskset', '-c', '0'] if shutil.which('taskset') else []) + [elf, 'time']
+	run = subprocess.run(command, capture_output=True, text=True, timeout=1800)
+	if run.returncode != 0:
+		raise SystemExit(f'{elf}: exit status {run.returncode}\n{run.stderr}')
+	return {name: round(cycles / operations, 2) for name, operations, cycles in parse_cases(run.stdout, elf)[1:]}
+
+
+def measure(board, build_type, build_root):
+	build = os.path.join(build_root, board, build_type)
+	result = {'arch': arch_of(board), 'board': board, 'build_type': build_type, 'flavour': 'size', 'qemu': QEMU_VERSION, 'programs': {}}
+	for program in PROGRAMS:
+		elf = program_path(build, program)
+		if not os.path.exists(elf):
+			raise SystemExit(f'{elf}: not built (make BOARD_TYPE={board} BUILD_TYPE={build_type})')
+		cases = {name: {'insns': insns} for name, insns in count_instructions(board, elf).items()}
+		if not is_arm(board):
+			for name, cycles in time_cycles(elf).items():
+				cases[name]['cycles'] = cycles
+		result['programs'][program] = cases
+	return result
+
+
+def write_json(path, data):
+	with open(path, 'w') as f:
+		json.dump(data, f, indent=1, sort_keys=True)
+		f.write('\n')
+
+
+def read_json(path):
+	with open(path) as f:
+		return json.load(f)
+
+
+def check_tools():
+	missing = [p for p in (os.path.join(QEMU_ROOT, 'bin', 'qemu-arm'), os.path.join(QEMU_ROOT, 'bin', 'qemu-x86_64'), PLUGIN) if not os.path.exists(p)]
+	if missing:
+		raise SystemExit(f'{", ".join(missing)}: missing; "make bench" builds them (setup-bench)')
+
+
+def command_run(args):
+	check_tools()
+	for board in args.board:
+		build = os.path.join(args.build_root, board, args.build_type)
+		result = measure(board, args.build_type, args.build_root)
+		write_json(results_path(build), result)
+		print(f'{results_path(build)}: {sum(len(c) for c in result["programs"].values())} cases')
+	return 0
+
+
+def compare(old, new):
+	"""The cases whose instruction count changed: (program, case, old, new), and the cases only in one."""
+	changed = []
+	only = []
+	for program in sorted(set(old['programs']) | set(new['programs'])):
+		before = old['programs'].get(program, {})
+		after = new['programs'].get(program, {})
+		for case in sorted(set(before) | set(after)):
+			if case not in before or case not in after:
+				only.append((program, case, 'baseline' if case in before else 'build'))
+			elif before[case]['insns'] != after[case]['insns']:
+				changed.append((program, case, before[case]['insns'], after[case]['insns']))
+	return changed, only
+
+
+def regressed(old, new):
+	return new - old > REGRESSION_INSNS and new > old * (1 + REGRESSION_RATIO)
+
+
+def command_diff(args):
+	failed = False
+	for board in args.board:
+		build = os.path.join(args.build_root, board, args.build_type)
+		baseline = read_json(baseline_path(args.baseline_dir, board))
+		changed, only = compare(baseline, read_json(results_path(build)))
+		worse = [c for c in changed if regressed(c[2], c[3])]
+		better = [c for c in changed if c[3] < c[2]]
+		print(f'{board}: {len(better)} faster, {len(worse)} regressed, {len(changed) - len(better) - len(worse)} within noise, {len(only)} added or removed')
+		for program, case, old, new in sorted(changed, key=lambda c: (c[3] - c[2]) / max(c[2], 1)):
+			if args.verbose or (program, case, old, new) in worse:
+				mark = ' REGRESSED' if (program, case, old, new) in worse else ''
+				print(f'  {program}/{case}: {old:g} -> {new:g} ({(new - old) / max(old, 1) * 100:+.1f} %){mark}')
+		for program, case, where in only:
+			print(f'  {program}/{case}: only in the {where}')
+		failed |= bool(worse)
+	return 1 if failed else 0
+
+
+def command_report(args):
+	for board in args.board:
+		build = os.path.join(args.build_root, board, args.build_type)
+		result = read_json(results_path(build))
+		path = baseline_path(args.baseline_dir, board)
+		write_json(path, result)
+		print(f'{path}: {sum(len(c) for c in result["programs"].values())} cases')
+	return 0
+
+
+def previous_baseline(revision, path):
+	run = subprocess.run(['git', 'show', f'{revision}:{path}'], capture_output=True, text=True)
+	return json.loads(run.stdout) if run.returncode == 0 else None
+
+
+def figure(cases, case, key='insns'):
+	value = cases.get(case, {}).get(key)
+	if value is None:
+		return '—'
+	return f'{value:.0f}' if value >= 100 else f'{value:.1f}'
+
+
+def with_change(cases, before, case):
+	text = figure(cases, case)
+	if before is None or case not in before or case not in cases or before[case]['insns'] == cases[case]['insns']:
+		return text
+	old = before[case]['insns']
+	return f'{text} ({(cases[case]["insns"] - old) / max(old, 1) * 100:+.0f} %)'
+
+
+def string_summary(cases, before):
+	"""Function x size: the aligned case, then the worst of the misaligned ones."""
+	lines = ['| Function | ' + ' | '.join(str(s) for s in SUMMARY_SIZES) + ' |', '|---|' + '---:|' * len(SUMMARY_SIZES)]
+	for function in STRING_FUNCTIONS:
+		cells = []
+		for size in SUMMARY_SIZES:
+			prefix = f'{function}/{size}/'
+			aligned = prefix + ('0:0' if f'{prefix}0:0' in cases else '0')
+			others = [c for c in cases if c.startswith(prefix) and c != aligned]
+			worst = max(others, key=lambda c: cases[c]['insns']) if others else None
+			cells.append(with_change(cases, before, aligned) + (f' / {figure(cases, worst)}' if worst else ''))
+		lines.append(f'| `{function}` | ' + ' | '.join(cells) + ' |')
+	for case in sorted(c for c in cases if c.startswith('mix/')):
+		lines.append(f'| `{case}` (per call) | ' + with_change(cases, before, case) + ' |' + ' |' * (len(SUMMARY_SIZES) - 1))
+	return lines
+
+
+def case_table(cases, before, cycles):
+	lines = ['| Case | insns/op |' + (' cycles/op |' if cycles else ''), '|---|---:|' + ('---:|' if cycles else '')]
+	for case in cases:
+		lines.append(f'| `{case}` | {with_change(cases, before, case)} |' + (f' {figure(cases, case, "cycles")} |' if cycles else ''))
+	return lines
+
+
+def math_table(cases, before, cycles):
+	"""One row per function: float and double throughput, and their latency where cycles were measured."""
+	functions = []
+	for case in cases:
+		name = case.split('/')[0]
+		base = name[:-1] if name.endswith('f') and f'{name[:-1]}/throughput' in cases else name
+		if base not in functions:
+			functions.append(base)
+	header = '| Function | float | double |' + (' float cycles (thr / lat) | double cycles (thr / lat) |' if cycles else '')
+	lines = [header, '|---|---:|---:|' + ('---:|---:|' if cycles else '')]
+	for base in functions:
+		row = f'| `{base}` | {with_change(cases, before, f"{base}f/throughput")} | {with_change(cases, before, f"{base}/throughput")} |'
+		if cycles:
+			row += f' {figure(cases, f"{base}f/throughput", "cycles")} / {figure(cases, f"{base}f/latency", "cycles")} |'
+			row += f' {figure(cases, f"{base}/throughput", "cycles")} / {figure(cases, f"{base}/latency", "cycles")} |'
+		lines.append(row)
+	return lines
+
+
+def command_markdown(args):
+	for board in args.board:
+		path = baseline_path(args.baseline_dir, board)
+		data = read_json(path)
+		previous = previous_baseline(args.previous, path) if args.previous else None
+		cycles = not is_arm(board)
+		print(f'Instructions per operation (qemu {data["qemu"]}, {data["build_type"]}, {data["flavour"]} flavour)' + (f', change against {args.previous}' if previous else '') + '.\n')
+		for program in [p for p in PROGRAMS if p in data['programs']]:
+			cases = data['programs'][program]
+			before = previous['programs'].get(program) if previous else None
+			print(f'### {program}\n')
+			if program == 'string':
+				lines = string_summary(cases, before)
+				print('Aligned / worst of the misaligned offsets.\n')
+			elif program == 'math':
+				lines = math_table(cases, before, cycles)
+				print('Throughput, per call (the latency counts are the same under qemu).\n')
+			else:
+				lines = case_table(cases, before, cycles)
+			print('\n'.join(lines) + '\n')
+	return 0
+
+
+def main():
+	parser = argparse.ArgumentParser(description='Phase 3 benchmark measurements (PLAN D72)')
+	parser.add_argument('--build-type', default='release')
+	parser.add_argument('--baseline-dir', default=os.path.join('docs', 'perf'))
+	parser.add_argument('--build-root', default='build', help='the OUTPUT_ROOT of the build to measure')
+	sub = parser.add_subparsers(dest='command', required=True)
+	for name in ('run', 'diff', 'report', 'markdown'):
+		p = sub.add_parser(name)
+		p.add_argument('--board', action='append', choices=BOARDS)
+		if name == 'diff':
+			p.add_argument('--verbose', action='store_true', help='list every changed case, not only the regressions')
+		if name == 'markdown':
+			p.add_argument('--previous', help='a git revision whose baseline to compare with')
+	args = parser.parse_args()
+	if getattr(args, 'board', None) is None:
+		args.board = BOARDS
+	commands = {'run': command_run, 'diff': command_diff, 'report': command_report, 'markdown': command_markdown}
+	return commands[args.command](args)
+
+
+if __name__ == '__main__':
+	sys.exit(main())

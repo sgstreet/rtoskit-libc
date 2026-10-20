@@ -40,6 +40,12 @@ check:
 	done
 .PHONY: check
 
+bench:
+	@for board in ${BOARDS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BOARD_TYPE=$$board bench || exit $$?; \
+	done
+.PHONY: bench
+
 else ifeq (${BUILD_TYPE},all)
 
 export INSTALL_ROOT := ${PREFIX}$(if ${BOARD_TYPE},/${BOARD_TYPE},)
@@ -63,6 +69,11 @@ check:
 	done
 .PHONY: check
 
+# Benchmarks measure the release build only
+bench:
+	${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=release bench
+.PHONY: bench
+
 else
 
 export INSTALL_ROOT := ${PREFIX}$(if ${BOARD_TYPE},/${BOARD_TYPE},)$(if ${BUILD_TYPE},/${BUILD_TYPE},)
@@ -80,7 +91,7 @@ include ${TOOLS_ROOT}/makefiles/tree.mk
 
 # Dependency ordering only active for full builds (all/clean/install)
 # Individual module targets (make libc, make test/unit/smoke) are dep-free
-ifneq ($(filter-out all target clean install check,${MAKECMDGOALS}),)
+ifneq ($(filter-out all target clean install check bench,${MAKECMDGOALS}),)
 target:
 else
 # The cross toolchain is downloaded into local/ on first use (tools/makefiles/setup.mk)
@@ -95,6 +106,13 @@ check: target
 	${PROJECT_ROOT}/test/unit/run-unit ${BUILD_ROOT}/test/unit
 	${PROJECT_ROOT}/test/libc-test/run $(if ${LIBC_TEST_UPDATE},--update) ${BUILD_ROOT}/test/libc-test ${PROJECT_ROOT}/test/libc-test/expected/${BOARD_TYPE}.txt
 .PHONY: check
+
+# Build, then run the test/bench programs and compare them with docs/perf/baseline-<arch>.json
+# (tools/scripts/bench-runner, PLAN D72); BENCH_UPDATE=1 records the results as the new baseline
+bench: target setup-bench
+	cd ${PROJECT_ROOT} && tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} run --board ${BOARD_TYPE}
+	cd ${PROJECT_ROOT} && $(if ${BENCH_UPDATE},tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} report --board ${BOARD_TYPE},tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} diff --board ${BOARD_TYPE})
+.PHONY: bench
 
 endif
 
@@ -131,6 +149,8 @@ help:
 	@echo "  clean                  Clean all build artifacts"
 	@echo "  install                Install all build artifacts"
 	@echo "  check                  Build and run the tests"
+	@echo "  bench                  Build release and run the benchmarks against docs/perf (needs setup-bench)"
+	@echo "  setup-bench            Build the instruction-counting qemu for bench into local/"
 	@echo "  db                     Generate compilation database (bear)"
 	@echo "  setup                  Download and install host build tools"
 	@echo "  distclean              Delete all build artifacts and output directories"
@@ -147,6 +167,7 @@ help:
 	@echo "  BUILD_TYPE=debug       Build variant: debug, release, or all"
 	@echo "  V=1                    Verbose output (show full compiler commands)"
 	@echo "  LIBC_TEST_UPDATE=1     With check: record libc-test improvements in the board baseline"
+	@echo "  BENCH_UPDATE=1         With bench: record the results as the board's benchmark baseline"
 	@echo "  PROJECT_ROOT=<path>    Override project root (required in worktrees)"
 .PHONY: help
 
