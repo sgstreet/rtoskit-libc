@@ -574,6 +574,10 @@ static inline struct __libc_ff __libc_ff_from_i64(int64_t n)
 	return n < 0 ? (struct __libc_ff){ .hi = -magnitude.hi, .lo = -magnitude.lo } : magnitude;
 }
 
+/* pi and pi/32 as float-float */
+#define __LIBC_PIF ((struct __libc_ff){ .hi = 0x1.921fb6p1f, .lo = -0x1.777a5cp-24f })
+#define __LIBC_PI_32F ((struct __libc_ff){ .hi = 0x1.921fb6p-4f, .lo = -0x1.777a5cp-29f })
+
 /* ln 2, 1/ln 2, ln 10, log2(10), log10(2) and 1/ln 10 as float-float */
 #define __LIBC_LN2F ((struct __libc_ff){ .hi = 0x1.62e43p-1f, .lo = -0x1.05c61p-29f })
 #define __LIBC_INV_LN2F ((struct __libc_ff){ .hi = 0x1.715476p0f, .lo = 0x1.4ae0cp-26f })
@@ -629,6 +633,12 @@ float __libc_exp2f_scale(struct __libc_ff v, int exponent);
 
 /* +-2^z rounded once: +-infinity above 2^128, +-0 below 2^-151, else the exp2 core and its scaling */
 float __libc_exp2f_signed(struct __libc_ff z, bool negative);
+
+/* x = (k + d) pi/32, k returned modulo 64, *s = d pi/32 with |d| <= 1/2, for finite |x| >= 2^-6 */
+int __libc_rem_pio2f(float x, struct __libc_ff *s);
+
+/* sin(k pi/32 + s.hi + s.lo) for any k and |s| <= pi/64, to about 2^-42 */
+struct __libc_ff __libc_sinf_core(int k, struct __libc_ff s);
 
 /* log2(x + tail) for positive finite x and |tail| at most half an ulp of x, to about 2^-40 (relative near 1) */
 struct __libc_ff __libc_log2f_core(float x, float tail);

@@ -59,6 +59,13 @@ static const struct unary unary[] = {
 	{ "logp1f", logp1f, logp1, -0x1.fffffep-1f, FLT_MAX, -0x1.8p-6f, -0x1.8p-7f },
 	{ "log2p1f", log2p1f, log2p1, -0x1.fffffep-1f, FLT_MAX, 0x1.8p-7f, 0x1.8p-6f },
 	{ "log10p1f", log10p1f, log10p1, -0x1.fffffep-1f, FLT_MAX, -0x1.8p-6f, -0x1.8p-7f },
+	/* The trigonometric functions over every binade, sweeping every float near a zero or a pole */
+	{ "sinf", sinf, sin, -FLT_MAX, FLT_MAX, 0x1.9p1f, 0x1.94p1f },
+	{ "cosf", cosf, cos, -FLT_MAX, FLT_MAX, 0x1.9p0f, 0x1.94p0f },
+	{ "tanf", tanf, tan, -FLT_MAX, FLT_MAX, 0x1.9p0f, 0x1.94p0f },
+	{ "sinpif", sinpif, sinpi, -FLT_MAX, FLT_MAX, 0x1.fcp-1f, 0x1.02p0f },
+	{ "cospif", cospif, cospi, -FLT_MAX, FLT_MAX, 0x1.fcp-2f, 0x1.02p-1f },
+	{ "tanpif", tanpif, tanpi, -FLT_MAX, FLT_MAX, 0x1.fcp-2f, 0x1.02p-1f },
 	/* The roots sweep [1, 2), every significand once */
 	{ "sqrtf", sqrtf, sqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },
 	{ "rsqrtf", rsqrtf, rsqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },
@@ -146,8 +153,12 @@ static float sample(uint32_t *state, float low, float high, int i)
 {
 	float x;
 
-	if ((i & 1) != 0)
-		return low + (high - low) * ((float)(next(state) >> 8) * 0x1p-24f);
+	if ((i & 1) != 0) {
+		float u = (float)(next(state) >> 8) * 0x1p-24f;
+
+		/* Interpolated without forming high - low, which overflows for the full range */
+		return low * (1.0f - u) + high * u;
+	}
 	do {
 		x = from_bits(next(state));
 	} while (!(x >= low && x <= high));
@@ -206,7 +217,7 @@ static void check_unary(const struct unary *test)
 		float got = test->function(x);
 		double error = ulp_error(got, exact);
 
-		if (got != (float)exact)
+		if (got != (float)exact && !(isnan(got) && isnan(exact)))
 			++misrounded;
 		if (error >= 1.0 && failures < 20) {
 			snprintf(message, sizeof(message), "fail: %s(%a) = %a, exact %a\n", test->name, (double)x, (double)got, exact);
