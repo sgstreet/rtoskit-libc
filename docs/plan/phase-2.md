@@ -132,8 +132,11 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `libc/string/thumb2` for armv7e-m, armv7e-m-dp and armv8-m.main, where it beats the compiler; `setjmp` reviewed.
   *The Thumb-1 kernels already beat the Thumb-2 compiler output (80/168/68/54/22 → 60/60/48/44/22 bytes) and are shared; Thumb-2-only encodings would save 4–6 bytes, so no second directory; setjmp/longjmp already minimal (D70).*
 
-## P2.07 — Phase wrap-up
-- [ ] Final size report against the Phase 1 baseline and against the picolibc/newlib-nano comparison.
-- [ ] Document the flavour/archive selection for users (`docs/configuration.md`).
-- [ ] Lock the size budget per reference program per arch (Phase 3 must stay within budget +N% for the speed flavour; N is decided here).
+## P2.07 — Phase wrap-up  `[~]`
+- [x] Final size report against the Phase 1 baseline and against the picolibc/newlib-nano comparison.
+  *`docs/size/phase-2.md`: printf/puts images −12 to −27 % on Arm, float programs the smallest of the three libraries on the single-precision cores, `math-mix` +11–14 % on those cores (Q15) (D71).*
+- [x] Document the flavour/archive selection for users (`docs/configuration.md`).
+- [x] Lock the size budget per reference program per arch (Phase 3 must stay within budget +N% for the speed flavour; N is decided here).
+  *`docs/size/budget.json` and `tools/scripts/size-report budget`; N = 10 % (D71).*
 - [ ] Tag `phase-2-complete`.
+  *Blocked here: this environment's git proxy refuses tag pushes (as for phase 1). The repository owner tags the merge commit of this step.*
