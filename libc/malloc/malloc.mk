@@ -13,8 +13,9 @@
 
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
 
-# Every allocator variant is built, so the tests can exercise each; libc.a takes ${LIBC_MALLOC} (PLAN D32)
-SUBDIRS := nano tlsf
+# Every allocator variant is built, so the tests can exercise each; libc.a takes ${LIBC_MALLOC} (PLAN D32),
+# and libc-tinymalloc.a takes tiny (D54)
+SUBDIRS := nano tlsf tiny
 
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else

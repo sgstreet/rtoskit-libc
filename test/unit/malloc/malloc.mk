@@ -29,7 +29,7 @@ CFLAGS += -fno-builtin
 CPPFLAGS += -I${PROJECT_ROOT}/libc
 
 # One executable per allocator variant: its objects come first, so libc.a's allocator is never pulled in (PLAN D32)
-MALLOC_VARIANTS := nano tlsf
+MALLOC_VARIANTS := nano tlsf tiny
 MALLOC_COMMON_OBJ := $(wildcard ${BUILD_ROOT}/libc/malloc/*.o)
 
 all: $(foreach variant,${MALLOC_VARIANTS},${CURDIR}/malloc-${variant}.elf)

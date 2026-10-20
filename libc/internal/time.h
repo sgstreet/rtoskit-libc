@@ -16,6 +16,8 @@
 
 #include <time.h>
 
+#include "internal/div64.h"
+
 /*
  * Calendar arithmetic and the POSIX TZ rules (docs/research/time-locale.md).
  * Days count from 1970-01-01 in the proleptic Gregorian calendar.
@@ -29,8 +31,9 @@ static inline long long __libc_days_from_civil(long long year, unsigned int mont
 	/* Years start on March 1, so the leap day is the last day of a year */
 	year -= month <= 2;
 
-	long long era = (year >= 0 ? year : year - 399) / 400;
-	unsigned int year_of_era = (unsigned int)(year - era * 400);
+	/* Floor division without the 64-bit division helpers (PLAN D54) */
+	uint32_t year_of_era;
+	long long era = __libc_floor_divmod64(year, 400, &year_of_era);
 	unsigned int march_month = (month + 9) % 12;
 	unsigned int day_of_year = (153 * march_month + 2) / 5 + day - 1;
 	unsigned int day_of_era = year_of_era * 365 + year_of_era / 4 - year_of_era / 100 + day_of_year;
@@ -44,8 +47,8 @@ static inline void __libc_civil_from_days(long long days, long long *year, unsig
 {
 	days += 719468;
 
-	long long era = (days >= 0 ? days : days - 146096) / 146097;
-	unsigned int day_of_era = (unsigned int)(days - era * 146097);
+	uint32_t day_of_era;
+	long long era = __libc_floor_divmod64(days, 146097, &day_of_era);
 	unsigned int year_of_era = (day_of_era - day_of_era / 1460 + day_of_era / 36524 - day_of_era / 146096) / 365;
 	unsigned int day_of_year = day_of_era - (365 * year_of_era + year_of_era / 4 - year_of_era / 100);
 	unsigned int march_month = (5 * day_of_year + 2) / 153;
@@ -57,7 +60,11 @@ static inline void __libc_civil_from_days(long long days, long long *year, unsig
 
 static inline bool __libc_is_leap(long long year)
 {
-	return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+	uint32_t year_of_era;
+
+	/* The rule repeats every 400 years */
+	__libc_floor_divmod64(year, 400, &year_of_era);
+	return year_of_era % 4 == 0 && (year_of_era % 100 != 0 || year_of_era == 0);
 }
 
 /* gmtime and localtime share their result (C23 7.29.3p1), one per thread (PLAN D6) */

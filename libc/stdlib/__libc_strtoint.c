@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <stdint.h>
 
+#include "internal/div64.h"
 #include "internal/stdlib.h"
 
 /* The value of digit c in bases up to 36, or 36 when c is not a digit */
@@ -34,6 +35,8 @@ uintmax_t __libc_strtoint(const char *restrict nptr, char **restrict endptr, int
 	const unsigned char *digits;
 	uintmax_t value = 0;
 	uintmax_t limit;
+	uintmax_t cutoff;
+	uint32_t cutoff_digit;
 	bool negative = false;
 	bool overflow = false;
 
@@ -61,12 +64,14 @@ uintmax_t __libc_strtoint(const char *restrict nptr, char **restrict endptr, int
 		base = s[0] == '0' ? 8 : 10;
 	}
 
+	/* value * base + digit stays within limit while value < cutoff, or equals it with digit <= cutoff_digit */
 	limit = is_signed && negative ? max + 1 : max;
+	cutoff = __libc_udivmod64(limit, (uint32_t)base, &cutoff_digit);
 	for (digits = s; digit_value(*s) < (unsigned int)base; ++s) {
 		unsigned int digit = digit_value(*s);
 
 		/* Keep consuming digits after an overflow so endptr covers the whole sequence */
-		if (overflow || value > (limit - digit) / (unsigned int)base)
+		if (overflow || value > cutoff || (value == cutoff && digit > cutoff_digit))
 			overflow = true;
 		else
 			value = value * base + digit;

@@ -13,6 +13,7 @@
 
 #include <time.h>
 
+#include "internal/div64.h"
 #include "internal/time.h"
 
 /*
@@ -42,8 +43,10 @@ static size_t put_number(size_t length, long long value, int width, int precisio
 
 	*start = '\0';
 	do {
-		*--start = (char)('0' + magnitude % 10);
-		magnitude /= 10;
+		uint32_t digit;
+
+		magnitude = __libc_udivmod64(magnitude, 10, &digit);
+		*--start = (char)('0' + digit);
 	} while (magnitude != 0 || &digits[sizeof(digits) - 1] - start < precision);
 	if (value < 0)
 		*--start = '-';

@@ -14,6 +14,7 @@
 #include <ctype.h>
 #include <stdint.h>
 
+#include "internal/div64.h"
 #include "internal/strtofloat.h"
 
 /* Exponents saturate here, far beyond any finite or non-zero result, so int arithmetic never overflows */
@@ -204,9 +205,11 @@ uint64_t __libc_strtofloat(const char *restrict nptr, char **restrict endptr, co
 
 	if (rounding == __LIBC_ROUND_NEAREST && count <= DECIMAL_FAST_DIGITS) {
 		uint64_t limit = (uint64_t)1 << format->precision;
+		uint32_t unused;
+		uint64_t tenth = __libc_udivmod64(limit, 10, &unused);
 
 		/* Move excess powers of ten into the significand while it stays exact */
-		while (exponent10 > format->max_pow10 && significand <= limit / 10) {
+		while (exponent10 > format->max_pow10 && significand <= tenth) {
 			significand *= 10;
 			--exponent10;
 		}

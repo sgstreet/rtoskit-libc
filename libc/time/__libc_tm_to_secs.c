@@ -22,11 +22,10 @@
  */
 long long __libc_tm_to_secs(const struct tm *tm)
 {
-	long long year = (long long)tm->tm_year + 1900;
-	long long month = tm->tm_mon;
+	/* int arithmetic: 64-bit division costs the 32-bit targets a library helper (PLAN D54) */
+	int month = tm->tm_mon % 12;
+	long long year = (long long)tm->tm_year + 1900 + tm->tm_mon / 12;
 
-	year += month / 12;
-	month %= 12;
 	if (month < 0) {
 		month += 12;
 		--year;

@@ -37,10 +37,10 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] Reduce `FILE` size and the per-stream buffers; std streams with no static buffers when unbuffered. *The FILE drops from 36 to 32 bytes (singly linked list). `stdin`/`stdout` have static buffers linked only with the stream, and `stderr` has none. Setup names `malloc` weakly, so `hello-puts` links no allocator: −368 bytes of code; the 256 bytes of RAM move from the heap to `.bss`. `setvbuf(NULL)` keeps the stream's buffer.*
 - [x] Do the same for `scanf`. *`__libc_scan_float` is stubbed in `libc-nofloat.a` (a matching failure, `EINVAL`, no `strtod` engine). `__libc_scan_store`/`__libc_scan_count` are replaceable, so `libc-minimal-printf.a` refuses `%n` and the stores wider than `long` in the scanf family too. A `sscanf` probe drops from 13332 to 3194 bytes on armv6-m with `libc-nofloat.a`.*
 
-## P2.04 — `<stdlib.h>`, `malloc`, `<string.h>`, `<time.h>`
-- [ ] Shrink the allocator's code and per-block overhead; an optional "tiny" allocator in a separate archive.
-- [ ] `qsort` code size; `strerror` table compaction; `ctype` (table vs code) re-evaluation per arch.
-- [ ] `strftime`/`mktime`/TZ parsing code size.
+## P2.04 — `<stdlib.h>`, `malloc`, `<string.h>`, `<time.h>`  `[x]`
+- [x] Shrink the allocator's code and per-block overhead; an optional "tiny" allocator in a separate archive. *D54. nano is already at one header word and the alignment `max_align_t` needs, so it is unchanged. `libc/malloc/tiny` uses an implicit list with deferred merging, a sentinel and the first region only. It is 13 % smaller than nano (574 vs 658 bytes on armv6-m), ships as `libc-tinymalloc.a` (or `LIBC_MALLOC=tiny`), and passes the full malloc test as `malloc-tiny`. An allocate-only design was rejected (7.24.3.3).*
+- [x] `qsort` code size; `strerror` table compaction; `ctype` (table vs code) re-evaluation per arch. *`strerror` is one array of records: 2395 → 1968 bytes, with a golden test of every number. ctype stays as code (14–34 bytes per function against a 256-byte table), and so does `qsort` (a 228-byte heapsort). Library-wide, 64-bit division by small constants now goes through `__libc_udivmod64`, so printf images on armv7e-m/v8-m drop all libgcc (−648 bytes).*
+- [x] `strftime`/`mktime`/TZ parsing code size. *The calendar, `strftime`, `asctime` and the TZ rules divide through `__libc_udivmod64`/`__libc_floor_divmod64` instead of libgcc's 64-bit division. A localtime + strftime + mktime probe: 6344 → 5470 bytes on armv7e-m (no libgcc) and 6904 → 6122 on armv6-m. The code itself was already table-light (`docs/research/stdlib-time-size.md`).*
 
 ## P2.05 — libm size
 - [ ] Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows. Re-derive the table sizes with the size/accuracy trade-off documented.

@@ -20,11 +20,11 @@
 
 #include "internal/malloc.h"
 
-/* Both allocators align payloads to two words (PLAN D31, D32), above alignof(max_align_t) on x86_64 */
+/* Every allocator aligns payloads to two words (PLAN D31, D32, D54), above alignof(max_align_t) on x86_64 */
 static constexpr size_t heap_align = 2 * sizeof(size_t);
 
 /*
- * The allocator (P1.04), built once per variant (malloc-nano, malloc-tlsf): alignment, zero sizes, overflow, exhaustion and
+ * The allocator (P1.04), built once per variant (malloc-nano, malloc-tlsf, malloc-tiny): alignment, zero sizes, overflow, exhaustion and
  * recovery, realloc in place and by moving, aligned_alloc, strdup/strndup,
  * and a randomised operation sequence with the heap consistency checker
  * after every step. Vectors from docs/research/malloc.md.

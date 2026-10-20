@@ -13,6 +13,7 @@
 
 #include <stdint.h>
 
+#include "internal/div64.h"
 #include "internal/format.h"
 
 /* Writes the digits of value backwards ending at end; returns the first digit */
@@ -37,10 +38,12 @@ char *__libc_format_digits(char *end, uintmax_t value, char conversion)
 			shift = 4;
 			break;
 		default:
-			/* Divide in 64 bits only while needed; 32-bit targets then use the cheap loop */
+			/* Divide in 64 bits only while needed, without the compiler's 64-bit helpers (PLAN D54) */
 			while (value > UINT32_MAX) {
-				*--p = '0' + value % 10;
-				value /= 10;
+				uint32_t digit;
+
+				value = __libc_udivmod64(value, 10, &digit);
+				*--p = '0' + digit;
 			}
 			for (small = value; small != 0; small /= 10)
 				*--p = '0' + small % 10;
