@@ -663,10 +663,10 @@
     "libc": {
      "bss": 0,
      "data": 0,
-     "rodata": 708,
+     "rodata": 516,
      "tbss": 0,
      "tdata": 0,
-     "text": 5892,
+     "text": 5988,
      "unwind": 0
     },
     "libgcc": {
@@ -709,10 +709,10 @@
    "sections": {
     "bss": 20,
     "data": 0,
-    "rodata": 708,
+    "rodata": 516,
     "tbss": 0,
     "tdata": 0,
-    "text": 9028,
+    "text": 9124,
     "unwind": 0
    }
   },
@@ -764,10 +764,10 @@
     "libc": {
      "bss": 0,
      "data": 0,
-     "rodata": 3892,
+     "rodata": 3700,
      "tbss": 0,
      "tdata": 0,
-     "text": 21910,
+     "text": 22006,
      "unwind": 0
     },
     "libgcc": {
@@ -810,10 +810,10 @@
    "sections": {
     "bss": 20,
     "data": 0,
-    "rodata": 3892,
+    "rodata": 3700,
     "tbss": 0,
     "tdata": 0,
-    "text": 30380,
+    "text": 30476,
     "unwind": 0
    }
   }
@@ -994,7 +994,7 @@
    "__libc_atan2f_core.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 136,
+    "rodata": 72,
     "tbss": 0,
     "tdata": 0,
     "text": 1188,
@@ -1192,10 +1192,10 @@
    "__libc_exp2f_core.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 256,
+    "rodata": 64,
     "tbss": 0,
     "tdata": 0,
-    "text": 608,
+    "text": 704,
     "unwind": 0
    },
    "__libc_exp2f_scale.o": {
@@ -1543,10 +1543,10 @@
    "__libc_lgammaf_core.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 988,
+    "rodata": 932,
     "tbss": 0,
     "tdata": 0,
-    "text": 2064,
+    "text": 2076,
     "unwind": 0
    },
    "__libc_log1p_core.o": {
@@ -2227,10 +2227,10 @@
    "asinhf.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 8,
+    "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 976,
+    "text": 100,
     "unwind": 0
    },
    "asinhl.o": {
@@ -2986,7 +2986,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 1384,
+    "text": 1196,
     "unwind": 0
    },
    "clogl.o": {
@@ -3634,7 +3634,7 @@
     "rodata": 16,
     "tbss": 0,
     "tdata": 0,
-    "text": 544,
+    "text": 674,
     "unwind": 0
    },
    "exp10m1l.o": {
@@ -3688,7 +3688,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 496,
+    "text": 684,
     "unwind": 0
    },
    "exp2m1l.o": {
@@ -3733,7 +3733,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 432,
+    "text": 588,
     "unwind": 0
    },
    "expm1l.o": {
@@ -7889,10 +7889,10 @@
   "totals": {
    "bss": 1184,
    "data": 108,
-   "rodata": 10254,
+   "rodata": 9934,
    "tbss": 358,
    "tdata": 8,
-   "text": 157868,
+   "text": 157386,
    "unwind": 0
   }
  },
@@ -9016,10 +9016,7 @@
    "asinf.o:libc/math/sp-nearest/asinf.c:__libc_ff_product": 32,
    "asinh.o:asinh": 160,
    "asinh.o:libc/math/asinh.c:__libc_dd_product": 56,
-   "asinhf.o:asinhf": 96,
-   "asinhf.o:libc/math/sp-nearest/asinhf.c:__libc_ff_add": 40,
-   "asinhf.o:libc/math/sp-nearest/asinhf.c:__libc_ff_multiply": 40,
-   "asinhf.o:libc/math/sp-nearest/asinhf.c:__libc_ff_product": 32,
+   "asinhf.o:asinhf": 32,
    "asinhl.o:asinhl": 8,
    "asinl.o:asinl": 8,
    "asinpi.o:asinpi": 152,
@@ -9126,8 +9123,7 @@
    "clock.o:clock": 32,
    "clog.o:clog": 136,
    "clog.o:libc/complex/clog.c:__libc_dd_product": 56,
-   "clogf.o:clogf": 136,
-   "clogf.o:libc/complex/sp-nearest/clogf.c:__libc_ff_add": 40,
+   "clogf.o:clogf": 96,
    "clogf.o:libc/complex/sp-nearest/clogf.c:__libc_ff_product": 32,
    "clogl.o:clogl": 32,
    "cnd_broadcast.o:cnd_broadcast": 8,
@@ -9209,20 +9205,22 @@
    "exp10f.o:exp10f": 56,
    "exp10l.o:exp10l": 8,
    "exp10m1.o:exp10m1": 80,
-   "exp10m1f.o:exp10m1f": 40,
-   "exp10m1f.o:libc/math/sp-nearest/exp10m1f.c:__libc_ff_scale": 48,
+   "exp10m1f.o:exp10m1f": 56,
+   "exp10m1f.o:libc/math/sp-nearest/exp10m1f.c:__libc_ff_product": 32,
+   "exp10m1f.o:libc/math/sp-nearest/exp10m1f.c:__libc_ff_scale": 32,
    "exp10m1l.o:exp10m1l": 8,
    "exp2.o:exp2": 104,
    "exp2f.o:exp2f": 32,
    "exp2l.o:exp2l": 8,
    "exp2m1.o:exp2m1": 80,
-   "exp2m1f.o:exp2m1f": 40,
-   "exp2m1f.o:libc/math/sp-nearest/exp2m1f.c:__libc_ff_scale.constprop.0": 32,
+   "exp2m1f.o:exp2m1f": 56,
+   "exp2m1f.o:libc/math/sp-nearest/exp2m1f.c:__libc_ff_product": 32,
    "exp2m1l.o:exp2m1l": 8,
    "expf.o:expf": 56,
    "expl.o:expl": 8,
    "expm1.o:expm1": 40,
    "expm1f.o:expm1f": 56,
+   "expm1f.o:libc/math/sp-nearest/expm1f.c:__libc_ff_product": 32,
    "expm1l.o:expm1l": 8,
    "fabs.o:fabs": 12,
    "fabsf.o:fabsf": 0,

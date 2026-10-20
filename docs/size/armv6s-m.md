@@ -537,3 +537,29 @@ Members that grew or are new, justified:
 - `__libc_log1pf_core.o` 0 → 608 (+608): new: log1p of a float-float argument.
 - `__libc_clogf_modulus.o` 0 → 568 (+568): new: log|z| as float-float, shared by the inverse functions.
 - Reduced: 3 members, -94 bytes; the largest: `casinf.o` 68 → 36, `catanf.o` 68 → 36, `cacoshf.o` 68 → 38.
+
+## P2.05e4 — float kernel sharing and table sizes
+
+Decision D68, `docs/research/libm-float-kernels.md`. Before → after, release build.
+
+`libc.a`: code 168122 → 167320 (-802), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 2211 → 2211 | 380 → 380 | 1428 → 1428 | 0 → 0 |
+| hello-printf-int | 7945 → 7945 | 380 → 380 | 6709 → 6709 | 420 → 420 |
+| hello-printf-float | 10550 → 10550 | 380 → 380 | 6709 → 6709 | 2984 → 2984 |
+| malloc-heavy | 2286 → 2286 | 80 → 80 | 1346 → 1346 | 0 → 0 |
+| math-mix | 34272 → 34176 | 20 → 20 | 25802 → 25706 | 7752 → 7752 |
+| float-exact | 3908 → 3908 | 20 → 20 | 1444 → 1444 | 1946 → 1946 |
+| math-float | 9736 → 9640 | 20 → 20 | 6600 → 6504 | 2708 → 2708 |
+| hello-printf-int-nofloat | 5047 → 5047 | 380 → 380 | 3811 → 3811 | 420 → 420 |
+| hello-printf-int-minimal | 4779 → 4779 | 380 → 380 | 3593 → 3593 | 372 → 372 |
+| malloc-heavy-tiny | 2206 → 2206 | 76 → 76 | 1266 → 1266 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `exp2m1f.o` 496 → 684 (+188): the exact-square expm1 series inlined.
+- `expm1f.o` 432 → 588 (+156): the exact-square expm1 series inlined.
+- `exp10m1f.o` 560 → 690 (+130): the exact-square expm1 series inlined.
+- Reduced: 5 members, -1276 bytes; the largest: `asinhf.o` 984 → 100, `clogf.o` 1384 → 1196, `__libc_exp2f_core.o` 864 → 768, `__libc_atan2f_core.o` 1324 → 1260.

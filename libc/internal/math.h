@@ -612,15 +612,19 @@ static inline struct __libc_ff __libc_ff_sqrt(struct __libc_ff a)
 #define __LIBC_INV_LN10F ((struct __libc_ff){ .hi = 0x1.bcb7b2p-2f, .lo = -0x1.5b235ep-27f })
 
 /*
- * e^r - 1 for |r| below 0.011 (Taylor to r^5; the r^6 term is below 2^-41
+ * e^r - 1 for |r| below 0.044 (Taylor to r^6; the r^7 term is below 2^-44
  * of the result), with r.hi leading so the sum keeps r's relative accuracy.
+ * The r^2/2 term is formed from an exact square: rounded in float it would
+ * cost 2^-36 at the top of the range (PLAN D68).
  */
 static inline struct __libc_ff __libc_ff_expm1_series(struct __libc_ff r)
 {
 	float h = r.hi;
-	float tail = h * h * (0.5f + h * (0x1.555556p-3f + h * (0x1.555556p-5f + h * 0x1.111112p-7f)));
+	struct __libc_ff square = __libc_ff_product(h, h);
+	struct __libc_ff head = __libc_ff_fast_sum(h, 0.5f * square.hi);
+	float tail = h * square.hi * (0x1.555556p-3f + h * (0x1.555556p-5f + h * (0x1.111112p-7f + h * 0x1.6c16c2p-10f)));
 
-	return __libc_ff_fast_sum(h, r.lo + tail);
+	return __libc_ff_fast_sum(head.hi, head.lo + (0.5f * square.lo + r.lo * (1.0f + h) + tail));
 }
 
 /*

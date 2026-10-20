@@ -42,7 +42,7 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `qsort` code size; `strerror` table compaction; `ctype` (table vs code) re-evaluation per arch. *`strerror` is one array of records: 2395 → 1968 bytes, with a golden test of every number. ctype stays as code (14–34 bytes per function against a 256-byte table), and so does `qsort` (a 228-byte heapsort). Library-wide, 64-bit division by small constants now goes through `__libc_udivmod64`, so printf images on armv7e-m/v8-m drop all libgcc (−648 bytes).*
 - [x] `strftime`/`mktime`/TZ parsing code size. *The calendar, `strftime`, `asctime` and the TZ rules divide through `__libc_udivmod64`/`__libc_floor_divmod64` instead of libgcc's 64-bit division. A localtime + strftime + mktime probe: 6344 → 5470 bytes on armv7e-m (no libgcc) and 6904 → 6122 on armv6-m. The code itself was already table-light (`docs/research/stdlib-time-size.md`).*
 
-## P2.05 — libm size (split into P2.05a–e: about 90 `float` functions compute in `double`, which is soft-float on the single-precision FPUs)
+## P2.05 — libm size (split into P2.05a–e: about 90 `float` functions compute in `double`, which is soft-float on the single-precision FPUs)  `[x]`
 
 ## P2.05a — Soft-float helper audit: armv7e-m-dp and armv6-m  `[x]`
 - [x] armv7e-m-dp: the `double` functions must not pull in any soft-float helpers (`__aeabi_d*`); check the link maps. Use the hardware ops instead of software bit tricks wherever that is smaller.
@@ -88,7 +88,7 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `sinhf`, `coshf`, `tanhf`, `asinhf`, `acoshf`, `atanhf`.
   *All 0.500 ulp; the test gained a 0.52-ulp bound (D62).*
 
-## P2.05e — Single-precision special and complex functions; shared kernels (split into P2.05e1–e4)
+## P2.05e — Single-precision special and complex functions; shared kernels (split into P2.05e1–e4)  `[x]`
 - `erff`, `erfcf`, `lgammaf`, `tgammaf` and the `float complex` functions on the single-precision layer.
 - Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows. Re-derive the table sizes with the size/accuracy trade-off documented.
 
@@ -115,8 +115,9 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `casinhf`, `cacoshf`, `catanhf`, `casinf`, `cacosf`, `catanf`.
   *All 0.500 ulp normwise and 0.5 per part, none misrounded; 15 mutants caught (D67).*
 
-## P2.05e4 — Kernel sharing and table sizes
-- [ ] Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows; re-derive the table sizes with the size/accuracy trade-off documented.
+## P2.05e4 — Kernel sharing and table sizes  `[x]`
+- [x] Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows; re-derive the table sizes with the size/accuracy trade-off documented.
+  *f/d kernels stay apart on the single-precision cores (D57); asinhf/clogf share the D67 cores; an exact square in the expm1 series lets the exp2 table go 32 → 8 with better accuracy, atan2 17 → 9, the lgamma expansions lose c7; log2 and sin tables kept (measured). 312 bytes of tables less; 7 mutants (3 caught, 4 below the test's resolution, documented) (D68).*
 
 ## P2.06 — Per-arch hand-written size kernels
 - [ ] armv6-m Thumb-1: `memcpy`, `memset`, `memmove`, `strlen`, `strcmp`, `setjmp`, written for size (the arch `size/` flavour, D12).
