@@ -659,6 +659,9 @@ struct __libc_ff __libc_sinf_core(int k, struct __libc_ff s);
 /* atan2(y, x) for finite y and x not both zero, to about 2^-42 */
 struct __libc_ff __libc_atan2f_core(struct __libc_ff y, struct __libc_ff x);
 
+/* e^|x| = 2^*exponent (result.hi + result.lo) and *inverse = 2^-*exponent e^-|x| (0 for exponent above 20), for |x| up to 90 */
+struct __libc_ff __libc_expf_pair(float x, int *exponent, struct __libc_ff *inverse);
+
 /* log2(x + tail) for positive finite x and |tail| at most half an ulp of x, to about 2^-40 (relative near 1) */
 struct __libc_ff __libc_log2f_core(float x, float tail);
 
