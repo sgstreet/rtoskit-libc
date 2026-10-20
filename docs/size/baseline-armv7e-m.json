@@ -620,10 +620,10 @@
     "libc": {
      "bss": 0,
      "data": 0,
-     "rodata": 2912,
+     "rodata": 3188,
      "tbss": 0,
      "tdata": 0,
-     "text": 12970,
+     "text": 13646,
      "unwind": 0
     },
     "libgcc": {
@@ -638,10 +638,10 @@
     "other": {
      "bss": 0,
      "data": 0,
-     "rodata": 0,
+     "rodata": 4,
      "tbss": 0,
      "tdata": 0,
-     "text": 34,
+     "text": 38,
      "unwind": 0
     },
     "port": {
@@ -666,10 +666,10 @@
    "sections": {
     "bss": 20,
     "data": 0,
-    "rodata": 2912,
+    "rodata": 3192,
     "tbss": 0,
     "tdata": 0,
-    "text": 15912,
+    "text": 16592,
     "unwind": 0
    }
   },
@@ -706,10 +706,10 @@
     "libc": {
      "bss": 0,
      "data": 0,
-     "rodata": 3440,
+     "rodata": 3716,
      "tbss": 0,
      "tdata": 0,
-     "text": 17594,
+     "text": 18462,
      "unwind": 0
     },
     "libgcc": {
@@ -727,7 +727,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 38,
+     "text": 42,
      "unwind": 0
     },
     "port": {
@@ -752,10 +752,10 @@
    "sections": {
     "bss": 20,
     "data": 0,
-    "rodata": 3440,
+    "rodata": 3716,
     "tbss": 0,
     "tdata": 0,
-    "text": 20900,
+    "text": 21772,
     "unwind": 0
    }
   }
@@ -1083,7 +1083,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 160,
+    "text": 168,
     "unwind": 0
    },
    "__libc_exp2m1f_scale.o": {
@@ -1399,6 +1399,24 @@
     "tbss": 0,
     "tdata": 0,
     "text": 244,
+    "unwind": 0
+   },
+   "__libc_log2f_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 276,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 584,
+    "unwind": 0
+   },
+   "__libc_log2p1f_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 344,
     "unwind": 0
    },
    "__libc_log_core.o": {
@@ -4908,7 +4926,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 216,
     "unwind": 0
    },
    "log10l.o": {
@@ -4935,7 +4953,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 392,
     "unwind": 0
    },
    "log10p1l.o": {
@@ -4962,7 +4980,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 228,
+    "text": 256,
     "unwind": 0
    },
    "log1pl.o": {
@@ -4989,7 +5007,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 112,
     "unwind": 0
    },
    "log2l.o": {
@@ -5016,7 +5034,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 304,
     "unwind": 0
    },
    "log2p1l.o": {
@@ -5061,7 +5079,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 216,
     "unwind": 0
    },
    "logl.o": {
@@ -5088,7 +5106,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 228,
+    "text": 4,
     "unwind": 0
    },
    "logp1l.o": {
@@ -7660,10 +7678,10 @@
   "totals": {
    "bss": 1184,
    "data": 108,
-   "rodata": 8662,
+   "rodata": 8938,
    "tbss": 358,
    "tdata": 8,
-   "text": 115132,
+   "text": 116952,
    "unwind": 0
   }
  },
@@ -8467,7 +8485,7 @@
    "__libc_exit_run.o:__libc_exit_run": 16,
    "__libc_exp2f_core.o:__libc_exp2f_core": 40,
    "__libc_exp2f_core.o:libc/math/sp-nearest/__libc_exp2f_core.c:__libc_ff_product": 16,
-   "__libc_exp2f_scale.o:__libc_exp2f_scale": 48,
+   "__libc_exp2f_scale.o:__libc_exp2f_scale": 40,
    "__libc_exp2m1f_scale.o:__libc_exp2m1f_scale": 16,
    "__libc_exp_core.o:__libc_exp_core": 152,
    "__libc_exp_dd.o:__libc_exp_dd": 72,
@@ -8522,6 +8540,10 @@
    "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:stirling": 176,
    "__libc_log1p_core.o:__libc_log1p_core": 88,
    "__libc_log1p_dd.o:__libc_log1p_dd": 112,
+   "__libc_log2f_core.o:__libc_log2f_core": 56,
+   "__libc_log2f_core.o:libc/math/sp-nearest/__libc_log2f_core.c:__libc_ff_product": 16,
+   "__libc_log2p1f_core.o:__libc_log2p1f_core": 32,
+   "__libc_log2p1f_core.o:libc/math/sp-nearest/__libc_log2p1f_core.c:__libc_ff_product": 16,
    "__libc_log_core.o:__libc_log_core": 160,
    "__libc_log_core.o:libc/math/__libc_log_core.c:__libc_dd_product": 88,
    "__libc_malloc_check.o:__libc_malloc_check": 24,
@@ -8944,27 +8966,28 @@
    "localtime_r.o:localtime_r": 104,
    "log.o:log": 40,
    "log10.o:log10": 88,
-   "log10f.o:log10f": 8,
+   "log10f.o:log10f": 16,
    "log10l.o:log10l": 0,
    "log10p1.o:log10p1": 88,
-   "log10p1f.o:log10p1f": 8,
+   "log10p1f.o:libc/math/sp-nearest/log10p1f.c:__libc_ff_product": 16,
+   "log10p1f.o:log10p1f": 32,
    "log10p1l.o:log10p1l": 0,
    "log1p.o:log1p": 40,
    "log1pf.o:log1pf": 24,
    "log1pl.o:log1pl": 0,
    "log2.o:log2": 88,
-   "log2f.o:log2f": 8,
+   "log2f.o:log2f": 16,
    "log2l.o:log2l": 0,
    "log2p1.o:log2p1": 88,
-   "log2p1f.o:log2p1f": 8,
+   "log2p1f.o:log2p1f": 24,
    "log2p1l.o:log2p1l": 0,
    "logb.o:logb": 16,
    "logbf.o:logbf": 8,
    "logbl.o:logbl": 0,
-   "logf.o:logf": 8,
+   "logf.o:logf": 16,
    "logl.o:logl": 0,
    "logp1.o:logp1": 0,
-   "logp1f.o:logp1f": 24,
+   "logp1f.o:logp1f": 0,
    "logp1l.o:logp1l": 0,
    "lrint.o:lrint": 16,
    "lrintf.o:lrintf": 8,

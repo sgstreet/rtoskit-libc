@@ -65,8 +65,9 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `expf`, `exp2f`, `exp10f`, `expm1f`, `exp2m1f`, `exp10m1f`.
   *Max 0.500–0.510 ulp, a few in 10^5 not correctly rounded. Images grow until the remaining float functions follow (transitional, justified in `docs/size`).*
 
-## P2.05c2 — The logarithms
-- [ ] The `log2` core; `logf`, `log2f`, `log10f`, `log1pf`/`logp1f`, `log2p1f`, `log10p1f`.
+## P2.05c2 — The logarithms  `[x]`
+- [x] The `log2` core; `logf`, `log2f`, `log10f`, `log1pf`/`logp1f`, `log2p1f`, `log10p1f`.
+  *Every log 0.500 ulp, at most 2 in 10^5 not correctly rounded; the series' exact square was needed (D58). Test bound tightened to 1/10 000; 8 mutants caught.*
 
 ## P2.05c3 — Powers and roots
 - [ ] `powf`, `pownf`, `powrf`, `rootnf`, `compoundnf`, `rsqrtf`, `cbrtf`, `hypotf`.

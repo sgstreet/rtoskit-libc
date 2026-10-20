@@ -21,7 +21,7 @@
  * The float transcendental functions against the double functions on the
  * widened argument (good to about 2^-53, far below a float ulp): the error of
  * each result in float ulps of the exact value must stay below 1 (faithful,
- * PLAN D57), and at most one result in a thousand may differ from the
+ * PLAN D57), and at most one result in ten thousand may differ from the
  * correctly rounded one (the reference's own double rounding included). The special values must match exactly. On
  * x86_64 the test links the float-float layer of the single-precision cores
  * (libc/math/sp-nearest) and runs FLOAT_ACCURACY_SAMPLES arguments per
@@ -48,6 +48,15 @@ static const struct unary unary[] = {
 	{ "expm1f", expm1f, expm1, -18.0f, 89.0f },
 	{ "exp2m1f", exp2m1f, exp2m1, -26.0f, 128.0f },
 	{ "exp10m1f", exp10m1f, exp10m1, -8.0f, 39.0f },
+	/* The logarithms sweep every float near 1, where only the relative accuracy of log(1 + f) matters */
+	{ "logf", logf, log, 0x1p-149f, FLT_MAX, 0x1.fcp-1f, 0x1.02p0f },
+	{ "log2f", log2f, log2, 0x1p-149f, FLT_MAX, 0x1.fcp-1f, 0x1.02p0f },
+	{ "log10f", log10f, log10, 0x1p-149f, FLT_MAX, 0x1.fcp-1f, 0x1.02p0f },
+	/* The p1 forms sweep the binades around their series threshold 2^-6 */
+	{ "log1pf", log1pf, log1p, -0x1.fffffep-1f, FLT_MAX, 0x1p-7f, 0x1p-5f },
+	{ "logp1f", logp1f, logp1, -0x1.fffffep-1f, FLT_MAX, -0x1p-5f, -0x1p-7f },
+	{ "log2p1f", log2p1f, log2p1, -0x1.fffffep-1f, FLT_MAX, 0x1p-7f, 0x1p-5f },
+	{ "log10p1f", log10p1f, log10p1, -0x1.fffffep-1f, FLT_MAX, -0x1p-5f, -0x1p-7f },
 };
 
 static uint32_t next(uint32_t *state)
@@ -179,7 +188,7 @@ static void check_unary(const struct unary *test)
 	snprintf(message, sizeof(message), "%s: max %.3f ulp at %a, %ld of %ld not correctly rounded\n", test->name, worst, (double)worst_x, misrounded, count);
 	fputs(message, stdout);
 	/* Faithful everywhere, and correctly rounded but for rare near-halfway cases */
-	if (worst >= 1.0 || misrounded > count / 1000)
+	if (worst >= 1.0 || misrounded > count / 10000)
 		++failures;
 }
 

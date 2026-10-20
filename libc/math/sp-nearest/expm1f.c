@@ -16,7 +16,7 @@
 #include "internal/math.h"
 
 /*
- * C23 7.12.6.3: e^x - 1. Near 0 the series on r = x keeps the
+ * C23 7.12.6.6: e^x - 1. Near 0 the series on r = x keeps the
  * relative accuracy; elsewhere the exp2 core's result minus 1 is a
  * float-float sum, rounded once (PLAN D57).
  */
