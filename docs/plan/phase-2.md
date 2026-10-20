@@ -50,9 +50,11 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] armv6-m: minimise the soft-float helper pull-in (audit the libgcc dependencies).
   *`nofp` layer: `__aeabi_dsub`/`__aeabi_fsub` as addition of the negation (−1444/−764 bytes of libgcc); special-case results and exception raising out of line in `libc/fenv`, constants on the soft variant (no soft division); `math-mix` 30024 → 27864, libgcc share 9368 → 7412. Comparisons and division left to libgcc (fragile to replace; P2.06). Test `test/unit/softfp`, 8 mutants caught (D55).*
 
-## P2.05b — Single-precision layer: infrastructure and the exact `float` functions
-- [ ] A layer for armv7e-m and v8-m.main whose `float` functions use only the single-precision FPU (no double promotion; enforce with `-Wdouble-promotion` and a check that its objects reference no `__aeabi_d*` helper).
-- [ ] The exact and bit-level `float` functions: rounding, `fmodf`/`remainderf`/`remquof`, `frexpf`/`ldexpf`/`scalbnf`, `ilogbf`/`logbf`, `nextafterf`/`nexttowardf`, `l(l)rintf`/`l(l)roundf`, `fromfpf`, `modff`, the trivial complex accessors.
+## P2.05b — Single-precision layer: infrastructure and the exact `float` functions  `[x]`
+- [x] A layer for armv7e-m and v8-m.main whose `float` functions use only the single-precision FPU (no double promotion; enforce with `-Wdouble-promotion` and a check that its objects reference no `__aeabi_d*` helper).
+  *`libc/math/sp`, first in `LIBC_MATH_LAYERS` on every Arm core (armv6-m and armv7e-m-dp measured smaller too); `subdir.mk` yields to later FPU layers; `sp.checked` fails the build on any double helper or double-computing 64-bit conversion (D56).*
+- [x] The exact and bit-level `float` functions: rounding, `fmodf`/`remainderf`/`remquof`, `frexpf`/`ldexpf`/`scalbnf`, `ilogbf`/`logbf`, `nextafterf`/`nexttowardf`, `l(l)rintf`/`l(l)roundf`, `fromfpf`, `modff`, the trivial complex accessors.
+  *`ldexpf`/`scalbnf`/`nextafterf` were already float-only. New reference program `float-exact`: 5056 → 2048 (armv7e-m, no libgcc), 8440 → 3908 (armv6-m). Test `test/unit/float_exact` (bitwise against the double functions, 40 000 arguments each), 11 mutants caught.*
 
 ## P2.05c — Single-precision exp, log and pow family
 - [ ] `expf`, `exp2f`, `exp10f`, `expm1f` and the `m1` forms, `logf`, `log2f`, `log10f`, `log1pf` and the `p1` forms, `powf`, `pownf`, `powrf`, `rootnf`, `rsqrtf`, `cbrtf`, `hypotf`, `compoundnf`, within the D47 accuracy, on single-precision float-float cores.

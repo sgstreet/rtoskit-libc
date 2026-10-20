@@ -13,8 +13,10 @@
 
 #include <complex.h>
 
-/* C23 7.3.9.6: evaluated in double, then rounded part by part */
+#include "internal/complex.h"
+
+/* C23 7.3.9.6: the real part, read from the representation (no conversion through double) */
 float crealf(float complex z)
 {
-	return (float)creal(z);
+	return __libc_ref(z);
 }
