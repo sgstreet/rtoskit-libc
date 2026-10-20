@@ -27,5 +27,5 @@ double getpayload(const double *x)
 	if ((bits & ~__LIBC_DOUBLE_SIGN) <= __LIBC_DOUBLE_EXPONENT)
 		return -1;
 
-	return (double)(bits & (__LIBC_DOUBLE_FRACTION & ~__LIBC_DOUBLE_QUIET));
+	return __libc_u64_to_double(bits & (__LIBC_DOUBLE_FRACTION & ~__LIBC_DOUBLE_QUIET));
 }

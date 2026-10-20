@@ -16,13 +16,14 @@
 #include <stdlib.h>
 
 #include "internal/strtofloat.h"
+#include "internal/math.h"
 
 /* 10^0 .. 10^22 are exact in binary64 */
 static const double powers_of_ten[] = { 1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15, 1e16, 1e17, 1e18, 1e19, 1e20, 1e21, 1e22 };
 
 static uint64_t exact(uint64_t significand, int exponent10)
 {
-	double value = (double)significand;
+	double value = __libc_u64_to_double(significand);
 	uint64_t bits;
 
 	value = exponent10 < 0 ? value / powers_of_ten[-exponent10] : value * powers_of_ten[exponent10];

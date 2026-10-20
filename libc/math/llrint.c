@@ -30,5 +30,5 @@ long long llrint(double x)
 		return LLONG_MIN;
 	}
 
-	return (long long)rounded;
+	return __libc_double_to_i64(rounded);
 }

@@ -14,13 +14,15 @@
 #include <stdckdint.h>
 #include <time.h>
 
-/* C23 7.29.2.2: exact while the difference fits, rounded only once by the conversion */
+#include "internal/math.h"
+
+/* C23 7.29.2.2: exact while the difference fits, rounded only once by the conversion (without the soft-float helpers, PLAN D55) */
 double difftime(time_t time1, time_t time0)
 {
 	time_t difference;
 
 	if (!ckd_sub(&difference, time1, time0))
-		return (double)difference;
+		return __libc_i64_to_double(difference);
 
-	return (double)time1 - (double)time0;
+	return __libc_i64_to_double(time1) - __libc_i64_to_double(time0);
 }

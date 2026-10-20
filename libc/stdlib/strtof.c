@@ -20,10 +20,14 @@
 /* 10^0 .. 10^10 are exact in binary32 */
 static const float powers_of_ten[] = { 1e0f, 1e1f, 1e2f, 1e3f, 1e4f, 1e5f, 1e6f, 1e7f, 1e8f, 1e9f, 1e10f };
 
-/* Computed in float, never through double, so there is a single rounding */
+/*
+ * Computed in float, never through double, so there is a single rounding.
+ * The significand is at most 2^24, so it converts exactly from 32 bits: no
+ * 64-bit conversion helper from the soft-float library (PLAN D55).
+ */
 static uint64_t exact(uint64_t significand, int exponent10)
 {
-	float value = (float)significand;
+	float value = (float)(uint32_t)significand;
 	uint32_t bits;
 
 	value = exponent10 < 0 ? value / powers_of_ten[-exponent10] : value * powers_of_ten[exponent10];

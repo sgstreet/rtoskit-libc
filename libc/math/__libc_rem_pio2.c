@@ -97,7 +97,7 @@ static int payne_hanek(double x, struct __libc_dd *r)
 		return quadrant & 3;
 	}
 
-	f = __libc_dd_fast_sum(ldexp((double)bits_at(product, 9, top - 52, 53), top - 52 - shift), ldexp((double)bits_at(product, 9, top - 105, 53), top - 105 - shift));
+	f = __libc_dd_fast_sum(ldexp(__libc_u64_to_double(bits_at(product, 9, top - 52, 53)), top - 52 - shift), ldexp(__libc_u64_to_double(bits_at(product, 9, top - 105, 53)), top - 105 - shift));
 	f = __libc_dd_multiply(f, __LIBC_PI_2);
 	*r = negative ? __libc_dd_negate(f) : f;
 

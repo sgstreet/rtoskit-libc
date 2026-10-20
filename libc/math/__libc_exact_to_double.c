@@ -82,7 +82,7 @@ double __libc_exact_to_double(const struct __libc_exact *value)
 
 	if (top >= (DBL_MIN_EXP - 1)) {
 		double tail = half ? (below ? 0.75 : 0.5) : (below ? 0.25 : 0.0);
-		double rounded = value->negative ? -(double)kept - tail : (double)kept + tail;
+		double rounded = value->negative ? -__libc_u64_to_double(kept) - tail : __libc_u64_to_double(kept) + tail;
 
 		return scalbn(rounded, top - (DBL_MANT_DIG - 1));
 	}

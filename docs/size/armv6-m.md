@@ -150,3 +150,38 @@ Members that grew or are new, justified:
 - `__libc_decimal_set.o` 144 → 146 (+2): calls the division helper.
 - Reduced: `strerror.o` 2395 → 1968, `__libc_secs_to_tm.o` 580 → 486, `__libc_asctime.o` 498 → 480.
 - The tiny allocator's objects are not in `libc.a`; they replace nano's in `libc-tinymalloc.a` (`malloc-heavy-tiny`).
+
+## P2.05a — soft-float helper audit
+
+Decision D55, `docs/research/libm-softfloat.md`. Before → after, release build.
+
+`libc.a`: code 121640 → 120330 (-1310), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 2211 → 2211 | 380 → 380 | 1428 → 1428 | 0 → 0 |
+| hello-printf-int | 7945 → 7945 | 380 → 380 | 6709 → 6709 | 420 → 420 |
+| hello-printf-float | 10550 → 10550 | 380 → 380 | 6709 → 6709 | 2984 → 2984 |
+| malloc-heavy | 2286 → 2286 | 80 → 80 | 1346 → 1346 | 0 → 0 |
+| math-mix | 30024 → 27864 | 20 → 20 | 19940 → 19732 | 9368 → 7412 |
+| hello-printf-int-nofloat | 5047 → 5047 | 380 → 380 | 3811 → 3811 | 420 → 420 |
+| hello-printf-int-minimal | 4779 → 4779 | 380 → 380 | 3593 → 3593 | 372 → 372 |
+| malloc-heavy-tiny | 2206 → 2206 | 76 → 76 | 1266 → 1266 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `__libc_double_to_i64.o` 0 → 96 (+96): new: the integral double to `int64_t` conversion shared by `llrint`, `llround`, `setpayload` and `setpayloadsig`, without `__aeabi_d2lz`/`__aeabi_d2ulz`.
+- `__libc_math_divbyzero.o` 0 → 28 (+28): new: out-of-line special-case result (a constant where `<fenv.h>` records nothing, so no soft division).
+- `__libc_math_underflow.o` 0 → 20 (+20): new: out-of-line special-case result (a constant where `<fenv.h>` records nothing, so no soft division).
+- `__aeabi_dsub.o` 0 → 14 (+14): new (nofp layer): subtraction as addition of the negation, replacing libgcc's 1444-byte `subdf3.o`.
+- `__aeabi_fsub.o` 0 → 14 (+14): new (nofp layer): replaces libgcc's 764-byte `subsf3.o`.
+- `__libc_math_invalid.o` 0 → 12 (+12): new: out-of-line special-case result (a constant where `<fenv.h>` records nothing, so no soft division).
+- `__libc_i64_to_double.o` 0 → 8 (+8): new: as `__libc_u64_to_double`.
+- `__libc_math_invalidf.o` 0 → 8 (+8): new: out-of-line special-case result (a constant where `<fenv.h>` records nothing, so no soft division).
+- `__libc_u64_to_double.o` 0 → 8 (+8): new: 64-bit conversion; two exact 32-bit conversions on fpv5-dp, the native one elsewhere.
+- `__libc_math_raise_divbyzero.o` 0 → 2 (+2): new: out-of-line exception raising (empty where `<fenv.h>` records nothing).
+- `__libc_math_raise_inexact.o` 0 → 2 (+2): new: out-of-line exception raising (empty where `<fenv.h>` records nothing).
+- `__libc_math_raise_invalid.o` 0 → 2 (+2): new: out-of-line exception raising (empty where `<fenv.h>` records nothing).
+- `__libc_math_raise_overflow.o` 0 → 2 (+2): new: out-of-line exception raising (empty where `<fenv.h>` records nothing).
+- `__libc_math_raise_underflow.o` 0 → 2 (+2): new: out-of-line exception raising (empty where `<fenv.h>` records nothing).
+- Reduced: 73 members, -1528 bytes; the largest: `rootn.o` 756 → 692, `powr.o` 990 → 932, `tgamma.o` 588 → 540, `pow.o` 1360 → 1316.

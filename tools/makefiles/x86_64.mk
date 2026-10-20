@@ -18,7 +18,7 @@ CROSS_FLAGS ?= -mlong-double-64
 export ARCH_FAMILY := x86_64
 # <fenv.h> implementation: x86_64, fpv5-dp (every floating type in the FPU), or soft (D44)
 export LIBC_FENV := x86_64
-# libm functions in FPU instructions: libc/math/<layer> replaces the generic files of the same name (D46)
+# libm layers: libc/math/<layer> replaces the generic files of the same name and may add helpers (D46, D55)
 export LIBC_MATH_LAYERS := x86_64
 
 CC := gcc-14
