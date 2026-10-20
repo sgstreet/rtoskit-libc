@@ -578,6 +578,22 @@ static inline struct __libc_ff __libc_ff_from_i64(int64_t n)
 #define __LIBC_PIF ((struct __libc_ff){ .hi = 0x1.921fb6p1f, .lo = -0x1.777a5cp-24f })
 #define __LIBC_PI_32F ((struct __libc_ff){ .hi = 0x1.921fb6p-4f, .lo = -0x1.777a5cp-29f })
 
+/* pi/2 and 1/pi as float-float */
+#define __LIBC_PI_2F ((struct __libc_ff){ .hi = 0x1.921fb6p0f, .lo = -0x1.777a5cp-25f })
+#define __LIBC_INV_PIF ((struct __libc_ff){ .hi = 0x1.45f306p-2f, .lo = 0x1.b9391p-27f })
+
+/* sqrt(a.hi + a.lo) for a non-negative a, corrected by the exact residual (a - r^2)/(2r) */
+static inline struct __libc_ff __libc_ff_sqrt(struct __libc_ff a)
+{
+	float root = sqrtf(a.hi);
+	struct __libc_ff square = __libc_ff_product(root, root);
+
+	if (root == 0)
+		return (struct __libc_ff){ .hi = 0.0f, .lo = 0.0f };
+
+	return __libc_ff_fast_sum(root, (((a.hi - square.hi) - square.lo) + a.lo) / (2.0f * root));
+}
+
 /* ln 2, 1/ln 2, ln 10, log2(10), log10(2) and 1/ln 10 as float-float */
 #define __LIBC_LN2F ((struct __libc_ff){ .hi = 0x1.62e43p-1f, .lo = -0x1.05c61p-29f })
 #define __LIBC_INV_LN2F ((struct __libc_ff){ .hi = 0x1.715476p0f, .lo = 0x1.4ae0cp-26f })
@@ -639,6 +655,9 @@ int __libc_rem_pio2f(float x, struct __libc_ff *s);
 
 /* sin(k pi/32 + s.hi + s.lo) for any k and |s| <= pi/64, to about 2^-42 */
 struct __libc_ff __libc_sinf_core(int k, struct __libc_ff s);
+
+/* atan2(y, x) for finite y and x not both zero, to about 2^-42 */
+struct __libc_ff __libc_atan2f_core(struct __libc_ff y, struct __libc_ff x);
 
 /* log2(x + tail) for positive finite x and |tail| at most half an ulp of x, to about 2^-40 (relative near 1) */
 struct __libc_ff __libc_log2f_core(float x, float tail);
