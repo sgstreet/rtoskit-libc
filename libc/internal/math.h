@@ -674,6 +674,12 @@ struct __libc_ff __libc_erff_core(float x);
 /* log|gamma(x)| for finite x that is not a pole, *sign the sign of gamma(x), to about 2^-42 */
 struct __libc_ff __libc_lgammaf_core(float x, int *sign);
 
+/* sin y and cos y as float-float for a finite float-float y (|y.lo| at most half an ulp of y.hi), to about 2^-42 */
+void __libc_sincosf_core(struct __libc_ff y, struct __libc_ff *sine, struct __libc_ff *cosine);
+
+/* 2^z m rounded once, for finite z and a sine or cosine m */
+float __libc_exp2f_times(struct __libc_ff z, struct __libc_ff m);
+
 /* e^|x| = 2^*exponent (result.hi + result.lo) and *inverse = 2^-*exponent e^-|x| (0 for exponent above 20), for |x| up to 90 */
 struct __libc_ff __libc_expf_pair(float x, int *exponent, struct __libc_ff *inverse);
 
