@@ -62,4 +62,14 @@ static inline double complex __libc_times_minus_i(double complex z)
 	return CMPLX(__libc_im(z), -__libc_re(z));
 }
 
+static inline float complex __libc_times_if(float complex z)
+{
+	return CMPLXF(-__libc_imf(z), __libc_ref(z));
+}
+
+static inline float complex __libc_times_minus_if(float complex z)
+{
+	return CMPLXF(__libc_imf(z), -__libc_ref(z));
+}
+
 #endif /* _INTERNAL_COMPLEX_H */

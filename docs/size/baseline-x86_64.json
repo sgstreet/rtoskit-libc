@@ -2509,10 +2509,10 @@
    "ccosh.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 48,
+    "rodata": 56,
     "tbss": 0,
     "tdata": 0,
-    "text": 561,
+    "text": 586,
     "unwind": 0
    },
    "ccoshf.o": {
@@ -2986,10 +2986,10 @@
    "csinh.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 48,
+    "rodata": 56,
     "tbss": 0,
     "tdata": 0,
-    "text": 491,
+    "text": 527,
     "unwind": 0
    },
    "csinhf.o": {
@@ -7559,10 +7559,10 @@
   "totals": {
    "bss": 1848,
    "data": 188,
-   "rodata": 17170,
+   "rodata": 17186,
    "tbss": 618,
    "tdata": 8,
-   "text": 99076,
+   "text": 99137,
    "unwind": 0
   }
  },

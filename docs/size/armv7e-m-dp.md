@@ -401,3 +401,28 @@ Decision D65, `docs/research/libm-float-complex.md`. Before → after, release b
 Members that grew or are new, justified:
 
 - Reduced: 0 members, 0 bytes; the largest: .
+
+## P2.05e3b — float complex trigonometric and hyperbolic functions
+
+Decision D66, `docs/research/libm-float-complex.md`. Before → after, release build.
+
+`libc.a`: code 86932 → 86948 (+16), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 1931 → 1931 | 380 → 380 | 1178 → 1178 | 0 → 0 |
+| hello-printf-int | 7368 → 7368 | 380 → 380 | 6577 → 6577 | 0 → 0 |
+| hello-printf-float | 7392 → 7392 | 380 → 380 | 6577 → 6577 | 0 → 0 |
+| malloc-heavy | 1982 → 1982 | 80 → 80 | 1066 → 1066 | 0 → 0 |
+| math-mix | 12326 → 12326 | 20 → 20 | 11634 → 11634 | 0 → 0 |
+| float-exact | 1688 → 1688 | 20 → 20 | 1198 → 1198 | 0 → 0 |
+| math-float | 9510 → 9510 | 20 → 20 | 9068 → 9068 | 0 → 0 |
+| hello-printf-int-nofloat | 4511 → 4511 | 380 → 380 | 3723 → 3723 | 0 → 0 |
+| hello-printf-int-minimal | 4271 → 4271 | 380 → 380 | 3487 → 3487 | 0 → 0 |
+| malloc-heavy-tiny | 1922 → 1922 | 76 → 76 | 1006 → 1006 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `ccosh.o` 392 → 400 (+8): the sign fix beyond 709 (one multiply).
+- `csinh.o` 352 → 360 (+8): the sign fix beyond 709 (one multiply).
+- Reduced: 0 members, 0 bytes; the largest: .

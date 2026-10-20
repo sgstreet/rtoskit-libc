@@ -677,6 +677,12 @@ struct __libc_ff __libc_lgammaf_core(float x, int *sign);
 /* sin y and cos y as float-float for a finite float-float y (|y.lo| at most half an ulp of y.hi), to about 2^-42 */
 void __libc_sincosf_core(struct __libc_ff y, struct __libc_ff *sine, struct __libc_ff *cosine);
 
+/* 2^exponent a b rounded once, tiny factors prescaled so that their relative accuracy survives */
+float __libc_ff_round_product(struct __libc_ff a, struct __libc_ff b, int exponent);
+
+/* sinh x and cosh x as float-float for |x| below 16, to about 2^-42 */
+void __libc_sinhcoshf_core(float x, struct __libc_ff *sinh, struct __libc_ff *cosh);
+
 /* 2^z m rounded once, for finite z and a sine or cosine m */
 float __libc_exp2f_times(struct __libc_ff z, struct __libc_ff m);
 

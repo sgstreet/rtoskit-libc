@@ -258,6 +258,21 @@ static void check_basics(void)
 	CHECK(cabs(CMPLX(3.0, 4.0)) == 5.0 && cabs(CMPLX(NAN, INFINITY)) == INFINITY && carg(CMPLX(-1.0, 0.0)) == 0x1.921fb54442d18p+1 && carg(CMPLX(-1.0, -0.0)) == -0x1.921fb54442d18p+1);
 }
 
+/* Beyond |x| = 709 csinh and ccosh scale by e^|x|/2 in two halves: sinh x times cos y (sin y) keeps the signs of both (P2.05e3b) */
+static void check_hyperbolic_halves(void)
+{
+	double scale = 0.5 * exp(355.0) * exp(355.0);
+	double complex value = csinh(CMPLX(710.0, 2.0));
+
+	CHECK(creal(value) < 0 && fabs(creal(value) / (scale * cos(2.0)) - 1.0) < 0x1p-40 && cimag(value) > 0);
+	value = csinh(CMPLX(-710.0, 2.0));
+	CHECK(creal(value) > 0 && fabs(creal(value) / (scale * cos(2.0)) + 1.0) < 0x1p-40 && cimag(value) > 0);
+	value = ccosh(CMPLX(710.0, -2.0));
+	CHECK(creal(value) < 0 && cimag(value) < 0 && fabs(cimag(value) / (scale * sin(-2.0)) - 1.0) < 0x1p-40);
+	value = ccosh(CMPLX(-710.0, -2.0));
+	CHECK(creal(value) < 0 && cimag(value) > 0 && fabs(cimag(value) / (scale * sin(-2.0)) + 1.0) < 0x1p-40);
+}
+
 static void check_annex_g(void)
 {
 	const double pi = 0x1.921fb54442d18p+1;
@@ -351,6 +366,7 @@ int main(void)
 {
 	check_vectors();
 	check_basics();
+	check_hyperbolic_halves();
 	check_annex_g();
 	check_tgmath();
 
