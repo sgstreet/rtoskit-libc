@@ -1,0 +1,218 @@
+{
+ "images": {
+  "armv6-m": {
+   "float-exact": {
+    "code": 3908,
+    "ram": 20
+   },
+   "hello-printf-float": {
+    "code": 10374,
+    "ram": 388
+   },
+   "hello-printf-int": {
+    "code": 7769,
+    "ram": 388
+   },
+   "hello-printf-int-minimal": {
+    "code": 4719,
+    "ram": 388
+   },
+   "hello-printf-int-nofloat": {
+    "code": 4987,
+    "ram": 388
+   },
+   "hello-puts": {
+    "code": 2163,
+    "ram": 388
+   },
+   "malloc-heavy": {
+    "code": 2214,
+    "ram": 88
+   },
+   "malloc-heavy-tiny": {
+    "code": 2134,
+    "ram": 84
+   },
+   "math-float": {
+    "code": 9640,
+    "ram": 20
+   },
+   "math-mix": {
+    "code": 34116,
+    "ram": 20
+   }
+  },
+  "armv6s-m": {
+   "float-exact": {
+    "code": 3908,
+    "ram": 20
+   },
+   "hello-printf-float": {
+    "code": 10374,
+    "ram": 388
+   },
+   "hello-printf-int": {
+    "code": 7769,
+    "ram": 388
+   },
+   "hello-printf-int-minimal": {
+    "code": 4719,
+    "ram": 388
+   },
+   "hello-printf-int-nofloat": {
+    "code": 4987,
+    "ram": 388
+   },
+   "hello-puts": {
+    "code": 2163,
+    "ram": 388
+   },
+   "malloc-heavy": {
+    "code": 2214,
+    "ram": 88
+   },
+   "malloc-heavy-tiny": {
+    "code": 2134,
+    "ram": 84
+   },
+   "math-float": {
+    "code": 9640,
+    "ram": 20
+   },
+   "math-mix": {
+    "code": 34116,
+    "ram": 20
+   }
+  },
+  "armv7e-m": {
+   "float-exact": {
+    "code": 2048,
+    "ram": 20
+   },
+   "hello-printf-float": {
+    "code": 9170,
+    "ram": 388
+   },
+   "hello-printf-int": {
+    "code": 7185,
+    "ram": 388
+   },
+   "hello-printf-int-minimal": {
+    "code": 4231,
+    "ram": 388
+   },
+   "hello-printf-int-nofloat": {
+    "code": 4471,
+    "ram": 388
+   },
+   "hello-puts": {
+    "code": 1903,
+    "ram": 388
+   },
+   "malloc-heavy": {
+    "code": 1934,
+    "ram": 88
+   },
+   "malloc-heavy-tiny": {
+    "code": 1874,
+    "ram": 84
+   },
+   "math-float": {
+    "code": 5282,
+    "ram": 20
+   },
+   "math-mix": {
+    "code": 27312,
+    "ram": 20
+   }
+  },
+  "armv7e-m-dp": {
+   "float-exact": {
+    "code": 1688,
+    "ram": 20
+   },
+   "hello-printf-float": {
+    "code": 7244,
+    "ram": 388
+   },
+   "hello-printf-int": {
+    "code": 7220,
+    "ram": 388
+   },
+   "hello-printf-int-minimal": {
+    "code": 4231,
+    "ram": 388
+   },
+   "hello-printf-int-nofloat": {
+    "code": 4471,
+    "ram": 388
+   },
+   "hello-puts": {
+    "code": 1903,
+    "ram": 388
+   },
+   "malloc-heavy": {
+    "code": 1934,
+    "ram": 88
+   },
+   "malloc-heavy-tiny": {
+    "code": 1874,
+    "ram": 84
+   },
+   "math-float": {
+    "code": 9494,
+    "ram": 20
+   },
+   "math-mix": {
+    "code": 12302,
+    "ram": 20
+   }
+  },
+  "armv8-m.main": {
+   "float-exact": {
+    "code": 1612,
+    "ram": 20
+   },
+   "hello-printf-float": {
+    "code": 9150,
+    "ram": 388
+   },
+   "hello-printf-int": {
+    "code": 7165,
+    "ram": 388
+   },
+   "hello-printf-int-minimal": {
+    "code": 4203,
+    "ram": 388
+   },
+   "hello-printf-int-nofloat": {
+    "code": 4439,
+    "ram": 388
+   },
+   "hello-puts": {
+    "code": 1883,
+    "ram": 388
+   },
+   "malloc-heavy": {
+    "code": 1914,
+    "ram": 88
+   },
+   "malloc-heavy-tiny": {
+    "code": 1854,
+    "ram": 84
+   },
+   "math-float": {
+    "code": 5214,
+    "ram": 20
+   },
+   "math-mix": {
+    "code": 27232,
+    "ram": 20
+   }
+  }
+ },
+ "margins_percent": {
+  "size": 0,
+  "speed": 10
+ }
+}

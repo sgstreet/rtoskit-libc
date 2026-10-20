@@ -20,6 +20,10 @@
 #   tools/scripts/size-report markdown --board B         print the summary of a baseline
 #   tools/scripts/size-report compare                    build test/size with picolibc and
 #                                                        newlib-nano; print a Markdown table
+#   tools/scripts/size-report budget [--flavour F]       check the test/size images against
+#                                                        docs/size/budget.json (P2.07, PLAN D71);
+#                                                        exit status 1 when one is over
+#   tools/scripts/size-report budget --lock              write docs/size/budget.json from the build
 #
 # Figures: per libc.a member, the bytes of each section class (text, rodata, unwind,
 # data, bss, tdata, tbss) from the ELF section flags; per test/size image, the same
@@ -766,6 +770,53 @@ def command_compare(args):
 	return 0
 
 
+# The size budget (P2.07, PLAN D71): code and RAM per reference program per arch, locked at the end
+# of phase 2; the size flavour may not exceed it, a speed flavour by at most its margin
+BUDGET_MARGINS = {'size': 0, 'speed': 10}
+
+
+def budget_path(directory):
+	return os.path.join(directory, 'budget.json')
+
+
+def image_figures(image):
+	sections = image['sections']
+	return {'code': total(sections, ['text', 'rodata', 'unwind']), 'ram': total(sections, ['data', 'bss', 'tdata', 'tbss'])}
+
+
+def command_budget(args):
+	path = budget_path(args.baseline_dir)
+	boards = [board for board in args.board if board != 'linux-x86_64']
+	if args.lock:
+		budget = {'margins_percent': BUDGET_MARGINS, 'images': {}}
+		for board in boards:
+			images = measure(board, args.build_type, args.build_root)['images']
+			budget['images'][arch_of(board)] = {program: image_figures(images[program]) for program in PROGRAMS + FLAVOUR_PROGRAMS}
+		with open(path, 'w') as f:
+			json.dump(budget, f, indent=1, sort_keys=True)
+			f.write('\n')
+		print(f'{path}: {len(budget["images"])} arches locked')
+		return 0
+	with open(path) as f:
+		budget = json.load(f)
+	margin = budget['margins_percent'][args.flavour]
+	over = False
+	for board in boards:
+		arch = arch_of(board)
+		if arch not in budget['images']:
+			continue
+		images = measure(board, args.build_type, args.build_root)['images']
+		for program, limits in budget['images'][arch].items():
+			figures = image_figures(images[program])
+			for key in ('code', 'ram'):
+				allowed = limits[key] + limits[key] * margin // 100
+				if figures[key] > allowed:
+					over = True
+					print(f'{arch} {program} {key}: {figures[key]} > {allowed} ({limits[key]} + {margin} %)')
+	print('size budget: over' if over else f'size budget: within ({args.flavour} flavour, +{margin} %)')
+	return 1 if over else 0
+
+
 def main():
 	parser = argparse.ArgumentParser(description='Phase 2 size measurements (PLAN D51)')
 	parser.add_argument('--build-type', default='release')
@@ -776,12 +827,16 @@ def main():
 		p = sub.add_parser(name)
 		p.add_argument('--board', action='append', choices=BOARDS)
 		p.add_argument('--top', type=int, default=20)
+	p = sub.add_parser('budget')
+	p.add_argument('--board', action='append', choices=BOARDS)
+	p.add_argument('--flavour', choices=sorted(BUDGET_MARGINS), default='size')
+	p.add_argument('--lock', action='store_true', help='write the budget from this build')
 	p = sub.add_parser('compare')
 	p.add_argument('--work', default=os.path.join('tmp', 'size-compare'))
 	args = parser.parse_args()
 	if getattr(args, 'board', None) is None:
 		args.board = BOARDS
-	commands = {'report': command_report, 'diff': command_diff, 'markdown': command_markdown, 'compare': command_compare}
+	commands = {'report': command_report, 'diff': command_diff, 'markdown': command_markdown, 'compare': command_compare, 'budget': command_budget}
 	return commands[args.command](args)
 
 

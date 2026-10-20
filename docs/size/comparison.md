@@ -1,5 +1,8 @@
 # Size comparison with picolibc and newlib-nano (P2.01)
 
+The end-of-phase-1 comparison. The end-of-phase-2 figures are in
+`docs/size/phase-2.md`.
+
 For context only; this is not a gate (phase 2, PLAN D51). Produced by
 `tools/scripts/size-report compare` after a release build. It builds the
 `test/size` reference programs with the same arm-none-eabi GCC 16.2 and the same
