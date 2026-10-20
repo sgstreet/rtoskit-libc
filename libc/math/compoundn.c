@@ -37,7 +37,7 @@ double compoundn(double x, long long n)
 	if (n == 1)
 		return 1.0 + x;
 	if (fabs(x) < 0x1p-60)
-		return 1.0 + n * x;
+		return 1.0 + __libc_i64_to_double(n) * x;
 
 	return __libc_pow_integer(__libc_log1p_core(x), n, false);
 }

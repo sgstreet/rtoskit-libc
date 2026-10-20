@@ -25,8 +25,8 @@
 double __libc_pow_integer(struct __libc_dd log, long long n, bool negative)
 {
 	double sign = negative ? -1.0 : 1.0;
-	double high = (double)(n & ~2047LL);
-	double low = (double)(n - (n & ~2047LL));
+	double high = __libc_i64_to_double(n & ~2047LL);
+	double low = __libc_i64_to_double(n - (n & ~2047LL));
 	double estimate = (high + low) * log.hi;
 	struct __libc_dd upper;
 	struct __libc_dd lower;

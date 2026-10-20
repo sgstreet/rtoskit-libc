@@ -26,6 +26,6 @@ int setpayloadsig(double *res, double pl)
 		return 1;
 	}
 
-	*res = __libc_double_from(__LIBC_DOUBLE_EXPONENT | (uint64_t)pl);
+	*res = __libc_double_from(__LIBC_DOUBLE_EXPONENT | (uint64_t)__libc_double_to_i64(pl));
 	return 0;
 }

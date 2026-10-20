@@ -63,4 +63,7 @@ static inline unsigned int __libc_fenv_nonstop(unsigned int state)
 	return state;
 }
 
+/* Whether the library's exception-raising helpers need to do anything: no exception is recorded (PLAN D55) */
+static constexpr bool __libc_fenv_records = false;
+
 #endif /* _FENV_ARCH_H */

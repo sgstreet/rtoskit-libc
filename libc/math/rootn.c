@@ -24,7 +24,7 @@ double rootn(double x, long long n)
 {
 	bool odd = (n & 1) != 0;
 	bool negative = signbit(x) && odd;
-	double divisor = (double)n;
+	double divisor = __libc_i64_to_double(n);
 	struct __libc_dd log;
 	struct __libc_dd product;
 	struct __libc_dd value;

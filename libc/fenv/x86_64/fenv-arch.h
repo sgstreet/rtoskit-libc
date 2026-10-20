@@ -75,4 +75,7 @@ static inline unsigned int __libc_fenv_nonstop(unsigned int state)
 	return state | 0x1f80u;
 }
 
+/* Whether the library's exception-raising helpers need to do anything: MXCSR and the x87 status record the exceptions (PLAN D55) */
+static constexpr bool __libc_fenv_records = true;
+
 #endif /* _FENV_ARCH_H */

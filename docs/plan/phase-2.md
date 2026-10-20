@@ -42,11 +42,27 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `qsort` code size; `strerror` table compaction; `ctype` (table vs code) re-evaluation per arch. *`strerror` is one array of records: 2395 → 1968 bytes, with a golden test of every number. ctype stays as code (14–34 bytes per function against a 256-byte table), and so does `qsort` (a 228-byte heapsort). Library-wide, 64-bit division by small constants now goes through `__libc_udivmod64`, so printf images on armv7e-m/v8-m drop all libgcc (−648 bytes).*
 - [x] `strftime`/`mktime`/TZ parsing code size. *The calendar, `strftime`, `asctime` and the TZ rules divide through `__libc_udivmod64`/`__libc_floor_divmod64` instead of libgcc's 64-bit division. A localtime + strftime + mktime probe: 6344 → 5470 bytes on armv7e-m (no libgcc) and 6904 → 6122 on armv6-m. The code itself was already table-light (`docs/research/stdlib-time-size.md`).*
 
-## P2.05 — libm size
+## P2.05 — libm size (split into P2.05a–e: about 90 `float` functions compute in `double`, which is soft-float on the single-precision FPUs)
+
+## P2.05a — Soft-float helper audit: armv7e-m-dp and armv6-m  `[x]`
+- [x] armv7e-m-dp: the `double` functions must not pull in any soft-float helpers (`__aeabi_d*`); check the link maps. Use the hardware ops instead of software bit tricks wherever that is smaller.
+  *64-bit conversions through two exact 32-bit VCVTs (fpv5-dp layer: `__libc_u64_to_double`, `__libc_i64_to_double`, `__libc_double_to_i64`), `strtof` through 32 bits; no `libc.a` member refers to a double helper; `math-mix` 13244 → 12326 with no libgcc (D55). VCVT for `lrint`/`lround` rejected: it saturates instead of the uniform `LONG_MIN`.*
+- [x] armv6-m: minimise the soft-float helper pull-in (audit the libgcc dependencies).
+  *`nofp` layer: `__aeabi_dsub`/`__aeabi_fsub` as addition of the negation (−1444/−764 bytes of libgcc); special-case results and exception raising out of line in `libc/fenv`, constants on the soft variant (no soft division); `math-mix` 30024 → 27864, libgcc share 9368 → 7412. Comparisons and division left to libgcc (fragile to replace; P2.06). Test `test/unit/softfp`, 8 mutants caught (D55).*
+
+## P2.05b — Single-precision layer: infrastructure and the exact `float` functions
+- [ ] A layer for armv7e-m and v8-m.main whose `float` functions use only the single-precision FPU (no double promotion; enforce with `-Wdouble-promotion` and a check that its objects reference no `__aeabi_d*` helper).
+- [ ] The exact and bit-level `float` functions: rounding, `fmodf`/`remainderf`/`remquof`, `frexpf`/`ldexpf`/`scalbnf`, `ilogbf`/`logbf`, `nextafterf`/`nexttowardf`, `l(l)rintf`/`l(l)roundf`, `fromfpf`, `modff`, the trivial complex accessors.
+
+## P2.05c — Single-precision exp, log and pow family
+- [ ] `expf`, `exp2f`, `exp10f`, `expm1f` and the `m1` forms, `logf`, `log2f`, `log10f`, `log1pf` and the `p1` forms, `powf`, `pownf`, `powrf`, `rootnf`, `rsqrtf`, `cbrtf`, `hypotf`, `compoundnf`, within the D47 accuracy, on single-precision float-float cores.
+
+## P2.05d — Single-precision trigonometric and hyperbolic functions
+- [ ] `sinf`, `cosf`, `tanf` (with a single-precision reduction), the pi-scaled forms, the inverse and hyperbolic functions, within the D48 accuracy.
+
+## P2.05e — Single-precision special and complex functions; shared kernels
+- [ ] `erff`, `erfcf`, `lgammaf`, `tgammaf` and the `float complex` functions on the single-precision layer.
 - [ ] Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows. Re-derive the table sizes with the size/accuracy trade-off documented.
-- [ ] armv7e-m and v8-m.main: the `float` functions must use only the single-precision FPU (no double promotion; enforce with `-Wdouble-promotion`).
-- [ ] armv7e-m-dp: the `double` functions must not pull in any soft-float helpers (`__aeabi_d*`); check the link maps. Use the hardware ops instead of software bit tricks wherever that is smaller.
-- [ ] armv6-m: minimise the soft-float helper pull-in (audit the libgcc dependencies).
 
 ## P2.06 — Per-arch hand-written size kernels
 - [ ] armv6-m Thumb-1: `memcpy`, `memset`, `memmove`, `strlen`, `strcmp`, `setjmp`, written for size (the arch `size/` flavour, D12).

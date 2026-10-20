@@ -59,6 +59,23 @@ static inline double __libc_double_from(uint64_t bits)
 {
 	return (union __libc_double){ .bits = bits }.value;
 }
+/*
+ * 64-bit integers to double, correctly rounded as the conversion is. The
+ * generic files convert natively; the fpv5-dp layer, whose FPU converts
+ * 32-bit integers only, adds two exact 32-bit conversions instead of linking
+ * the soft-float library (libgcc keeps __aeabi_ul2d and __aeabi_l2d in the
+ * object of the soft double addition). PLAN D55.
+ */
+double __libc_u64_to_double(uint64_t x);
+double __libc_i64_to_double(int64_t x);
+
+/*
+ * An integral double in [-2^63, 2^63) to int64_t, without the compiler's
+ * 64-bit conversion helpers (__aeabi_d2lz and __aeabi_d2ulz): from the bits
+ * in the generic file, through two 32-bit conversions in the fpv5-dp layer
+ * (PLAN D55).
+ */
+int64_t __libc_double_to_i64(double x);
 
 static inline uint32_t __libc_float_bits(float x)
 {
@@ -81,53 +98,30 @@ static inline int __libc_float_exponent(uint32_t bits)
 	return (int)((bits >> 23) & 0xff);
 }
 
-static inline void __libc_math_raise_invalid(void)
-{
-	volatile float zero = 0.0f;
-	[[maybe_unused]] volatile float result = zero / zero;
-}
+/*
+ * Raise one exception as the operation would. Out of line in libc/fenv,
+ * where the <fenv.h> variant decides: an arithmetic operation where the FPU
+ * records exceptions, nothing where none is recorded, so a program on such a
+ * core links no floating-point arithmetic just to raise one (PLAN D55).
+ */
+void __libc_math_raise_invalid(void);
+void __libc_math_raise_divbyzero(void);
 
-static inline void __libc_math_raise_divbyzero(void)
-{
-	volatile float zero = 0.0f;
-	[[maybe_unused]] volatile float result = 1.0f / zero;
-}
+/* Overflow and underflow come with inexact, as any overflowing or underflowing operation */
+void __libc_math_raise_overflow(void);
+void __libc_math_raise_underflow(void);
+void __libc_math_raise_inexact(void);
 
-/* Overflow, with inexact as any overflowing operation */
-static inline void __libc_math_raise_overflow(void)
-{
-	volatile float huge = 0x1p127f;
-	[[maybe_unused]] volatile float result = huge * huge;
-}
-
-/* Underflow, with inexact */
-static inline void __libc_math_raise_underflow(void)
-{
-	volatile float tiny = 0x1p-100f;
-	[[maybe_unused]] volatile float result = tiny * tiny;
-}
-
-static inline void __libc_math_raise_inexact(void)
-{
-	volatile float one = 1.0f;
-	volatile float tiny = 0x1p-100f;
-	[[maybe_unused]] volatile float result = one + tiny;
-}
+/*
+ * The results of the special cases, raising their exception: out of line in
+ * libc/fenv, where the <fenv.h> variant decides. Where exceptions and
+ * rounding directions exist they come from the operation itself (0/0,
+ * sign/0, sign * tiny * tiny); elsewhere they are constants (PLAN D55).
+ */
 
 /* A quiet NaN, raising invalid: the result of a domain error (math_errhandling is MATH_ERREXCEPT) */
-static inline double __libc_math_invalid(void)
-{
-	volatile double zero = 0.0;
-
-	return zero / zero;
-}
-
-static inline float __libc_math_invalidf(void)
-{
-	volatile float zero = 0.0f;
-
-	return zero / zero;
-}
+double __libc_math_invalid(void);
+float __libc_math_invalidf(void);
 
 /* The core of fromfp, ufromfp, fromfpx and ufromfpx */
 double __libc_fromfp(double x, int rnd, unsigned int width, bool is_unsigned, bool exact);
@@ -320,7 +314,7 @@ struct __libc_dd __libc_log1p_core(double x);
 /* exp(n * (log.hi + log.lo)) for integer n, signed: the core of pown and compoundn */
 double __libc_pow_integer(struct __libc_dd log, long long n, bool negative);
 
-/* Exceptional results, raised by arithmetic: +-infinity with overflow, +-0 (or the smallest subnormal) with underflow, +-infinity with divide-by-zero */
+/* +-infinity with overflow; inline, as the multiplication links no more than the caller has (PLAN D55) */
 static inline double __libc_math_overflow(double sign)
 {
 	volatile double huge = 0x1p1023;
@@ -328,19 +322,11 @@ static inline double __libc_math_overflow(double sign)
 	return sign * huge * huge;
 }
 
-static inline double __libc_math_underflow(double sign)
-{
-	volatile double tiny = 0x1p-1022;
+/* Zero with the sign of sign, rounded in the current direction, raising underflow (out of line, see above) */
+double __libc_math_underflow(double sign);
 
-	return sign * tiny * tiny;
-}
-
-static inline double __libc_math_divbyzero(double sign)
-{
-	volatile double zero = 0.0;
-
-	return sign / zero;
-}
+/* Infinity with the sign of sign, raising divide-by-zero (out of line, see above) */
+double __libc_math_divbyzero(double sign);
 
 /*
  * The double-double algorithms (TwoSum, the exact product, the cores) are

@@ -32,5 +32,5 @@ long long llround(double x)
 	if (rounded != x)
 		__libc_math_raise_inexact();
 
-	return (long long)rounded;
+	return __libc_double_to_i64(rounded);
 }
