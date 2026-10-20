@@ -243,3 +243,126 @@ string. The full tables are in `docs/perf/<arch>.md`.
   test.
 - libc-test and every unit test pass on the speed build type of all six
   boards.
+
+## P3.02b: word-at-a-time `strcmp` and `strchr` (Thumb-2, DSP)
+
+### Sources reviewed
+
+- **Armv7-M ARM** A7.7.183 `UADD8` and A7.7.127 `SEL` (DSP extension:
+  Armv7E-M, and Armv8-M Mainline with `+dsp`, which our armv8-m.main
+  build enables).
+  - `UADD8 Rd, Rn, Rm` adds the four byte pairs and sets `GE[i]` when byte
+    i carries out. With `Rm = 0xffffffff`, the carry happens exactly when
+    byte i of Rn is non-zero.
+  - `SEL Rd, Rn, Rm` takes byte i from Rn where `GE[i]` is set, and from Rm
+    elsewhere.
+- **The Linaro cortex-strings `strlen` for ARMv7**, imported into newlib in
+  2013 (<https://sourceware.org/legacy-ml/newlib/2013/msg00474.html>,
+  <https://bazaar.launchpad.net/~linaro-toolchain-dev/cortex-strings/trunk/revision/110/src/thumb-2/strlen.S>):
+  - two words per iteration;
+  - `UADD8` against 0xff bytes, then `SEL` into a zero-byte mask;
+  - the second `SEL` chains the first word's mask, so one test covers both.
+- **The classic zero-byte test** `(x - 0x01010101) & ~x & 0x80808080`.
+  - It is non-zero exactly when x holds a zero byte.
+  - Its lowest set bit is exact: a borrow only reaches the bytes above a
+    zero.
+  - It is what D30's C code uses through `__libc_word_has_zero`. On Thumb-2,
+    both constants are *modified immediates*, so it needs no registers.
+
+### Measured trade-offs
+
+The instruction counts make the cost of setup and exit concrete. A word
+loop's entry (alignment tests), and its exit (finding and extracting the
+flagged byte), cost about 20 instructions. Right after a fast path starts,
+it therefore loses to the size flavour's cheap loops, unless the code
+before it is already cheaper per byte. Four versions were measured against
+the P3.02a speed baseline and the phase 2 size baseline:
+
+1. **DSP throughout** (`strlen` and `strchr` with UADD8/SEL and two
+   registers pushed for the constants; `strcmp` with UADD8/SEL and one):
+   - `strcmp` 1024 B fell from 8220 to 1834 instructions and `strlen` from
+     1315 to 936;
+   - but `strcmp("")` rose from 28 to 42 and `strlen` of 0 and 8 bytes rose
+     by 5–8: eleven regressions.
+   - It also had a bug the test caught. The `strcmp` mask holds the
+     difference byte, not 0xff, so CLZ counts that byte's own leading zeros
+     too and must be rounded down to a multiple of 8.
+2. **First-character checks and four classic-test words before the DSP
+   loop:** eight regressions remained. They moved to the lengths just past
+   the switch, where the push and the exit are paid without the savings yet
+   to cover them.
+3. **`strcmp`: 16 bytes through a 4× unrolled byte loop first.**
+   - The loop costs 6 instructions per byte (`CMP` against 1 clears C at
+     the terminator, an IT-conditional `CMP` sets Z for equal bytes)
+     against 8 in the Thumb-1 kernel.
+   - By 16 bytes it has saved more than the word path's entry and exit
+     cost, so no length is slower.
+   - The word loop then uses the classic test, which needs no sixth
+     register. The exit adds the byte index to both pointers and reloads
+     the two bytes (8 instructions).
+4. **`strlen`: an LDRD loop with the classic test, each word with its own
+   exit** (4.5 instructions per word, no push), had no regressions. It is
+   only 10 % faster than the Thumb-1 word loop on long strings (1186 against
+   1315 for 1024 B), at 100 bytes against 44.
+   - `malloc-heavy` links `strlen`, and the P3.02a kernels leave 5–13 bytes
+     of that image's speed budget.
+   - So **the speed flavour keeps the Thumb-1 `strlen`**: 56 bytes for
+     10 % cannot fit.
+   - The kernel is kept out of the tree; its design and figures are
+     recorded here (Q16).
+
+**`strchr` keeps the DSP form:**
+- `UADD8`/`SEL` against 0xffffffff makes the zero-byte mask.
+- The word XOR the replicated character gives a match mask through a
+  second `UADD8`/`SEL` pair, and the second `SEL` merges the two.
+- That is 8 instructions per word for two conditions. The classic form
+  would take 9 and a register.
+- It wins at every length, even 0: the size flavour's `strchr` is the
+  generic C over `__libc_strchrnul`, with a call and a byte loop to
+  alignment.
+
+### Results (armv7e-m, instructions per call)
+
+| Case | phase 2 (size) | P3.02a (speed) | P3.02b (speed) |
+|---|---:|---:|---:|
+| `strcmp` "" | 28 | 28 | 27 |
+| `strcmp` 4 B | 60 | 60 | 53 |
+| `strcmp` 16 B | 156 | 156 | 144 |
+| `strcmp` 64 B | 540 | 540 | 240 |
+| `strcmp` 1024 B, same phase | 8220 | 8220 | 2160 |
+| `strcmp` 1024 B, phases differ | 8220 | 8220 | 6190 |
+| `strchr` "" | 52 | 52 | 43 |
+| `strchr` 16 B | 102 | 102 | 67 |
+| `strchr` 1024 B | 2874 | 2874 | 2083 |
+| `qsort` of 256 strings (per element) | 595 | 595 | 585 |
+
+No case is slower than either baseline. `strcmp`, at 190 bytes, and
+`strchr`, at 94, are in none of the `test/size` images, so the speed budget
+is unchanged.
+
+### Edge cases and validation
+
+- **`strcmp`:**
+  - a terminator in either string at every position;
+  - differences across the sign bit, compared as unsigned char;
+  - the prologue end (16 bytes) against the alignment loop;
+  - every source and destination offset pair modulo 8, and equal phases
+    other than 0;
+  - one string a prefix of the other.
+- **`strchr`:**
+  - the character at every position;
+  - characters that alias a careless zero test (0x01, 0x80, 0xff, 0x7f);
+  - `c == '\0'`, which returns the terminator;
+  - `int` arguments beyond a byte (0x141, -1, 0x100), converted to
+    unsigned char;
+  - absent characters;
+  - offsets 0–7 and lengths 0–80.
+
+  `test/unit/string_kernels` gains this `strchr` check. It runs on every
+  board and build type, the C version included.
+- **Mutation check:** of 12 mutants, 2 do not assemble (constants that are
+  not modified immediates) and 9 fail or crash the test. The survivor
+  narrows the phase test to bit 0. It sends strings whose phases differ by
+  2 down the word path, where unaligned LDR still gives the right answer on
+  these cores: it only gives up the guarantee of never reading past the
+  word holding the terminator, which no test without guard pages can see.
