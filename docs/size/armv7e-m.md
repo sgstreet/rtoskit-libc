@@ -363,3 +363,41 @@ Members that grew or are new, justified:
 - `tanf.o` 232 → 296 (+64): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
 - Reduced: 1 members, -72 bytes; the largest: `sinf.o` 236 → 164.
 - `math-float` (float only) now links no double code at all: 18044 → 5426 bytes on armv7e-m (no libgcc) and 23064 → 9736 on armv6-m since the start of P2.05. `math-mix` grows (justified): it links the float-float layer next to the double functions it also calls.
+
+## P2.05d2–d3 — float-float inverse trigonometric and hyperbolic functions
+
+Decisions D61 and D62, `docs/research/libm-float-atan.md` and `libm-float-hyperbolic.md`. Before → after, release build.
+
+`libc.a`: code 132154 → 138552 (+6398), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 1931 → 1931 | 380 → 380 | 1178 → 1178 | 0 → 0 |
+| hello-printf-int | 7333 → 7333 | 380 → 380 | 6545 → 6545 | 0 → 0 |
+| hello-printf-float | 9318 → 9318 | 380 → 380 | 6545 → 6545 | 1948 → 1948 |
+| malloc-heavy | 1982 → 1982 | 80 → 80 | 1066 → 1066 | 0 → 0 |
+| math-mix | 27472 → 27472 | 20 → 20 | 24324 → 24324 | 2344 → 2344 |
+| float-exact | 2048 → 2048 | 20 → 20 | 1518 → 1518 | 0 → 0 |
+| math-float | 5426 → 5426 | 20 → 20 | 5014 → 5014 | 0 → 0 |
+| hello-printf-int-nofloat | 4511 → 4511 | 380 → 380 | 3723 → 3723 | 0 → 0 |
+| hello-printf-int-minimal | 4271 → 4271 | 380 → 380 | 3487 → 3487 | 0 → 0 |
+| malloc-heavy-tiny | 1922 → 1922 | 76 → 76 | 1006 → 1006 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `__libc_atan2f_core.o` 0 → 854 (+854): new: the atan2 core shared by every inverse trigonometric function.
+- `atan2pif.o` 52 → 764 (+712): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `asinpif.o` 32 → 580 (+548): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `acoshf.o` 32 → 578 (+546): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `tanhf.o` 236 → 708 (+472): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `atan2f.o` 204 → 656 (+452): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `asinhf.o` 236 → 678 (+442): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `acospif.o` 32 → 460 (+428): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `atanhf.o` 232 → 636 (+404): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `atanpif.o` 32 → 428 (+396): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `acosf.o` 32 → 360 (+328): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `__libc_expf_pair.o` 0 → 304 (+304): new: e^x and e^-x as float-float, shared by sinhf, coshf and tanhf.
+- `sinhf.o` 232 → 532 (+300): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `asinf.o` 232 → 388 (+156): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `coshf.o` 32 → 180 (+148): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- Reduced: 1 members, -92 bytes; the largest: `atanf.o` 236 → 144.

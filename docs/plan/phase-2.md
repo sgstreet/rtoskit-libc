@@ -88,9 +88,21 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `sinhf`, `coshf`, `tanhf`, `asinhf`, `acoshf`, `atanhf`.
   *All 0.500 ulp; the test gained a 0.52-ulp bound (D62).*
 
-## P2.05e — Single-precision special and complex functions; shared kernels
-- [ ] `erff`, `erfcf`, `lgammaf`, `tgammaf` and the `float complex` functions on the single-precision layer.
-- [ ] Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows. Re-derive the table sizes with the size/accuracy trade-off documented.
+## P2.05e — Single-precision special and complex functions; shared kernels (split into P2.05e1–e4)
+- `erff`, `erfcf`, `lgammaf`, `tgammaf` and the `float complex` functions on the single-precision layer.
+- Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows. Re-derive the table sizes with the size/accuracy trade-off documented.
+
+## P2.05e1 — The error functions
+- [ ] `erff` and `erfcf` on float-float, within the D47 accuracy.
+
+## P2.05e2 — The gamma functions
+- [ ] `lgammaf` and `tgammaf` on float-float, within the D47 accuracy.
+
+## P2.05e3 — The `float complex` functions
+- [ ] The `float complex` functions on the single-precision cores (a complex `sp-nearest` layer), within the D49 accuracy.
+
+## P2.05e4 — Kernel sharing and table sizes
+- [ ] Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows; re-derive the table sizes with the size/accuracy trade-off documented.
 
 ## P2.06 — Per-arch hand-written size kernels
 - [ ] armv6-m Thumb-1: `memcpy`, `memset`, `memmove`, `strlen`, `strcmp`, `setjmp`, written for size (the arch `size/` flavour, D12).
