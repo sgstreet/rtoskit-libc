@@ -84,6 +84,9 @@ static const struct unary unary[] = {
 	/* The error functions, sweeping where erff becomes +-1 and where erfcf turns subnormal */
 	{ "erff", erff, erf, -5.0f, 5.0f, 0x1.fp1f, 0x1.f8p1f },
 	{ "erfcf", erfcf, erfc, -5.0f, 11.0f, 0x1.28p3f, 0x1.48p3f },
+	/* The gamma functions, sweeping both zeros of lgammaf in (-3, -2) and the overflow of tgammaf */
+	{ "lgammaf", lgammaf, lgamma, -FLT_MAX, FLT_MAX, -0x1.6p1f, -0x1.38p1f },
+	{ "tgammaf", tgammaf, tgamma, -60.0f, 36.0f, 0x1.18p5f, 0x1.2p5f },
 	/* The roots sweep [1, 2), every significand once */
 	{ "sqrtf", sqrtf, sqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },
 	{ "rsqrtf", rsqrtf, rsqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },

@@ -423,3 +423,29 @@ Members that grew or are new, justified:
 - `__libc_erff_core.o` 0 → 728 (+728): new: the erf series with positive terms, shared by erff and erfcf.
 - `erff.o` 16 → 316 (+300): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
 - Reduced: 0 members, 0 bytes; the largest: .
+
+## P2.05e2 — float-float gamma functions
+
+Decision D64, `docs/research/libm-float-gamma.md`. Before → after, release build.
+
+`libc.a`: code 148982 → 152582 (+3600), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 2211 → 2211 | 380 → 380 | 1428 → 1428 | 0 → 0 |
+| hello-printf-int | 7945 → 7945 | 380 → 380 | 6709 → 6709 | 420 → 420 |
+| hello-printf-float | 10550 → 10550 | 380 → 380 | 6709 → 6709 | 2984 → 2984 |
+| malloc-heavy | 2286 → 2286 | 80 → 80 | 1346 → 1346 | 0 → 0 |
+| math-mix | 34272 → 34272 | 20 → 20 | 25802 → 25802 | 7752 → 7752 |
+| float-exact | 3908 → 3908 | 20 → 20 | 1444 → 1444 | 1946 → 1946 |
+| math-float | 9736 → 9736 | 20 → 20 | 6600 → 6600 | 2708 → 2708 |
+| hello-printf-int-nofloat | 5047 → 5047 | 380 → 380 | 3811 → 3811 | 420 → 420 |
+| hello-printf-int-minimal | 4779 → 4779 | 380 → 380 | 3593 → 3593 | 372 → 372 |
+| malloc-heavy-tiny | 2206 → 2206 | 76 → 76 | 1266 → 1266 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `__libc_lgammaf_core.o` 0 → 3052 (+3052): new: the lgamma core (zeta series, Stirling, reflection) with the Taylor expansions at the 14 negative zeros (728 bytes of the table).
+- `tgammaf.o` 16 → 408 (+392): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `lgammaf.o` 16 → 172 (+156): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- Reduced: 0 members, 0 bytes; the largest: .

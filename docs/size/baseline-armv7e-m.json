@@ -1401,6 +1401,15 @@
     "text": 2920,
     "unwind": 0
    },
+   "__libc_lgammaf_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 988,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 1802,
+    "unwind": 0
+   },
    "__libc_log1p_core.o": {
     "bss": 0,
     "data": 0,
@@ -4800,7 +4809,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 172,
     "unwind": 0
    },
    "lgammal.o": {
@@ -7293,7 +7302,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 340,
     "unwind": 0
    },
    "tgammal.o": {
@@ -7714,10 +7723,10 @@
   "totals": {
    "bss": 1184,
    "data": 108,
-   "rodata": 9298,
+   "rodata": 10286,
    "tbss": 358,
    "tdata": 8,
-   "text": 130598,
+   "text": 132848,
    "unwind": 0
   }
  },
@@ -8556,6 +8565,12 @@
    "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:log_dd": 104,
    "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:near_zero": 192,
    "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:stirling": 176,
+   "__libc_lgammaf_core.o:__libc_lgammaf_core": 224,
+   "__libc_lgammaf_core.o:libc/math/sp-nearest/__libc_lgammaf_core.c:__libc_ff_add": 32,
+   "__libc_lgammaf_core.o:libc/math/sp-nearest/__libc_lgammaf_core.c:__libc_ff_multiply": 48,
+   "__libc_lgammaf_core.o:libc/math/sp-nearest/__libc_lgammaf_core.c:__libc_ff_product": 16,
+   "__libc_lgammaf_core.o:libc/math/sp-nearest/__libc_lgammaf_core.c:lgamma1p": 40,
+   "__libc_lgammaf_core.o:libc/math/sp-nearest/__libc_lgammaf_core.c:ln": 32,
    "__libc_log1p_core.o:__libc_log1p_core": 88,
    "__libc_log1p_dd.o:__libc_log1p_dd": 112,
    "__libc_log2f_core.o:__libc_log2f_core": 56,
@@ -8989,7 +9004,7 @@
    "ldexpl.o:ldexpl": 0,
    "ldiv.o:ldiv": 0,
    "lgamma.o:lgamma": 120,
-   "lgammaf.o:lgammaf": 8,
+   "lgammaf.o:lgammaf": 32,
    "lgammal.o:lgammal": 0,
    "llabs.o:llabs": 0,
    "lldiv.o:lldiv": 8,
@@ -9328,7 +9343,7 @@
    "tanpif.o:tanpif": 48,
    "tanpil.o:tanpil": 0,
    "tgamma.o:tgamma": 72,
-   "tgammaf.o:tgammaf": 8,
+   "tgammaf.o:tgammaf": 40,
    "tgammal.o:tgammal": 0,
    "thrd_create.o:thrd_create": 24,
    "thrd_current.o:thrd_current": 0,
