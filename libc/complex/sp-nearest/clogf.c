@@ -20,7 +20,7 @@
 /*
  * C23 7.3.7.2, G.6.3.2: log|z| + i arg z, with log|z| = log2(a^2 + b^2) ln 2 / 2
  * on the parts scaled by 2^-scale, plus scale ln 2, the squares exact as
- * float-float. Near |z| = 1 it is log1p(a^2 + b^2 - 1)/2 with the 1 taken
+ * float-float (__libc_clogf_modulus, shared with the inverse functions). Near |z| = 1 it is log1p(a^2 + b^2 - 1)/2 with the 1 taken
  * out exactly, so a modulus near 1 keeps its relative accuracy; for a = 1
  * and b below 2^-20 it is b^2/2 from the square of b scaled into [1, 2),
  * which would underflow unscaled (PLAN D65).
@@ -62,15 +62,7 @@ float complex clogf(float complex z)
 		return CMPLXF(0.5f * value.hi + 0.5f * value.lo, atan2f(y, x));
 	}
 
-	scale = ilogbf(a);
-	a = scalbnf(a, -scale);
-	b = scalbnf(b, -scale);
-	square_a = __libc_ff_product(a, a);
-	square_b = __libc_ff_product(b, b);
-	value = __libc_ff_add(square_a, square_b);
-	value = __libc_log2f_core(value.hi, value.lo);
-	value = __libc_ff_add((struct __libc_ff){ .hi = 0.5f * value.hi, .lo = 0.5f * value.lo }, (struct __libc_ff){ .hi = (float)scale, .lo = 0.0f });
-	value = __libc_ff_multiply(value, __LIBC_LN2F);
+	value = __libc_clogf_modulus(x, y);
 
 	return CMPLXF(value.hi + value.lo, atan2f(y, x));
 }
