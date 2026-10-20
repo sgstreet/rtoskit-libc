@@ -233,3 +233,35 @@ Members that grew or are new, justified:
 - `truncf.o` 32 → 48 (+16): computed in float (the `sp` layer) instead of a wrapper of the double function.
 - `cprojf.o` 74 → 84 (+10): tests the parts directly.
 - Reduced: 10 members, -454 bytes; the largest: `conjf.o` 74 → 6, `crealf.o` 52 → 2, `remquof.o` 58 → 8, `fmodf.o` 56 → 8.
+
+## P2.05c1 — float-float exponentials
+
+Decision D57, `docs/research/libm-float-exp.md`. Before → after, release build.
+
+`libc.a`: code 121526 → 123794 (+2268), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 1931 → 1931 | 380 → 380 | 1178 → 1178 | 0 → 0 |
+| hello-printf-int | 7333 → 7333 | 380 → 380 | 6545 → 6545 | 0 → 0 |
+| hello-printf-float | 9318 → 9318 | 380 → 380 | 6545 → 6545 | 1948 → 1948 |
+| malloc-heavy | 1982 → 1982 | 80 → 80 | 1066 → 1066 | 0 → 0 |
+| math-mix | 23256 → 24340 | 20 → 20 | 19956 → 21034 | 2504 → 2504 |
+| float-exact | 2048 → 2048 | 20 → 20 | 1518 → 1518 | 0 → 0 |
+| math-float | 18044 → 18824 | 20 → 20 | 15100 → 15882 | 2504 → 2504 |
+| hello-printf-int-nofloat | 4511 → 4511 | 380 → 380 | 3723 → 3723 | 0 → 0 |
+| hello-printf-int-minimal | 4271 → 4271 | 380 → 380 | 3487 → 3487 | 0 → 0 |
+| malloc-heavy-tiny | 1922 → 1922 | 76 → 76 | 1006 → 1006 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `__libc_exp2f_core.o` 0 → 592 (+592): new: the base-2 float-float exponential core with its 2^(j/32) table (256 bytes).
+- `exp10m1f.o` 32 → 440 (+408): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `exp2m1f.o` 32 → 420 (+388): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `exp10f.o` 32 → 244 (+212): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `expf.o` 32 → 236 (+204): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `__libc_exp2f_scale.o` 0 → 160 (+160): new: one rounding of the core result, subnormal results included.
+- `expm1f.o` 196 → 328 (+132): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `__libc_exp2m1f_scale.o` 0 → 104 (+104): new: the core result minus one, rounded once.
+- `exp2f.o` 32 → 100 (+68): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- Transitional growth, justified: `math-mix` and `math-float` now link the float-float exponentials *and*, through `logf`, `powf`, `sinf` and `cosf` (still wrappers until P2.05c2–d), the double cores and soft double. A float program sheds soft double only when every float function it calls is float-only; the reductions are measured at the end of P2.05 (D57).

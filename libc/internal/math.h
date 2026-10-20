@@ -477,4 +477,111 @@ struct __libc_dd __libc_erfc_tail(double x, int *exponent);
 /* log|gamma(x)| for finite x that is not a pole (zero or a negative integer) and below 2^60; *sign is the sign of gamma(x) */
 struct __libc_dd __libc_lgamma_core(double x, int *sign);
 
+/*
+ * Float-float arithmetic (PLAN D57): the double-double algorithms above at
+ * single precision, for the float functions of the sp-nearest layer on cores
+ * whose FPU has no double precision. Exact only when rounding to nearest,
+ * which is the only direction those cores have (D44).
+ */
+struct __libc_ff {
+	float hi;
+	float lo;
+};
+
+/* a + b exactly, for any a and b */
+static inline struct __libc_ff __libc_ff_sum(float a, float b)
+{
+	float sum = a + b;
+	float bb = sum - a;
+
+	return (struct __libc_ff){ .hi = sum, .lo = (a - (sum - bb)) + (b - bb) };
+}
+
+/* a + b exactly, when |a| >= |b| (or a is zero) */
+static inline struct __libc_ff __libc_ff_fast_sum(float a, float b)
+{
+	float sum = a + b;
+
+	return (struct __libc_ff){ .hi = sum, .lo = b - (sum - a) };
+}
+
+/* Veltkamp's split into two halves of at most 12 bits: 4097 is 2^12 + 1 */
+static inline void __libc_ff_split(float a, float *high, float *low)
+{
+	float c = 0x1.002p12f * a;
+
+	*high = c - (c - a);
+	*low = a - *high;
+}
+
+/* a * b exactly (Dekker), for |a| and |b| below 2^115 */
+static inline struct __libc_ff __libc_ff_product(float a, float b)
+{
+	float product = a * b;
+	float ah;
+	float al;
+	float bh;
+	float bl;
+
+	__libc_ff_split(a, &ah, &al);
+	__libc_ff_split(b, &bh, &bl);
+
+	return (struct __libc_ff){ .hi = product, .lo = ((ah * bh - product) + ah * bl + al * bh) + al * bl };
+}
+
+/* (a.hi + a.lo) * (b.hi + b.lo), to about 2^-44 */
+static inline struct __libc_ff __libc_ff_multiply(struct __libc_ff a, struct __libc_ff b)
+{
+	struct __libc_ff product = __libc_ff_product(a.hi, b.hi);
+
+	return __libc_ff_fast_sum(product.hi, product.lo + (a.hi * b.lo + a.lo * b.hi));
+}
+
+/* (a.hi + a.lo) + (b.hi + b.lo), to about 2^-45 */
+static inline struct __libc_ff __libc_ff_add(struct __libc_ff a, struct __libc_ff b)
+{
+	struct __libc_ff sum = __libc_ff_sum(a.hi, b.hi);
+
+	return __libc_ff_fast_sum(sum.hi, sum.lo + a.lo + b.lo);
+}
+
+/* ln 2, 1/ln 2, ln 10, log2(10) and log10(2) as float-float */
+#define __LIBC_LN2F ((struct __libc_ff){ .hi = 0x1.62e43p-1f, .lo = -0x1.05c61p-29f })
+#define __LIBC_INV_LN2F ((struct __libc_ff){ .hi = 0x1.715476p0f, .lo = 0x1.4ae0cp-26f })
+#define __LIBC_LN10F ((struct __libc_ff){ .hi = 0x1.26bb1cp1f, .lo = -0x1.12aabap-25f })
+#define __LIBC_LOG2_10F ((struct __libc_ff){ .hi = 0x1.a934fp1f, .lo = 0x1.2f346ep-24f })
+#define __LIBC_LOG10_2F ((struct __libc_ff){ .hi = 0x1.344136p-2f, .lo = -0x1.ec10cp-27f })
+
+/*
+ * e^r - 1 for |r| below 0.011 (Taylor to r^5; the r^6 term is below 2^-41
+ * of the result), with r.hi leading so the sum keeps r's relative accuracy.
+ */
+static inline struct __libc_ff __libc_ff_expm1_series(struct __libc_ff r)
+{
+	float h = r.hi;
+	float tail = h * h * (0.5f + h * (0x1.555556p-3f + h * (0x1.555556p-5f + h * 0x1.111112p-7f)));
+
+	return __libc_ff_fast_sum(h, r.lo + tail);
+}
+
+/* x * c as float-float for a float-float constant c */
+static inline struct __libc_ff __libc_ff_scale(float x, struct __libc_ff c)
+{
+	struct __libc_ff product = __libc_ff_product(x, c.hi);
+
+	return __libc_ff_fast_sum(product.hi, product.lo + x * c.lo);
+}
+
+/*
+ * 2^(z.hi + z.lo) = 2^*exponent * (result.hi + result.lo), to about 2^-40,
+ * for |z.hi| below 2^17 (sp-nearest layer).
+ */
+struct __libc_ff __libc_exp2f_core(struct __libc_ff z, int *exponent);
+
+/* 2^exponent * (v.hi + v.lo) rounded once to nearest, subnormal results included, for |v.hi| in about [1/2, 4) */
+float __libc_exp2f_scale(struct __libc_ff v, int exponent);
+
+/* 2^exponent * (v.hi + v.lo) - 1 rounded once to nearest, for exponent in [-27, 128] */
+float __libc_exp2m1f_scale(struct __libc_ff v, int exponent);
+
 #endif /* _INTERNAL_MATH_H */

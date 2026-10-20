@@ -56,8 +56,20 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] The exact and bit-level `float` functions: rounding, `fmodf`/`remainderf`/`remquof`, `frexpf`/`ldexpf`/`scalbnf`, `ilogbf`/`logbf`, `nextafterf`/`nexttowardf`, `l(l)rintf`/`l(l)roundf`, `fromfpf`, `modff`, the trivial complex accessors.
   *`ldexpf`/`scalbnf`/`nextafterf` were already float-only. New reference program `float-exact`: 5056 → 2048 (armv7e-m, no libgcc), 8440 → 3908 (armv6-m). Test `test/unit/float_exact` (bitwise against the double functions, 40 000 arguments each), 11 mutants caught.*
 
-## P2.05c — Single-precision exp, log and pow family
-- [ ] `expf`, `exp2f`, `exp10f`, `expm1f` and the `m1` forms, `logf`, `log2f`, `log10f`, `log1pf` and the `p1` forms, `powf`, `pownf`, `powrf`, `rootnf`, `rsqrtf`, `cbrtf`, `hypotf`, `compoundnf`, within the D47 accuracy, on single-precision float-float cores.
+## P2.05c — Single-precision exp, log and pow family (split into P2.05c1–c3)
+- `expf`, `exp2f`, `exp10f`, `expm1f` and the `m1` forms, `logf`, `log2f`, `log10f`, `log1pf` and the `p1` forms, `powf`, `pownf`, `powrf`, `rootnf`, `rsqrtf`, `cbrtf`, `hypotf`, `compoundnf`, within the D47 accuracy, on single-precision float-float cores.
+
+## P2.05c1 — Float-float infrastructure and the exponentials  `[x]`
+- [x] Float-float arithmetic (`struct __libc_ff`), the `exp2` core and its scaling, a `sp-nearest` layer for the soft-`<fenv.h>` cores (round to nearest, no flags), the shared accuracy test.
+  *`test/unit/float_accuracy`: max error < 1 ulp and at most 1/1000 not correctly rounded; on x86_64 the layer runs natively (4M arguments per function plus every subnormal-result argument). 9 mutants caught (D57).*
+- [x] `expf`, `exp2f`, `exp10f`, `expm1f`, `exp2m1f`, `exp10m1f`.
+  *Max 0.500–0.510 ulp, a few in 10^5 not correctly rounded. Images grow until the remaining float functions follow (transitional, justified in `docs/size`).*
+
+## P2.05c2 — The logarithms
+- [ ] The `log2` core; `logf`, `log2f`, `log10f`, `log1pf`/`logp1f`, `log2p1f`, `log10p1f`.
+
+## P2.05c3 — Powers and roots
+- [ ] `powf`, `pownf`, `powrf`, `rootnf`, `compoundnf`, `rsqrtf`, `cbrtf`, `hypotf`.
 
 ## P2.05d — Single-precision trigonometric and hyperbolic functions
 - [ ] `sinf`, `cosf`, `tanf` (with a single-precision reduction), the pi-scaled forms, the inverse and hyperbolic functions, within the D48 accuracy.

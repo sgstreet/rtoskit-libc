@@ -39,7 +39,7 @@ import sys
 import urllib.request
 
 BOARDS = ['linux-x86_64', 'linux-armv6-m', 'linux-armv6s-m', 'linux-armv7e-m', 'linux-armv7e-m-dp', 'linux-armv8-m.main']
-PROGRAMS = ['hello-puts', 'hello-printf-int', 'hello-printf-float', 'malloc-heavy', 'math-mix', 'float-exact']
+PROGRAMS = ['hello-puts', 'hello-printf-int', 'hello-printf-float', 'malloc-heavy', 'math-mix', 'float-exact', 'math-float']
 # The same programs linked against the flavour archives (PLAN D53, D54); not built for the comparison
 FLAVOUR_PROGRAMS = ['hello-printf-int-nofloat', 'hello-printf-int-minimal', 'malloc-heavy-tiny']
 CLASSES = ['text', 'rodata', 'unwind', 'data', 'bss', 'tdata', 'tbss']
