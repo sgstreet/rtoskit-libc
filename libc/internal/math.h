@@ -545,6 +545,35 @@ static inline struct __libc_ff __libc_ff_add(struct __libc_ff a, struct __libc_f
 	return __libc_ff_fast_sum(sum.hi, sum.lo + a.lo + b.lo);
 }
 
+/* (a.hi + a.lo) / (b.hi + b.lo), to about 2^-44: the quotient corrected by the exact remainder */
+static inline struct __libc_ff __libc_ff_divide(struct __libc_ff a, struct __libc_ff b)
+{
+	float quotient = a.hi / b.hi;
+	struct __libc_ff product = __libc_ff_product(quotient, b.hi);
+
+	return __libc_ff_fast_sum(quotient, ((((a.hi - product.hi) - product.lo) + a.lo) - quotient * b.lo) / b.hi);
+}
+
+/*
+ * A 64-bit integer as float-float, to about 2^-48: three exact 21-bit chunks
+ * summed, without the compiler's 64-bit conversion (which computes in double
+ * on these cores, D56).
+ */
+static inline struct __libc_ff __libc_ff_from_u64(uint64_t u)
+{
+	struct __libc_ff sum = __libc_ff_sum((float)(uint32_t)(u >> 42) * 0x1p42f, (float)(uint32_t)((u >> 21) & 0x1fffff) * 0x1p21f);
+
+	return __libc_ff_fast_sum(sum.hi, sum.lo + (float)(uint32_t)(u & 0x1fffff));
+}
+
+/* The same for a signed value, -2^63 included */
+static inline struct __libc_ff __libc_ff_from_i64(int64_t n)
+{
+	struct __libc_ff magnitude = __libc_ff_from_u64(n < 0 ? 0 - (uint64_t)n : (uint64_t)n);
+
+	return n < 0 ? (struct __libc_ff){ .hi = -magnitude.hi, .lo = -magnitude.lo } : magnitude;
+}
+
 /* ln 2, 1/ln 2, ln 10, log2(10), log10(2) and 1/ln 10 as float-float */
 #define __LIBC_LN2F ((struct __libc_ff){ .hi = 0x1.62e43p-1f, .lo = -0x1.05c61p-29f })
 #define __LIBC_INV_LN2F ((struct __libc_ff){ .hi = 0x1.715476p0f, .lo = 0x1.4ae0cp-26f })
@@ -597,6 +626,9 @@ struct __libc_ff __libc_exp2f_core(struct __libc_ff z, int *exponent);
 
 /* 2^exponent * (v.hi + v.lo) rounded once to nearest, subnormal results included */
 float __libc_exp2f_scale(struct __libc_ff v, int exponent);
+
+/* +-2^z rounded once: +-infinity above 2^128, +-0 below 2^-151, else the exp2 core and its scaling */
+float __libc_exp2f_signed(struct __libc_ff z, bool negative);
 
 /* log2(x + tail) for positive finite x and |tail| at most half an ulp of x, to about 2^-40 (relative near 1) */
 struct __libc_ff __libc_log2f_core(float x, float tail);

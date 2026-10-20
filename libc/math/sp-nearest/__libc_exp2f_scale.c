@@ -38,5 +38,6 @@ float __libc_exp2f_scale(struct __libc_ff v, int exponent)
 	bias = copysignf(1.0f, v.hi);
 	sum = __libc_ff_sum(bias, high);
 
-	return ((sum.hi + (sum.lo + scalbnf(v.lo, exponent + 126))) - bias) * 0x1p-126f;
+	/* A result that rounds to zero keeps the sign of v: (-1) - (-1) alone would give +0 */
+	return copysignf(((sum.hi + (sum.lo + scalbnf(v.lo, exponent + 126))) - bias) * 0x1p-126f, v.hi);
 }

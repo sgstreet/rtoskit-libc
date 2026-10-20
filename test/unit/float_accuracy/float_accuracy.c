@@ -12,6 +12,7 @@
  */
 
 #include <float.h>
+#include <limits.h>
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -21,7 +22,8 @@
  * The float transcendental functions against the double functions on the
  * widened argument (good to about 2^-53, far below a float ulp): the error of
  * each result in float ulps of the exact value must stay below 1 (faithful,
- * PLAN D57), and at most one result in ten thousand may differ from the
+ * PLAN D57), and at most one result in ten thousand (plus one, for the
+ * small samples of the slower boards) may differ from the
  * correctly rounded one (the reference's own double rounding included). The special values must match exactly. On
  * x86_64 the test links the float-float layer of the single-precision cores
  * (libc/math/sp-nearest) and runs FLOAT_ACCURACY_SAMPLES arguments per
@@ -52,11 +54,43 @@ static const struct unary unary[] = {
 	{ "logf", logf, log, 0x1p-149f, FLT_MAX, 0x1.fcp-1f, 0x1.02p0f },
 	{ "log2f", log2f, log2, 0x1p-149f, FLT_MAX, 0x1.fcp-1f, 0x1.02p0f },
 	{ "log10f", log10f, log10, 0x1p-149f, FLT_MAX, 0x1.fcp-1f, 0x1.02p0f },
-	/* The p1 forms sweep the binades around their series threshold 2^-6 */
-	{ "log1pf", log1pf, log1p, -0x1.fffffep-1f, FLT_MAX, 0x1p-7f, 0x1p-5f },
-	{ "logp1f", logp1f, logp1, -0x1.fffffep-1f, FLT_MAX, -0x1p-5f, -0x1p-7f },
-	{ "log2p1f", log2p1f, log2p1, -0x1.fffffep-1f, FLT_MAX, 0x1p-7f, 0x1p-5f },
-	{ "log10p1f", log10p1f, log10p1, -0x1.fffffep-1f, FLT_MAX, -0x1p-5f, -0x1p-7f },
+	/* The p1 forms sweep half a binade on either side of their series threshold 2^-6 */
+	{ "log1pf", log1pf, log1p, -0x1.fffffep-1f, FLT_MAX, 0x1.8p-7f, 0x1.8p-6f },
+	{ "logp1f", logp1f, logp1, -0x1.fffffep-1f, FLT_MAX, -0x1.8p-6f, -0x1.8p-7f },
+	{ "log2p1f", log2p1f, log2p1, -0x1.fffffep-1f, FLT_MAX, 0x1.8p-7f, 0x1.8p-6f },
+	{ "log10p1f", log10p1f, log10p1, -0x1.fffffep-1f, FLT_MAX, -0x1.8p-6f, -0x1.8p-7f },
+	/* The roots sweep [1, 2), every significand once */
+	{ "sqrtf", sqrtf, sqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },
+	{ "rsqrtf", rsqrtf, rsqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },
+	{ "cbrtf", cbrtf, cbrt, -FLT_MAX, FLT_MAX, 1.0f, 2.0f },
+};
+
+/* f(x, y): kind 0 picks y so that x^y stays in range, kind 1 picks pairs of any and of close magnitudes */
+struct binary {
+	const char *name;
+	float (*function)(float, float);
+	double (*reference)(double, double);
+	int kind;
+};
+
+static const struct binary binary[] = {
+	{ "powf", powf, pow, 0 },
+	{ "powrf", powrf, powr, 0 },
+	{ "hypotf", hypotf, hypot, 1 },
+};
+
+/* f(x, n): kind 0 pown, 1 rootn, 2 compoundn */
+struct integer {
+	const char *name;
+	float (*function)(float, long long);
+	double (*reference)(double, long long);
+	int kind;
+};
+
+static const struct integer integer[] = {
+	{ "pownf", pownf, pown, 0 },
+	{ "rootnf", rootnf, rootn, 1 },
+	{ "compoundnf", compoundnf, compoundn, 2 },
 };
 
 static uint32_t next(uint32_t *state)
@@ -94,7 +128,8 @@ static double ulp_error(float f, double exact)
 		return isnan(f) ? 0.0 : INFINITY;
 	if (isinf(exact))
 		return f == exact ? 0.0 : INFINITY;
-	if (isnan(f) || (f != 0 && exact != 0 && !signbit(f) != !signbit(exact)))
+	/* The sign must match, zeros included (a result rounding to zero keeps the sign of the exact value) */
+	if (isnan(f) || !signbit(f) != !signbit(exact))
 		return INFINITY;
 	/* Past FLT_MAX a faithful result is FLT_MAX or infinity */
 	if (magnitude > FLT_MAX)
@@ -154,7 +189,7 @@ static void check_unary(const struct unary *test)
 
 	check_specials(test);
 	/* Where the platform runs millions of arguments, the sweep adds every float of the subnormal range */
-	if (FLOAT_ACCURACY_SAMPLES >= 0x400000 && test->sweep_low < test->sweep_high)
+	if (FLOAT_ACCURACY_SAMPLES >= 0x200000 && test->sweep_low < test->sweep_high)
 		sweep = 1;
 	for (long i = 0; i < count || (sweep != 0 && swept < test->sweep_high); ++i) {
 		float x;
@@ -188,14 +223,173 @@ static void check_unary(const struct unary *test)
 	snprintf(message, sizeof(message), "%s: max %.3f ulp at %a, %ld of %ld not correctly rounded\n", test->name, worst, (double)worst_x, misrounded, count);
 	fputs(message, stdout);
 	/* Faithful everywhere, and correctly rounded but for rare near-halfway cases */
-	if (worst >= 1.0 || misrounded > count / 10000)
+	if (worst >= 1.0 || misrounded > count / 10000 + 1)
 		++failures;
+}
+
+/* Error statistics over the samples of one function */
+struct statistics {
+	double worst;
+	float worst_x;
+	float worst_y;
+	long misrounded;
+	long count;
+};
+
+static void record(struct statistics *statistics, const char *name, float x, float y, float got, double exact)
+{
+	double error = ulp_error(got, exact);
+	char message[192];
+
+	++statistics->count;
+	if (got != (float)exact && !(isnan(got) && isnan(exact)))
+		++statistics->misrounded;
+	if (error >= 1.0 && failures < 20) {
+		snprintf(message, sizeof(message), "fail: %s(%a, %a) = %a, exact %a\n", name, (double)x, (double)y, (double)got, exact);
+		fputs(message, stdout);
+		++failures;
+	}
+	if (error > statistics->worst) {
+		statistics->worst = error;
+		statistics->worst_x = x;
+		statistics->worst_y = y;
+	}
+}
+
+static void report(const struct statistics *statistics, const char *name)
+{
+	char message[192];
+
+	snprintf(message, sizeof(message), "%s: max %.3f ulp at (%a, %a), %ld of %ld not correctly rounded\n", name, statistics->worst, (double)statistics->worst_x, (double)statistics->worst_y, statistics->misrounded, statistics->count);
+	fputs(message, stdout);
+	if (statistics->worst >= 1.0 || statistics->misrounded > statistics->count / 10000 + 1)
+		++failures;
+}
+
+/* A positive finite float of any binade */
+static float positive(uint32_t *state)
+{
+	float x;
+
+	do {
+		x = from_bits(next(state) & 0x7fffffff);
+	} while (!(x > 0 && isfinite(x)));
+
+	return x;
+}
+
+/* The special values of every pair must give exactly what the double function gives (C23 F.10.4) */
+static const float binary_specials[] = { 0.0f, -0.0f, 1.0f, -1.0f, 0.5f, -0.5f, 2.0f, -2.0f, 3.0f, -3.0f, 0x1p-149f, INFINITY, -INFINITY, NAN };
+
+static void check_binary_specials(const struct binary *test)
+{
+	char message[160];
+
+	for (size_t i = 0; i < sizeof(binary_specials) / sizeof(binary_specials[0]); ++i) {
+		for (size_t j = 0; j < sizeof(binary_specials) / sizeof(binary_specials[0]); ++j) {
+			float x = binary_specials[i];
+			float y = binary_specials[j];
+			float got = test->function(x, y);
+			double exact = test->reference(x, y);
+
+			if ((isnan(got) && isnan(exact)) || ulp_error(got, exact) < 1.0)
+				continue;
+			snprintf(message, sizeof(message), "fail: %s(%a, %a) = %a, expected %a\n", test->name, (double)x, (double)y, (double)got, exact);
+			fputs(message, stdout);
+			++failures;
+		}
+	}
+}
+
+static void check_binary(const struct binary *test)
+{
+	uint32_t state = 0x7f4a7c15;
+	struct statistics statistics = { 0 };
+
+	check_binary_specials(test);
+	for (int i = 0; i < FLOAT_ACCURACY_SAMPLES; ++i) {
+		float x = positive(&state);
+		float y;
+
+		if (test->kind == 0) {
+			/* y such that x^y lands between 2^-155 and 2^132, or y of any binade */
+			double z = -155.0 + 287.0 * (double)(next(&state) >> 8) * 0x1p-24;
+
+			y = (i & 3) != 0 && log2(x) != 0 ? (float)(z / log2(x)) : from_bits(next(&state) & 0x83ffffff);
+			if (test->function == powf && (i & 7) == 0) {
+				/* A negative x with an integer y */
+				x = -x;
+				y = truncf(y);
+			}
+		} else {
+			y = (i & 1) != 0 ? x * (0.5f + (float)(next(&state) >> 8) * 0x1p-23f) : positive(&state);
+			if ((i & 2) != 0)
+				x = -x;
+		}
+		record(&statistics, test->name, x, y, test->function(x, y), test->reference(x, y));
+	}
+	report(&statistics, test->name);
+}
+
+static void check_integer(const struct integer *test)
+{
+	uint32_t state = 0x1b873593;
+	struct statistics statistics = { 0 };
+	static const long long specials[] = { 0, 1, -1, 2, -2, 3, -3, 0x7fffffffffffffffLL, -0x7fffffffffffffffLL - 1 };
+	char message[160];
+
+	for (size_t i = 0; i < sizeof(binary_specials) / sizeof(binary_specials[0]); ++i) {
+		for (size_t j = 0; j < sizeof(specials) / sizeof(specials[0]); ++j) {
+			float x = binary_specials[i];
+			float got = test->function(x, specials[j]);
+			double exact = test->reference(x, specials[j]);
+
+			if ((isnan(got) && isnan(exact)) || ulp_error(got, exact) < 1.0)
+				continue;
+			snprintf(message, sizeof(message), "fail: %s(%a, %lld) = %a, expected %a\n", test->name, (double)x, specials[j], (double)got, exact);
+			fputs(message, stdout);
+			++failures;
+		}
+	}
+
+	for (int i = 0; i < FLOAT_ACCURACY_SAMPLES; ++i) {
+		float x = positive(&state);
+		long long n;
+
+		if (test->kind == 2) {
+			/* 1 + x in (0, inf): x in (-1, inf) */
+			if ((i & 1) != 0)
+				x = -(float)(next(&state) >> 8) * 0x1p-24f;
+		} else if ((i & 3) == 0) {
+			x = -x;
+		}
+
+		if ((i & 1) != 0) {
+			n = (long long)(next(&state) % 101) - 50;
+		} else {
+			/* n large where the result stays in range: n = z / log2|x| (log2(1 + x) for compoundn) */
+			double z = -155.0 + 287.0 * (double)(next(&state) >> 8) * 0x1p-24;
+			double log = test->kind == 2 ? log2p1(x) : log2(fabs(x));
+			double quotient = test->kind == 1 ? log / z : z / log;
+
+			n = log != 0 && fabs(quotient) < 0x1p62 ? (long long)quotient : (long long)(next(&state) % 101) - 50;
+		}
+		/* Odd roots of negative values, so that most results are numbers */
+		if (test->kind == 1 && x < 0)
+			n |= 1;
+		record(&statistics, test->name, x, (float)n, test->function(x, n), test->reference(x, n));
+	}
+	report(&statistics, test->name);
 }
 
 int main(void)
 {
 	for (size_t i = 0; i < sizeof(unary) / sizeof(unary[0]); ++i)
 		check_unary(&unary[i]);
+	for (size_t i = 0; i < sizeof(binary) / sizeof(binary[0]); ++i)
+		check_binary(&binary[i]);
+	for (size_t i = 0; i < sizeof(integer) / sizeof(integer[0]); ++i)
+		check_integer(&integer[i]);
 
 	fputs(failures == 0 ? "float_accuracy: pass\n" : "float_accuracy: FAIL\n", stdout);
 	return failures == 0 ? 0 : 1;

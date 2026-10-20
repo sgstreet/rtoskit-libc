@@ -293,3 +293,38 @@ Members that grew or are new, justified:
 - `__libc_exp2f_scale.o` 172 → 176 (+4): takes the subnormal path from the magnitude of the result (D58).
 - Reduced: 1 members, -176 bytes; the largest: `logp1f.o` 184 → 8.
 - Transitional growth, justified as in P2.05c1: `math-mix` and `math-float` still link the double cores through `powf`, `sinf` and `cosf` (P2.05c3, P2.05d) besides the new float-float logarithm (D58).
+
+## P2.05c3 — float-float powers and roots
+
+Decision D59, `docs/research/libm-float-pow.md`. Before → after, release build.
+
+`libc.a`: code 128256 → 133280 (+5024), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 2211 → 2211 | 380 → 380 | 1428 → 1428 | 0 → 0 |
+| hello-printf-int | 7945 → 7945 | 380 → 380 | 6709 → 6709 | 420 → 420 |
+| hello-printf-float | 10550 → 10550 | 380 → 380 | 6709 → 6709 | 2984 → 2984 |
+| malloc-heavy | 2286 → 2286 | 80 → 80 | 1346 → 1346 | 0 → 0 |
+| math-mix | 31508 → 32780 | 20 → 20 | 22806 → 23960 | 7984 → 8104 |
+| float-exact | 3908 → 3908 | 20 → 20 | 1444 → 1444 | 1946 → 1946 |
+| math-float | 26256 → 16360 | 20 → 20 | 17834 → 9432 | 7984 → 6496 |
+| hello-printf-int-nofloat | 5047 → 5047 | 380 → 380 | 3811 → 3811 | 420 → 420 |
+| hello-printf-int-minimal | 4779 → 4779 | 380 → 380 | 3593 → 3593 | 372 → 372 |
+| malloc-heavy-tiny | 2206 → 2206 | 76 → 76 | 1266 → 1266 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `rootnf.o` 24 → 700 (+676): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `powf.o` 34 → 688 (+654): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `pownf.o` 24 → 656 (+632): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `compoundnf.o` 24 → 628 (+604): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `cbrtf.o` 16 → 580 (+564): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `powrf.o` 34 → 588 (+554): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `hypotf.o` 176 → 620 (+444): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `rsqrtf.o` 16 → 456 (+440): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `sqrtf.o` 16 → 320 (+304): float-only correctly rounded square root in the `sp` layer (integer root and sticky bit) instead of a wrapper of sqrt.
+- `__libc_exp2f_signed.o` 0 → 140 (+140): new: the end of every power function (thresholds, sign, one rounding).
+- `__libc_exp2f_scale.o` 176 → 184 (+8): keeps the sign of a result that rounds to zero (D59 fix).
+- `compoundn.o` 308 → 312 (+4): the tiny-x case goes through the power core (D59 fix).
+- `math-mix` grows (justified): it links the float-float layer next to the double functions it also calls. `math-float` now links no double exp/log/pow core: 18044 → 10408 on armv7e-m since the start of P2.05; `sinf`/`cosf` (P2.05d) still pull the double sin/cos core and soft double.
