@@ -4,7 +4,7 @@ MAKECMDGOALS := all
 endif
 
 BOARDS ?= linux-x86_64 linux-armv6-m linux-armv6s-m linux-armv7e-m linux-armv7e-m-dp linux-armv8-m.main
-BUILDS ?= debug release
+BUILDS ?= debug release speed
 
 export BOARD_TYPE ?= all
 export BUILD_TYPE ?= all
@@ -69,9 +69,11 @@ check:
 	done
 .PHONY: check
 
-# Benchmarks measure the release build only
+# Benchmarks measure the two flavours: release (size) and speed (PLAN D73)
 bench:
-	${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=release bench
+	@for build_type in release speed; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=$$build_type bench || exit $$?; \
+	done
 .PHONY: bench
 
 else
@@ -107,7 +109,7 @@ check: target
 	${PROJECT_ROOT}/test/libc-test/run $(if ${LIBC_TEST_UPDATE},--update) ${BUILD_ROOT}/test/libc-test ${PROJECT_ROOT}/test/libc-test/expected/${BOARD_TYPE}.txt
 .PHONY: check
 
-# Build, then run the test/bench programs and compare them with docs/perf/baseline-<arch>.json
+# Build, then run the test/bench programs and compare them with docs/perf/baseline-<arch>[-speed].json
 # (tools/scripts/bench-runner, PLAN D72); BENCH_UPDATE=1 records the results as the new baseline
 bench: target setup-bench
 	cd ${PROJECT_ROOT} && tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} run --board ${BOARD_TYPE}
@@ -149,7 +151,7 @@ help:
 	@echo "  clean                  Clean all build artifacts"
 	@echo "  install                Install all build artifacts"
 	@echo "  check                  Build and run the tests"
-	@echo "  bench                  Build release and run the benchmarks against docs/perf (needs setup-bench)"
+	@echo "  bench                  Build release and speed, run the benchmarks against docs/perf"
 	@echo "  setup-bench            Build the instruction-counting qemu for bench into local/"
 	@echo "  db                     Generate compilation database (bear)"
 	@echo "  setup                  Download and install host build tools"
@@ -164,7 +166,7 @@ help:
 	@echo ""
 	@echo "Configuration variables:"
 	@echo "  BOARD_TYPE=all         Which board(s): all (${BOARDS}), or a single board"
-	@echo "  BUILD_TYPE=debug       Build variant: debug, release, or all"
+	@echo "  BUILD_TYPE=debug       Build variant: debug, release, speed (the speed flavour), or all"
 	@echo "  V=1                    Verbose output (show full compiler commands)"
 	@echo "  LIBC_TEST_UPDATE=1     With check: record libc-test improvements in the board baseline"
 	@echo "  BENCH_UPDATE=1         With bench: record the results as the board's benchmark baseline"

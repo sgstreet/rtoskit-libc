@@ -23,17 +23,32 @@ Link exactly one of the `libc*.a` archives. They are complete libraries,
 not add-ons: a flavour archive replaces members of `libc.a`, it is not
 linked in front of it.
 
+## Size or speed
+
+Each board builds two optimised libraries (D73):
+
+| Build type | Install | What it is |
+|---|---|---|
+| `release` | `images/<board>/release/` | the size flavour: the smallest code, the default |
+| `speed` | `images/<board>/speed/` | the speed flavour: the same `-Os` library with faster kernels (on the Thumb-2 cores, `memcpy`/`memmove`/`memset` that copy 32 bytes per iteration and use unaligned word access), within 10 % of the size flavour's code size (`docs/size/budget.json`) |
+
+Both flavours ship the same headers and archives (`libc.a`, the flavour
+archives, `libm.a`). The speed flavour's Thumb-2 kernels use unaligned
+`LDR`/`STR`, as GCC's own code does on these cores; a system that sets
+`CCR.UNALIGN_TRP`, or copies Device memory with `memcpy`, should link the
+size flavour. Speed figures: `docs/perf/<arch>.md`.
+
 ## Choosing the core
 
 The board selects the core. The core then fixes everything below
 automatically; there is nothing to configure per function.
 
-| Core (`ARCH_CROSS`) | FPU | `<fenv.h>` | libm layers (D46, D56, D57) | String kernels (D69, D70) |
+| Core (`ARCH_CROSS`) | FPU | `<fenv.h>` | libm layers (D46, D56, D57) | String kernels (D69, D70, D73) |
 |---|---|---|---|---|
 | `armv6-m`, `armv6s-m` | none | soft: round to nearest, no flags | `sp sp-nearest nofp` | `thumb1` |
-| `armv7e-m` | FPv4-SP | soft | `sp sp-nearest fpv4-sp` | `thumb1` |
-| `armv8-m.main` | FPv5-SP | soft | `sp sp-nearest fpv5-sp` | `thumb1` |
-| `armv7e-m-dp` | FPv5-DP | full: every direction and flag | `sp fpv5-sp fpv5-dp` | `thumb1` |
+| `armv7e-m` | FPv4-SP | soft | `sp sp-nearest fpv4-sp` | `thumb1`; speed: `thumb2 thumb1` |
+| `armv8-m.main` | FPv5-SP | soft | `sp sp-nearest fpv5-sp` | `thumb1`; speed: `thumb2 thumb1` |
+| `armv7e-m-dp` | FPv5-DP | full: every direction and flag | `sp fpv5-sp fpv5-dp` | `thumb1`; speed: `thumb2 thumb1` |
 | `x86_64` (tests) | SSE | full | `x86_64` | none (C) |
 
 What the layers mean for a program:
@@ -153,7 +168,7 @@ The library reaches the OS only through the `__rtos_*` functions declared in
 | Variable | Default | Effect |
 |---|---|---|
 | `BOARD_TYPE` | every board in `BOARDS` | one board, e.g. `linux-armv7e-m` |
-| `BUILD_TYPE` | `debug` and `release` | one build type |
+| `BUILD_TYPE` | `debug`, `release` and `speed` | one build type (`speed` is the speed flavour) |
 | `LIBC_MALLOC` | `nano` | the allocator in `libc.a` |
 | `V=1` | off | show the commands |
 
