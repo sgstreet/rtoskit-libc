@@ -119,7 +119,4 @@ void __libc_file_unlink(FILE *stream);
 /* Flush every stream (fflush(NULL)), or only the line-buffered ones; returns 0 or EOF */
 int __libc_stdio_flush_all(bool line_buffered_only);
 
-/* At exit: flush the standard streams and close every other stream (C23 7.24.4.4p4) */
-void __libc_stdio_exit(void);
-
 #endif /* _INTERNAL_FILE_H */

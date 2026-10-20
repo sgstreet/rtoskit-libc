@@ -475,8 +475,8 @@ def library_graph(build, archive):
 	return graph
 
 
-def measure(board, build_type):
-	build = os.path.join('build', board, build_type)
+def measure(board, build_type, build_root='build'):
+	build = os.path.join(build_root, board, build_type)
 	archive = os.path.join(build, 'libc', 'libc.a')
 	if not os.path.exists(archive):
 		raise SystemExit(f'{archive}: missing; build first (make BOARD_TYPE={board} BUILD_TYPE={build_type})')
@@ -516,7 +516,7 @@ def baseline_path(directory, board):
 
 def command_report(args):
 	for board in args.board:
-		result = measure(board, args.build_type)
+		result = measure(board, args.build_type, args.build_root)
 		path = baseline_path(args.baseline_dir, board)
 		with open(path, 'w') as f:
 			json.dump(result, f, indent=1, sort_keys=True)
@@ -539,7 +539,7 @@ def command_diff(args):
 		path = baseline_path(args.baseline_dir, board)
 		with open(path) as f:
 			old = json.load(f)
-		new = measure(board, args.build_type)
+		new = measure(board, args.build_type, args.build_root)
 		print(f'== {board} (against {path})')
 		old_totals = old['libc']['totals']
 		new_totals = new['libc']['totals']
@@ -746,7 +746,7 @@ def command_compare(args):
 	for board in BOARDS[1:]:
 		arch = arch_of(board)
 		for program in PROGRAMS:
-			directory = os.path.join('build', board, args.build_type, 'test', 'size', program)
+			directory = os.path.join(args.build_root, board, args.build_type, 'test', 'size', program)
 			ours = analyze_image(os.path.join(directory, program + '.elf'), os.path.join(directory, program + '.map'), [os.path.join(directory, program + '.o')])
 			pico = build_with('picolibc', roots, arch, program, work)
 			nano = build_with('newlib', roots, arch, program, work)
@@ -762,6 +762,7 @@ def main():
 	parser = argparse.ArgumentParser(description='Phase 2 size measurements (PLAN D51)')
 	parser.add_argument('--build-type', default='release')
 	parser.add_argument('--baseline-dir', default=os.path.join('docs', 'size'))
+	parser.add_argument('--build-root', default='build', help='the OUTPUT_ROOT of the build to measure')
 	sub = parser.add_subparsers(dest='command', required=True)
 	for name in ('report', 'diff', 'markdown'):
 		p = sub.add_parser(name)

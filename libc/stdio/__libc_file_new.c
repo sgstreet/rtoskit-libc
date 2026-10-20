@@ -18,6 +18,17 @@
 
 #include "internal/file.h"
 
+/*
+ * C23 7.24.4.4p4: exit closes the streams fopen and tmpfile made, which also
+ * removes tmpfile files. Only this object makes them, so closing at exit is
+ * its destructor, and a program that opens no file links no fclose (PLAN D52).
+ */
+[[gnu::destructor]] static void close_at_exit(void)
+{
+	while (__libc_files != nullptr)
+		fclose(__libc_files);
+}
+
 /* An opened file is fully buffered: it is not taken to be an interactive device (C23 7.23.5.3p8) */
 FILE *__libc_file_new(int handle, unsigned short flags)
 {

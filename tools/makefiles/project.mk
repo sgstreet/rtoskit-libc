@@ -51,7 +51,7 @@ all: ${EXTRA_TARGETS} ${OBJ}
 
 clean:
 	@echo "CLEANING ${CURDIR} ${EXTRA_CLEAN}"
-	${RM} ${CURDIR}/*.bin ${CURDIR}/*.elf ${CURDIR}/*.map ${CURDIR}/*.smap ${CURDIR}/*.dis ${OBJ} ${OBJ:%.o=%.d} ${OBJ:%.o=%.dis} ${OBJ:%.o=%.o.lst} ${CURDIR}/*.su ${CURDIR}/*.ci ${EXTRA_CLEAN}
+	${RM} ${CURDIR}/*.bin ${CURDIR}/*.elf ${CURDIR}/*.map ${CURDIR}/*.smap ${CURDIR}/*.dis ${OBJ} ${OBJ:%.o=%.d} ${OBJ:%.o=%.dis} ${OBJ:%.o=%.o.lst} ${CURDIR}/*.su ${CURDIR}/*.ci ${CURDIR}/*.a ${EXTRA_CLEAN}
 
 distclean:
 
@@ -61,6 +61,7 @@ ${EXTRA_DEPS} ${EXTRA_LIB_DEPS} ${EXTRA_ELF_DEPS} ${TARGET_OBJ}:
 
 ${CURDIR}/%.a: ${OBJ} ${TARGET_OBJ} ${EXTRA_LIB_DEPS} ${EXTRA_DEPS}
 	@echo "ARCHIVING $@"
+	${RM} $@
 	$(AR) ${ARFLAGS} $@ ${OBJ} ${TARGET_OBJ}
 
 ${CURDIR}/%.so: ${OBJ} ${TARGET_OBJ} ${EXTRA_LIB_DEPS} ${EXTRA_DEPS}

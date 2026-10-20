@@ -18,6 +18,13 @@
 #include "internal/signal.h"
 
 /*
+ * The handlers, indexed by signal number. They live with raise, so signal
+ * links raise, and abort can reference raise weakly (PLAN D52). Every signal
+ * starts with SIG_DFL (C23 7.14.1.1p6), which is the zero pointer.
+ */
+void (*__libc_signal_handlers[__LIBC_SIGNAL_COUNT])(int);
+
+/*
  * C23 7.14.2.1. A handler is reset to SIG_DFL before it runs (7.14.1.1p3
  * allows that). The default action for SIGABRT is abnormal termination;
  * for the other signals the program ends with status 128 + sig, as a shell

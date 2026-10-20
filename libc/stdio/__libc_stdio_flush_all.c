@@ -16,9 +16,19 @@
 
 #include "internal/file.h"
 
+/*
+ * A standard stream the program never names holds no output: refer to them
+ * weakly, so flushing links neither (PLAN D52).
+ */
+#pragma weak __libc_stdout
+#pragma weak __libc_stderr
+
 static int flush_one(FILE *stream, bool line_buffered_only)
 {
 	int status = 0;
+
+	if (stream == nullptr)
+		return 0;
 
 	__libc_file_lock(stream);
 	if ((stream->flags & __LIBC_FILE_WRITING) && (!line_buffered_only || (stream->flags & __LIBC_FILE_LINE)))

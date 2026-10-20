@@ -21,13 +21,13 @@
    },
    "origin": {
     "libc": {
-     "bss": 296,
-     "data": 136,
+     "bss": 32,
+     "data": 72,
      "rodata": 745,
      "tbss": 4,
      "tdata": 0,
-     "text": 9434,
-     "unwind": 1188
+     "text": 9124,
+     "unwind": 0
     },
     "libgcc": {
      "bss": 0,
@@ -39,22 +39,22 @@
      "unwind": 0
     },
     "other": {
-     "bss": 72,
+     "bss": 48,
      "data": 0,
      "rodata": 91,
      "tbss": 0,
      "tdata": 0,
      "text": 0,
-     "unwind": 1
+     "unwind": 0
     },
     "port": {
-     "bss": 216,
+     "bss": 168,
      "data": 0,
      "rodata": 0,
      "tbss": 8,
      "tdata": 0,
-     "text": 859,
-     "unwind": 960
+     "text": 820,
+     "unwind": 0
     },
     "program": {
      "bss": 0,
@@ -63,17 +63,17 @@
      "tbss": 0,
      "tdata": 0,
      "text": 59,
-     "unwind": 23
+     "unwind": 0
     }
    },
    "sections": {
-    "bss": 584,
-    "data": 136,
+    "bss": 248,
+    "data": 72,
     "rodata": 880,
     "tbss": 12,
     "tdata": 0,
-    "text": 10352,
-    "unwind": 2172
+    "text": 10003,
+    "unwind": 0
    }
   },
   "hello-printf-int": {
@@ -94,13 +94,13 @@
    },
    "origin": {
     "libc": {
-     "bss": 296,
-     "data": 136,
+     "bss": 32,
+     "data": 72,
      "rodata": 745,
      "tbss": 4,
      "tdata": 0,
-     "text": 9434,
-     "unwind": 1188
+     "text": 9124,
+     "unwind": 0
     },
     "libgcc": {
      "bss": 0,
@@ -112,22 +112,22 @@
      "unwind": 0
     },
     "other": {
-     "bss": 72,
+     "bss": 48,
      "data": 0,
      "rodata": 104,
      "tbss": 0,
      "tdata": 0,
      "text": 0,
-     "unwind": 1
+     "unwind": 0
     },
     "port": {
-     "bss": 216,
+     "bss": 168,
      "data": 0,
      "rodata": 0,
      "tbss": 8,
      "tdata": 0,
-     "text": 859,
-     "unwind": 960
+     "text": 820,
+     "unwind": 0
     },
     "program": {
      "bss": 0,
@@ -136,17 +136,17 @@
      "tbss": 0,
      "tdata": 0,
      "text": 44,
-     "unwind": 23
+     "unwind": 0
     }
    },
    "sections": {
-    "bss": 584,
-    "data": 136,
+    "bss": 248,
+    "data": 72,
     "rodata": 864,
     "tbss": 12,
     "tdata": 0,
-    "text": 10337,
-    "unwind": 2172
+    "text": 9988,
+    "unwind": 0
    }
   },
   "hello-puts": {
@@ -165,13 +165,13 @@
    },
    "origin": {
     "libc": {
-     "bss": 296,
-     "data": 136,
+     "bss": 32,
+     "data": 72,
      "rodata": 2,
      "tbss": 4,
      "tdata": 0,
-     "text": 2346,
-     "unwind": 534
+     "text": 2036,
+     "unwind": 0
     },
     "libgcc": {
      "bss": 0,
@@ -183,22 +183,22 @@
      "unwind": 0
     },
     "other": {
-     "bss": 72,
+     "bss": 48,
      "data": 0,
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
      "text": 0,
-     "unwind": 2
+     "unwind": 0
     },
     "port": {
-     "bss": 216,
+     "bss": 168,
      "data": 0,
      "rodata": 0,
      "tbss": 8,
      "tdata": 0,
-     "text": 859,
-     "unwind": 762
+     "text": 820,
+     "unwind": 0
     },
     "program": {
      "bss": 0,
@@ -207,17 +207,17 @@
      "tbss": 0,
      "tdata": 0,
      "text": 20,
-     "unwind": 18
+     "unwind": 0
     }
    },
    "sections": {
-    "bss": 584,
-    "data": 136,
+    "bss": 248,
+    "data": 72,
     "rodata": 15,
     "tbss": 12,
     "tdata": 0,
-    "text": 3225,
-    "unwind": 1316
+    "text": 2876,
+    "unwind": 0
    }
   },
   "malloc-heavy": {
@@ -234,13 +234,13 @@
    },
    "origin": {
     "libc": {
-     "bss": 288,
+     "bss": 24,
      "data": 0,
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 1587,
-     "unwind": 312
+     "text": 1532,
+     "unwind": 0
     },
     "libgcc": {
      "bss": 0,
@@ -252,22 +252,22 @@
      "unwind": 0
     },
     "other": {
-     "bss": 56,
+     "bss": 40,
      "data": 0,
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
      "text": 0,
-     "unwind": 1
+     "unwind": 0
     },
     "port": {
-     "bss": 144,
+     "bss": 120,
      "data": 0,
      "rodata": 0,
      "tbss": 8,
      "tdata": 0,
      "text": 787,
-     "unwind": 630
+     "unwind": 0
     },
     "program": {
      "bss": 0,
@@ -276,17 +276,17 @@
      "tbss": 0,
      "tdata": 0,
      "text": 282,
-     "unwind": 33
+     "unwind": 0
     }
    },
    "sections": {
-    "bss": 488,
+    "bss": 184,
     "data": 0,
     "rodata": 0,
     "tbss": 12,
     "tdata": 0,
-    "text": 2656,
-    "unwind": 976
+    "text": 2601,
+    "unwind": 0
    }
   },
   "math-mix": {
@@ -304,13 +304,13 @@
    },
    "origin": {
     "libc": {
-     "bss": 264,
+     "bss": 0,
      "data": 0,
      "rodata": 3881,
      "tbss": 0,
      "tdata": 0,
-     "text": 12094,
-     "unwind": 1179
+     "text": 12039,
+     "unwind": 0
     },
     "libgcc": {
      "bss": 0,
@@ -322,22 +322,22 @@
      "unwind": 0
     },
     "other": {
-     "bss": 40,
+     "bss": 0,
      "data": 0,
      "rodata": 18,
      "tbss": 0,
      "tdata": 0,
      "text": 0,
-     "unwind": 1
+     "unwind": 0
     },
     "port": {
-     "bss": 120,
+     "bss": 40,
      "data": 0,
      "rodata": 0,
-     "tbss": 8,
+     "tbss": 0,
      "tdata": 0,
-     "text": 700,
-     "unwind": 846
+     "text": 301,
+     "unwind": 0
     },
     "program": {
      "bss": 0,
@@ -346,17 +346,17 @@
      "tbss": 0,
      "tdata": 0,
      "text": 500,
-     "unwind": 34
+     "unwind": 0
     }
    },
    "sections": {
-    "bss": 424,
+    "bss": 40,
     "data": 0,
     "rodata": 3968,
-    "tbss": 8,
+    "tbss": 0,
     "tdata": 0,
-    "text": 13294,
-    "unwind": 2060
+    "text": 12840,
+    "unwind": 0
    }
   }
  },
@@ -369,7 +369,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 566,
-    "unwind": 480
+    "unwind": 0
    },
    "__atomic_and.o": {
     "bss": 0,
@@ -378,7 +378,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 574,
-    "unwind": 480
+    "unwind": 0
    },
    "__atomic_compare_exchange.o": {
     "bss": 0,
@@ -387,7 +387,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 473,
-    "unwind": 328
+    "unwind": 0
    },
    "__atomic_exchange.o": {
     "bss": 0,
@@ -396,7 +396,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 399,
-    "unwind": 328
+    "unwind": 0
    },
    "__atomic_is_lock_free.o": {
     "bss": 0,
@@ -405,7 +405,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 33,
-    "unwind": 48
+    "unwind": 0
    },
    "__atomic_load.o": {
     "bss": 0,
@@ -414,7 +414,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 110,
-    "unwind": 160
+    "unwind": 0
    },
    "__atomic_nand.o": {
     "bss": 0,
@@ -423,7 +423,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 582,
-    "unwind": 480
+    "unwind": 0
    },
    "__atomic_or.o": {
     "bss": 0,
@@ -432,7 +432,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 574,
-    "unwind": 480
+    "unwind": 0
    },
    "__atomic_store.o": {
     "bss": 0,
@@ -441,7 +441,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 376,
-    "unwind": 312
+    "unwind": 0
    },
    "__atomic_sub.o": {
     "bss": 0,
@@ -450,7 +450,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 577,
-    "unwind": 488
+    "unwind": 0
    },
    "__atomic_test_and_set.o": {
     "bss": 0,
@@ -459,7 +459,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 101,
-    "unwind": 72
+    "unwind": 0
    },
    "__atomic_xor.o": {
     "bss": 0,
@@ -468,7 +468,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 574,
-    "unwind": 480
+    "unwind": 0
    },
    "__flt_rounds.o": {
     "bss": 0,
@@ -477,25 +477,25 @@
     "tbss": 0,
     "tdata": 0,
     "text": 35,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_asctime.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 114,
-    "tbss": 64,
+    "rodata": 86,
+    "tbss": 26,
     "tdata": 0,
-    "text": 129,
-    "unwind": 72
+    "text": 460,
+    "unwind": 0
    },
    "__libc_assert_fail.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 35,
+    "rodata": 37,
     "tbss": 0,
     "tdata": 0,
-    "text": 64,
-    "unwind": 64
+    "text": 262,
+    "unwind": 0
    },
    "__libc_atan2_core.o": {
     "bss": 0,
@@ -504,15 +504,15 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1024,
-    "unwind": 136
+    "unwind": 0
    },
-   "__libc_atexit_handlers.o": {
-    "bss": 528,
+   "__libc_atexit_run.o": {
+    "bss": 264,
     "data": 0,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 0,
+    "text": 14,
     "unwind": 0
    },
    "__libc_cond_wait.o": {
@@ -522,7 +522,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 117,
-    "unwind": 88
+    "unwind": 0
    },
    "__libc_cos_core.o": {
     "bss": 0,
@@ -531,7 +531,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 293,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_cosh_core.o": {
     "bss": 0,
@@ -540,7 +540,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 285,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_decimal_round.o": {
     "bss": 0,
@@ -549,7 +549,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 315,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_decimal_set.o": {
     "bss": 0,
@@ -558,7 +558,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 191,
-    "unwind": 72
+    "unwind": 0
    },
    "__libc_decimal_shift_left.o": {
     "bss": 0,
@@ -567,7 +567,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 232,
-    "unwind": 64
+    "unwind": 0
    },
    "__libc_decimal_shift_right.o": {
     "bss": 0,
@@ -576,7 +576,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 195,
-    "unwind": 56
+    "unwind": 0
    },
    "__libc_decimal_to_float.o": {
     "bss": 0,
@@ -585,7 +585,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 583,
-    "unwind": 96
+    "unwind": 0
    },
    "__libc_erf_series.o": {
     "bss": 0,
@@ -594,7 +594,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 450,
-    "unwind": 88
+    "unwind": 0
    },
    "__libc_erfc_table.o": {
     "bss": 0,
@@ -603,7 +603,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 433,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_erfc_tail.o": {
     "bss": 0,
@@ -612,7 +612,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 520,
-    "unwind": 112
+    "unwind": 0
    },
    "__libc_exact_fma.o": {
     "bss": 0,
@@ -621,7 +621,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 539,
-    "unwind": 88
+    "unwind": 0
    },
    "__libc_exact_to_double.o": {
     "bss": 0,
@@ -630,7 +630,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 427,
-    "unwind": 112
+    "unwind": 0
    },
    "__libc_exact_to_float.o": {
     "bss": 0,
@@ -639,7 +639,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 421,
-    "unwind": 112
+    "unwind": 0
    },
    "__libc_exit_register.o": {
     "bss": 0,
@@ -648,7 +648,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 66,
-    "unwind": 72
+    "unwind": 0
    },
    "__libc_exit_run.o": {
     "bss": 0,
@@ -657,7 +657,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 60,
-    "unwind": 64
+    "unwind": 0
    },
    "__libc_exp_core.o": {
     "bss": 0,
@@ -666,7 +666,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 495,
-    "unwind": 80
+    "unwind": 0
    },
    "__libc_exp_dd.o": {
     "bss": 0,
@@ -675,7 +675,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 80,
-    "unwind": 64
+    "unwind": 0
    },
    "__libc_exp_scale.o": {
     "bss": 0,
@@ -684,7 +684,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 417,
-    "unwind": 72
+    "unwind": 0
    },
    "__libc_expm1_core.o": {
     "bss": 0,
@@ -693,7 +693,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 366,
-    "unwind": 64
+    "unwind": 0
    },
    "__libc_file_before_input.o": {
     "bss": 0,
@@ -702,7 +702,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_file_flush.o": {
     "bss": 0,
@@ -711,7 +711,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 162,
-    "unwind": 64
+    "unwind": 0
    },
    "__libc_file_getc.o": {
     "bss": 0,
@@ -720,7 +720,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 152,
-    "unwind": 56
+    "unwind": 0
    },
    "__libc_file_link.o": {
     "bss": 0,
@@ -729,7 +729,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 62,
-    "unwind": 56
+    "unwind": 0
    },
    "__libc_file_mode.o": {
     "bss": 0,
@@ -738,16 +738,16 @@
     "tbss": 0,
     "tdata": 0,
     "text": 166,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_file_new.o": {
     "bss": 0,
-    "data": 0,
+    "data": 8,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 108,
-    "unwind": 72
+    "text": 145,
+    "unwind": 0
    },
    "__libc_file_position.o": {
     "bss": 0,
@@ -756,7 +756,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 95,
-    "unwind": 56
+    "unwind": 0
    },
    "__libc_file_read.o": {
     "bss": 0,
@@ -765,7 +765,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 125,
-    "unwind": 88
+    "unwind": 0
    },
    "__libc_file_refill.o": {
     "bss": 0,
@@ -774,7 +774,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 78,
-    "unwind": 56
+    "unwind": 0
    },
    "__libc_file_setup.o": {
     "bss": 0,
@@ -783,7 +783,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 96,
-    "unwind": 72
+    "unwind": 0
    },
    "__libc_file_unlink.o": {
     "bss": 0,
@@ -792,7 +792,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 85,
-    "unwind": 56
+    "unwind": 0
    },
    "__libc_file_write.o": {
     "bss": 0,
@@ -800,8 +800,8 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 377,
-    "unwind": 184
+    "text": 379,
+    "unwind": 0
    },
    "__libc_files.o": {
     "bss": 8,
@@ -819,7 +819,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 560,
-    "unwind": 144
+    "unwind": 0
    },
    "__libc_format.o": {
     "bss": 0,
@@ -828,7 +828,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 3250,
-    "unwind": 360
+    "unwind": 0
    },
    "__libc_format_buffer_write.o": {
     "bss": 0,
@@ -837,7 +837,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 51,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_format_float.o": {
     "bss": 0,
@@ -846,7 +846,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 2500,
-    "unwind": 312
+    "unwind": 0
    },
    "__libc_fromfp.o": {
     "bss": 0,
@@ -855,7 +855,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 365,
-    "unwind": 80
+    "unwind": 0
    },
    "__libc_iseqsig.o": {
     "bss": 0,
@@ -864,7 +864,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 67,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_iseqsigf.o": {
     "bss": 0,
@@ -873,7 +873,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 64,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_iseqsigl.o": {
     "bss": 0,
@@ -882,7 +882,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_lgamma_core.o": {
     "bss": 0,
@@ -891,7 +891,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1863,
-    "unwind": 368
+    "unwind": 0
    },
    "__libc_log1p_core.o": {
     "bss": 0,
@@ -900,7 +900,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 182,
-    "unwind": 72
+    "unwind": 0
    },
    "__libc_log1p_dd.o": {
     "bss": 0,
@@ -909,7 +909,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 157,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_log_core.o": {
     "bss": 0,
@@ -918,7 +918,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 735,
-    "unwind": 112
+    "unwind": 0
    },
    "__libc_malloc_check.o": {
     "bss": 0,
@@ -927,7 +927,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 248,
-    "unwind": 72
+    "unwind": 0
    },
    "__libc_mutex_lock.o": {
     "bss": 0,
@@ -936,7 +936,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 144,
-    "unwind": 80
+    "unwind": 0
    },
    "__libc_mutex_unlock.o": {
     "bss": 0,
@@ -945,7 +945,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 93,
-    "unwind": 56
+    "unwind": 0
    },
    "__libc_nano_allocate.o": {
     "bss": 0,
@@ -954,7 +954,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 74,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_nano_heap.o": {
     "bss": 24,
@@ -972,7 +972,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 146,
-    "unwind": 72
+    "unwind": 0
    },
    "__libc_nano_release.o": {
     "bss": 0,
@@ -981,7 +981,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 100,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_nano_trim.o": {
     "bss": 0,
@@ -990,7 +990,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 34,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_pow_integer.o": {
     "bss": 0,
@@ -999,7 +999,16 @@
     "tbss": 0,
     "tdata": 0,
     "text": 473,
-    "unwind": 80
+    "unwind": 0
+   },
+   "__libc_quick_exit_handlers.o": {
+    "bss": 264,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 0,
+    "unwind": 0
    },
    "__libc_rand_state.o": {
     "bss": 0,
@@ -1017,7 +1026,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1187,
-    "unwind": 144
+    "unwind": 0
    },
    "__libc_remainder.o": {
     "bss": 0,
@@ -1026,7 +1035,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 592,
-    "unwind": 56
+    "unwind": 0
    },
    "__libc_scan.o": {
     "bss": 0,
@@ -1035,7 +1044,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 2354,
-    "unwind": 208
+    "unwind": 0
    },
    "__libc_scan_float.o": {
     "bss": 0,
@@ -1044,7 +1053,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1497,
-    "unwind": 152
+    "unwind": 0
    },
    "__libc_secs_to_tm.o": {
     "bss": 0,
@@ -1053,15 +1062,6 @@
     "tbss": 0,
     "tdata": 0,
     "text": 530,
-    "unwind": 64
-   },
-   "__libc_signal_handlers.o": {
-    "bss": 256,
-    "data": 0,
-    "rodata": 0,
-    "tbss": 0,
-    "tdata": 0,
-    "text": 0,
     "unwind": 0
    },
    "__libc_sin_core.o": {
@@ -1071,7 +1071,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 491,
-    "unwind": 64
+    "unwind": 0
    },
    "__libc_sinh_core.o": {
     "bss": 0,
@@ -1080,7 +1080,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 459,
-    "unwind": 64
+    "unwind": 0
    },
    "__libc_start_main.o": {
     "bss": 0,
@@ -1089,7 +1089,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 79,
-    "unwind": 64
+    "unwind": 0
    },
    "__libc_stderr.o": {
     "bss": 0,
@@ -1109,23 +1109,14 @@
     "text": 0,
     "unwind": 0
    },
-   "__libc_stdio_exit.o": {
-    "bss": 0,
-    "data": 0,
-    "rodata": 0,
-    "tbss": 0,
-    "tdata": 0,
-    "text": 33,
-    "unwind": 48
-   },
    "__libc_stdio_flush_all.o": {
     "bss": 0,
     "data": 0,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 164,
-    "unwind": 112
+    "text": 201,
+    "unwind": 0
    },
    "__libc_stdout.o": {
     "bss": 0,
@@ -1143,7 +1134,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 126,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_strtofloat.o": {
     "bss": 0,
@@ -1152,7 +1143,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1176,
-    "unwind": 200
+    "unwind": 0
    },
    "__libc_strtoint.o": {
     "bss": 0,
@@ -1161,7 +1152,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 418,
-    "unwind": 120
+    "unwind": 0
    },
    "__libc_thread_start.o": {
     "bss": 0,
@@ -1170,7 +1161,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 56
+    "unwind": 0
    },
    "__libc_time_tm.o": {
     "bss": 0,
@@ -1188,7 +1179,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 61,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_tls_init.o": {
     "bss": 0,
@@ -1197,7 +1188,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 155,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_tm_to_secs.o": {
     "bss": 0,
@@ -1206,7 +1197,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 228,
-    "unwind": 48
+    "unwind": 0
    },
    "__libc_tss_run_destructors.o": {
     "bss": 512,
@@ -1215,7 +1206,7 @@
     "tbss": 512,
     "tdata": 0,
     "text": 135,
-    "unwind": 80
+    "unwind": 0
    },
    "__libc_tz_get.o": {
     "bss": 0,
@@ -1224,7 +1215,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1061,
-    "unwind": 280
+    "unwind": 0
    },
    "__libc_tz_is_dst.o": {
     "bss": 0,
@@ -1233,7 +1224,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 525,
-    "unwind": 160
+    "unwind": 0
    },
    "_exit.o": {
     "bss": 0,
@@ -1242,7 +1233,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 12,
-    "unwind": 56
+    "unwind": 0
    },
    "abort.o": {
     "bss": 0,
@@ -1250,8 +1241,8 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 22,
-    "unwind": 56
+    "text": 32,
+    "unwind": 0
    },
    "abs.o": {
     "bss": 0,
@@ -1260,7 +1251,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 12,
-    "unwind": 48
+    "unwind": 0
    },
    "acos.o": {
     "bss": 0,
@@ -1269,7 +1260,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 593,
-    "unwind": 80
+    "unwind": 0
    },
    "acosf.o": {
     "bss": 0,
@@ -1278,7 +1269,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "acosh.o": {
     "bss": 0,
@@ -1287,7 +1278,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 717,
-    "unwind": 104
+    "unwind": 0
    },
    "acoshf.o": {
     "bss": 0,
@@ -1296,7 +1287,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "acoshl.o": {
     "bss": 0,
@@ -1305,7 +1296,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "acosl.o": {
     "bss": 0,
@@ -1314,7 +1305,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "acospi.o": {
     "bss": 0,
@@ -1323,7 +1314,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 704,
-    "unwind": 80
+    "unwind": 0
    },
    "acospif.o": {
     "bss": 0,
@@ -1332,7 +1323,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "acospil.o": {
     "bss": 0,
@@ -1341,7 +1332,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "aligned_alloc.o": {
     "bss": 0,
@@ -1350,7 +1341,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 276,
-    "unwind": 104
+    "unwind": 0
    },
    "asctime.o": {
     "bss": 0,
@@ -1359,7 +1350,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "asin.o": {
     "bss": 0,
@@ -1368,7 +1359,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 785,
-    "unwind": 80
+    "unwind": 0
    },
    "asinf.o": {
     "bss": 0,
@@ -1377,7 +1368,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 275,
-    "unwind": 64
+    "unwind": 0
    },
    "asinh.o": {
     "bss": 0,
@@ -1386,7 +1377,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 872,
-    "unwind": 120
+    "unwind": 0
    },
    "asinhf.o": {
     "bss": 0,
@@ -1395,7 +1386,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 300,
-    "unwind": 72
+    "unwind": 0
    },
    "asinhl.o": {
     "bss": 0,
@@ -1404,7 +1395,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "asinl.o": {
     "bss": 0,
@@ -1413,7 +1404,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "asinpi.o": {
     "bss": 0,
@@ -1422,7 +1413,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 857,
-    "unwind": 128
+    "unwind": 0
    },
    "asinpif.o": {
     "bss": 0,
@@ -1431,7 +1422,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "asinpil.o": {
     "bss": 0,
@@ -1440,7 +1431,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "at_quick_exit.o": {
     "bss": 0,
@@ -1449,7 +1440,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 17,
-    "unwind": 48
+    "unwind": 0
    },
    "atan.o": {
     "bss": 0,
@@ -1458,7 +1449,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 395,
-    "unwind": 64
+    "unwind": 0
    },
    "atan2.o": {
     "bss": 0,
@@ -1467,7 +1458,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1087,
-    "unwind": 112
+    "unwind": 0
    },
    "atan2f.o": {
     "bss": 0,
@@ -1476,7 +1467,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 156,
-    "unwind": 56
+    "unwind": 0
    },
    "atan2l.o": {
     "bss": 0,
@@ -1485,7 +1476,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "atan2pi.o": {
     "bss": 0,
@@ -1494,7 +1485,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1142,
-    "unwind": 128
+    "unwind": 0
    },
    "atan2pif.o": {
     "bss": 0,
@@ -1503,7 +1494,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "atan2pil.o": {
     "bss": 0,
@@ -1512,7 +1503,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "atanf.o": {
     "bss": 0,
@@ -1521,7 +1512,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 300,
-    "unwind": 72
+    "unwind": 0
    },
    "atanh.o": {
     "bss": 0,
@@ -1530,7 +1521,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 653,
-    "unwind": 64
+    "unwind": 0
    },
    "atanhf.o": {
     "bss": 0,
@@ -1539,7 +1530,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 275,
-    "unwind": 64
+    "unwind": 0
    },
    "atanhl.o": {
     "bss": 0,
@@ -1548,7 +1539,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "atanl.o": {
     "bss": 0,
@@ -1557,7 +1548,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "atanpi.o": {
     "bss": 0,
@@ -1566,7 +1557,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 641,
-    "unwind": 128
+    "unwind": 0
    },
    "atanpif.o": {
     "bss": 0,
@@ -1575,7 +1566,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "atanpil.o": {
     "bss": 0,
@@ -1584,7 +1575,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "atexit.o": {
     "bss": 0,
@@ -1593,7 +1584,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 17,
-    "unwind": 48
+    "unwind": 0
    },
    "atof.o": {
     "bss": 0,
@@ -1602,7 +1593,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 11,
-    "unwind": 48
+    "unwind": 0
    },
    "atoi.o": {
     "bss": 0,
@@ -1611,7 +1602,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 19,
-    "unwind": 48
+    "unwind": 0
    },
    "atol.o": {
     "bss": 0,
@@ -1620,7 +1611,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "atoll.o": {
     "bss": 0,
@@ -1629,7 +1620,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "atomic_flag_clear.o": {
     "bss": 0,
@@ -1638,7 +1629,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "atomic_flag_clear_explicit.o": {
     "bss": 0,
@@ -1647,7 +1638,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "atomic_flag_test_and_set.o": {
     "bss": 0,
@@ -1656,7 +1647,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "atomic_flag_test_and_set_explicit.o": {
     "bss": 0,
@@ -1665,7 +1656,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "atomic_signal_fence.o": {
     "bss": 0,
@@ -1674,7 +1665,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 5,
-    "unwind": 48
+    "unwind": 0
    },
    "atomic_thread_fence.o": {
     "bss": 0,
@@ -1683,7 +1674,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 8,
-    "unwind": 48
+    "unwind": 0
    },
    "bsearch.o": {
     "bss": 0,
@@ -1692,7 +1683,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 115,
-    "unwind": 96
+    "unwind": 0
    },
    "cabs.o": {
     "bss": 0,
@@ -1701,7 +1692,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cabsf.o": {
     "bss": 0,
@@ -1710,7 +1701,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 48
+    "unwind": 0
    },
    "cabsl.o": {
     "bss": 0,
@@ -1719,7 +1710,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cacos.o": {
     "bss": 0,
@@ -1728,7 +1719,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 413,
-    "unwind": 64
+    "unwind": 0
    },
    "cacosf.o": {
     "bss": 0,
@@ -1737,7 +1728,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "cacosh.o": {
     "bss": 0,
@@ -1746,7 +1737,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 66,
-    "unwind": 72
+    "unwind": 0
    },
    "cacoshf.o": {
     "bss": 0,
@@ -1755,7 +1746,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "cacoshl.o": {
     "bss": 0,
@@ -1764,7 +1755,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cacosl.o": {
     "bss": 0,
@@ -1773,7 +1764,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "call_once.o": {
     "bss": 0,
@@ -1782,7 +1773,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 105,
-    "unwind": 80
+    "unwind": 0
    },
    "calloc.o": {
     "bss": 0,
@@ -1791,7 +1782,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 72,
-    "unwind": 64
+    "unwind": 0
    },
    "canonicalize.o": {
     "bss": 0,
@@ -1800,7 +1791,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 48,
-    "unwind": 48
+    "unwind": 0
    },
    "canonicalizef.o": {
     "bss": 0,
@@ -1809,7 +1800,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 40,
-    "unwind": 48
+    "unwind": 0
    },
    "canonicalizel.o": {
     "bss": 0,
@@ -1818,7 +1809,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 50,
-    "unwind": 56
+    "unwind": 0
    },
    "carg.o": {
     "bss": 0,
@@ -1827,7 +1818,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "cargf.o": {
     "bss": 0,
@@ -1836,7 +1827,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 48
+    "unwind": 0
    },
    "cargl.o": {
     "bss": 0,
@@ -1845,7 +1836,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "casin.o": {
     "bss": 0,
@@ -1854,7 +1845,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 56,
-    "unwind": 48
+    "unwind": 0
    },
    "casinf.o": {
     "bss": 0,
@@ -1863,7 +1854,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "casinh.o": {
     "bss": 0,
@@ -1872,7 +1863,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 478,
-    "unwind": 64
+    "unwind": 0
    },
    "casinhf.o": {
     "bss": 0,
@@ -1881,7 +1872,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "casinhl.o": {
     "bss": 0,
@@ -1890,7 +1881,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "casinl.o": {
     "bss": 0,
@@ -1899,7 +1890,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "catan.o": {
     "bss": 0,
@@ -1908,7 +1899,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 56,
-    "unwind": 48
+    "unwind": 0
    },
    "catanf.o": {
     "bss": 0,
@@ -1917,7 +1908,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "catanh.o": {
     "bss": 0,
@@ -1926,7 +1917,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1015,
-    "unwind": 112
+    "unwind": 0
    },
    "catanhf.o": {
     "bss": 0,
@@ -1935,7 +1926,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "catanhl.o": {
     "bss": 0,
@@ -1944,7 +1935,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "catanl.o": {
     "bss": 0,
@@ -1953,7 +1944,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cbrt.o": {
     "bss": 0,
@@ -1962,7 +1953,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 347,
-    "unwind": 56
+    "unwind": 0
    },
    "cbrtf.o": {
     "bss": 0,
@@ -1971,7 +1962,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "cbrtl.o": {
     "bss": 0,
@@ -1980,7 +1971,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ccos.o": {
     "bss": 0,
@@ -1989,7 +1980,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 29,
-    "unwind": 48
+    "unwind": 0
    },
    "ccosf.o": {
     "bss": 0,
@@ -1998,7 +1989,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "ccosh.o": {
     "bss": 0,
@@ -2007,7 +1998,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 561,
-    "unwind": 64
+    "unwind": 0
    },
    "ccoshf.o": {
     "bss": 0,
@@ -2016,7 +2007,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "ccoshl.o": {
     "bss": 0,
@@ -2025,7 +2016,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ccosl.o": {
     "bss": 0,
@@ -2034,7 +2025,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ceil.o": {
     "bss": 0,
@@ -2043,7 +2034,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 125,
-    "unwind": 48
+    "unwind": 0
    },
    "ceilf.o": {
     "bss": 0,
@@ -2052,7 +2043,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "ceill.o": {
     "bss": 0,
@@ -2061,7 +2052,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cexp.o": {
     "bss": 0,
@@ -2070,7 +2061,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 481,
-    "unwind": 56
+    "unwind": 0
    },
    "cexpf.o": {
     "bss": 0,
@@ -2079,7 +2070,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "cexpl.o": {
     "bss": 0,
@@ -2088,7 +2079,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cimag.o": {
     "bss": 0,
@@ -2097,7 +2088,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 8,
-    "unwind": 48
+    "unwind": 0
    },
    "cimagf.o": {
     "bss": 0,
@@ -2106,7 +2097,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 48
+    "unwind": 0
    },
    "cimagl.o": {
     "bss": 0,
@@ -2115,7 +2106,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "clearerr.o": {
     "bss": 0,
@@ -2124,7 +2115,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 32,
-    "unwind": 56
+    "unwind": 0
    },
    "clock.o": {
     "bss": 0,
@@ -2133,7 +2124,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 72,
-    "unwind": 48
+    "unwind": 0
    },
    "clog.o": {
     "bss": 0,
@@ -2142,7 +2133,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 797,
-    "unwind": 120
+    "unwind": 0
    },
    "clogf.o": {
     "bss": 0,
@@ -2151,7 +2142,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "clogl.o": {
     "bss": 0,
@@ -2160,7 +2151,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cnd_broadcast.o": {
     "bss": 0,
@@ -2169,7 +2160,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 23,
-    "unwind": 48
+    "unwind": 0
    },
    "cnd_destroy.o": {
     "bss": 0,
@@ -2178,7 +2169,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cnd_init.o": {
     "bss": 0,
@@ -2187,7 +2178,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 11,
-    "unwind": 48
+    "unwind": 0
    },
    "cnd_signal.o": {
     "bss": 0,
@@ -2196,7 +2187,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 25,
-    "unwind": 48
+    "unwind": 0
    },
    "cnd_timedwait.o": {
     "bss": 0,
@@ -2205,7 +2196,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cnd_wait.o": {
     "bss": 0,
@@ -2214,7 +2205,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 11,
-    "unwind": 48
+    "unwind": 0
    },
    "compoundn.o": {
     "bss": 0,
@@ -2223,7 +2214,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 297,
-    "unwind": 72
+    "unwind": 0
    },
    "compoundnf.o": {
     "bss": 0,
@@ -2232,7 +2223,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "compoundnl.o": {
     "bss": 0,
@@ -2241,7 +2232,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "conj.o": {
     "bss": 0,
@@ -2250,7 +2241,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 12,
-    "unwind": 48
+    "unwind": 0
    },
    "conjf.o": {
     "bss": 0,
@@ -2259,7 +2250,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "conjl.o": {
     "bss": 0,
@@ -2268,7 +2259,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "copysign.o": {
     "bss": 0,
@@ -2277,7 +2268,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 40,
-    "unwind": 48
+    "unwind": 0
    },
    "copysignf.o": {
     "bss": 0,
@@ -2286,7 +2277,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 30,
-    "unwind": 48
+    "unwind": 0
    },
    "copysignl.o": {
     "bss": 0,
@@ -2295,7 +2286,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cos.o": {
     "bss": 0,
@@ -2304,7 +2295,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 320,
-    "unwind": 64
+    "unwind": 0
    },
    "cosf.o": {
     "bss": 0,
@@ -2313,7 +2304,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "cosh.o": {
     "bss": 0,
@@ -2322,7 +2313,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 633,
-    "unwind": 64
+    "unwind": 0
    },
    "coshf.o": {
     "bss": 0,
@@ -2331,7 +2322,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "coshl.o": {
     "bss": 0,
@@ -2340,7 +2331,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cosl.o": {
     "bss": 0,
@@ -2349,7 +2340,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cospi.o": {
     "bss": 0,
@@ -2358,7 +2349,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 582,
-    "unwind": 72
+    "unwind": 0
    },
    "cospif.o": {
     "bss": 0,
@@ -2367,7 +2358,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "cospil.o": {
     "bss": 0,
@@ -2376,7 +2367,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cpow.o": {
     "bss": 0,
@@ -2385,7 +2376,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1867,
-    "unwind": 184
+    "unwind": 0
    },
    "cpowf.o": {
     "bss": 0,
@@ -2394,7 +2385,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 80,
-    "unwind": 48
+    "unwind": 0
    },
    "cpowl.o": {
     "bss": 0,
@@ -2403,7 +2394,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "cproj.o": {
     "bss": 0,
@@ -2412,7 +2403,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 67,
-    "unwind": 48
+    "unwind": 0
    },
    "cprojf.o": {
     "bss": 0,
@@ -2421,7 +2412,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "cprojl.o": {
     "bss": 0,
@@ -2430,7 +2421,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "creal.o": {
     "bss": 0,
@@ -2439,7 +2430,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 5,
-    "unwind": 48
+    "unwind": 0
    },
    "crealf.o": {
     "bss": 0,
@@ -2448,7 +2439,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 48
+    "unwind": 0
    },
    "creall.o": {
     "bss": 0,
@@ -2457,7 +2448,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "csin.o": {
     "bss": 0,
@@ -2466,7 +2457,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 56,
-    "unwind": 48
+    "unwind": 0
    },
    "csinf.o": {
     "bss": 0,
@@ -2475,7 +2466,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "csinh.o": {
     "bss": 0,
@@ -2484,7 +2475,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 491,
-    "unwind": 56
+    "unwind": 0
    },
    "csinhf.o": {
     "bss": 0,
@@ -2493,7 +2484,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "csinhl.o": {
     "bss": 0,
@@ -2502,7 +2493,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "csinl.o": {
     "bss": 0,
@@ -2511,7 +2502,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "csqrt.o": {
     "bss": 0,
@@ -2520,7 +2511,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 547,
-    "unwind": 80
+    "unwind": 0
    },
    "csqrtf.o": {
     "bss": 0,
@@ -2529,7 +2520,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "csqrtl.o": {
     "bss": 0,
@@ -2538,7 +2529,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ctan.o": {
     "bss": 0,
@@ -2547,7 +2538,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 56,
-    "unwind": 48
+    "unwind": 0
    },
    "ctanf.o": {
     "bss": 0,
@@ -2556,7 +2547,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "ctanh.o": {
     "bss": 0,
@@ -2565,7 +2556,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 520,
-    "unwind": 64
+    "unwind": 0
    },
    "ctanhf.o": {
     "bss": 0,
@@ -2574,7 +2565,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 59,
-    "unwind": 48
+    "unwind": 0
    },
    "ctanhl.o": {
     "bss": 0,
@@ -2583,7 +2574,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ctanl.o": {
     "bss": 0,
@@ -2592,7 +2583,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ctime.o": {
     "bss": 0,
@@ -2601,7 +2592,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 41,
-    "unwind": 56
+    "unwind": 0
    },
    "daddl.o": {
     "bss": 0,
@@ -2610,7 +2601,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ddivl.o": {
     "bss": 0,
@@ -2619,7 +2610,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "dfmal.o": {
     "bss": 0,
@@ -2628,7 +2619,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "difftime.o": {
     "bss": 0,
@@ -2637,7 +2628,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 33,
-    "unwind": 48
+    "unwind": 0
    },
    "div.o": {
     "bss": 0,
@@ -2646,7 +2637,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 17,
-    "unwind": 48
+    "unwind": 0
    },
    "dmull.o": {
     "bss": 0,
@@ -2655,7 +2646,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "dsqrtl.o": {
     "bss": 0,
@@ -2664,7 +2655,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "dsubl.o": {
     "bss": 0,
@@ -2673,7 +2664,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "erf.o": {
     "bss": 0,
@@ -2682,7 +2673,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 788,
-    "unwind": 144
+    "unwind": 0
    },
    "erfc.o": {
     "bss": 0,
@@ -2691,7 +2682,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 698,
-    "unwind": 96
+    "unwind": 0
    },
    "erfcf.o": {
     "bss": 0,
@@ -2700,7 +2691,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "erfcl.o": {
     "bss": 0,
@@ -2709,7 +2700,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "erff.o": {
     "bss": 0,
@@ -2718,7 +2709,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "erfl.o": {
     "bss": 0,
@@ -2727,7 +2718,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "errno.o": {
     "bss": 0,
@@ -2744,8 +2735,8 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 49,
-    "unwind": 56
+    "text": 54,
+    "unwind": 0
    },
    "exp.o": {
     "bss": 0,
@@ -2754,7 +2745,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 235,
-    "unwind": 48
+    "unwind": 0
    },
    "exp10.o": {
     "bss": 0,
@@ -2763,7 +2754,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 447,
-    "unwind": 56
+    "unwind": 0
    },
    "exp10f.o": {
     "bss": 0,
@@ -2772,7 +2763,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "exp10l.o": {
     "bss": 0,
@@ -2781,7 +2772,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "exp10m1.o": {
     "bss": 0,
@@ -2790,7 +2781,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 361,
-    "unwind": 56
+    "unwind": 0
    },
    "exp10m1f.o": {
     "bss": 0,
@@ -2799,7 +2790,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "exp10m1l.o": {
     "bss": 0,
@@ -2808,7 +2799,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "exp2.o": {
     "bss": 0,
@@ -2817,7 +2808,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 419,
-    "unwind": 56
+    "unwind": 0
    },
    "exp2f.o": {
     "bss": 0,
@@ -2826,7 +2817,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "exp2l.o": {
     "bss": 0,
@@ -2835,7 +2826,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "exp2m1.o": {
     "bss": 0,
@@ -2844,7 +2835,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 361,
-    "unwind": 56
+    "unwind": 0
    },
    "exp2m1f.o": {
     "bss": 0,
@@ -2853,7 +2844,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "exp2m1l.o": {
     "bss": 0,
@@ -2862,7 +2853,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "expf.o": {
     "bss": 0,
@@ -2871,7 +2862,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "expl.o": {
     "bss": 0,
@@ -2880,7 +2871,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "expm1.o": {
     "bss": 0,
@@ -2889,7 +2880,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 374,
-    "unwind": 56
+    "unwind": 0
    },
    "expm1f.o": {
     "bss": 0,
@@ -2898,7 +2889,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 238,
-    "unwind": 56
+    "unwind": 0
    },
    "expm1l.o": {
     "bss": 0,
@@ -2907,7 +2898,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fabs.o": {
     "bss": 0,
@@ -2916,7 +2907,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "fabsf.o": {
     "bss": 0,
@@ -2925,7 +2916,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "fabsl.o": {
     "bss": 0,
@@ -2934,7 +2925,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fadd.o": {
     "bss": 0,
@@ -2943,7 +2934,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 319,
-    "unwind": 72
+    "unwind": 0
    },
    "faddl.o": {
     "bss": 0,
@@ -2952,7 +2943,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fclose.o": {
     "bss": 0,
@@ -2961,7 +2952,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 133,
-    "unwind": 64
+    "unwind": 0
    },
    "fdim.o": {
     "bss": 0,
@@ -2970,7 +2961,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 36,
-    "unwind": 48
+    "unwind": 0
    },
    "fdimf.o": {
     "bss": 0,
@@ -2979,7 +2970,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 33,
-    "unwind": 48
+    "unwind": 0
    },
    "fdiml.o": {
     "bss": 0,
@@ -2988,7 +2979,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fdiv.o": {
     "bss": 0,
@@ -2997,7 +2988,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 297,
-    "unwind": 56
+    "unwind": 0
    },
    "fdivl.o": {
     "bss": 0,
@@ -3006,7 +2997,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "feclearexcept.o": {
     "bss": 0,
@@ -3015,7 +3006,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 65,
-    "unwind": 48
+    "unwind": 0
    },
    "fegetenv.o": {
     "bss": 0,
@@ -3024,7 +3015,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "fegetexceptflag.o": {
     "bss": 0,
@@ -3033,7 +3024,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 32,
-    "unwind": 48
+    "unwind": 0
    },
    "fegetmode.o": {
     "bss": 0,
@@ -3042,7 +3033,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "fegetround.o": {
     "bss": 0,
@@ -3051,7 +3042,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 27,
-    "unwind": 48
+    "unwind": 0
    },
    "feholdexcept.o": {
     "bss": 0,
@@ -3060,7 +3051,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 35,
-    "unwind": 48
+    "unwind": 0
    },
    "feof.o": {
     "bss": 0,
@@ -3069,7 +3060,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 43,
-    "unwind": 64
+    "unwind": 0
    },
    "feraiseexcept.o": {
     "bss": 0,
@@ -3078,7 +3069,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 63,
-    "unwind": 48
+    "unwind": 0
    },
    "ferror.o": {
     "bss": 0,
@@ -3087,7 +3078,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 43,
-    "unwind": 64
+    "unwind": 0
    },
    "fesetenv.o": {
     "bss": 0,
@@ -3096,7 +3087,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 29,
-    "unwind": 48
+    "unwind": 0
    },
    "fesetexcept.o": {
     "bss": 0,
@@ -3105,7 +3096,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 63,
-    "unwind": 48
+    "unwind": 0
    },
    "fesetexceptflag.o": {
     "bss": 0,
@@ -3114,7 +3105,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 69,
-    "unwind": 48
+    "unwind": 0
    },
    "fesetmode.o": {
     "bss": 0,
@@ -3123,7 +3114,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 46,
-    "unwind": 48
+    "unwind": 0
    },
    "fesetround.o": {
     "bss": 0,
@@ -3132,7 +3123,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 53,
-    "unwind": 48
+    "unwind": 0
    },
    "fetestexcept.o": {
     "bss": 0,
@@ -3141,7 +3132,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 28,
-    "unwind": 48
+    "unwind": 0
    },
    "fetestexceptflag.o": {
     "bss": 0,
@@ -3150,7 +3141,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 12,
-    "unwind": 48
+    "unwind": 0
    },
    "feupdateenv.o": {
     "bss": 0,
@@ -3159,7 +3150,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 47,
-    "unwind": 56
+    "unwind": 0
    },
    "fflush.o": {
     "bss": 0,
@@ -3168,7 +3159,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 64,
-    "unwind": 56
+    "unwind": 0
    },
    "ffma.o": {
     "bss": 0,
@@ -3177,7 +3168,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 356,
-    "unwind": 96
+    "unwind": 0
    },
    "ffmal.o": {
     "bss": 0,
@@ -3186,7 +3177,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fgetc.o": {
     "bss": 0,
@@ -3195,7 +3186,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 57,
-    "unwind": 56
+    "unwind": 0
    },
    "fgetpos.o": {
     "bss": 0,
@@ -3204,7 +3195,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 62,
-    "unwind": 72
+    "unwind": 0
    },
    "fgets.o": {
     "bss": 0,
@@ -3213,7 +3204,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 135,
-    "unwind": 88
+    "unwind": 0
    },
    "floor.o": {
     "bss": 0,
@@ -3222,7 +3213,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 120,
-    "unwind": 48
+    "unwind": 0
    },
    "floorf.o": {
     "bss": 0,
@@ -3231,7 +3222,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "floorl.o": {
     "bss": 0,
@@ -3240,7 +3231,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fma.o": {
     "bss": 0,
@@ -3249,7 +3240,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 370,
-    "unwind": 96
+    "unwind": 0
    },
    "fmaf.o": {
     "bss": 0,
@@ -3258,7 +3249,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 358,
-    "unwind": 96
+    "unwind": 0
    },
    "fmal.o": {
     "bss": 0,
@@ -3267,7 +3258,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fmax.o": {
     "bss": 0,
@@ -3276,7 +3267,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 136,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaxf.o": {
     "bss": 0,
@@ -3285,7 +3276,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 110,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaximum.o": {
     "bss": 0,
@@ -3294,7 +3285,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 46,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaximum_mag.o": {
     "bss": 0,
@@ -3303,7 +3294,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 116,
-    "unwind": 56
+    "unwind": 0
    },
    "fmaximum_mag_num.o": {
     "bss": 0,
@@ -3312,7 +3303,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 26,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaximum_mag_numf.o": {
     "bss": 0,
@@ -3321,7 +3312,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaximum_mag_numl.o": {
     "bss": 0,
@@ -3330,7 +3321,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaximum_magf.o": {
     "bss": 0,
@@ -3339,7 +3330,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 112,
-    "unwind": 56
+    "unwind": 0
    },
    "fmaximum_magl.o": {
     "bss": 0,
@@ -3348,7 +3339,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaximum_num.o": {
     "bss": 0,
@@ -3357,7 +3348,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 148,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaximum_numf.o": {
     "bss": 0,
@@ -3366,7 +3357,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 122,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaximum_numl.o": {
     "bss": 0,
@@ -3375,7 +3366,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaximumf.o": {
     "bss": 0,
@@ -3384,7 +3375,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 43,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaximuml.o": {
     "bss": 0,
@@ -3393,7 +3384,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fmaxl.o": {
     "bss": 0,
@@ -3402,7 +3393,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fmin.o": {
     "bss": 0,
@@ -3411,7 +3402,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 136,
-    "unwind": 48
+    "unwind": 0
    },
    "fminf.o": {
     "bss": 0,
@@ -3420,7 +3411,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 110,
-    "unwind": 48
+    "unwind": 0
    },
    "fminimum.o": {
     "bss": 0,
@@ -3429,7 +3420,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 58,
-    "unwind": 48
+    "unwind": 0
    },
    "fminimum_mag.o": {
     "bss": 0,
@@ -3438,7 +3429,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 116,
-    "unwind": 56
+    "unwind": 0
    },
    "fminimum_mag_num.o": {
     "bss": 0,
@@ -3447,7 +3438,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 26,
-    "unwind": 48
+    "unwind": 0
    },
    "fminimum_mag_numf.o": {
     "bss": 0,
@@ -3456,7 +3447,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "fminimum_mag_numl.o": {
     "bss": 0,
@@ -3465,7 +3456,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fminimum_magf.o": {
     "bss": 0,
@@ -3474,7 +3465,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 112,
-    "unwind": 56
+    "unwind": 0
    },
    "fminimum_magl.o": {
     "bss": 0,
@@ -3483,7 +3474,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fminimum_num.o": {
     "bss": 0,
@@ -3492,7 +3483,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 148,
-    "unwind": 48
+    "unwind": 0
    },
    "fminimum_numf.o": {
     "bss": 0,
@@ -3501,7 +3492,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 122,
-    "unwind": 48
+    "unwind": 0
    },
    "fminimum_numl.o": {
     "bss": 0,
@@ -3510,7 +3501,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fminimumf.o": {
     "bss": 0,
@@ -3519,7 +3510,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 55,
-    "unwind": 48
+    "unwind": 0
    },
    "fminimuml.o": {
     "bss": 0,
@@ -3528,7 +3519,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fminl.o": {
     "bss": 0,
@@ -3537,7 +3528,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fmod.o": {
     "bss": 0,
@@ -3546,7 +3537,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "fmodf.o": {
     "bss": 0,
@@ -3555,7 +3546,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 28,
-    "unwind": 48
+    "unwind": 0
    },
    "fmodl.o": {
     "bss": 0,
@@ -3564,7 +3555,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fmul.o": {
     "bss": 0,
@@ -3573,7 +3564,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 287,
-    "unwind": 64
+    "unwind": 0
    },
    "fmull.o": {
     "bss": 0,
@@ -3582,7 +3573,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fopen.o": {
     "bss": 0,
@@ -3591,7 +3582,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 82,
-    "unwind": 56
+    "unwind": 0
    },
    "fprintf.o": {
     "bss": 0,
@@ -3600,7 +3591,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 147,
-    "unwind": 56
+    "unwind": 0
    },
    "fputc.o": {
     "bss": 0,
@@ -3609,7 +3600,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 79,
-    "unwind": 64
+    "unwind": 0
    },
    "fputs.o": {
     "bss": 0,
@@ -3618,7 +3609,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 72,
-    "unwind": 72
+    "unwind": 0
    },
    "fread.o": {
     "bss": 0,
@@ -3627,7 +3618,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 126,
-    "unwind": 80
+    "unwind": 0
    },
    "free.o": {
     "bss": 0,
@@ -3636,7 +3627,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 43,
-    "unwind": 56
+    "unwind": 0
    },
    "free_aligned_sized.o": {
     "bss": 0,
@@ -3645,7 +3636,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "free_sized.o": {
     "bss": 0,
@@ -3654,7 +3645,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "freopen.o": {
     "bss": 0,
@@ -3663,7 +3654,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 189,
-    "unwind": 72
+    "unwind": 0
    },
    "frexp.o": {
     "bss": 0,
@@ -3672,7 +3663,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 111,
-    "unwind": 48
+    "unwind": 0
    },
    "frexpf.o": {
     "bss": 0,
@@ -3681,7 +3672,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "frexpl.o": {
     "bss": 0,
@@ -3690,7 +3681,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fromfp.o": {
     "bss": 0,
@@ -3699,7 +3690,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "fromfpf.o": {
     "bss": 0,
@@ -3708,7 +3699,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "fromfpl.o": {
     "bss": 0,
@@ -3717,7 +3708,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fromfpx.o": {
     "bss": 0,
@@ -3726,7 +3717,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "fromfpxf.o": {
     "bss": 0,
@@ -3735,7 +3726,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 27,
-    "unwind": 48
+    "unwind": 0
    },
    "fromfpxl.o": {
     "bss": 0,
@@ -3744,7 +3735,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fscanf.o": {
     "bss": 0,
@@ -3753,7 +3744,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 147,
-    "unwind": 56
+    "unwind": 0
    },
    "fseek.o": {
     "bss": 0,
@@ -3762,7 +3753,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 156,
-    "unwind": 72
+    "unwind": 0
    },
    "fsetpos.o": {
     "bss": 0,
@@ -3771,7 +3762,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 108,
-    "unwind": 64
+    "unwind": 0
    },
    "fsqrt.o": {
     "bss": 0,
@@ -3780,7 +3771,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 298,
-    "unwind": 56
+    "unwind": 0
    },
    "fsqrtl.o": {
     "bss": 0,
@@ -3789,7 +3780,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "fsub.o": {
     "bss": 0,
@@ -3798,7 +3789,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "fsubl.o": {
     "bss": 0,
@@ -3807,7 +3798,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ftell.o": {
     "bss": 0,
@@ -3816,7 +3807,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 54,
-    "unwind": 56
+    "unwind": 0
    },
    "fwrite.o": {
     "bss": 0,
@@ -3825,7 +3816,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 120,
-    "unwind": 80
+    "unwind": 0
    },
    "getc.o": {
     "bss": 0,
@@ -3834,7 +3825,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "getchar.o": {
     "bss": 0,
@@ -3843,7 +3834,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 14,
-    "unwind": 48
+    "unwind": 0
    },
    "getenv.o": {
     "bss": 0,
@@ -3852,7 +3843,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "getpayload.o": {
     "bss": 0,
@@ -3861,7 +3852,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 56,
-    "unwind": 48
+    "unwind": 0
    },
    "getpayloadf.o": {
     "bss": 0,
@@ -3870,7 +3861,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 40,
-    "unwind": 48
+    "unwind": 0
    },
    "getpayloadl.o": {
     "bss": 0,
@@ -3879,7 +3870,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 33,
-    "unwind": 48
+    "unwind": 0
    },
    "gmtime.o": {
     "bss": 0,
@@ -3888,7 +3879,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 25,
-    "unwind": 48
+    "unwind": 0
    },
    "gmtime_r.o": {
     "bss": 0,
@@ -3897,7 +3888,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 34,
-    "unwind": 56
+    "unwind": 0
    },
    "hypot.o": {
     "bss": 0,
@@ -3906,7 +3897,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 594,
-    "unwind": 88
+    "unwind": 0
    },
    "hypotf.o": {
     "bss": 0,
@@ -3915,7 +3906,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 95,
-    "unwind": 48
+    "unwind": 0
    },
    "hypotl.o": {
     "bss": 0,
@@ -3924,7 +3915,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ilogb.o": {
     "bss": 0,
@@ -3933,7 +3924,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 161,
-    "unwind": 48
+    "unwind": 0
    },
    "ilogbf.o": {
     "bss": 0,
@@ -3942,7 +3933,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "ilogbl.o": {
     "bss": 0,
@@ -3951,7 +3942,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "imaxabs.o": {
     "bss": 0,
@@ -3960,7 +3951,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "imaxdiv.o": {
     "bss": 0,
@@ -3969,7 +3960,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "isalnum.o": {
     "bss": 0,
@@ -3978,7 +3969,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 34,
-    "unwind": 48
+    "unwind": 0
    },
    "isalpha.o": {
     "bss": 0,
@@ -3987,7 +3978,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 19,
-    "unwind": 48
+    "unwind": 0
    },
    "isblank.o": {
     "bss": 0,
@@ -3996,7 +3987,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 22,
-    "unwind": 48
+    "unwind": 0
    },
    "iscntrl.o": {
     "bss": 0,
@@ -4005,7 +3996,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 22,
-    "unwind": 48
+    "unwind": 0
    },
    "isdigit.o": {
     "bss": 0,
@@ -4014,7 +4005,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "isgraph.o": {
     "bss": 0,
@@ -4023,7 +4014,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "islower.o": {
     "bss": 0,
@@ -4032,7 +4023,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "isprint.o": {
     "bss": 0,
@@ -4041,7 +4032,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "ispunct.o": {
     "bss": 0,
@@ -4050,7 +4041,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 41,
-    "unwind": 48
+    "unwind": 0
    },
    "isspace.o": {
     "bss": 0,
@@ -4059,7 +4050,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 25,
-    "unwind": 48
+    "unwind": 0
    },
    "isupper.o": {
     "bss": 0,
@@ -4068,7 +4059,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "isxdigit.o": {
     "bss": 0,
@@ -4077,7 +4068,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 32,
-    "unwind": 48
+    "unwind": 0
    },
    "labs.o": {
     "bss": 0,
@@ -4086,7 +4077,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "ldexp.o": {
     "bss": 0,
@@ -4095,7 +4086,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ldexpf.o": {
     "bss": 0,
@@ -4104,7 +4095,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ldexpl.o": {
     "bss": 0,
@@ -4113,7 +4104,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ldiv.o": {
     "bss": 0,
@@ -4122,7 +4113,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "lgamma.o": {
     "bss": 0,
@@ -4131,7 +4122,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 670,
-    "unwind": 120
+    "unwind": 0
    },
    "lgammaf.o": {
     "bss": 0,
@@ -4140,7 +4131,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "lgammal.o": {
     "bss": 0,
@@ -4149,7 +4140,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "llabs.o": {
     "bss": 0,
@@ -4158,7 +4149,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "lldiv.o": {
     "bss": 0,
@@ -4167,7 +4158,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "llogb.o": {
     "bss": 0,
@@ -4176,7 +4167,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 176,
-    "unwind": 48
+    "unwind": 0
    },
    "llogbf.o": {
     "bss": 0,
@@ -4185,7 +4176,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "llogbl.o": {
     "bss": 0,
@@ -4194,7 +4185,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "llrint.o": {
     "bss": 0,
@@ -4203,7 +4194,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 88,
-    "unwind": 48
+    "unwind": 0
    },
    "llrintf.o": {
     "bss": 0,
@@ -4212,7 +4203,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "llrintl.o": {
     "bss": 0,
@@ -4221,7 +4212,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "llround.o": {
     "bss": 0,
@@ -4230,7 +4221,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 158,
-    "unwind": 48
+    "unwind": 0
    },
    "llroundf.o": {
     "bss": 0,
@@ -4239,7 +4230,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "llroundl.o": {
     "bss": 0,
@@ -4248,7 +4239,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "localeconv.o": {
     "bss": 0,
@@ -4257,7 +4248,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 10,
-    "unwind": 48
+    "unwind": 0
    },
    "localtime.o": {
     "bss": 0,
@@ -4266,7 +4257,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 25,
-    "unwind": 48
+    "unwind": 0
    },
    "localtime_r.o": {
     "bss": 0,
@@ -4275,7 +4266,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 90,
-    "unwind": 80
+    "unwind": 0
    },
    "log.o": {
     "bss": 0,
@@ -4284,7 +4275,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 130,
-    "unwind": 48
+    "unwind": 0
    },
    "log10.o": {
     "bss": 0,
@@ -4293,7 +4284,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 291,
-    "unwind": 56
+    "unwind": 0
    },
    "log10f.o": {
     "bss": 0,
@@ -4302,7 +4293,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "log10l.o": {
     "bss": 0,
@@ -4311,7 +4302,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "log10p1.o": {
     "bss": 0,
@@ -4320,7 +4311,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 345,
-    "unwind": 56
+    "unwind": 0
    },
    "log10p1f.o": {
     "bss": 0,
@@ -4329,7 +4320,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "log10p1l.o": {
     "bss": 0,
@@ -4338,7 +4329,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "log1p.o": {
     "bss": 0,
@@ -4347,7 +4338,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 316,
-    "unwind": 56
+    "unwind": 0
    },
    "log1pf.o": {
     "bss": 0,
@@ -4356,7 +4347,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 266,
-    "unwind": 56
+    "unwind": 0
    },
    "log1pl.o": {
     "bss": 0,
@@ -4365,7 +4356,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "log2.o": {
     "bss": 0,
@@ -4374,7 +4365,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 369,
-    "unwind": 56
+    "unwind": 0
    },
    "log2f.o": {
     "bss": 0,
@@ -4383,7 +4374,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "log2l.o": {
     "bss": 0,
@@ -4392,7 +4383,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "log2p1.o": {
     "bss": 0,
@@ -4401,7 +4392,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 345,
-    "unwind": 56
+    "unwind": 0
    },
    "log2p1f.o": {
     "bss": 0,
@@ -4410,7 +4401,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "log2p1l.o": {
     "bss": 0,
@@ -4419,7 +4410,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "logb.o": {
     "bss": 0,
@@ -4428,7 +4419,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 100,
-    "unwind": 48
+    "unwind": 0
    },
    "logbf.o": {
     "bss": 0,
@@ -4437,7 +4428,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "logbl.o": {
     "bss": 0,
@@ -4446,7 +4437,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "logf.o": {
     "bss": 0,
@@ -4455,7 +4446,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "logl.o": {
     "bss": 0,
@@ -4464,7 +4455,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "logp1.o": {
     "bss": 0,
@@ -4473,7 +4464,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "logp1f.o": {
     "bss": 0,
@@ -4482,7 +4473,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 266,
-    "unwind": 56
+    "unwind": 0
    },
    "logp1l.o": {
     "bss": 0,
@@ -4491,7 +4482,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "longjmp.o": {
     "bss": 0,
@@ -4509,7 +4500,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 88,
-    "unwind": 48
+    "unwind": 0
    },
    "lrintf.o": {
     "bss": 0,
@@ -4518,7 +4509,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "lrintl.o": {
     "bss": 0,
@@ -4527,7 +4518,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "lround.o": {
     "bss": 0,
@@ -4536,7 +4527,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 158,
-    "unwind": 48
+    "unwind": 0
    },
    "lroundf.o": {
     "bss": 0,
@@ -4545,7 +4536,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "lroundl.o": {
     "bss": 0,
@@ -4554,7 +4545,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "malloc.o": {
     "bss": 0,
@@ -4563,7 +4554,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 98,
-    "unwind": 56
+    "unwind": 0
    },
    "mblen.o": {
     "bss": 0,
@@ -4572,7 +4563,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 28,
-    "unwind": 48
+    "unwind": 0
    },
    "mbstowcs.o": {
     "bss": 0,
@@ -4581,7 +4572,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 48
+    "unwind": 0
    },
    "mbtowc.o": {
     "bss": 0,
@@ -4590,7 +4581,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 40,
-    "unwind": 48
+    "unwind": 0
    },
    "memalignment.o": {
     "bss": 0,
@@ -4599,7 +4590,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 14,
-    "unwind": 48
+    "unwind": 0
    },
    "memccpy.o": {
     "bss": 0,
@@ -4608,7 +4599,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 34,
-    "unwind": 48
+    "unwind": 0
    },
    "memchr.o": {
     "bss": 0,
@@ -4617,7 +4608,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 134,
-    "unwind": 48
+    "unwind": 0
    },
    "memcmp.o": {
     "bss": 0,
@@ -4626,7 +4617,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 36,
-    "unwind": 48
+    "unwind": 0
    },
    "memcpy.o": {
     "bss": 0,
@@ -4635,7 +4626,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 116,
-    "unwind": 48
+    "unwind": 0
    },
    "memmove.o": {
     "bss": 0,
@@ -4644,7 +4635,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 256,
-    "unwind": 48
+    "unwind": 0
    },
    "memset.o": {
     "bss": 0,
@@ -4653,7 +4644,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 122,
-    "unwind": 48
+    "unwind": 0
    },
    "memset_explicit.o": {
     "bss": 0,
@@ -4662,7 +4653,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 56
+    "unwind": 0
    },
    "mktime.o": {
     "bss": 0,
@@ -4671,7 +4662,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 142,
-    "unwind": 80
+    "unwind": 0
    },
    "modf.o": {
     "bss": 0,
@@ -4680,7 +4671,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 90,
-    "unwind": 72
+    "unwind": 0
    },
    "modff.o": {
     "bss": 0,
@@ -4689,7 +4680,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 46,
-    "unwind": 56
+    "unwind": 0
    },
    "modfl.o": {
     "bss": 0,
@@ -4698,7 +4689,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 38,
-    "unwind": 56
+    "unwind": 0
    },
    "mtx_destroy.o": {
     "bss": 0,
@@ -4707,7 +4698,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 12,
-    "unwind": 48
+    "unwind": 0
    },
    "mtx_init.o": {
     "bss": 0,
@@ -4716,7 +4707,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 35,
-    "unwind": 48
+    "unwind": 0
    },
    "mtx_lock.o": {
     "bss": 0,
@@ -4725,7 +4716,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 11,
-    "unwind": 48
+    "unwind": 0
    },
    "mtx_timedlock.o": {
     "bss": 0,
@@ -4734,7 +4725,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "mtx_trylock.o": {
     "bss": 0,
@@ -4743,7 +4734,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 81,
-    "unwind": 56
+    "unwind": 0
    },
    "mtx_unlock.o": {
     "bss": 0,
@@ -4752,7 +4743,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "nan.o": {
     "bss": 0,
@@ -4761,7 +4752,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "nanf.o": {
     "bss": 0,
@@ -4770,7 +4761,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "nanl.o": {
     "bss": 0,
@@ -4779,7 +4770,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "nearbyint.o": {
     "bss": 0,
@@ -4788,7 +4779,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 86,
-    "unwind": 56
+    "unwind": 0
    },
    "nearbyintf.o": {
     "bss": 0,
@@ -4797,7 +4788,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "nearbyintl.o": {
     "bss": 0,
@@ -4806,7 +4797,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "nextafter.o": {
     "bss": 0,
@@ -4815,7 +4806,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 220,
-    "unwind": 48
+    "unwind": 0
    },
    "nextafterf.o": {
     "bss": 0,
@@ -4824,7 +4815,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 191,
-    "unwind": 48
+    "unwind": 0
    },
    "nextafterl.o": {
     "bss": 0,
@@ -4833,7 +4824,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "nextdown.o": {
     "bss": 0,
@@ -4842,7 +4833,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 34,
-    "unwind": 48
+    "unwind": 0
    },
    "nextdownf.o": {
     "bss": 0,
@@ -4851,7 +4842,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 34,
-    "unwind": 48
+    "unwind": 0
    },
    "nextdownl.o": {
     "bss": 0,
@@ -4860,7 +4851,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "nexttoward.o": {
     "bss": 0,
@@ -4869,7 +4860,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "nexttowardf.o": {
     "bss": 0,
@@ -4878,7 +4869,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 196,
-    "unwind": 48
+    "unwind": 0
    },
    "nexttowardl.o": {
     "bss": 0,
@@ -4887,7 +4878,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "nextup.o": {
     "bss": 0,
@@ -4896,7 +4887,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 75,
-    "unwind": 48
+    "unwind": 0
    },
    "nextupf.o": {
     "bss": 0,
@@ -4905,7 +4896,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 58,
-    "unwind": 48
+    "unwind": 0
    },
    "nextupl.o": {
     "bss": 0,
@@ -4914,7 +4905,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "perror.o": {
     "bss": 0,
@@ -4923,7 +4914,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 151,
-    "unwind": 64
+    "unwind": 0
    },
    "pow.o": {
     "bss": 0,
@@ -4932,7 +4923,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 1174,
-    "unwind": 80
+    "unwind": 0
    },
    "powf.o": {
     "bss": 0,
@@ -4941,7 +4932,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "powl.o": {
     "bss": 0,
@@ -4950,7 +4941,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "pown.o": {
     "bss": 0,
@@ -4959,7 +4950,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 315,
-    "unwind": 88
+    "unwind": 0
    },
    "pownf.o": {
     "bss": 0,
@@ -4968,7 +4959,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "pownl.o": {
     "bss": 0,
@@ -4977,7 +4968,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "powr.o": {
     "bss": 0,
@@ -4986,7 +4977,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 611,
-    "unwind": 80
+    "unwind": 0
    },
    "powrf.o": {
     "bss": 0,
@@ -4995,7 +4986,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "powrl.o": {
     "bss": 0,
@@ -5004,7 +4995,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "printf.o": {
     "bss": 0,
@@ -5013,7 +5004,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 160,
-    "unwind": 56
+    "unwind": 0
    },
    "putc.o": {
     "bss": 0,
@@ -5022,7 +5013,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "putchar.o": {
     "bss": 0,
@@ -5031,7 +5022,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 14,
-    "unwind": 48
+    "unwind": 0
    },
    "puts.o": {
     "bss": 0,
@@ -5040,7 +5031,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 102,
-    "unwind": 64
+    "unwind": 0
    },
    "qsort.o": {
     "bss": 0,
@@ -5049,7 +5040,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 361,
-    "unwind": 152
+    "unwind": 0
    },
    "quick_exit.o": {
     "bss": 0,
@@ -5058,16 +5049,16 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "raise.o": {
-    "bss": 0,
+    "bss": 256,
     "data": 0,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
     "text": 77,
-    "unwind": 48
+    "unwind": 0
    },
    "rand.o": {
     "bss": 0,
@@ -5076,7 +5067,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 72,
-    "unwind": 48
+    "unwind": 0
    },
    "realloc.o": {
     "bss": 0,
@@ -5085,7 +5076,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 241,
-    "unwind": 80
+    "unwind": 0
    },
    "remainder.o": {
     "bss": 0,
@@ -5094,7 +5085,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "remainderf.o": {
     "bss": 0,
@@ -5103,7 +5094,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 48
+    "unwind": 0
    },
    "remainderl.o": {
     "bss": 0,
@@ -5112,7 +5103,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "remove.o": {
     "bss": 0,
@@ -5121,7 +5112,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 33,
-    "unwind": 48
+    "unwind": 0
    },
    "remquo.o": {
     "bss": 0,
@@ -5130,7 +5121,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 17,
-    "unwind": 48
+    "unwind": 0
    },
    "remquof.o": {
     "bss": 0,
@@ -5139,7 +5130,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 32,
-    "unwind": 48
+    "unwind": 0
    },
    "remquol.o": {
     "bss": 0,
@@ -5148,7 +5139,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "rename.o": {
     "bss": 0,
@@ -5157,7 +5148,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 33,
-    "unwind": 48
+    "unwind": 0
    },
    "rewind.o": {
     "bss": 0,
@@ -5166,7 +5157,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 41,
-    "unwind": 56
+    "unwind": 0
    },
    "rint.o": {
     "bss": 0,
@@ -5175,7 +5166,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 119,
-    "unwind": 56
+    "unwind": 0
    },
    "rintf.o": {
     "bss": 0,
@@ -5184,7 +5175,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "rintl.o": {
     "bss": 0,
@@ -5193,7 +5184,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "rootn.o": {
     "bss": 0,
@@ -5202,7 +5193,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 523,
-    "unwind": 64
+    "unwind": 0
    },
    "rootnf.o": {
     "bss": 0,
@@ -5211,7 +5202,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "rootnl.o": {
     "bss": 0,
@@ -5220,7 +5211,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "round.o": {
     "bss": 0,
@@ -5229,7 +5220,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 117,
-    "unwind": 48
+    "unwind": 0
    },
    "roundeven.o": {
     "bss": 0,
@@ -5238,7 +5229,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 160,
-    "unwind": 48
+    "unwind": 0
    },
    "roundevenf.o": {
     "bss": 0,
@@ -5247,7 +5238,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "roundevenl.o": {
     "bss": 0,
@@ -5256,7 +5247,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "roundf.o": {
     "bss": 0,
@@ -5265,7 +5256,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "roundl.o": {
     "bss": 0,
@@ -5274,7 +5265,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "rsqrt.o": {
     "bss": 0,
@@ -5283,7 +5274,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 165,
-    "unwind": 48
+    "unwind": 0
    },
    "rsqrtf.o": {
     "bss": 0,
@@ -5292,7 +5283,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "rsqrtl.o": {
     "bss": 0,
@@ -5301,7 +5292,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "scalbln.o": {
     "bss": 0,
@@ -5310,7 +5301,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 40,
-    "unwind": 48
+    "unwind": 0
    },
    "scalblnf.o": {
     "bss": 0,
@@ -5319,7 +5310,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 40,
-    "unwind": 48
+    "unwind": 0
    },
    "scalblnl.o": {
     "bss": 0,
@@ -5328,7 +5319,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "scalbn.o": {
     "bss": 0,
@@ -5337,7 +5328,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 132,
-    "unwind": 48
+    "unwind": 0
    },
    "scalbnf.o": {
     "bss": 0,
@@ -5346,7 +5337,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 113,
-    "unwind": 48
+    "unwind": 0
    },
    "scalbnl.o": {
     "bss": 0,
@@ -5355,7 +5346,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "scanf.o": {
     "bss": 0,
@@ -5364,7 +5355,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 160,
-    "unwind": 56
+    "unwind": 0
    },
    "setbuf.o": {
     "bss": 0,
@@ -5373,7 +5364,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "setjmp.o": {
     "bss": 0,
@@ -5391,7 +5382,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 83,
-    "unwind": 56
+    "unwind": 0
    },
    "setpayload.o": {
     "bss": 0,
@@ -5400,7 +5391,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 142,
-    "unwind": 56
+    "unwind": 0
    },
    "setpayloadf.o": {
     "bss": 0,
@@ -5409,7 +5400,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 99,
-    "unwind": 56
+    "unwind": 0
    },
    "setpayloadl.o": {
     "bss": 0,
@@ -5418,7 +5409,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 38,
-    "unwind": 56
+    "unwind": 0
    },
    "setpayloadsig.o": {
     "bss": 0,
@@ -5427,7 +5418,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 143,
-    "unwind": 56
+    "unwind": 0
    },
    "setpayloadsigf.o": {
     "bss": 0,
@@ -5436,7 +5427,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 100,
-    "unwind": 56
+    "unwind": 0
    },
    "setpayloadsigl.o": {
     "bss": 0,
@@ -5445,7 +5436,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 38,
-    "unwind": 56
+    "unwind": 0
    },
    "setvbuf.o": {
     "bss": 0,
@@ -5454,7 +5445,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 166,
-    "unwind": 88
+    "unwind": 0
    },
    "signal.o": {
     "bss": 0,
@@ -5463,7 +5454,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 55,
-    "unwind": 48
+    "unwind": 0
    },
    "sin.o": {
     "bss": 0,
@@ -5472,7 +5463,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 409,
-    "unwind": 64
+    "unwind": 0
    },
    "sinf.o": {
     "bss": 0,
@@ -5481,7 +5472,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 300,
-    "unwind": 72
+    "unwind": 0
    },
    "sinh.o": {
     "bss": 0,
@@ -5490,7 +5481,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 799,
-    "unwind": 72
+    "unwind": 0
    },
    "sinhf.o": {
     "bss": 0,
@@ -5499,7 +5490,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 275,
-    "unwind": 64
+    "unwind": 0
    },
    "sinhl.o": {
     "bss": 0,
@@ -5508,7 +5499,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "sinl.o": {
     "bss": 0,
@@ -5517,7 +5508,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "sinpi.o": {
     "bss": 0,
@@ -5526,7 +5517,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 703,
-    "unwind": 128
+    "unwind": 0
    },
    "sinpif.o": {
     "bss": 0,
@@ -5535,7 +5526,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "sinpil.o": {
     "bss": 0,
@@ -5544,7 +5535,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "snprintf.o": {
     "bss": 0,
@@ -5553,7 +5544,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 142,
-    "unwind": 56
+    "unwind": 0
    },
    "sprintf.o": {
     "bss": 0,
@@ -5562,7 +5553,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 147,
-    "unwind": 56
+    "unwind": 0
    },
    "sqrt.o": {
     "bss": 0,
@@ -5571,7 +5562,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "sqrtf.o": {
     "bss": 0,
@@ -5580,7 +5571,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "sqrtl.o": {
     "bss": 0,
@@ -5589,7 +5580,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "srand.o": {
     "bss": 0,
@@ -5598,7 +5589,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 43,
-    "unwind": 48
+    "unwind": 0
    },
    "sscanf.o": {
     "bss": 0,
@@ -5607,7 +5598,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 147,
-    "unwind": 56
+    "unwind": 0
    },
    "stdc_bit_ceil_uc.o": {
     "bss": 0,
@@ -5616,7 +5607,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 26,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_ceil_ui.o": {
     "bss": 0,
@@ -5625,7 +5616,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 27,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_ceil_ul.o": {
     "bss": 0,
@@ -5634,7 +5625,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_ceil_ull.o": {
     "bss": 0,
@@ -5643,7 +5634,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_ceil_us.o": {
     "bss": 0,
@@ -5652,7 +5643,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 32,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_floor_uc.o": {
     "bss": 0,
@@ -5661,7 +5652,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 23,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_floor_ui.o": {
     "bss": 0,
@@ -5670,7 +5661,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_floor_ul.o": {
     "bss": 0,
@@ -5679,7 +5670,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 33,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_floor_ull.o": {
     "bss": 0,
@@ -5688,7 +5679,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 33,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_floor_us.o": {
     "bss": 0,
@@ -5697,7 +5688,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 25,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_width_uc.o": {
     "bss": 0,
@@ -5706,7 +5697,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_width_ui.o": {
     "bss": 0,
@@ -5715,7 +5706,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 17,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_width_ul.o": {
     "bss": 0,
@@ -5724,7 +5715,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 19,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_width_ull.o": {
     "bss": 0,
@@ -5733,7 +5724,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 19,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_bit_width_us.o": {
     "bss": 0,
@@ -5742,7 +5733,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_count_ones_uc.o": {
     "bss": 0,
@@ -5751,7 +5742,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_count_ones_ui.o": {
     "bss": 0,
@@ -5760,7 +5751,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 14,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_count_ones_ul.o": {
     "bss": 0,
@@ -5769,7 +5760,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 12,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_count_ones_ull.o": {
     "bss": 0,
@@ -5778,7 +5769,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 12,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_count_ones_us.o": {
     "bss": 0,
@@ -5787,7 +5778,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_count_zeros_uc.o": {
     "bss": 0,
@@ -5796,7 +5787,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_count_zeros_ui.o": {
     "bss": 0,
@@ -5805,7 +5796,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 14,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_count_zeros_ul.o": {
     "bss": 0,
@@ -5814,7 +5805,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_count_zeros_ull.o": {
     "bss": 0,
@@ -5823,7 +5814,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_count_zeros_us.o": {
     "bss": 0,
@@ -5832,7 +5823,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 17,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_leading_one_uc.o": {
     "bss": 0,
@@ -5841,7 +5832,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_leading_one_ui.o": {
     "bss": 0,
@@ -5850,7 +5841,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_leading_one_ul.o": {
     "bss": 0,
@@ -5859,7 +5850,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 23,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_leading_one_ull.o": {
     "bss": 0,
@@ -5868,7 +5859,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 23,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_leading_one_us.o": {
     "bss": 0,
@@ -5877,7 +5868,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_leading_zero_uc.o": {
     "bss": 0,
@@ -5886,7 +5877,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 26,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_leading_zero_ui.o": {
     "bss": 0,
@@ -5895,7 +5886,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_leading_zero_ul.o": {
     "bss": 0,
@@ -5904,7 +5895,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_leading_zero_ull.o": {
     "bss": 0,
@@ -5913,7 +5904,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_leading_zero_us.o": {
     "bss": 0,
@@ -5922,7 +5913,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 25,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_trailing_one_uc.o": {
     "bss": 0,
@@ -5931,7 +5922,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_trailing_one_ui.o": {
     "bss": 0,
@@ -5940,7 +5931,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 17,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_trailing_one_ul.o": {
     "bss": 0,
@@ -5949,7 +5940,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 19,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_trailing_one_ull.o": {
     "bss": 0,
@@ -5958,7 +5949,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 19,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_trailing_one_us.o": {
     "bss": 0,
@@ -5967,7 +5958,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_trailing_zero_uc.o": {
     "bss": 0,
@@ -5976,7 +5967,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 23,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_trailing_zero_ui.o": {
     "bss": 0,
@@ -5985,7 +5976,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_trailing_zero_ul.o": {
     "bss": 0,
@@ -5994,7 +5985,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_trailing_zero_ull.o": {
     "bss": 0,
@@ -6003,7 +5994,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_first_trailing_zero_us.o": {
     "bss": 0,
@@ -6012,7 +6003,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 22,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_has_single_bit_uc.o": {
     "bss": 0,
@@ -6021,7 +6012,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 19,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_has_single_bit_ui.o": {
     "bss": 0,
@@ -6030,7 +6021,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_has_single_bit_ul.o": {
     "bss": 0,
@@ -6039,7 +6030,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_has_single_bit_ull.o": {
     "bss": 0,
@@ -6048,7 +6039,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_has_single_bit_us.o": {
     "bss": 0,
@@ -6057,7 +6048,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_leading_ones_uc.o": {
     "bss": 0,
@@ -6066,7 +6057,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 29,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_leading_ones_ui.o": {
     "bss": 0,
@@ -6075,7 +6066,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_leading_ones_ul.o": {
     "bss": 0,
@@ -6084,7 +6075,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 27,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_leading_ones_ull.o": {
     "bss": 0,
@@ -6093,7 +6084,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 27,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_leading_ones_us.o": {
     "bss": 0,
@@ -6102,7 +6093,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 28,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_leading_zeros_uc.o": {
     "bss": 0,
@@ -6111,7 +6102,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 27,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_leading_zeros_ui.o": {
     "bss": 0,
@@ -6120,7 +6111,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_leading_zeros_ul.o": {
     "bss": 0,
@@ -6129,7 +6120,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_leading_zeros_ull.o": {
     "bss": 0,
@@ -6138,7 +6129,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_leading_zeros_us.o": {
     "bss": 0,
@@ -6147,7 +6138,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 27,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_trailing_ones_uc.o": {
     "bss": 0,
@@ -6156,7 +6147,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 23,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_trailing_ones_ui.o": {
     "bss": 0,
@@ -6165,7 +6156,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_trailing_ones_ul.o": {
     "bss": 0,
@@ -6174,7 +6165,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 23,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_trailing_ones_ull.o": {
     "bss": 0,
@@ -6183,7 +6174,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 23,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_trailing_ones_us.o": {
     "bss": 0,
@@ -6192,7 +6183,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 22,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_trailing_zeros_uc.o": {
     "bss": 0,
@@ -6201,7 +6192,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_trailing_zeros_ui.o": {
     "bss": 0,
@@ -6210,7 +6201,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 17,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_trailing_zeros_ul.o": {
     "bss": 0,
@@ -6219,7 +6210,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_trailing_zeros_ull.o": {
     "bss": 0,
@@ -6228,7 +6219,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "stdc_trailing_zeros_us.o": {
     "bss": 0,
@@ -6237,7 +6228,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 21,
-    "unwind": 48
+    "unwind": 0
    },
    "strcat.o": {
     "bss": 0,
@@ -6246,7 +6237,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 45,
-    "unwind": 56
+    "unwind": 0
    },
    "strchr.o": {
     "bss": 0,
@@ -6255,7 +6246,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 56
+    "unwind": 0
    },
    "strcmp.o": {
     "bss": 0,
@@ -6264,7 +6255,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 28,
-    "unwind": 48
+    "unwind": 0
    },
    "strcoll.o": {
     "bss": 0,
@@ -6273,7 +6264,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "strcpy.o": {
     "bss": 0,
@@ -6282,7 +6273,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 47,
-    "unwind": 56
+    "unwind": 0
    },
    "strcspn.o": {
     "bss": 0,
@@ -6291,7 +6282,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 134,
-    "unwind": 64
+    "unwind": 0
    },
    "strdup.o": {
     "bss": 0,
@@ -6300,7 +6291,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 58,
-    "unwind": 72
+    "unwind": 0
    },
    "strerror.o": {
     "bss": 0,
@@ -6309,7 +6300,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 28,
-    "unwind": 48
+    "unwind": 0
    },
    "strfromd.o": {
     "bss": 0,
@@ -6318,7 +6309,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 11,
-    "unwind": 48
+    "unwind": 0
    },
    "strfromf.o": {
     "bss": 0,
@@ -6327,7 +6318,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "strfroml.o": {
     "bss": 0,
@@ -6336,7 +6327,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 11,
-    "unwind": 48
+    "unwind": 0
    },
    "strftime.o": {
     "bss": 0,
@@ -6345,7 +6336,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 2220,
-    "unwind": 416
+    "unwind": 0
    },
    "strlen.o": {
     "bss": 0,
@@ -6354,7 +6345,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 79,
-    "unwind": 48
+    "unwind": 0
    },
    "strncat.o": {
     "bss": 0,
@@ -6363,7 +6354,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 85,
-    "unwind": 80
+    "unwind": 0
    },
    "strncmp.o": {
     "bss": 0,
@@ -6372,7 +6363,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 39,
-    "unwind": 48
+    "unwind": 0
    },
    "strncpy.o": {
     "bss": 0,
@@ -6381,7 +6372,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 86,
-    "unwind": 80
+    "unwind": 0
    },
    "strndup.o": {
     "bss": 0,
@@ -6390,7 +6381,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 79,
-    "unwind": 72
+    "unwind": 0
    },
    "strpbrk.o": {
     "bss": 0,
@@ -6399,7 +6390,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 25,
-    "unwind": 56
+    "unwind": 0
    },
    "strrchr.o": {
     "bss": 0,
@@ -6408,7 +6399,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 25,
-    "unwind": 48
+    "unwind": 0
    },
    "strspn.o": {
     "bss": 0,
@@ -6417,7 +6408,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 99,
-    "unwind": 48
+    "unwind": 0
    },
    "strstr.o": {
     "bss": 0,
@@ -6426,7 +6417,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 472,
-    "unwind": 136
+    "unwind": 0
    },
    "strtod.o": {
     "bss": 0,
@@ -6435,7 +6426,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 128,
-    "unwind": 72
+    "unwind": 0
    },
    "strtof.o": {
     "bss": 0,
@@ -6444,7 +6435,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 126,
-    "unwind": 72
+    "unwind": 0
    },
    "strtoimax.o": {
     "bss": 0,
@@ -6453,7 +6444,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "strtok.o": {
     "bss": 0,
@@ -6462,7 +6453,7 @@
     "tbss": 8,
     "tdata": 0,
     "text": 125,
-    "unwind": 56
+    "unwind": 0
    },
    "strtol.o": {
     "bss": 0,
@@ -6471,7 +6462,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "strtold.o": {
     "bss": 0,
@@ -6480,7 +6471,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "strtoll.o": {
     "bss": 0,
@@ -6489,7 +6480,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 24,
-    "unwind": 48
+    "unwind": 0
    },
    "strtoul.o": {
     "bss": 0,
@@ -6498,7 +6489,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "strtoull.o": {
     "bss": 0,
@@ -6507,7 +6498,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "strtoumax.o": {
     "bss": 0,
@@ -6516,7 +6507,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 15,
-    "unwind": 48
+    "unwind": 0
    },
    "strxfrm.o": {
     "bss": 0,
@@ -6525,7 +6516,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 70,
-    "unwind": 72
+    "unwind": 0
    },
    "system.o": {
     "bss": 0,
@@ -6534,7 +6525,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "tan.o": {
     "bss": 0,
@@ -6543,7 +6534,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 650,
-    "unwind": 80
+    "unwind": 0
    },
    "tanf.o": {
     "bss": 0,
@@ -6552,7 +6543,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 275,
-    "unwind": 64
+    "unwind": 0
    },
    "tanh.o": {
     "bss": 0,
@@ -6561,7 +6552,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 855,
-    "unwind": 88
+    "unwind": 0
    },
    "tanhf.o": {
     "bss": 0,
@@ -6570,7 +6561,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 300,
-    "unwind": 72
+    "unwind": 0
    },
    "tanhl.o": {
     "bss": 0,
@@ -6579,7 +6570,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "tanl.o": {
     "bss": 0,
@@ -6588,7 +6579,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "tanpi.o": {
     "bss": 0,
@@ -6597,7 +6588,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 964,
-    "unwind": 152
+    "unwind": 0
    },
    "tanpif.o": {
     "bss": 0,
@@ -6606,7 +6597,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "tanpil.o": {
     "bss": 0,
@@ -6615,7 +6606,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "tgamma.o": {
     "bss": 0,
@@ -6624,7 +6615,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 543,
-    "unwind": 64
+    "unwind": 0
    },
    "tgammaf.o": {
     "bss": 0,
@@ -6633,7 +6624,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "tgammal.o": {
     "bss": 0,
@@ -6642,7 +6633,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "thrd_create.o": {
     "bss": 0,
@@ -6651,7 +6642,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 116,
-    "unwind": 80
+    "unwind": 0
    },
    "thrd_current.o": {
     "bss": 0,
@@ -6660,7 +6651,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "thrd_detach.o": {
     "bss": 0,
@@ -6669,7 +6660,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 17,
-    "unwind": 48
+    "unwind": 0
    },
    "thrd_equal.o": {
     "bss": 0,
@@ -6678,7 +6669,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 13,
-    "unwind": 48
+    "unwind": 0
    },
    "thrd_exit.o": {
     "bss": 0,
@@ -6687,7 +6678,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 54,
-    "unwind": 56
+    "unwind": 0
    },
    "thrd_join.o": {
     "bss": 0,
@@ -6696,7 +6687,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 56,
-    "unwind": 56
+    "unwind": 0
    },
    "thrd_sleep.o": {
     "bss": 0,
@@ -6705,7 +6696,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 48
+    "unwind": 0
    },
    "thrd_yield.o": {
     "bss": 0,
@@ -6714,7 +6705,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "time.o": {
     "bss": 0,
@@ -6723,7 +6714,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 64,
-    "unwind": 56
+    "unwind": 0
    },
    "timegm.o": {
     "bss": 0,
@@ -6732,7 +6723,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 58,
-    "unwind": 56
+    "unwind": 0
    },
    "timespec_get.o": {
     "bss": 0,
@@ -6741,7 +6732,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 37,
-    "unwind": 56
+    "unwind": 0
    },
    "timespec_getres.o": {
     "bss": 0,
@@ -6750,7 +6741,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 65,
-    "unwind": 64
+    "unwind": 0
    },
    "tmpfile.o": {
     "bss": 4,
@@ -6759,7 +6750,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 155,
-    "unwind": 72
+    "unwind": 0
    },
    "tmpnam.o": {
     "bss": 4,
@@ -6768,7 +6759,7 @@
     "tbss": 32,
     "tdata": 0,
     "text": 147,
-    "unwind": 72
+    "unwind": 0
    },
    "tolower.o": {
     "bss": 0,
@@ -6777,7 +6768,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "totalorder.o": {
     "bss": 0,
@@ -6786,7 +6777,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 41,
-    "unwind": 48
+    "unwind": 0
    },
    "totalorderf.o": {
     "bss": 0,
@@ -6795,7 +6786,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 31,
-    "unwind": 48
+    "unwind": 0
    },
    "totalorderl.o": {
     "bss": 0,
@@ -6804,7 +6795,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 45,
-    "unwind": 48
+    "unwind": 0
    },
    "totalordermag.o": {
     "bss": 0,
@@ -6813,7 +6804,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 33,
-    "unwind": 48
+    "unwind": 0
    },
    "totalordermagf.o": {
     "bss": 0,
@@ -6822,7 +6813,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 28,
-    "unwind": 48
+    "unwind": 0
    },
    "totalordermagl.o": {
     "bss": 0,
@@ -6831,7 +6822,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 45,
-    "unwind": 48
+    "unwind": 0
    },
    "toupper.o": {
     "bss": 0,
@@ -6840,7 +6831,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 18,
-    "unwind": 48
+    "unwind": 0
    },
    "trunc.o": {
     "bss": 0,
@@ -6849,7 +6840,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 85,
-    "unwind": 48
+    "unwind": 0
    },
    "truncf.o": {
     "bss": 0,
@@ -6858,7 +6849,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "truncl.o": {
     "bss": 0,
@@ -6867,7 +6858,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "tss_create.o": {
     "bss": 0,
@@ -6876,7 +6867,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 66,
-    "unwind": 48
+    "unwind": 0
    },
    "tss_delete.o": {
     "bss": 0,
@@ -6885,7 +6876,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 34,
-    "unwind": 48
+    "unwind": 0
    },
    "tss_get.o": {
     "bss": 0,
@@ -6894,7 +6885,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 54,
-    "unwind": 48
+    "unwind": 0
    },
    "tss_set.o": {
     "bss": 0,
@@ -6903,7 +6894,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 56,
-    "unwind": 48
+    "unwind": 0
    },
    "ufromfp.o": {
     "bss": 0,
@@ -6912,7 +6903,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 16,
-    "unwind": 48
+    "unwind": 0
    },
    "ufromfpf.o": {
     "bss": 0,
@@ -6921,7 +6912,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 27,
-    "unwind": 48
+    "unwind": 0
    },
    "ufromfpl.o": {
     "bss": 0,
@@ -6930,7 +6921,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ufromfpx.o": {
     "bss": 0,
@@ -6939,7 +6930,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 19,
-    "unwind": 48
+    "unwind": 0
    },
    "ufromfpxf.o": {
     "bss": 0,
@@ -6948,7 +6939,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 30,
-    "unwind": 48
+    "unwind": 0
    },
    "ufromfpxl.o": {
     "bss": 0,
@@ -6957,7 +6948,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 9,
-    "unwind": 48
+    "unwind": 0
    },
    "ungetc.o": {
     "bss": 0,
@@ -6966,7 +6957,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 102,
-    "unwind": 64
+    "unwind": 0
    },
    "vfprintf.o": {
     "bss": 0,
@@ -6975,7 +6966,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 135,
-    "unwind": 96
+    "unwind": 0
    },
    "vfscanf.o": {
     "bss": 0,
@@ -6984,7 +6975,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 97,
-    "unwind": 56
+    "unwind": 0
    },
    "vprintf.o": {
     "bss": 0,
@@ -6993,7 +6984,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "vscanf.o": {
     "bss": 0,
@@ -7002,7 +6993,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 20,
-    "unwind": 48
+    "unwind": 0
    },
    "vsnprintf.o": {
     "bss": 0,
@@ -7011,7 +7002,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 77,
-    "unwind": 56
+    "unwind": 0
    },
    "vsprintf.o": {
     "bss": 0,
@@ -7020,7 +7011,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 19,
-    "unwind": 48
+    "unwind": 0
    },
    "vsscanf.o": {
     "bss": 0,
@@ -7029,7 +7020,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 44,
-    "unwind": 48
+    "unwind": 0
    },
    "wcstombs.o": {
     "bss": 0,
@@ -7038,7 +7029,7 @@
     "tbss": 0,
     "tdata": 0,
     "text": 52,
-    "unwind": 48
+    "unwind": 0
    },
    "wctomb.o": {
     "bss": 0,
@@ -7047,17 +7038,17 @@
     "tbss": 0,
     "tdata": 0,
     "text": 44,
-    "unwind": 48
+    "unwind": 0
    }
   },
   "totals": {
    "bss": 1336,
-   "data": 204,
-   "rodata": 18371,
-   "tbss": 656,
+   "data": 212,
+   "rodata": 18345,
+   "tbss": 618,
    "tdata": 8,
-   "text": 99892,
-   "unwind": 46096
+   "text": 100493,
+   "unwind": 0
   }
  },
  "stack": {
@@ -7150,15 +7141,14 @@
     ]
    },
    "exit": {
-    "depth": 104,
+    "depth": 40,
     "notes": [
-     "indirect call"
+     "indirect call",
+     "unknown: __libc_atexit_run"
     ],
     "path": [
      "exit",
-     "__libc_exit_run",
-     "__rtos_lock_acquire",
-     "__rtos_thread_self"
+     "__rtos_exit"
     ]
    },
    "exp": {
@@ -7191,12 +7181,12 @@
     ]
    },
    "fflush": {
-    "depth": 136,
+    "depth": 152,
     "notes": [],
     "path": [
      "fflush",
      "__libc_stdio_flush_all",
-     "libc/stdio/__libc_stdio_flush_all.c:flush_one",
+     "libc/stdio/__libc_stdio_flush_all.c:flush_one.part.0",
      "__rtos_lock_acquire",
      "__rtos_thread_self"
     ]
@@ -7644,13 +7634,17 @@
    "__atomic_xor.o:__atomic_xor_fetch_8": 32,
    "__atomic_xor.o:libc/atomic/__atomic_xor.c:__libc_atomic_cas_small": 80,
    "__flt_rounds.o:__flt_rounds": 8,
-   "__libc_asctime.o:__libc_asctime": 48,
-   "__libc_assert_fail.o:__libc_assert_fail": 288,
+   "__libc_asctime.o:__libc_asctime": 16,
+   "__libc_asctime.o:libc/time/__libc_asctime.c:put": 8,
+   "__libc_asctime.o:libc/time/__libc_asctime.c:put_number": 56,
+   "__libc_assert_fail.o:__libc_assert_fail": 304,
+   "__libc_assert_fail.o:libc/assert/__libc_assert_fail.c:append": 8,
    "__libc_atan2_core.o:__libc_atan2_core": 48,
    "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:__libc_dd_divide": 16,
    "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:__libc_dd_product": 8,
    "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:__libc_dd_sum": 8,
    "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:atan_unit": 8,
+   "__libc_atexit_run.o:libc/stdlib/__libc_atexit_run.c:__libc_atexit_run": 8,
    "__libc_cond_wait.o:__libc_cond_wait": 48,
    "__libc_cos_core.o:__libc_cos_core": 8,
    "__libc_cosh_core.o:__libc_cosh_core": 8,
@@ -7681,6 +7675,7 @@
    "__libc_file_link.o:__libc_file_link": 16,
    "__libc_file_mode.o:__libc_file_mode": 8,
    "__libc_file_new.o:__libc_file_new": 32,
+   "__libc_file_new.o:libc/stdio/__libc_file_new.c:close_at_exit": 16,
    "__libc_file_position.o:__libc_file_position": 16,
    "__libc_file_read.o:__libc_file_read": 48,
    "__libc_file_refill.o:__libc_file_refill": 16,
@@ -7748,9 +7743,8 @@
    "__libc_sinh_core.o:__libc_sinh_core": 8,
    "__libc_sinh_core.o:libc/math/__libc_sinh_core.c:__libc_dd_product": 8,
    "__libc_start_main.o:__libc_start_main": 48,
-   "__libc_stdio_exit.o:__libc_stdio_exit": 16,
-   "__libc_stdio_flush_all.o:__libc_stdio_flush_all": 32,
-   "__libc_stdio_flush_all.o:libc/stdio/__libc_stdio_flush_all.c:flush_one": 32,
+   "__libc_stdio_flush_all.o:__libc_stdio_flush_all": 48,
+   "__libc_stdio_flush_all.o:libc/stdio/__libc_stdio_flush_all.c:flush_one.part.0": 32,
    "__libc_strchrnul.o:__libc_strchrnul": 8,
    "__libc_strtofloat.o:__libc_strtofloat": 128,
    "__libc_strtofloat.o:libc/stdlib/__libc_strtofloat.c:hex_value": 8,

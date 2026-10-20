@@ -47,4 +47,7 @@ extern struct __libc_exit_handlers __libc_quick_exit_handlers;
 int __libc_exit_register(struct __libc_exit_handlers *table, void (*func)(void));
 void __libc_exit_run(struct __libc_exit_handlers *table);
 
+/* Runs the atexit handlers; linked only with atexit (a weak reference from exit, PLAN D52) */
+[[gnu::weak]] void __libc_atexit_run(void);
+
 #endif /* _INTERNAL_STDLIB_H */
