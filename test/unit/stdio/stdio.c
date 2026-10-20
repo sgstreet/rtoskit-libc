@@ -240,6 +240,23 @@ static void check_buffering(void)
 	CHECK(g != nullptr && fgetc(g) == 'u');
 	CHECK(fclose(g) == 0 && fclose(f) == 0);
 
+	/* A caller's buffer given up by a later setvbuf is never written again (PLAN D53) */
+	memset(buffer, '.', sizeof(buffer));
+	f = fopen(name, "w");
+	CHECK(f != nullptr && setvbuf(f, buffer, _IOFBF, sizeof(buffer)) == 0 && setvbuf(f, nullptr, _IOFBF, 0) == 0);
+	CHECK(fputs("zzz", f) == 0 && buffer[0] == '.' && fclose(f) == 0);
+
+	/* Unbuffered, then fully buffered again: output is held until the flush */
+	f = fopen(name, "w");
+	CHECK(f != nullptr && setvbuf(f, nullptr, _IONBF, 0) == 0 && setvbuf(f, nullptr, _IOFBF, 0) == 0);
+	CHECK(fputs("held", f) == 0);
+	g = fopen(name, "r");
+	CHECK(g != nullptr && fgetc(g) == EOF);
+	CHECK(fflush(f) == 0);
+	clearerr(g);
+	CHECK(fgets(line, sizeof(line), g) == line && strcmp(line, "held") == 0);
+	CHECK(fclose(g) == 0 && fclose(f) == 0);
+
 	/* An invalid mode */
 	f = fopen(name, "r");
 	CHECK(f != nullptr && setvbuf(f, nullptr, 7, 0) != 0 && fclose(f) == 0);
@@ -327,6 +344,17 @@ static int run_mode(const char *mode)
 			return 1;
 		trace_close = true;
 		return 4;
+	}
+
+	/*
+	 * stdout made unbuffered gives up its static buffer: each write reaches
+	 * the handle at once, before what is written to it directly afterwards
+	 */
+	if (strcmp(mode, "unbuffered-stdout") == 0) {
+		if (setvbuf(stdout, nullptr, _IONBF, 0) != 0 || fputs("first ", stdout) == EOF)
+			return 1;
+		__rtos_write(1, "second", 6);
+		return 0;
 	}
 
 	/* perror with a prefix, without one, and an empty one */

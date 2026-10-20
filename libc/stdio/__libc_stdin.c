@@ -16,4 +16,7 @@
 #include "internal/file.h"
 
 /* Line buffered: whether it is interactive is unknown, and C23 7.23.3p7 allows full buffering only when it can be determined not to be */
-FILE __libc_stdin = { .handle = 0, .flags = __LIBC_FILE_READ | __LIBC_FILE_LINE, .lock = &__rtos_stdin_lock };
+/* A static buffer: a program that reads stdin needs no allocator for it (PLAN D53) */
+static unsigned char buffer[BUFSIZ];
+
+FILE __libc_stdin = { .buffer = buffer, .pos = buffer, .end = buffer, .size = BUFSIZ, .handle = 0, .flags = __LIBC_FILE_READ | __LIBC_FILE_LINE, .lock = &__rtos_stdin_lock };

@@ -40,6 +40,8 @@ import urllib.request
 
 BOARDS = ['linux-x86_64', 'linux-armv6-m', 'linux-armv6s-m', 'linux-armv7e-m', 'linux-armv7e-m-dp', 'linux-armv8-m.main']
 PROGRAMS = ['hello-puts', 'hello-printf-int', 'hello-printf-float', 'malloc-heavy', 'math-mix']
+# The same program linked against the flavour archives (PLAN D53); not built for the comparison
+FLAVOUR_PROGRAMS = ['hello-printf-int-nofloat', 'hello-printf-int-minimal']
 CLASSES = ['text', 'rodata', 'unwind', 'data', 'bss', 'tdata', 'tbss']
 ORIGINS = ['program', 'libc', 'port', 'libgcc', 'other']
 
@@ -207,7 +209,8 @@ def map_origin(path, program_objects):
 	match = re.match(r'(.*)\((.*)\)$', path)
 	if match:
 		base = os.path.basename(match.group(1))
-		if base in ('libc.a', 'libm.a', 'libc_nano.a', 'libg_nano.a', 'libg.a'):
+		# libc-<flavour>.a are rtoskit's flavour archives (PLAN D53)
+		if base in ('libc.a', 'libm.a', 'libc_nano.a', 'libg_nano.a', 'libg.a') or (base.startswith('libc-') and base.endswith('.a')):
 			return 'libc'
 		if base.startswith('libgcc'):
 			return 'libgcc'
@@ -491,7 +494,7 @@ def measure(board, build_type, build_root='build'):
 		if result:
 			depths[name] = result
 	images = {}
-	for program in PROGRAMS:
+	for program in PROGRAMS + FLAVOUR_PROGRAMS:
 		directory = os.path.join(build, 'test', 'size', program)
 		elf = os.path.join(directory, program + '.elf')
 		if not os.path.exists(elf):
@@ -567,7 +570,10 @@ def command_diff(args):
 				print(f'  {name:40} {before:7} -> {after:7} ({delta:+d}) {state}')
 
 		print('images (text+rodata+unwind / data+bss / tdata+tbss; libc share in brackets):')
-		for program in PROGRAMS:
+		for program in PROGRAMS + FLAVOUR_PROGRAMS:
+			if program not in old['images']:
+				print(f'  {program:20} added')
+				continue
 			o = old['images'][program]
 			n = new['images'][program]
 			parts = []
@@ -583,7 +589,7 @@ def command_diff(args):
 		print('stack depth of entry points:')
 		depth_changes = 0
 		rows = [(name, old['stack']['depths'].get(name), new['stack']['depths'].get(name)) for name in KEY_FUNCTIONS]
-		rows += [(f'main of {p}', old['images'][p]['main'], new['images'][p]['main']) for p in PROGRAMS]
+		rows += [(f'main of {p}', old['images'][p]['main'], new['images'][p]['main']) for p in PROGRAMS + FLAVOUR_PROGRAMS if p in old['images']]
 		for name, before, after in rows:
 			before_depth = before['depth'] if before else 0
 			after_depth = after['depth'] if after else 0
@@ -638,7 +644,9 @@ def print_markdown(data, top):
 	code = ['text', 'rodata', 'unwind']
 	ram = ['data', 'bss']
 	tls = ['tdata', 'tbss']
-	for program in PROGRAMS:
+	for program in PROGRAMS + FLAVOUR_PROGRAMS:
+		if program not in data['images']:
+			continue
 		image = data['images'][program]
 		s = image['sections']
 		o = image['origin']

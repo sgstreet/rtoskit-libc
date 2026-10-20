@@ -16,9 +16,11 @@
 
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #include "internal/file.h"
+#include "internal/length.h"
 
 /*
  * The input of the scanf engine (docs/research/scanf.md): a string, or a
@@ -70,6 +72,17 @@ static inline void __libc_scan_unget(struct __libc_scan_input *in, int c)
 		--in->string;
 	}
 }
+
+/*
+ * Stores an integer conversion's value through the pointer type the length
+ * modifier names; out-of-range values wrap as the conversion does. The
+ * minimal flavour replaces it and __libc_scan_count, refusing what it leaves
+ * out with errno EINVAL (libc-minimal-printf.a, PLAN D53).
+ */
+bool __libc_scan_store(va_list *ap, enum __libc_length length, uintmax_t value);
+
+/* n (C23 7.23.6.2p12): stores the count of characters read */
+bool __libc_scan_count(va_list *ap, enum __libc_length length, size_t count);
 
 /* C23 7.23.6.2: the number of items assigned, or EOF for an input failure before the first conversion */
 int __libc_scan(struct __libc_scan_input *in, const char *format, va_list ap);

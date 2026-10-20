@@ -63,6 +63,15 @@ format of `double` everywhere (D7).
   digits. Beyond 800 significant digits a sticky flag keeps the rounding
   correct (D38). `CR_DECIMAL_DIG` is 800 under
   `__STDC_WANT_IEC_60559_EXT__`.
+- **Library flavours** (D53). `libc-nofloat.a` and `libc-minimal-printf.a`
+  replace `libc.a` when linked instead of it.
+  - With either, a floating conversion in the `printf` family fails with
+    `EINVAL`, and in the `scanf` family it is a matching failure with
+    `EINVAL`. `strtod` and the rest of the library are unchanged.
+  - `libc-minimal-printf.a` also refuses `%n` and the length modifiers
+    naming a type wider than `long` (`ll`, `j`, `w64` and `wf64` on the Arm
+    targets), in both families, with `EINVAL`.
+  - These are deliberate departures from C23 7.23.6, for small images.
 - **`printf` conversions** print exact digits for any precision. Infinity
   is `inf`/`INF` and NaN is `nan`/`NAN`, with a sign when negative or
   requested.
@@ -104,8 +113,12 @@ format of `double` everywhere (D7).
   `exit`; after abnormal termination they remain (*port*). `tmpnam` names
   come from `__rtos_tmpname`: Linux uses `/tmp/rtoskit-<pid>-<n>`.
   `TMP_MAX` is 10000 and `L_tmpnam` is 32.
-- **Buffering** (D40).
-  - `BUFSIZ` is 256. Buffers are allocated at the first transfer.
+- **Buffering** (D40, D53).
+  - `BUFSIZ` is 256. `stdin` and `stdout` have static buffers; the
+    streams `fopen` and `tmpfile` make get theirs from `malloc` at the first
+    transfer.
+  - `setvbuf` with a null buffer keeps the stream's own buffer and ignores
+    the size.
   - `stdin` and `stdout` are line buffered, `stderr` is unbuffered, and
     other files are fully buffered.
   - `FOPEN_MAX` is 16 and `FILENAME_MAX` is 256.

@@ -92,3 +92,33 @@ Members that grew, justified:
 - Removed: `__libc_atexit_handlers.o`, `__libc_signal_handlers.o`, `__libc_stdio_exit.o`.
 
 The worst stack depth of `exit` drops from 88 to 32 bytes.
+
+## P2.03 — stdio and printf flavours
+
+Decision D53, `docs/research/stdio-flavours.md`. Before → after, release build, linked against `libc.a` unless the name says otherwise.
+
+`libc.a`: code 121423 → 121453 (+30), RAM 792 → 1292 (+500), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 2263 → 1915 | 156 → 380 | 1456 → 1170 | 0 → 0 |
+| hello-printf-int | 8249 → 7965 | 156 → 380 | 6655 → 6431 | 758 → 758 |
+| hello-printf-float | 10234 → 9950 | 156 → 380 | 6655 → 6431 | 2706 → 2706 |
+| malloc-heavy | 1966 → 1966 | 80 → 80 | 1060 → 1060 | 0 → 0 |
+| math-mix | 23448 → 23448 | 20 → 20 | 20140 → 20140 | 2504 → 2504 |
+| hello-printf-int-nofloat (new) | 5135 | 380 | 3601 | 758 |
+| hello-printf-int-minimal (new) | 4243 | 380 | 3471 | 0 |
+
+Members that grew or are new, justified:
+
+- `__libc_stdin.o` 36 → 288 (+252): holds its static `BUFSIZ` buffer (`.bss`), so reading `stdin` needs no allocator.
+- `__libc_stdout.o` 36 → 288 (+252): holds its static `BUFSIZ` buffer (`.bss`), so writing to `stdout` needs no allocator; the heap buffer it replaces was not counted.
+- `__libc_format_digits.o` 0 → 194 (+194): new: the digit conversion, moved out of `__libc_format.o`.
+- `__libc_format_argument.o` 0 → 172 (+172): new: the argument fetch, moved out of `__libc_format.o` so the minimal flavour can replace it.
+- `__libc_scan_store.o` 0 → 62 (+62): new: the integer store, moved out of `__libc_scan.o`.
+- `__libc_format_count.o` 0 → 58 (+58): new: `%n`, moved out of `__libc_format.o`.
+- `setvbuf.o` 114 → 154 (+40): tracks a caller's buffer and keeps the stream's own one.
+- `__libc_file_setup.o` 70 → 76 (+6): tests the weak reference to `malloc`.
+- `__libc_scan_count.o` 0 → 6 (+6): new: `%n` for `scanf`, which calls the store.
+- Reduced: `__libc_format.o` 2292 → 1930, `__libc_scan.o` 1724 → 1600, `__libc_file_link.o` 44 → 36, `__libc_file_getc.o` 128 → 124, `__libc_scan_float.o` 1105 → 1101, `__libc_stderr.o` 36 → 32, `feof.o` 26 → 24, `ferror.o` 26 → 24, `ungetc.o` 78 → 76.
+- The RAM of the stdio images grows by the static `stdout` buffer, which used to come from the heap at the first write; the FILE objects shrink by a pointer each.

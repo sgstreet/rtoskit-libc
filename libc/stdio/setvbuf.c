@@ -17,11 +17,14 @@
 #include "internal/file.h"
 
 /*
- * C23 7.23.5.6: only before the first operation on the stream. A null buf
- * with a size sets the size of the buffer allocated at the first transfer.
+ * C23 7.23.5.6: only before the first operation on the stream. With a null
+ * buf the stream keeps its own buffer (the static one of stdin and stdout,
+ * or one already allocated) and the size is ignored, which p2 allows; only a
+ * previous caller's buffer is dropped (PLAN D53).
  */
 int setvbuf(FILE *restrict stream, char *restrict buf, int mode, size_t size)
 {
+	bool replace;
 	int status = 0;
 
 	if (mode != _IOFBF && mode != _IOLBF && mode != _IONBF)
@@ -31,23 +34,30 @@ int setvbuf(FILE *restrict stream, char *restrict buf, int mode, size_t size)
 	if (stream->flags & (__LIBC_FILE_READING | __LIBC_FILE_WRITING | __LIBC_FILE_UNGOT)) {
 		status = EOF;
 	} else {
-		if (stream->flags & __LIBC_FILE_OWN_BUFFER)
-			free(stream->buffer);
-		stream->flags &= ~(__LIBC_FILE_LINE | __LIBC_FILE_UNBUFFERED | __LIBC_FILE_OWN_BUFFER);
-		stream->buffer = nullptr;
-		stream->size = 0;
+		/* Unbuffered and caller-buffered streams give up the buffer they have; a caller's is never kept */
+		replace = mode == _IONBF || (buf != nullptr && size > 0) || (stream->flags & __LIBC_FILE_USER_BUFFER) || stream->buffer == &stream->single;
+		if (replace) {
+			if (stream->flags & __LIBC_FILE_OWN_BUFFER)
+				free(stream->buffer);
+			stream->flags &= ~(__LIBC_FILE_OWN_BUFFER | __LIBC_FILE_USER_BUFFER);
+			stream->buffer = nullptr;
+			stream->size = 0;
+		}
 
-		if (mode == _IONBF) {
+		stream->flags &= ~(__LIBC_FILE_LINE | __LIBC_FILE_UNBUFFERED);
+		if (mode == _IONBF)
 			stream->flags |= __LIBC_FILE_UNBUFFERED;
-		} else {
-			if (mode == _IOLBF)
-				stream->flags |= __LIBC_FILE_LINE;
+		else if (mode == _IOLBF)
+			stream->flags |= __LIBC_FILE_LINE;
+
+		if (mode != _IONBF && buf != nullptr && size > 0) {
+			stream->flags |= __LIBC_FILE_USER_BUFFER;
+			stream->buffer = (unsigned char *)buf;
 			stream->size = size;
-			if (buf != nullptr && size > 0) {
-				stream->buffer = (unsigned char *)buf;
-				stream->pos = stream->buffer;
-				stream->end = stream->buffer;
-			}
+		}
+		if (stream->buffer != nullptr) {
+			stream->pos = stream->buffer;
+			stream->end = stream->buffer;
 		}
 	}
 	__libc_file_unlock(stream);

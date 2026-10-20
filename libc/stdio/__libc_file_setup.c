@@ -17,21 +17,25 @@
 #include "internal/file.h"
 
 /*
- * The buffer comes at the first transfer, so an unused stream costs none;
- * size is BUFSIZ unless setvbuf chose one. Without memory the stream works
- * unbuffered rather than failing.
+ * malloc is linked by whatever made a stream without a buffer: fopen and
+ * tmpfile allocate the FILE itself. A program that only uses the standard
+ * streams, whose buffers are static, links no allocator (PLAN D53).
+ */
+#pragma weak malloc
+
+/*
+ * The buffer comes at the first transfer, so an unused stream costs none.
+ * Without memory the stream works unbuffered rather than failing.
  */
 void __libc_file_setup(FILE *stream)
 {
 	if (stream->buffer != nullptr)
 		return;
 
-	if (!(stream->flags & __LIBC_FILE_UNBUFFERED)) {
-		size_t size = stream->size != 0 ? stream->size : BUFSIZ;
-
-		stream->buffer = malloc(size);
+	if (!(stream->flags & __LIBC_FILE_UNBUFFERED) && malloc != nullptr) {
+		stream->buffer = malloc(BUFSIZ);
 		if (stream->buffer != nullptr) {
-			stream->size = size;
+			stream->size = BUFSIZ;
 			stream->flags |= __LIBC_FILE_OWN_BUFFER;
 		}
 	}
