@@ -22,10 +22,26 @@ x86_64, wall clock with `rdtsc`, pinned, median of N runs.
 - [x] `tools/bench-runner` produces a machine-readable baseline per arch. Capture the Phase 2 baseline. *`tools/scripts/bench-runner` (`run`, `diff`, `report`, `markdown --previous`) with the plugin `tools/qemu-plugins/bench-roi.c` and qemu 8.2.2 built with plugins by `make setup-bench` (Ubuntu's has none); `make bench` runs and diffs the release build of every board, `BENCH_UPDATE=1` records. The plugin agrees with an independent exec-trace count on all 30 regions checked, two runs are byte-identical, and fault injection trips the gate. Baselines `docs/perf/baseline-<arch>.json` and tables `docs/perf/<arch>.md` for the six boards. The library is unchanged: libc-test 219/219 on all 12 board × build configurations, unit tests pass, size diff and budget unchanged.*
 
 ## P3.02 — Memory and string functions
-- [ ] armv7e-m, armv7e-m-dp and v8-m.main: `LDRD`/`LDM`-based `memcpy`/`memset`/`memmove`, word-at-a-time `strlen`/`strcmp`/`strchr` using `UADD8`/`SEL` (DSP), and IT-block tuning. These are the `speed/` flavour files.
+
+Split into four steps (one ISA family each); the first also creates the
+speed flavour itself (D12, Q3, D73).
+
+### P3.02a — The speed flavour; Thumb-2 `memcpy`/`memmove`/`memset`  `[x]`
+- [x] The speed flavour as a build type (`BUILD_TYPE=speed`, in `BUILDS`, so `make check` runs libc-test and the unit tests on it); kernel directories per flavour with precedence; `make bench` measures both flavours. *D73, answering Q3: `tools/makefiles/speed.mk` is `-Os` plus `LIBC_FLAVOUR := speed` (a whole `-O2` library breaks the +10 % budget everywhere, `hello-printf-int` +35 %), with `LIBC_SPEED_CFLAGS` for hot modules; `LIBC_STRING_KERNELS_size`/`_speed` per arch, first directory wins; `bench-runner --build-type speed`, `docs/perf/baseline-<arch>-speed.json`.*
+- [x] armv7e-m, armv7e-m-dp and v8-m.main: `LDRD`/`LDM`-based `memcpy`/`memset`/`memmove` and IT-block tuning. These are the `speed/` flavour files. *`libc/string/thumb2`: 32-byte `LDM`/`STM` blocks, unaligned LDRs for a misaligned source, a branch-skipped bit tail (branches beat IT blocks: every skipped conditional instruction still issues); LDM chosen over LDRD (1 + N cycles against 3 per 8 bytes on an M4, the same 64-bit beats on an M7). armv7e-m: `memcpy` 1024 B 1313 → 174 instructions aligned, 4124 → 441 misaligned, the small-copy mix 215 → 54, `memset` 1024 B 1054 → 177; 319 cases faster per core, none beyond noise slower. Trimmed to 180 + 218 + 108 bytes so the speed budget holds (tightest 2034 of 2039 bytes).*
+- [x] Research note. Exhaustive alignment/length/overlap tests plus libc-test, on the speed flavour. *`docs/research/string-speed.md`. `test/unit/string_kernels` (every offset pair mod 8, lengths to 80 and 127–129, 255–257, every overlap) passes; 13 of 14 mutants killed, the survivor equivalent (memmove onto itself). From-scratch `make -j8 check` with the speed build type: libc-test 219/219 and every unit test on all 18 board × build configurations; the size flavour is unchanged (`size-report diff`, budget).*
+
+### P3.02b — Thumb-2 word-at-a-time string functions
+- [ ] armv7e-m, armv7e-m-dp and v8-m.main: word-at-a-time `strlen`/`strcmp`/`strchr` using `UADD8`/`SEL` (DSP). Armv8-M Mainline has the DSP extension only as an option: check what `-march=armv8-m.main` allows.
+- [ ] Research note. Exhaustive tests plus libc-test.
+
+### P3.02c — armv6-m speed variants
 - [ ] armv6-m: unrolled Thumb-1 variants (no unaligned access; the `LDM`/`STM` limits).
+- [ ] Research note. Exhaustive tests plus libc-test.
+
+### P3.02d — x86_64
 - [ ] x86_64: SSE2 baseline versions (the reference flavour only).
-- [ ] Research note per kernel. Exhaustive alignment/length/overlap tests plus libc-test.
+- [ ] Research note. Exhaustive tests plus libc-test.
 
 ## P3.03 — Conversions: printf/scanf and strtod/strtol
 - [ ] Fast paths for common formats (`%d`, `%s`, `%x`) and a digit-pair table (in the speed flavour only).

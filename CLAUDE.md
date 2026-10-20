@@ -40,7 +40,7 @@ Always run `make` from the project root; never `make -C <subdir>` or `make -f <s
 
 ```sh
 make                                   # every board in BOARDS x every build type in BUILDS
-make BUILD_TYPE=debug                  # debug only (all boards)
+make BUILD_TYPE=debug                  # debug only (all boards); BUILD_TYPE=speed is the speed flavour (D73)
 make BOARD_TYPE=linux-x86_64           # one board
 # One module (dep-free, assumes a prior full build); needs a concrete board and build type
 make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug libc
@@ -50,7 +50,7 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug info
 make help | clean | distclean
 V=1 make ...                           # verbose
 make check                             # build, then run the unit tests (+ libc-test from P1.02) for every board and build type
-make bench                             # build, then run the benchmarks (release, every board) against docs/perf
+make bench                             # build, then run the benchmarks (release and speed, every board) against docs/perf
 make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
 ```
 
@@ -71,6 +71,12 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
   `nano` (default, set in the board file), `tlsf` or `tiny`
   (`make LIBC_MALLOC=tlsf ...`; run `make clean` after changing it). Every
   variant under `libc/malloc/` is always built and tested (D32, D54).
+- **Size and speed flavours (D73):** the `release` build type is the size
+  flavour, `speed` the speed flavour (`-Os`, `LIBC_FLAVOUR := speed`, its own
+  build tree and install). Arch files select per-flavour kernels through
+  `LIBC_STRING_KERNELS_size`/`_speed`; in a kernel list the first directory
+  with a function wins. Speed-only C goes in a directory selected the same
+  way, never behind `#if`.
 - **Flavour archives (D53, D54):** `libc-nofloat.a`, `libc-minimal-printf.a`
   and `libc-tinymalloc.a` are `libc.a` with some members replaced; a program
   links one instead of `libc.a`.
@@ -214,7 +220,7 @@ Any exception needs a PLAN.md decision entry.
   step's reductions are recorded in `docs/size/<arch>.md`.
 - **Speed (phase 3, D72):** `test/bench/` holds the benchmark programs (built,
   run only by `tools/scripts/bench-runner`). `make bench` measures the release
-  build of every board: guest instructions per operation under a qemu built with
+  (size) and speed builds of every board: guest instructions per operation under a qemu built with
   TCG plugins (`make setup-bench`, into `local/`), plus `rdtsc` cycles on x86_64
   (not gated). It fails when a case grew by more than 1 %; record a step's
   improvements with `make bench BENCH_UPDATE=1` and the tables in

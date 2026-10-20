@@ -15,13 +15,17 @@
 # Run from the project root after a release build and "make setup-bench"
 # ("make bench" does all three):
 #
-#   tools/scripts/bench-runner run [--board B ...]       measure; write results.json in the build
-#   tools/scripts/bench-runner diff [--board B ...]      compare results.json with docs/perf/baseline-<arch>.json;
+#   tools/scripts/bench-runner [--build-type T] run [--board B ...]
+#                                                        measure; write results.json in the build
+#                                                        (release: the size flavour, the default;
+#                                                        speed: the speed flavour, PLAN D73)
+#   tools/scripts/bench-runner diff [--board B ...]      compare results.json with docs/perf/baseline-<arch>[-speed].json;
 #                                                        exit status 1 when a case regressed
 #   tools/scripts/bench-runner report [--board B ...]    write the baselines from results.json
-#   tools/scripts/bench-runner markdown --board B [--previous REF]
+#   tools/scripts/bench-runner markdown --board B [--previous REF | --against FILE]
 #                                                        print the summary tables of a baseline, against
-#                                                        the baseline at git revision REF if given
+#                                                        the baseline at git revision REF, or the baseline
+#                                                        file FILE (<arch> replaced), if given
 #
 # Figures: per case of each test/bench program, the guest instructions per
 # operation counted by the qemu plugin tools/qemu-plugins/bench-roi.c (on
@@ -69,8 +73,14 @@ def results_path(build):
 	return os.path.join(build, 'test', 'bench', 'results.json')
 
 
-def baseline_path(directory, board):
-	return os.path.join(directory, f'baseline-{arch_of(board)}.json')
+def flavour_of(build_type):
+	"""The speed build type is the speed flavour (PLAN D73); release (and debug) are the size flavour."""
+	return 'speed' if build_type == 'speed' else 'size'
+
+
+def baseline_path(directory, board, build_type):
+	suffix = '-speed' if flavour_of(build_type) == 'speed' else ''
+	return os.path.join(directory, f'baseline-{arch_of(board)}{suffix}.json')
 
 
 def symbol_addresses(board, elf, names):
@@ -132,7 +142,7 @@ def time_cycles(elf):
 
 def measure(board, build_type, build_root):
 	build = os.path.join(build_root, board, build_type)
-	result = {'arch': arch_of(board), 'board': board, 'build_type': build_type, 'flavour': 'size', 'qemu': QEMU_VERSION, 'programs': {}}
+	result = {'arch': arch_of(board), 'board': board, 'build_type': build_type, 'flavour': flavour_of(build_type), 'qemu': QEMU_VERSION, 'programs': {}}
 	for program in PROGRAMS:
 		elf = program_path(build, program)
 		if not os.path.exists(elf):
@@ -195,7 +205,7 @@ def command_diff(args):
 	failed = False
 	for board in args.board:
 		build = os.path.join(args.build_root, board, args.build_type)
-		baseline = read_json(baseline_path(args.baseline_dir, board))
+		baseline = read_json(baseline_path(args.baseline_dir, board, args.build_type))
 		changed, only = compare(baseline, read_json(results_path(build)))
 		worse = [c for c in changed if regressed(c[2], c[3])]
 		better = [c for c in changed if c[3] < c[2]]
@@ -214,7 +224,7 @@ def command_report(args):
 	for board in args.board:
 		build = os.path.join(args.build_root, board, args.build_type)
 		result = read_json(results_path(build))
-		path = baseline_path(args.baseline_dir, board)
+		path = baseline_path(args.baseline_dir, board, args.build_type)
 		write_json(path, result)
 		print(f'{path}: {sum(len(c) for c in result["programs"].values())} cases')
 	return 0
@@ -285,11 +295,14 @@ def math_table(cases, before, cycles):
 
 def command_markdown(args):
 	for board in args.board:
-		path = baseline_path(args.baseline_dir, board)
+		path = baseline_path(args.baseline_dir, board, args.build_type)
 		data = read_json(path)
-		previous = previous_baseline(args.previous, path) if args.previous else None
+		if args.against:
+			previous = read_json(args.against.replace('<arch>', arch_of(board)))
+		else:
+			previous = previous_baseline(args.previous, path) if args.previous else None
 		cycles = not is_arm(board)
-		print(f'Instructions per operation (qemu {data["qemu"]}, {data["build_type"]}, {data["flavour"]} flavour)' + (f', change against {args.previous}' if previous else '') + '.\n')
+		print(f'Instructions per operation (qemu {data["qemu"]}, {data["build_type"]}, {data["flavour"]} flavour)' + (f', change against {args.previous or args.against.replace("<arch>", arch_of(board))}' if previous else '') + '.\n')
 		for program in [p for p in PROGRAMS if p in data['programs']]:
 			cases = data['programs'][program]
 			before = previous['programs'].get(program) if previous else None
@@ -319,6 +332,7 @@ def main():
 			p.add_argument('--verbose', action='store_true', help='list every changed case, not only the regressions')
 		if name == 'markdown':
 			p.add_argument('--previous', help='a git revision whose baseline to compare with')
+			p.add_argument('--against', help='a baseline file to compare with (<arch> is replaced), e.g. the other flavour')
 	args = parser.parse_args()
 	if getattr(args, 'board', None) is None:
 		args.board = BOARDS
