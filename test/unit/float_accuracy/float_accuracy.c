@@ -21,10 +21,11 @@
 /*
  * The float transcendental functions against the double functions on the
  * widened argument (good to about 2^-53, far below a float ulp): the error of
- * each result in float ulps of the exact value must stay below 1 (faithful,
- * PLAN D57), and at most one result in ten thousand (plus one, for the
- * small samples of the slower boards) may differ from the
- * correctly rounded one (the reference's own double rounding included). The special values must match exactly. On
+ * each result in float ulps of the exact value must stay below 0.52 (faithful
+ * with margin, PLAN D57, D62), and at most one result in ten thousand (plus
+ * one, for the small samples of the slower boards) may differ from the
+ * correctly rounded one (the reference's own double rounding included). The
+ * special values must match exactly. On
  * x86_64 the test links the float-float layer of the single-precision cores
  * (libc/math/sp-nearest) and runs FLOAT_ACCURACY_SAMPLES arguments per
  * function natively; on the Arm boards it measures the library as built.
@@ -73,6 +74,13 @@ static const struct unary unary[] = {
 	{ "atanpif", atanpif, atanpi, -FLT_MAX, FLT_MAX, 0x1.f8p-1f, 0x1.04p0f },
 	{ "asinpif", asinpif, asinpi, -1.0f, 1.0f, 0x1.f8p-1f, 1.0f },
 	{ "acospif", acospif, acospi, -1.0f, 1.0f, -1.0f, -0x1.f8p-1f },
+	/* The hyperbolic functions, sweeping around their series thresholds or the cancellation near 1 */
+	{ "sinhf", sinhf, sinh, -90.0f, 90.0f, 0x1.cp-3f, 0x1.2p-2f },
+	{ "coshf", coshf, cosh, -90.0f, 90.0f, 0x1.cp-3f, 0x1.2p-2f },
+	{ "tanhf", tanhf, tanh, -11.0f, 11.0f, 0x1.cp-4f, 0x1.2p-3f },
+	{ "asinhf", asinhf, asinh, -FLT_MAX, FLT_MAX, 0x1.cp-4f, 0x1.2p-3f },
+	{ "acoshf", acoshf, acosh, 1.0f, FLT_MAX, 1.0f, 0x1.02p0f },
+	{ "atanhf", atanhf, atanh, -1.0f, 1.0f, 0x1.cp-4f, 0x1.2p-3f },
 	/* The roots sweep [1, 2), every significand once */
 	{ "sqrtf", sqrtf, sqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },
 	{ "rsqrtf", rsqrtf, rsqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },
@@ -243,7 +251,7 @@ static void check_unary(const struct unary *test)
 	snprintf(message, sizeof(message), "%s: max %.3f ulp at %a, %ld of %ld not correctly rounded\n", test->name, worst, (double)worst_x, misrounded, count);
 	fputs(message, stdout);
 	/* Faithful everywhere, and correctly rounded but for rare near-halfway cases */
-	if (worst >= 1.0 || misrounded > count / 10000 + 1)
+	if (worst >= 0.52 || misrounded > count / 10000 + 1)
 		++failures;
 }
 
@@ -282,7 +290,7 @@ static void report(const struct statistics *statistics, const char *name)
 
 	snprintf(message, sizeof(message), "%s: max %.3f ulp at (%a, %a), %ld of %ld not correctly rounded\n", name, statistics->worst, (double)statistics->worst_x, (double)statistics->worst_y, statistics->misrounded, statistics->count);
 	fputs(message, stdout);
-	if (statistics->worst >= 1.0 || statistics->misrounded > statistics->count / 10000 + 1)
+	if (statistics->worst >= 0.52 || statistics->misrounded > statistics->count / 10000 + 1)
 		++failures;
 }
 
