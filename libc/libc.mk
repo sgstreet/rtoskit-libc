@@ -21,6 +21,7 @@ $(if $(wildcard ${PROJECT_ROOT}/libc/malloc/${LIBC_MALLOC}/${LIBC_MALLOC}.mk),,$
 TARGET_OBJ_LIBS := libc/assert
 TARGET_OBJ_LIBS += libc/atomic
 TARGET_OBJ_LIBS += libc/complex
+TARGET_OBJ_LIBS += $(addprefix libc/complex/,$(filter sp-nearest,${LIBC_MATH_LAYERS}))
 TARGET_OBJ_LIBS += libc/ctype
 TARGET_OBJ_LIBS += libc/decimal
 TARGET_OBJ_LIBS += libc/errno

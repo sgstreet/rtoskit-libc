@@ -446,3 +446,32 @@ Members that grew or are new, justified:
 - `tgammaf.o` 32 → 340 (+308): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
 - `lgammaf.o` 32 → 172 (+140): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
 - Reduced: 0 members, 0 bytes; the largest: .
+
+## P2.05e3a — float complex layer: exponential, logarithm, powers and roots
+
+Decision D65, `docs/research/libm-float-complex.md`. Before → after, release build.
+
+`libc.a`: code 142180 → 145590 (+3410), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 1915 → 1915 | 380 → 380 | 1170 → 1170 | 0 → 0 |
+| hello-printf-int | 7313 → 7313 | 380 → 380 | 6539 → 6539 | 0 → 0 |
+| hello-printf-float | 9298 → 9298 | 380 → 380 | 6539 → 6539 | 1948 → 1948 |
+| malloc-heavy | 1966 → 1966 | 80 → 80 | 1060 → 1060 | 0 → 0 |
+| math-mix | 27400 → 27400 | 20 → 20 | 24246 → 24246 | 2344 → 2344 |
+| float-exact | 1612 → 1612 | 20 → 20 | 1122 → 1122 | 0 → 0 |
+| math-float | 5358 → 5358 | 20 → 20 | 4946 → 4946 | 0 → 0 |
+| hello-printf-int-nofloat | 4479 → 4479 | 380 → 380 | 3707 → 3707 | 0 → 0 |
+| hello-printf-int-minimal | 4243 → 4243 | 380 → 380 | 3471 → 3471 | 0 → 0 |
+| malloc-heavy-tiny | 1906 → 1906 | 76 → 76 | 1000 → 1000 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `clogf.o` 74 → 1050 (+976): computed in float (the complex `sp-nearest` layer) instead of a wrapper of the double function.
+- `cpowf.o` 112 → 1034 (+922): computed in float (the complex `sp-nearest` layer) instead of a wrapper of the double function.
+- `csqrtf.o` 74 → 812 (+738): computed in float (the complex `sp-nearest` layer) instead of a wrapper of the double function.
+- `cexpf.o` 74 → 416 (+342): computed in float (the complex `sp-nearest` layer) instead of a wrapper of the double function.
+- `__libc_exp2f_times.o` 0 → 260 (+260): new: 2^z m rounded once, shared by the complex functions.
+- `__libc_sincosf_core.o` 0 → 256 (+256): new: float-float sin and cos of a float-float angle, shared by the complex functions.
+- Reduced: 2 members, -84 bytes; the largest: `cabsf.o` 52 → 4, `cargf.o` 52 → 16.

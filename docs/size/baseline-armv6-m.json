@@ -1189,6 +1189,15 @@
     "text": 140,
     "unwind": 0
    },
+   "__libc_exp2f_times.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 372,
+    "unwind": 0
+   },
    "__libc_exp2m1f_scale.o": {
     "bss": 0,
     "data": 0,
@@ -1817,6 +1826,15 @@
     "tbss": 0,
     "tdata": 0,
     "text": 956,
+    "unwind": 0
+   },
+   "__libc_sincosf_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 246,
     "unwind": 0
    },
    "__libc_sinf_core.o": {
@@ -2473,7 +2491,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 40,
+    "text": 8,
     "unwind": 0
    },
    "cabsl.o": {
@@ -2599,7 +2617,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 40,
+    "text": 14,
     "unwind": 0
    },
    "cargl.o": {
@@ -2842,7 +2860,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 68,
+    "text": 524,
     "unwind": 0
    },
    "cexpl.o": {
@@ -2914,7 +2932,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 68,
+    "text": 1384,
     "unwind": 0
    },
    "clogl.o": {
@@ -3157,7 +3175,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 110,
+    "text": 1246,
     "unwind": 0
    },
    "cpowl.o": {
@@ -3292,7 +3310,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 68,
+    "text": 1032,
     "unwind": 0
    },
    "csqrtl.o": {
@@ -7820,7 +7838,7 @@
    "rodata": 10238,
    "tbss": 358,
    "tdata": 8,
-   "text": 142344,
+   "text": 146776,
    "unwind": 0
   }
  },
@@ -8765,6 +8783,7 @@
    "__libc_exp2f_core.o:libc/math/sp-nearest/__libc_exp2f_core.c:__libc_ff_product": 32,
    "__libc_exp2f_scale.o:__libc_exp2f_scale": 48,
    "__libc_exp2f_signed.o:__libc_exp2f_signed": 40,
+   "__libc_exp2f_times.o:__libc_exp2f_times": 88,
    "__libc_exp2m1f_scale.o:__libc_exp2m1f_scale": 40,
    "__libc_exp_core.o:__libc_exp_core": 112,
    "__libc_exp_dd.o:__libc_exp_dd": 56,
@@ -8868,6 +8887,7 @@
    "__libc_secs_to_tm.o:libc/time/__libc_secs_to_tm.c:__libc_floor_divmod64": 16,
    "__libc_sin_core.o:__libc_sin_core": 120,
    "__libc_sin_core.o:libc/math/__libc_sin_core.c:__libc_dd_product": 56,
+   "__libc_sincosf_core.o:__libc_sincosf_core": 64,
    "__libc_sinf_core.o:__libc_sinf_core": 160,
    "__libc_sinf_core.o:libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_add": 40,
    "__libc_sinf_core.o:libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_multiply": 40,
@@ -8973,7 +8993,7 @@
    "atomic_thread_fence.o:atomic_thread_fence": 0,
    "bsearch.o:bsearch": 32,
    "cabs.o:cabs": 8,
-   "cabsf.o:cabsf": 24,
+   "cabsf.o:cabsf": 8,
    "cabsl.o:cabsl": 24,
    "cacos.o:cacos": 80,
    "cacosf.o:cacosf": 48,
@@ -8987,7 +9007,7 @@
    "canonicalizef.o:canonicalizef": 8,
    "canonicalizel.o:canonicalizel": 24,
    "carg.o:carg": 16,
-   "cargf.o:cargf": 24,
+   "cargf.o:cargf": 8,
    "cargl.o:cargl": 24,
    "casin.o:casin": 48,
    "casinf.o:casinf": 48,
@@ -9016,7 +9036,7 @@
    "ceilf.o:ceilf": 8,
    "ceill.o:ceill": 8,
    "cexp.o:cexp": 40,
-   "cexpf.o:cexpf": 48,
+   "cexpf.o:cexpf": 72,
    "cexpl.o:cexpl": 32,
    "cimag.o:cimag": 0,
    "cimagf.o:cimagf": 0,
@@ -9025,7 +9045,9 @@
    "clock.o:clock": 32,
    "clog.o:clog": 136,
    "clog.o:libc/complex/clog.c:__libc_dd_product": 56,
-   "clogf.o:clogf": 48,
+   "clogf.o:clogf": 136,
+   "clogf.o:libc/complex/sp-nearest/clogf.c:__libc_ff_add": 40,
+   "clogf.o:libc/complex/sp-nearest/clogf.c:__libc_ff_product": 32,
    "clogl.o:clogl": 32,
    "cnd_broadcast.o:cnd_broadcast": 8,
    "cnd_destroy.o:cnd_destroy": 0,
@@ -9054,7 +9076,10 @@
    "cpow.o:cpow": 576,
    "cpow.o:libc/complex/cpow.c:__libc_dd_multiply": 56,
    "cpow.o:libc/complex/cpow.c:__libc_dd_product": 56,
-   "cpowf.o:cpowf": 80,
+   "cpowf.o:cpowf": 208,
+   "cpowf.o:libc/complex/sp-nearest/cpowf.c:__libc_ff_add": 40,
+   "cpowf.o:libc/complex/sp-nearest/cpowf.c:__libc_ff_product": 32,
+   "cpowf.o:libc/complex/sp-nearest/cpowf.c:__libc_ff_scale": 32,
    "cpowl.o:cpowl": 48,
    "cproj.o:cproj": 40,
    "cprojf.o:cprojf": 32,
@@ -9069,7 +9094,9 @@
    "csinhl.o:csinhl": 32,
    "csinl.o:csinl": 32,
    "csqrt.o:csqrt": 48,
-   "csqrtf.o:csqrtf": 48,
+   "csqrtf.o:csqrtf": 112,
+   "csqrtf.o:libc/complex/sp-nearest/csqrtf.c:__libc_ff_product": 32,
+   "csqrtf.o:libc/complex/sp-nearest/csqrtf.c:__libc_ff_sqrt": 40,
    "csqrtl.o:csqrtl": 32,
    "ctan.o:ctan": 48,
    "ctanf.o:ctanf": 48,

@@ -12,6 +12,8 @@
 #
 
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
+# The float complex layer follows the float-float libm layer (PLAN D65)
+SUBDIRS := $(filter sp-nearest,${LIBC_MATH_LAYERS})
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 
