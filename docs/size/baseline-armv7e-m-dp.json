@@ -2768,7 +2768,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 280,
+    "text": 304,
     "unwind": 0
    },
    "compoundnf.o": {
@@ -7602,7 +7602,7 @@
    "rodata": 8406,
    "tbss": 358,
    "tdata": 8,
-   "text": 78502,
+   "text": 78526,
    "unwind": 0
   }
  },

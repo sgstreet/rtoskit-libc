@@ -2725,10 +2725,10 @@
    "compoundn.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 56,
+    "rodata": 64,
     "tbss": 0,
     "tdata": 0,
-    "text": 286,
+    "text": 297,
     "unwind": 0
    },
    "compoundnf.o": {
@@ -7559,10 +7559,10 @@
   "totals": {
    "bss": 1848,
    "data": 188,
-   "rodata": 17162,
+   "rodata": 17170,
    "tbss": 618,
    "tdata": 8,
-   "text": 99065,
+   "text": 99076,
    "unwind": 0
   }
  },

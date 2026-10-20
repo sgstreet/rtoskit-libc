@@ -434,6 +434,9 @@ static void check_powers(void)
 	CHECK(compoundn(1.0, 10) == 1024.0 && compoundn(0.5, 2) == 2.25 && compoundn(0.0, 1000) == 1.0);
 	EXPECT(compoundn(1.0, 1024) == INFINITY, OVERFLOW | INEXACT);
 	CHECK(compoundn(0.1, 1) == 1.1 && compoundn(-0.5, -3) == 8.0 && compoundnf(1.0f, -2) == 0.25f && compoundnl(3.0L, 3) == 64.0L);
+	/* A tiny x with a huge n: (1 + x)^n = e^(n x) is not 1 + n x (P2.05c3 regression) */
+	CHECK(fabs(compoundn(0x1p-61, -(1LL << 61)) - 0x1.78b56362cef38p-2) <= 0x1p-54 && fabs(compoundn(0x1p-70, 1LL << 62) - 0x1.0100802ab5577p+0) <= 0x1p-52);
+	CHECK(fabs(compoundn(0x1.8p-63, -0x7fffffffffffffffLL - 1) - 0x1.c8f87724b5c1dp-3) <= 0x1p-55);
 }
 
 static void check_roots(void)

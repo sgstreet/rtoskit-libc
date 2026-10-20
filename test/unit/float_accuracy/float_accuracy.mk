@@ -21,13 +21,14 @@ EXTRA_ELF_DEPS := ${BUILD_ROOT}/libc/libc.a
 TARGET_OBJ_LIBS := port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_FAMILY}
 
 # On x86_64 the float-float layer of the single-precision cores is compiled into the test, so that
-# millions of arguments run natively; elsewhere the test measures the library's own functions (PLAN D57)
+# millions of arguments run natively; elsewhere the test measures the library's own functions (PLAN D57).
+# Every run stays well inside run-unit's 60 s limit, the unoptimised debug build included
 ifeq (${ARCH_FAMILY},x86_64)
 SP_NEAREST_SRC := $(wildcard ${PROJECT_ROOT}/libc/math/sp-nearest/*.c)
 EXTRA_OBJS := $(patsubst ${PROJECT_ROOT}/libc/math/sp-nearest/%.c,${CURDIR}/sp-nearest/%.o,${SP_NEAREST_SRC})
-SAMPLES := 4194304
+SAMPLES := $(if $(filter debug,${BUILD_TYPE}),65536,2097152)
 else
-SAMPLES := 16384
+SAMPLES := 8192
 endif
 
 include ${PROJECT_ROOT}/tools/makefiles/project.mk

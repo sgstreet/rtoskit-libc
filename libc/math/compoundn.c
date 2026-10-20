@@ -36,8 +36,13 @@ double compoundn(double x, long long n)
 		return 1.0;
 	if (n == 1)
 		return 1.0 + x;
+	/*
+	 * Below 2^-60, log(1 + x) = x - x^2/2 to far beyond double precision;
+	 * n x need not be small (n reaches 2^63), so the power still goes
+	 * through the core (the linear 1 + n x was wrong for large n).
+	 */
 	if (fabs(x) < 0x1p-60)
-		return 1.0 + __libc_i64_to_double(n) * x;
+		return __libc_pow_integer((struct __libc_dd){ .hi = x, .lo = -0.5 * x * x }, n, false);
 
 	return __libc_pow_integer(__libc_log1p_core(x), n, false);
 }

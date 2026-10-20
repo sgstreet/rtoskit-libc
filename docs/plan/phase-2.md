@@ -56,7 +56,7 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] The exact and bit-level `float` functions: rounding, `fmodf`/`remainderf`/`remquof`, `frexpf`/`ldexpf`/`scalbnf`, `ilogbf`/`logbf`, `nextafterf`/`nexttowardf`, `l(l)rintf`/`l(l)roundf`, `fromfpf`, `modff`, the trivial complex accessors.
   *`ldexpf`/`scalbnf`/`nextafterf` were already float-only. New reference program `float-exact`: 5056 → 2048 (armv7e-m, no libgcc), 8440 → 3908 (armv6-m). Test `test/unit/float_exact` (bitwise against the double functions, 40 000 arguments each), 11 mutants caught.*
 
-## P2.05c — Single-precision exp, log and pow family (split into P2.05c1–c3)
+## P2.05c — Single-precision exp, log and pow family (split into P2.05c1–c3)  `[x]`
 - `expf`, `exp2f`, `exp10f`, `expm1f` and the `m1` forms, `logf`, `log2f`, `log10f`, `log1pf` and the `p1` forms, `powf`, `pownf`, `powrf`, `rootnf`, `rsqrtf`, `cbrtf`, `hypotf`, `compoundnf`, within the D47 accuracy, on single-precision float-float cores.
 
 ## P2.05c1 — Float-float infrastructure and the exponentials  `[x]`
@@ -69,8 +69,9 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] The `log2` core; `logf`, `log2f`, `log10f`, `log1pf`/`logp1f`, `log2p1f`, `log10p1f`.
   *Every log 0.500 ulp, at most 2 in 10^5 not correctly rounded; the series' exact square was needed (D58). Test bound tightened to 1/10 000; 8 mutants caught.*
 
-## P2.05c3 — Powers and roots
-- [ ] `powf`, `pownf`, `powrf`, `rootnf`, `compoundnf`, `rsqrtf`, `cbrtf`, `hypotf`.
+## P2.05c3 — Powers and roots  `[x]`
+- [x] `powf`, `pownf`, `powrf`, `rootnf`, `compoundnf`, `rsqrtf`, `cbrtf`, `hypotf`.
+  *Plus a float-only `sqrtf` in `sp` (armv6-m). All within 0.509 ulp; 12 mutants (11 caught, 1 numerically insignificant). Fixed the double `compoundn` for tiny x and large n, and the sign of zero in `__libc_exp2f_scale` (D59).*
 
 ## P2.05d — Single-precision trigonometric and hyperbolic functions
 - [ ] `sinf`, `cosf`, `tanf` (with a single-precision reduction), the pi-scaled forms, the inverse and hyperbolic functions, within the D48 accuracy.
