@@ -18,7 +18,8 @@
 # when it exits with status 0. When the test's source directory contains an
 # executable <name>.run, that script is run with the executable's path instead
 # and decides the outcome. TARGET_RUNNER (e.g. a qemu command) prefixes every
-# execution.
+# execution. Each run is limited to 60 s, or to the seconds that a <name>.timeout
+# file next to the source gives (a long accuracy sweep, PLAN D63).
 
 build_dir=$(realpath "$1")
 source_dir=${PROJECT_ROOT:?}/test/unit
@@ -30,11 +31,16 @@ for elf in $(find "${build_dir}" -name '*.elf' | sort); do
 	relative=$(dirname "${elf#${build_dir}/}")
 	driver=${source_dir}/${relative}/${name}.run
 	log=${elf%.elf}.log
+	limit=60
+
+	if [[ -f ${source_dir}/${relative}/${name}.timeout ]]; then
+		limit=$(< "${source_dir}/${relative}/${name}.timeout")
+	fi
 
 	if [[ -x ${driver} ]]; then
-		TARGET_RUNNER=${TARGET_RUNNER:-} timeout 60 "${driver}" "${elf}" > "${log}" 2>&1
+		TARGET_RUNNER=${TARGET_RUNNER:-} timeout ${limit} "${driver}" "${elf}" > "${log}" 2>&1
 	else
-		timeout 60 ${TARGET_RUNNER:-} "${elf}" > "${log}" 2>&1
+		timeout ${limit} ${TARGET_RUNNER:-} "${elf}" > "${log}" 2>&1
 	fi
 	status=$?
 

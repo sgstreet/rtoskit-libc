@@ -414,6 +414,10 @@ static inline struct __libc_dd __libc_dd_divide(struct __libc_dd a, struct __lib
 	return __libc_dd_fast_sum(quotient, ((((a.hi - product.hi) - product.lo) + a.lo) - quotient * b.lo) / b.hi);
 }
 
+/* 2/sqrt(pi) and 1/sqrt(pi) as float-float */
+#define __LIBC_TWO_SQRTPIF ((struct __libc_ff){ .hi = 0x1.20dd76p0f, .lo = -0x1.f7ac92p-25f })
+#define __LIBC_INV_SQRTPIF ((struct __libc_ff){ .hi = 0x1.20dd76p-1f, .lo = -0x1.f7ac92p-26f })
+
 /* sqrt(a.hi + a.lo) for a non-negative a, corrected by the residual (a - s^2)/(2s) */
 static inline struct __libc_dd __libc_dd_sqrt(struct __libc_dd a)
 {
@@ -658,6 +662,9 @@ struct __libc_ff __libc_sinf_core(int k, struct __libc_ff s);
 
 /* atan2(y, x) for finite y and x not both zero, to about 2^-42 */
 struct __libc_ff __libc_atan2f_core(struct __libc_ff y, struct __libc_ff x);
+
+/* erf(x) for 0 <= x < 4, to about 2^-42 */
+struct __libc_ff __libc_erff_core(float x);
 
 /* e^|x| = 2^*exponent (result.hi + result.lo) and *inverse = 2^-*exponent e^-|x| (0 for exponent above 20), for |x| up to 90 */
 struct __libc_ff __libc_expf_pair(float x, int *exponent, struct __libc_ff *inverse);
