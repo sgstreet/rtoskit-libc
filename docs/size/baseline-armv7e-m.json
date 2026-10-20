@@ -888,6 +888,15 @@
     "text": 1684,
     "unwind": 0
    },
+   "__libc_atan2f_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 136,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 718,
+    "unwind": 0
+   },
    "__libc_atexit_run.o": {
     "bss": 132,
     "data": 0,
@@ -1111,6 +1120,15 @@
     "tbss": 0,
     "tdata": 0,
     "text": 440,
+    "unwind": 0
+   },
+   "__libc_expf_pair.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 304,
     "unwind": 0
    },
    "__libc_expm1_core.o": {
@@ -1911,7 +1929,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 360,
     "unwind": 0
    },
    "acosh.o": {
@@ -1929,7 +1947,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 578,
     "unwind": 0
    },
    "acoshl.o": {
@@ -1965,7 +1983,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 460,
     "unwind": 0
    },
    "acospil.o": {
@@ -2010,7 +2028,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 232,
+    "text": 388,
     "unwind": 0
    },
    "asinh.o": {
@@ -2025,10 +2043,10 @@
    "asinhf.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 0,
+    "rodata": 8,
     "tbss": 0,
     "tdata": 0,
-    "text": 236,
+    "text": 670,
     "unwind": 0
    },
    "asinhl.o": {
@@ -2064,7 +2082,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 580,
     "unwind": 0
    },
    "asinpil.o": {
@@ -2109,7 +2127,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 204,
+    "text": 656,
     "unwind": 0
    },
    "atan2l.o": {
@@ -2136,7 +2154,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 52,
+    "text": 764,
     "unwind": 0
    },
    "atan2pil.o": {
@@ -2154,7 +2172,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 236,
+    "text": 144,
     "unwind": 0
    },
    "atanh.o": {
@@ -2169,10 +2187,10 @@
    "atanhf.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 0,
+    "rodata": 8,
     "tbss": 0,
     "tdata": 0,
-    "text": 232,
+    "text": 628,
     "unwind": 0
    },
    "atanhl.o": {
@@ -2208,7 +2226,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 428,
     "unwind": 0
    },
    "atanpil.o": {
@@ -2964,7 +2982,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 180,
     "unwind": 0
    },
    "coshl.o": {
@@ -6132,7 +6150,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 232,
+    "text": 532,
     "unwind": 0
    },
    "sinhl.o": {
@@ -7203,7 +7221,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 236,
+    "text": 708,
     "unwind": 0
    },
    "tanhl.o": {
@@ -7687,10 +7705,10 @@
   "totals": {
    "bss": 1184,
    "data": 108,
-   "rodata": 9130,
+   "rodata": 9282,
    "tbss": 358,
    "tdata": 8,
-   "text": 123024,
+   "text": 129270,
    "unwind": 0
   }
  },
@@ -8443,6 +8461,11 @@
    "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:__libc_dd_divide": 136,
    "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:__libc_dd_product": 88,
    "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:atan_unit": 200,
+   "__libc_atan2f_core.o:__libc_atan2f_core": 88,
+   "__libc_atan2f_core.o:libc/math/sp-nearest/__libc_atan2f_core.c:__libc_ff_add": 32,
+   "__libc_atan2f_core.o:libc/math/sp-nearest/__libc_atan2f_core.c:__libc_ff_divide": 48,
+   "__libc_atan2f_core.o:libc/math/sp-nearest/__libc_atan2f_core.c:__libc_ff_product": 16,
+   "__libc_atan2f_core.o:libc/math/sp-nearest/__libc_atan2f_core.c:atan_unit": 88,
    "__libc_atexit_run.o:libc/stdlib/__libc_atexit_run.c:__libc_atexit_run": 0,
    "__libc_cond_wait.o:__libc_cond_wait": 24,
    "__libc_cos_core.o:__libc_cos_core": 128,
@@ -8471,6 +8494,8 @@
    "__libc_exp_core.o:__libc_exp_core": 152,
    "__libc_exp_dd.o:__libc_exp_dd": 72,
    "__libc_exp_scale.o:__libc_exp_scale": 72,
+   "__libc_expf_pair.o:__libc_expf_pair": 56,
+   "__libc_expf_pair.o:libc/math/sp-nearest/__libc_expf_pair.c:__libc_ff_product": 16,
    "__libc_expm1_core.o:__libc_expm1_core": 72,
    "__libc_file_before_input.o:__libc_file_before_input": 0,
    "__libc_file_flush.o:__libc_file_flush": 24,
@@ -8602,48 +8627,62 @@
    "abs.o:abs": 0,
    "acos.o:acos": 136,
    "acos.o:libc/math/acos.c:__libc_dd_product": 88,
-   "acosf.o:acosf": 8,
+   "acosf.o:acosf": 56,
+   "acosf.o:libc/math/sp-nearest/acosf.c:__libc_ff_product": 16,
    "acosh.o:acosh": 128,
    "acosh.o:libc/math/acosh.c:__libc_dd_product": 88,
-   "acoshf.o:acoshf": 8,
+   "acoshf.o:acoshf": 72,
+   "acoshf.o:libc/math/sp-nearest/acoshf.c:__libc_ff_product": 16,
+   "acoshf.o:libc/math/sp-nearest/acoshf.c:__libc_ff_sum": 16,
    "acoshl.o:acoshl": 0,
    "acosl.o:acosl": 0,
    "acospi.o:acospi": 136,
    "acospi.o:libc/math/acospi.c:__libc_dd_product": 88,
-   "acospif.o:acospif": 8,
+   "acospif.o:acospif": 56,
+   "acospif.o:libc/math/sp-nearest/acospif.c:__libc_ff_product": 16,
    "acospil.o:acospil": 0,
    "aligned_alloc.o:aligned_alloc": 24,
    "asctime.o:asctime": 0,
    "asin.o:asin": 136,
    "asin.o:libc/math/asin.c:__libc_dd_product": 88,
-   "asinf.o:asinf": 24,
+   "asinf.o:asinf": 48,
+   "asinf.o:libc/math/sp-nearest/asinf.c:__libc_ff_product": 16,
    "asinh.o:asinh": 224,
    "asinh.o:libc/math/asinh.c:__libc_dd_add": 120,
    "asinh.o:libc/math/asinh.c:__libc_dd_product": 88,
-   "asinhf.o:asinhf": 32,
+   "asinhf.o:asinhf": 72,
+   "asinhf.o:libc/math/sp-nearest/asinhf.c:__libc_ff_add": 32,
+   "asinhf.o:libc/math/sp-nearest/asinhf.c:__libc_ff_multiply": 48,
+   "asinhf.o:libc/math/sp-nearest/asinhf.c:__libc_ff_product": 16,
    "asinhl.o:asinhl": 0,
    "asinl.o:asinl": 0,
    "asinpi.o:asinpi": 144,
    "asinpi.o:libc/math/asinpi.c:__libc_dd_product": 88,
-   "asinpif.o:asinpif": 8,
+   "asinpif.o:asinpif": 64,
+   "asinpif.o:libc/math/sp-nearest/asinpif.c:__libc_ff_product": 16,
    "asinpil.o:asinpil": 0,
    "at_quick_exit.o:at_quick_exit": 0,
    "atan.o:atan": 80,
    "atan2.o:atan2": 136,
-   "atan2f.o:atan2f": 32,
+   "atan2f.o:atan2f": 48,
+   "atan2f.o:libc/math/sp-nearest/atan2f.c:__libc_ff_product": 16,
    "atan2l.o:atan2l": 0,
    "atan2pi.o:atan2pi": 128,
    "atan2pi.o:libc/math/atan2pi.c:__libc_dd_product": 88,
-   "atan2pif.o:atan2pif": 24,
+   "atan2pif.o:atan2pif": 56,
+   "atan2pif.o:libc/math/sp-nearest/atan2pif.c:__libc_ff_product": 16,
    "atan2pil.o:atan2pil": 0,
-   "atanf.o:atanf": 32,
+   "atanf.o:atanf": 40,
    "atanh.o:atanh": 128,
-   "atanhf.o:atanhf": 24,
+   "atanhf.o:atanhf": 56,
+   "atanhf.o:libc/math/sp-nearest/atanhf.c:__libc_ff_multiply": 48,
+   "atanhf.o:libc/math/sp-nearest/atanhf.c:__libc_ff_product": 16,
    "atanhl.o:atanhl": 0,
    "atanl.o:atanl": 0,
    "atanpi.o:atanpi": 120,
    "atanpi.o:libc/math/atanpi.c:__libc_dd_product": 88,
-   "atanpif.o:atanpif": 8,
+   "atanpif.o:atanpif": 56,
+   "atanpif.o:libc/math/sp-nearest/atanpif.c:__libc_ff_product": 16,
    "atanpil.o:atanpil": 0,
    "atexit.o:atexit": 0,
    "atof.o:atof": 0,
@@ -8730,7 +8769,7 @@
    "cos.o:cos": 88,
    "cosf.o:cosf": 32,
    "cosh.o:cosh": 120,
-   "coshf.o:coshf": 8,
+   "coshf.o:coshf": 48,
    "coshl.o:coshl": 0,
    "cosl.o:cosl": 0,
    "cospi.o:cospi": 144,
@@ -9127,7 +9166,8 @@
    "sin.o:sin": 88,
    "sinf.o:sinf": 32,
    "sinh.o:sinh": 128,
-   "sinhf.o:sinhf": 24,
+   "sinhf.o:libc/math/sp-nearest/sinhf.c:__libc_ff_product": 16,
+   "sinhf.o:sinhf": 40,
    "sinhl.o:sinhl": 0,
    "sinl.o:sinl": 0,
    "sinpi.o:libc/math/sinpi.c:__libc_dd_product": 88,
@@ -9264,7 +9304,9 @@
    "tanf.o:tanf": 40,
    "tanh.o:libc/math/tanh.c:__libc_dd_divide": 152,
    "tanh.o:tanh": 144,
-   "tanhf.o:tanhf": 32,
+   "tanhf.o:libc/math/sp-nearest/tanhf.c:__libc_ff_add.constprop.0": 32,
+   "tanhf.o:libc/math/sp-nearest/tanhf.c:__libc_ff_product": 16,
+   "tanhf.o:tanhf": 96,
    "tanhl.o:tanhl": 0,
    "tanl.o:tanl": 0,
    "tanpi.o:libc/math/tanpi.c:__libc_dd_product": 88,
