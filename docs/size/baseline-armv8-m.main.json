@@ -11,8 +11,7 @@
      "indirect call",
      "libgcc: __aeabi_ddiv",
      "libgcc: __aeabi_dmul",
-     "libgcc: __aeabi_i2d",
-     "libgcc: __aeabi_uldivmod"
+     "libgcc: __aeabi_i2d"
     ],
     "path": [
      "main",
@@ -32,7 +31,7 @@
      "rodata": 185,
      "tbss": 4,
      "tdata": 0,
-     "text": 6246,
+     "text": 6354,
      "unwind": 0
     },
     "libgcc": {
@@ -41,8 +40,8 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 2698,
-     "unwind": 8
+     "text": 1948,
+     "unwind": 0
     },
     "other": {
      "bss": 0,
@@ -50,7 +49,7 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 16,
+     "text": 14,
      "unwind": 0
     },
     "port": {
@@ -78,8 +77,8 @@
     "rodata": 198,
     "tbss": 8,
     "tdata": 0,
-    "text": 9744,
-    "unwind": 8
+    "text": 9100,
+    "unwind": 0
    }
   },
   "hello-printf-int": {
@@ -87,8 +86,7 @@
     "depth": 1276,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "indirect call",
-     "libgcc: __aeabi_uldivmod"
+     "indirect call"
     ],
     "path": [
      "main",
@@ -108,7 +106,7 @@
      "rodata": 185,
      "tbss": 4,
      "tdata": 0,
-     "text": 6246,
+     "text": 6354,
      "unwind": 0
     },
     "libgcc": {
@@ -117,8 +115,8 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 750,
-     "unwind": 8
+     "text": 0,
+     "unwind": 0
     },
     "other": {
      "bss": 0,
@@ -126,7 +124,7 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 16,
+     "text": 14,
      "unwind": 0
     },
     "port": {
@@ -154,8 +152,8 @@
     "rodata": 201,
     "tbss": 8,
     "tdata": 0,
-    "text": 7756,
-    "unwind": 8
+    "text": 7112,
+    "unwind": 0
    }
   },
   "hello-printf-int-minimal": {
@@ -163,8 +161,7 @@
     "depth": 1276,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "indirect call",
-     "libgcc: __aeabi_uldivmod"
+     "indirect call"
     ],
     "path": [
      "main",
@@ -239,8 +236,7 @@
     "depth": 1276,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "indirect call",
-     "libgcc: __aeabi_uldivmod"
+     "indirect call"
     ],
     "path": [
      "main",
@@ -260,7 +256,7 @@
      "rodata": 95,
      "tbss": 4,
      "tdata": 0,
-     "text": 3506,
+     "text": 3612,
      "unwind": 0
     },
     "libgcc": {
@@ -269,8 +265,8 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 750,
-     "unwind": 8
+     "text": 0,
+     "unwind": 0
     },
     "other": {
      "bss": 0,
@@ -278,7 +274,7 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 16,
+     "text": 12,
      "unwind": 0
     },
     "port": {
@@ -306,8 +302,8 @@
     "rodata": 111,
     "tbss": 8,
     "tdata": 0,
-    "text": 5016,
-    "unwind": 8
+    "text": 4368,
+    "unwind": 0
    }
   },
   "hello-puts": {
@@ -451,6 +447,77 @@
     "tbss": 8,
     "tdata": 0,
     "text": 1966,
+    "unwind": 0
+   }
+  },
+  "malloc-heavy-tiny": {
+   "main": {
+    "depth": 184,
+    "notes": [
+     "assembly: __rtos_linux_syscall"
+    ],
+    "path": [
+     "main",
+     "calloc",
+     "malloc",
+     "__rtos_lock_acquire",
+     "__rtos_futex_wait"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 8,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 4,
+     "tdata": 0,
+     "text": 1000,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 10,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 68,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 4,
+     "tdata": 0,
+     "text": 704,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 192,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 76,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 8,
+    "tdata": 0,
+    "text": 1906,
     "unwind": 0
    }
   },
@@ -666,7 +733,7 @@
     "rodata": 86,
     "tbss": 26,
     "tdata": 0,
-    "text": 394,
+    "text": 374,
     "unwind": 0
    },
    "__libc_assert_fail.o": {
@@ -738,7 +805,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 146,
+    "text": 148,
     "unwind": 0
    },
    "__libc_decimal_shift_left.o": {
@@ -1044,7 +1111,7 @@
     "rodata": 34,
     "tbss": 0,
     "tdata": 0,
-    "text": 160,
+    "text": 168,
     "unwind": 0
    },
    "__libc_format_float.o": {
@@ -1287,7 +1354,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 496,
+    "text": 410,
     "unwind": 0
    },
    "__libc_sin_core.o": {
@@ -1368,7 +1435,7 @@
     "rodata": 17,
     "tbss": 0,
     "tdata": 0,
-    "text": 1114,
+    "text": 1110,
     "unwind": 0
    },
    "__libc_strtoint.o": {
@@ -1377,7 +1444,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 400,
+    "text": 408,
     "unwind": 0
    },
    "__libc_thread_start.o": {
@@ -1449,7 +1516,16 @@
     "rodata": 12,
     "tbss": 0,
     "tdata": 0,
-    "text": 558,
+    "text": 560,
+    "unwind": 0
+   },
+   "__libc_udivmod64.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 98,
     "unwind": 0
    },
    "_exit.o": {
@@ -6522,10 +6598,10 @@
    "strerror.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 2371,
+    "rodata": 1924,
     "tbss": 0,
     "tdata": 0,
-    "text": 24,
+    "text": 44,
     "unwind": 0
    },
    "strfromd.o": {
@@ -6561,7 +6637,7 @@
     "rodata": 285,
     "tbss": 0,
     "tdata": 0,
-    "text": 1920,
+    "text": 1932,
     "unwind": 0
    },
    "strlen.o": {
@@ -7270,10 +7346,10 @@
   "totals": {
    "bss": 1184,
    "data": 108,
-   "rodata": 8837,
+   "rodata": 8390,
    "tbss": 358,
    "tdata": 8,
-   "text": 112616,
+   "text": 112656,
    "unwind": 0
   }
  },
@@ -7530,8 +7606,7 @@
     "depth": 1256,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "indirect call",
-     "libgcc: __aeabi_uldivmod"
+     "indirect call"
     ],
     "path": [
      "fprintf",
@@ -7572,8 +7647,7 @@
     "depth": 3176,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "indirect call",
-     "libgcc: __aeabi_uldivmod"
+     "indirect call"
     ],
     "path": [
      "fscanf",
@@ -7588,15 +7662,14 @@
     ]
    },
    "gmtime": {
-    "depth": 44,
-    "notes": [
-     "libgcc: __aeabi_ldivmod",
-     "libgcc: __aeabi_uldivmod"
-    ],
+    "depth": 84,
+    "notes": [],
     "path": [
      "gmtime",
      "gmtime_r",
-     "__libc_secs_to_tm"
+     "__libc_secs_to_tm",
+     "libc/time/__libc_secs_to_tm.c:__libc_floor_divmod64",
+     "__libc_udivmod64"
     ]
    },
    "lgamma": {
@@ -7626,17 +7699,16 @@
     ]
    },
    "localtime": {
-    "depth": 292,
-    "notes": [
-     "libgcc: __aeabi_ldivmod",
-     "libgcc: __aeabi_uldivmod"
-    ],
+    "depth": 300,
+    "notes": [],
     "path": [
      "localtime",
      "localtime_r",
-     "__libc_tz_get",
-     "libc/time/__libc_tz_get.c:parse_rule",
-     "libc/time/__libc_tz_get.c:parse_time"
+     "__libc_tz_is_dst",
+     "libc/time/__libc_tz_is_dst.c:change_time",
+     "libc/time/__libc_tz_is_dst.c:__libc_days_from_civil.constprop.0",
+     "libc/time/__libc_tz_is_dst.c:__libc_floor_divmod64",
+     "__libc_udivmod64"
     ]
    },
    "log": {
@@ -7672,17 +7744,16 @@
     ]
    },
    "mktime": {
-    "depth": 400,
-    "notes": [
-     "libgcc: __aeabi_ldivmod",
-     "libgcc: __aeabi_uldivmod"
-    ],
+    "depth": 408,
+    "notes": [],
     "path": [
      "mktime",
      "localtime_r",
-     "__libc_tz_get",
-     "libc/time/__libc_tz_get.c:parse_rule",
-     "libc/time/__libc_tz_get.c:parse_time"
+     "__libc_tz_is_dst",
+     "libc/time/__libc_tz_is_dst.c:change_time",
+     "libc/time/__libc_tz_is_dst.c:__libc_days_from_civil.constprop.0",
+     "libc/time/__libc_tz_is_dst.c:__libc_floor_divmod64",
+     "__libc_udivmod64"
     ]
    },
    "mtx_lock": {
@@ -7749,8 +7820,7 @@
     "depth": 1260,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "indirect call",
-     "libgcc: __aeabi_uldivmod"
+     "indirect call"
     ],
     "path": [
      "printf",
@@ -7847,8 +7917,7 @@
    "snprintf": {
     "depth": 1252,
     "notes": [
-     "indirect call",
-     "libgcc: __aeabi_uldivmod"
+     "indirect call"
     ],
     "path": [
      "snprintf",
@@ -7864,8 +7933,7 @@
     "depth": 3168,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "indirect call",
-     "libgcc: __aeabi_uldivmod"
+     "indirect call"
     ],
     "path": [
      "sscanf",
@@ -7882,8 +7950,6 @@
    "strftime": {
     "depth": 400,
     "notes": [
-     "libgcc: __aeabi_ldivmod",
-     "libgcc: __aeabi_uldivmod",
      "recursion"
     ],
     "path": [
@@ -7899,8 +7965,7 @@
    "strtod": {
     "depth": 1084,
     "notes": [
-     "indirect call",
-     "libgcc: __aeabi_uldivmod"
+     "indirect call"
     ],
     "path": [
      "strtod",
@@ -7913,8 +7978,7 @@
    "strtof": {
     "depth": 1084,
     "notes": [
-     "indirect call",
-     "libgcc: __aeabi_uldivmod"
+     "indirect call"
     ],
     "path": [
      "strtof",
@@ -7925,13 +7989,12 @@
     ]
    },
    "strtol": {
-    "depth": 88,
-    "notes": [
-     "libgcc: __aeabi_uldivmod"
-    ],
+    "depth": 120,
+    "notes": [],
     "path": [
      "strtol",
-     "__libc_strtoint"
+     "__libc_strtoint",
+     "__libc_udivmod64"
     ]
    },
    "tan": {
@@ -8133,7 +8196,7 @@
    "__libc_format_argument.o:__libc_format_argument": 12,
    "__libc_format_buffer_write.o:__libc_format_buffer_write": 12,
    "__libc_format_count.o:__libc_format_count": 12,
-   "__libc_format_digits.o:__libc_format_digits": 24,
+   "__libc_format_digits.o:__libc_format_digits": 32,
    "__libc_format_float.o:__libc_format_float": 1040,
    "__libc_format_float.o:libc/stdio/__libc_format_float.c:add_fill.constprop.0": 8,
    "__libc_format_float.o:libc/stdio/__libc_format_float.c:format_exponent": 20,
@@ -8179,6 +8242,7 @@
    "__libc_scan_float.o:libc/stdio/__libc_scan_float.c:__libc_scan_unget": 8,
    "__libc_scan_store.o:__libc_scan_store": 16,
    "__libc_secs_to_tm.o:__libc_secs_to_tm": 32,
+   "__libc_secs_to_tm.o:libc/time/__libc_secs_to_tm.c:__libc_floor_divmod64": 16,
    "__libc_sin_core.o:__libc_sin_core": 144,
    "__libc_sin_core.o:libc/math/__libc_sin_core.c:__libc_dd_product": 88,
    "__libc_sinh_core.o:__libc_sinh_core": 112,
@@ -8191,7 +8255,7 @@
    "__libc_strtofloat.o:libc/stdlib/__libc_strtofloat.c:hex_value": 0,
    "__libc_strtofloat.o:libc/stdlib/__libc_strtofloat.c:match": 0,
    "__libc_strtofloat.o:libc/stdlib/__libc_strtofloat.c:parse_exponent.part.0.constprop.0": 32,
-   "__libc_strtoint.o:__libc_strtoint": 64,
+   "__libc_strtoint.o:__libc_strtoint": 72,
    "__libc_strtoint.o:libc/stdlib/__libc_strtoint.c:digit_value": 0,
    "__libc_thread_start.o:__libc_thread_start": 8,
    "__libc_tls_block_size.o:__libc_tls_block_size": 0,
@@ -8204,8 +8268,10 @@
    "__libc_tz_get.o:libc/time/__libc_tz_get.c:parse_rule": 16,
    "__libc_tz_get.o:libc/time/__libc_tz_get.c:parse_time": 56,
    "__libc_tz_is_dst.o:__libc_tz_is_dst": 80,
-   "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:__libc_days_from_civil.constprop.0": 16,
-   "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:change_time": 40,
+   "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:__libc_days_from_civil.constprop.0": 24,
+   "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:__libc_floor_divmod64": 16,
+   "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:change_time": 48,
+   "__libc_udivmod64.o:__libc_udivmod64": 24,
    "_exit.o:_Exit": 8,
    "abort.o:abort": 8,
    "abs.o:abs": 0,
@@ -8826,14 +8892,16 @@
    "strfromd.o:strfromd": 16,
    "strfromf.o:strfromf": 24,
    "strfroml.o:strfroml": 16,
+   "strftime.o:libc/time/strftime.c:__libc_floor_divmod64.isra.0": 16,
    "strftime.o:libc/time/strftime.c:__libc_is_leap": 16,
    "strftime.o:libc/time/strftime.c:daylight": 8,
    "strftime.o:libc/time/strftime.c:format": 64,
    "strftime.o:libc/time/strftime.c:iso_week": 40,
    "strftime.o:libc/time/strftime.c:put": 0,
-   "strftime.o:libc/time/strftime.c:put_number": 72,
+   "strftime.o:libc/time/strftime.c:put_number": 64,
    "strftime.o:libc/time/strftime.c:put_text": 16,
-   "strftime.o:libc/time/strftime.c:put_year": 64,
+   "strftime.o:libc/time/strftime.c:put_year": 56,
+   "strftime.o:libc/time/strftime.c:render": 24,
    "strftime.o:libc/time/strftime.c:zone": 16,
    "strftime.o:strftime": 128,
    "strlen.o:strlen": 0,

@@ -122,3 +122,31 @@ Members that grew or are new, justified:
 - `__libc_scan_count.o` 0 → 6 (+6): new: `%n` for `scanf`, which calls the store.
 - Reduced: `__libc_format.o` 2292 → 1930, `__libc_scan.o` 1724 → 1600, `__libc_file_link.o` 44 → 36, `__libc_file_getc.o` 128 → 124, `__libc_scan_float.o` 1105 → 1101, `__libc_stderr.o` 36 → 32, `feof.o` 26 → 24, `ferror.o` 26 → 24, `ungetc.o` 78 → 76.
 - The RAM of the stdio images grows by the static `stdout` buffer, which used to come from the heap at the first write; the FILE objects shrink by a pointer each.
+
+## P2.04 — stdlib, allocator, string and time
+
+Decision D54, `docs/research/stdlib-time-size.md`. Before → after, release build.
+
+`libc.a`: code 121453 → 121046 (-407), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 1915 → 1915 | 380 → 380 | 1170 → 1170 | 0 → 0 |
+| hello-printf-int | 7965 → 7313 | 380 → 380 | 6431 → 6539 | 758 → 0 |
+| hello-printf-float | 9950 → 9298 | 380 → 380 | 6431 → 6539 | 2706 → 1948 |
+| malloc-heavy | 1966 → 1966 | 80 → 80 | 1060 → 1060 | 0 → 0 |
+| math-mix | 23448 → 23448 | 20 → 20 | 20140 → 20140 | 2504 → 2504 |
+| hello-printf-int-nofloat | 5135 → 4479 | 380 → 380 | 3601 → 3707 | 758 → 0 |
+| hello-printf-int-minimal | 4243 → 4243 | 380 → 380 | 3471 → 3471 | 0 → 0 |
+| malloc-heavy-tiny (new) | 1906 | 76 | 1000 | 0 |
+
+Members that grew or are new, justified:
+
+- `__libc_udivmod64.o` 0 → 98 (+98): new: the shared 64-bit division by a small divisor that replaces libgcc's.
+- `strftime.o` 2205 → 2217 (+12): calls the division helper; `%C` keeps truncating division.
+- `__libc_format_digits.o` 194 → 202 (+8): calls the division helper.
+- `__libc_strtoint.o` 400 → 408 (+8): computes the overflow cutoff with the helper.
+- `__libc_decimal_set.o` 146 → 148 (+2): calls the division helper.
+- `__libc_tz_is_dst.o` 570 → 572 (+2): floor division through the helper.
+- Reduced: `strerror.o` 2395 → 1968, `__libc_secs_to_tm.o` 496 → 410, `__libc_asctime.o` 506 → 486, `__libc_strtofloat.o` 1131 → 1127.
+- The tiny allocator's objects are not in `libc.a`; they replace nano's in `libc-tinymalloc.a` (`malloc-heavy-tiny`).

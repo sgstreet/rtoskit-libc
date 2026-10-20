@@ -40,8 +40,8 @@ import urllib.request
 
 BOARDS = ['linux-x86_64', 'linux-armv6-m', 'linux-armv6s-m', 'linux-armv7e-m', 'linux-armv7e-m-dp', 'linux-armv8-m.main']
 PROGRAMS = ['hello-puts', 'hello-printf-int', 'hello-printf-float', 'malloc-heavy', 'math-mix']
-# The same program linked against the flavour archives (PLAN D53); not built for the comparison
-FLAVOUR_PROGRAMS = ['hello-printf-int-nofloat', 'hello-printf-int-minimal']
+# The same programs linked against the flavour archives (PLAN D53, D54); not built for the comparison
+FLAVOUR_PROGRAMS = ['hello-printf-int-nofloat', 'hello-printf-int-minimal', 'malloc-heavy-tiny']
 CLASSES = ['text', 'rodata', 'unwind', 'data', 'bss', 'tdata', 'tbss']
 ORIGINS = ['program', 'libc', 'port', 'libgcc', 'other']
 

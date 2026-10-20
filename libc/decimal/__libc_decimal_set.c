@@ -13,6 +13,7 @@
 
 #include <stdint.h>
 
+#include "internal/div64.h"
 #include "internal/decimal.h"
 
 void __libc_decimal_set(struct __libc_decimal *d, uint64_t significand, int exponent)
@@ -24,8 +25,12 @@ void __libc_decimal_set(struct __libc_decimal *d, uint64_t significand, int expo
 	d->point = 0;
 	d->truncated = false;
 
-	for (; significand != 0; significand /= 10)
-		reversed[n++] = significand % 10;
+	while (significand != 0) {
+		uint32_t digit;
+
+		significand = __libc_udivmod64(significand, 10, &digit);
+		reversed[n++] = (unsigned char)digit;
+	}
 	for (d->point = n; n > 0;)
 		d->digits[d->count++] = reversed[--n];
 	__libc_decimal_trim(d);

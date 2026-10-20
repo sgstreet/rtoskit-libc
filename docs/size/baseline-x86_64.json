@@ -26,7 +26,7 @@
      "rodata": 745,
      "tbss": 4,
      "tdata": 0,
-     "text": 8740,
+     "text": 8811,
      "unwind": 0
     },
     "libgcc": {
@@ -72,7 +72,7 @@
     "rodata": 880,
     "tbss": 12,
     "tdata": 0,
-    "text": 9532,
+    "text": 9603,
     "unwind": 0
    }
   },
@@ -99,7 +99,7 @@
      "rodata": 745,
      "tbss": 4,
      "tdata": 0,
-     "text": 8740,
+     "text": 8811,
      "unwind": 0
     },
     "libgcc": {
@@ -145,7 +145,7 @@
     "rodata": 848,
     "tbss": 12,
     "tdata": 0,
-    "text": 9517,
+    "text": 9588,
     "unwind": 0
    }
   },
@@ -245,7 +245,7 @@
      "rodata": 623,
      "tbss": 4,
      "tdata": 0,
-     "text": 5036,
+     "text": 5085,
      "unwind": 0
     },
     "libgcc": {
@@ -291,7 +291,7 @@
     "rodata": 672,
     "tbss": 12,
     "tdata": 0,
-    "text": 5813,
+    "text": 5862,
     "unwind": 0
    }
   },
@@ -432,6 +432,75 @@
     "tbss": 12,
     "tdata": 0,
     "text": 2601,
+    "unwind": 0
+   }
+  },
+  "malloc-heavy-tiny": {
+   "main": {
+    "depth": 328,
+    "notes": [],
+    "path": [
+     "main",
+     "calloc",
+     "malloc",
+     "__libc_nano_init",
+     "__rtos_heap_region"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 16,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 4,
+     "tdata": 0,
+     "text": 1415,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 40,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 120,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 8,
+     "tdata": 0,
+     "text": 787,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 282,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 176,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 12,
+    "tdata": 0,
+    "text": 2484,
     "unwind": 0
    }
   },
@@ -631,7 +700,7 @@
     "rodata": 86,
     "tbss": 26,
     "tdata": 0,
-    "text": 460,
+    "text": 477,
     "unwind": 0
    },
    "__libc_assert_fail.o": {
@@ -703,7 +772,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 191,
+    "text": 213,
     "unwind": 0
    },
    "__libc_decimal_shift_left.o": {
@@ -1009,7 +1078,7 @@
     "rodata": 34,
     "tbss": 0,
     "tdata": 0,
-    "text": 170,
+    "text": 199,
     "unwind": 0
    },
    "__libc_format_float.o": {
@@ -1252,7 +1321,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 530,
+    "text": 513,
     "unwind": 0
    },
    "__libc_sin_core.o": {
@@ -1333,7 +1402,7 @@
     "rodata": 17,
     "tbss": 0,
     "tdata": 0,
-    "text": 1176,
+    "text": 1223,
     "unwind": 0
    },
    "__libc_strtoint.o": {
@@ -1342,7 +1411,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 418,
+    "text": 451,
     "unwind": 0
    },
    "__libc_thread_start.o": {
@@ -1387,7 +1456,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 228,
+    "text": 260,
     "unwind": 0
    },
    "__libc_tss_run_destructors.o": {
@@ -1414,7 +1483,16 @@
     "rodata": 12,
     "tbss": 0,
     "tdata": 0,
-    "text": 525,
+    "text": 622,
+    "unwind": 0
+   },
+   "__libc_udivmod64.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 20,
     "unwind": 0
    },
    "_exit.o": {
@@ -6487,10 +6565,10 @@
    "strerror.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 2899,
+    "rodata": 1924,
     "tbss": 0,
     "tdata": 0,
-    "text": 28,
+    "text": 49,
     "unwind": 0
    },
    "strfromd.o": {
@@ -6526,7 +6604,7 @@
     "rodata": 1049,
     "tbss": 0,
     "tdata": 0,
-    "text": 2220,
+    "text": 2362,
     "unwind": 0
    },
    "strlen.o": {
@@ -7235,10 +7313,10 @@
   "totals": {
    "bss": 1848,
    "data": 188,
-   "rodata": 18345,
+   "rodata": 17370,
    "tbss": 618,
    "tdata": 8,
-   "text": 100588,
+   "text": 101031,
    "unwind": 0
   }
  },
@@ -7461,12 +7539,14 @@
     ]
    },
    "gmtime": {
-    "depth": 48,
+    "depth": 112,
     "notes": [],
     "path": [
      "gmtime",
      "gmtime_r",
-     "__libc_secs_to_tm"
+     "__libc_secs_to_tm",
+     "libc/time/__libc_secs_to_tm.c:__libc_floor_divmod64",
+     "__libc_udivmod64"
     ]
    },
    "lgamma": {
@@ -7700,7 +7780,7 @@
     ]
    },
    "strtol": {
-    "depth": 96,
+    "depth": 112,
     "notes": [],
     "path": [
      "strtol",
@@ -7827,7 +7907,7 @@
    "__flt_rounds.o:__flt_rounds": 8,
    "__libc_asctime.o:__libc_asctime": 16,
    "__libc_asctime.o:libc/time/__libc_asctime.c:put": 8,
-   "__libc_asctime.o:libc/time/__libc_asctime.c:put_number": 56,
+   "__libc_asctime.o:libc/time/__libc_asctime.c:put_number": 96,
    "__libc_assert_fail.o:__libc_assert_fail": 304,
    "__libc_assert_fail.o:libc/assert/__libc_assert_fail.c:append": 8,
    "__libc_atan2_core.o:__libc_atan2_core": 48,
@@ -7840,7 +7920,7 @@
    "__libc_cos_core.o:__libc_cos_core": 8,
    "__libc_cosh_core.o:__libc_cosh_core": 8,
    "__libc_decimal_round.o:__libc_decimal_round": 8,
-   "__libc_decimal_set.o:__libc_decimal_set": 64,
+   "__libc_decimal_set.o:__libc_decimal_set": 80,
    "__libc_decimal_shift_left.o:__libc_decimal_shift_left": 32,
    "__libc_decimal_shift_right.o:__libc_decimal_shift_right": 16,
    "__libc_decimal_to_float.o:__libc_decimal_to_float": 896,
@@ -7887,7 +7967,7 @@
    "__libc_format_argument.o:__libc_format_argument": 8,
    "__libc_format_buffer_write.o:__libc_format_buffer_write": 8,
    "__libc_format_count.o:__libc_format_count": 8,
-   "__libc_format_digits.o:__libc_format_digits": 8,
+   "__libc_format_digits.o:__libc_format_digits": 48,
    "__libc_format_float.o:__libc_format_float": 1184,
    "__libc_format_float.o:libc/stdio/__libc_format_float.c:add_fill.constprop.0": 8,
    "__libc_format_float.o:libc/stdio/__libc_format_float.c:format_exponent": 8,
@@ -7932,7 +8012,8 @@
    "__libc_scan_float.o:libc/stdio/__libc_scan_float.c:__libc_scan_get": 16,
    "__libc_scan_float.o:libc/stdio/__libc_scan_float.c:__libc_scan_unget": 8,
    "__libc_scan_store.o:__libc_scan_store": 8,
-   "__libc_secs_to_tm.o:__libc_secs_to_tm": 24,
+   "__libc_secs_to_tm.o:__libc_secs_to_tm": 48,
+   "__libc_secs_to_tm.o:libc/time/__libc_secs_to_tm.c:__libc_floor_divmod64": 32,
    "__libc_sin_core.o:__libc_sin_core": 8,
    "__libc_sin_core.o:libc/math/__libc_sin_core.c:__libc_dd_product": 8,
    "__libc_sinh_core.o:__libc_sinh_core": 8,
@@ -7945,12 +8026,12 @@
    "__libc_strtofloat.o:libc/stdlib/__libc_strtofloat.c:hex_value": 8,
    "__libc_strtofloat.o:libc/stdlib/__libc_strtofloat.c:match": 8,
    "__libc_strtofloat.o:libc/stdlib/__libc_strtofloat.c:parse_exponent": 48,
-   "__libc_strtoint.o:__libc_strtoint": 80,
+   "__libc_strtoint.o:__libc_strtoint": 96,
    "__libc_strtoint.o:libc/stdlib/__libc_strtoint.c:digit_value": 8,
    "__libc_thread_start.o:__libc_thread_start": 32,
    "__libc_tls_block_size.o:__libc_tls_block_size": 8,
    "__libc_tls_init.o:__libc_tls_init": 8,
-   "__libc_tm_to_secs.o:__libc_tm_to_secs": 8,
+   "__libc_tm_to_secs.o:__libc_tm_to_secs": 48,
    "__libc_tss_run_destructors.o:libc/threads/__libc_tss_run_destructors.c:__libc_tss_run_destructors": 48,
    "__libc_tz_get.o:__libc_tz_get": 160,
    "__libc_tz_get.o:libc/time/__libc_tz_get.c:parse_name": 32,
@@ -7958,8 +8039,10 @@
    "__libc_tz_get.o:libc/time/__libc_tz_get.c:parse_rule": 16,
    "__libc_tz_get.o:libc/time/__libc_tz_get.c:parse_time": 80,
    "__libc_tz_is_dst.o:__libc_tz_is_dst": 96,
-   "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:__libc_days_from_civil.constprop.0": 8,
-   "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:change_time": 40,
+   "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:__libc_days_from_civil.constprop.0": 32,
+   "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:__libc_floor_divmod64": 32,
+   "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:change_time": 80,
+   "__libc_udivmod64.o:__libc_udivmod64": 8,
    "_exit.o:_Exit": 16,
    "abort.o:abort": 16,
    "abs.o:abs": 8,
@@ -8588,14 +8671,16 @@
    "strfromd.o:strfromd": 8,
    "strfromf.o:strfromf": 8,
    "strfroml.o:strfroml": 8,
-   "strftime.o:libc/time/strftime.c:__libc_is_leap": 8,
+   "strftime.o:libc/time/strftime.c:__libc_floor_divmod64.isra.0": 32,
+   "strftime.o:libc/time/strftime.c:__libc_is_leap": 32,
    "strftime.o:libc/time/strftime.c:daylight": 16,
    "strftime.o:libc/time/strftime.c:format": 80,
-   "strftime.o:libc/time/strftime.c:iso_week": 8,
+   "strftime.o:libc/time/strftime.c:iso_week": 64,
    "strftime.o:libc/time/strftime.c:put": 8,
-   "strftime.o:libc/time/strftime.c:put_number": 72,
+   "strftime.o:libc/time/strftime.c:put_number": 96,
    "strftime.o:libc/time/strftime.c:put_text": 8,
-   "strftime.o:libc/time/strftime.c:put_year": 72,
+   "strftime.o:libc/time/strftime.c:put_year": 96,
+   "strftime.o:libc/time/strftime.c:render": 48,
    "strftime.o:libc/time/strftime.c:zone": 32,
    "strftime.o:strftime": 176,
    "strlen.o:strlen": 8,

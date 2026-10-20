@@ -15,173 +15,184 @@
 #include <string.h>
 
 /*
- * C23 7.26.6.3: a switch keeps the messages for the sparse Linux numbering
- * (D20) out of a mostly empty pointer table. Every number <errno.h> defines has a message.
+ * C23 7.26.6.3. The messages for the sparse Linux numbering (D20) are one
+ * array of records: the error number plus one, the message and its null
+ * character; the array's own terminator ends it. A byte per message is all
+ * the index costs, where a switch compiled to a table of pointers (PLAN D54).
+ * Every number <errno.h> defines has a message.
  */
+static const char messages[] =
+	"\001"
+	"No error\0" /* 0 */
+	"\002"
+	"Operation not permitted\0" /* EPERM */
+	"\003"
+	"No such file or directory\0" /* ENOENT */
+	"\004"
+	"No such process\0" /* ESRCH */
+	"\005"
+	"Interrupted system call\0" /* EINTR */
+	"\006"
+	"Input/output error\0" /* EIO */
+	"\007"
+	"No such device or address\0" /* ENXIO */
+	"\010"
+	"Argument list too long\0" /* E2BIG */
+	"\011"
+	"Exec format error\0" /* ENOEXEC */
+	"\012"
+	"Bad file descriptor\0" /* EBADF */
+	"\013"
+	"No child processes\0" /* ECHILD */
+	"\014"
+	"Resource temporarily unavailable\0" /* EAGAIN */
+	"\015"
+	"Cannot allocate memory\0" /* ENOMEM */
+	"\016"
+	"Permission denied\0" /* EACCES */
+	"\017"
+	"Bad address\0" /* EFAULT */
+	"\021"
+	"Device or resource busy\0" /* EBUSY */
+	"\022"
+	"File exists\0" /* EEXIST */
+	"\023"
+	"Invalid cross-device link\0" /* EXDEV */
+	"\024"
+	"No such device\0" /* ENODEV */
+	"\025"
+	"Not a directory\0" /* ENOTDIR */
+	"\026"
+	"Is a directory\0" /* EISDIR */
+	"\027"
+	"Invalid argument\0" /* EINVAL */
+	"\030"
+	"Too many open files in system\0" /* ENFILE */
+	"\031"
+	"Too many open files\0" /* EMFILE */
+	"\032"
+	"Inappropriate ioctl for device\0" /* ENOTTY */
+	"\033"
+	"Text file busy\0" /* ETXTBSY */
+	"\034"
+	"File too large\0" /* EFBIG */
+	"\035"
+	"No space left on device\0" /* ENOSPC */
+	"\036"
+	"Illegal seek\0" /* ESPIPE */
+	"\037"
+	"Read-only file system\0" /* EROFS */
+	"\040"
+	"Too many links\0" /* EMLINK */
+	"\041"
+	"Broken pipe\0" /* EPIPE */
+	"\042"
+	"Numerical argument out of domain\0" /* EDOM */
+	"\043"
+	"Numerical result out of range\0" /* ERANGE */
+	"\044"
+	"Resource deadlock avoided\0" /* EDEADLK */
+	"\045"
+	"File name too long\0" /* ENAMETOOLONG */
+	"\046"
+	"No locks available\0" /* ENOLCK */
+	"\047"
+	"Function not implemented\0" /* ENOSYS */
+	"\050"
+	"Directory not empty\0" /* ENOTEMPTY */
+	"\051"
+	"Too many levels of symbolic links\0" /* ELOOP */
+	"\053"
+	"No message of desired type\0" /* ENOMSG */
+	"\054"
+	"Identifier removed\0" /* EIDRM */
+	"\075"
+	"Device not a stream\0" /* ENOSTR */
+	"\076"
+	"No data available\0" /* ENODATA */
+	"\077"
+	"Timer expired\0" /* ETIME */
+	"\100"
+	"Out of streams resources\0" /* ENOSR */
+	"\104"
+	"Link has been severed\0" /* ENOLINK */
+	"\110"
+	"Protocol error\0" /* EPROTO */
+	"\111"
+	"Multihop attempted\0" /* EMULTIHOP */
+	"\113"
+	"Bad message\0" /* EBADMSG */
+	"\114"
+	"Value too large for defined data type\0" /* EOVERFLOW */
+	"\125"
+	"Invalid or incomplete multibyte or wide character\0" /* EILSEQ */
+	"\131"
+	"Socket operation on non-socket\0" /* ENOTSOCK */
+	"\132"
+	"Destination address required\0" /* EDESTADDRREQ */
+	"\133"
+	"Message too long\0" /* EMSGSIZE */
+	"\134"
+	"Protocol wrong type for socket\0" /* EPROTOTYPE */
+	"\135"
+	"Protocol not available\0" /* ENOPROTOOPT */
+	"\136"
+	"Protocol not supported\0" /* EPROTONOSUPPORT */
+	"\140"
+	"Operation not supported\0" /* EOPNOTSUPP */
+	"\142"
+	"Address family not supported by protocol\0" /* EAFNOSUPPORT */
+	"\143"
+	"Address already in use\0" /* EADDRINUSE */
+	"\144"
+	"Cannot assign requested address\0" /* EADDRNOTAVAIL */
+	"\145"
+	"Network is down\0" /* ENETDOWN */
+	"\146"
+	"Network is unreachable\0" /* ENETUNREACH */
+	"\147"
+	"Network dropped connection on reset\0" /* ENETRESET */
+	"\150"
+	"Software caused connection abort\0" /* ECONNABORTED */
+	"\151"
+	"Connection reset by peer\0" /* ECONNRESET */
+	"\152"
+	"No buffer space available\0" /* ENOBUFS */
+	"\153"
+	"Transport endpoint is already connected\0" /* EISCONN */
+	"\154"
+	"Transport endpoint is not connected\0" /* ENOTCONN */
+	"\157"
+	"Connection timed out\0" /* ETIMEDOUT */
+	"\160"
+	"Connection refused\0" /* ECONNREFUSED */
+	"\162"
+	"No route to host\0" /* EHOSTUNREACH */
+	"\163"
+	"Operation already in progress\0" /* EALREADY */
+	"\164"
+	"Operation now in progress\0" /* EINPROGRESS */
+	"\165"
+	"Stale file handle\0" /* ESTALE */
+	"\173"
+	"Disk quota exceeded\0" /* EDQUOT */
+	"\176"
+	"Operation canceled\0" /* ECANCELED */
+	"\203"
+	"Owner died\0" /* EOWNERDEAD */
+	"\204"
+	"State not recoverable\0" /* ENOTRECOVERABLE */;
+
 char *strerror(int errnum)
 {
-	switch (errnum) {
-		case 0:
-			return "No error";
-		case EPERM:
-			return "Operation not permitted";
-		case ENOENT:
-			return "No such file or directory";
-		case ESRCH:
-			return "No such process";
-		case EINTR:
-			return "Interrupted system call";
-		case EIO:
-			return "Input/output error";
-		case ENXIO:
-			return "No such device or address";
-		case E2BIG:
-			return "Argument list too long";
-		case ENOEXEC:
-			return "Exec format error";
-		case EBADF:
-			return "Bad file descriptor";
-		case ECHILD:
-			return "No child processes";
-		case EAGAIN:
-			return "Resource temporarily unavailable";
-		case ENOMEM:
-			return "Cannot allocate memory";
-		case EACCES:
-			return "Permission denied";
-		case EFAULT:
-			return "Bad address";
-		case EBUSY:
-			return "Device or resource busy";
-		case EEXIST:
-			return "File exists";
-		case EXDEV:
-			return "Invalid cross-device link";
-		case ENODEV:
-			return "No such device";
-		case ENOTDIR:
-			return "Not a directory";
-		case EISDIR:
-			return "Is a directory";
-		case EINVAL:
-			return "Invalid argument";
-		case ENFILE:
-			return "Too many open files in system";
-		case EMFILE:
-			return "Too many open files";
-		case ENOTTY:
-			return "Inappropriate ioctl for device";
-		case ETXTBSY:
-			return "Text file busy";
-		case EFBIG:
-			return "File too large";
-		case ENOSPC:
-			return "No space left on device";
-		case ESPIPE:
-			return "Illegal seek";
-		case EROFS:
-			return "Read-only file system";
-		case EMLINK:
-			return "Too many links";
-		case EPIPE:
-			return "Broken pipe";
-		case EDOM:
-			return "Numerical argument out of domain";
-		case ERANGE:
-			return "Numerical result out of range";
-		case EDEADLK:
-			return "Resource deadlock avoided";
-		case ENAMETOOLONG:
-			return "File name too long";
-		case ENOLCK:
-			return "No locks available";
-		case ENOSYS:
-			return "Function not implemented";
-		case ENOTEMPTY:
-			return "Directory not empty";
-		case ELOOP:
-			return "Too many levels of symbolic links";
-		case ENOMSG:
-			return "No message of desired type";
-		case EIDRM:
-			return "Identifier removed";
-		case ENOSTR:
-			return "Device not a stream";
-		case ENODATA:
-			return "No data available";
-		case ETIME:
-			return "Timer expired";
-		case ENOSR:
-			return "Out of streams resources";
-		case ENOLINK:
-			return "Link has been severed";
-		case EPROTO:
-			return "Protocol error";
-		case EMULTIHOP:
-			return "Multihop attempted";
-		case EBADMSG:
-			return "Bad message";
-		case EOVERFLOW:
-			return "Value too large for defined data type";
-		case EILSEQ:
-			return "Invalid or incomplete multibyte or wide character";
-		case ENOTSOCK:
-			return "Socket operation on non-socket";
-		case EDESTADDRREQ:
-			return "Destination address required";
-		case EMSGSIZE:
-			return "Message too long";
-		case EPROTOTYPE:
-			return "Protocol wrong type for socket";
-		case ENOPROTOOPT:
-			return "Protocol not available";
-		case EPROTONOSUPPORT:
-			return "Protocol not supported";
-		case EOPNOTSUPP:
-			return "Operation not supported";
-		case EAFNOSUPPORT:
-			return "Address family not supported by protocol";
-		case EADDRINUSE:
-			return "Address already in use";
-		case EADDRNOTAVAIL:
-			return "Cannot assign requested address";
-		case ENETDOWN:
-			return "Network is down";
-		case ENETUNREACH:
-			return "Network is unreachable";
-		case ENETRESET:
-			return "Network dropped connection on reset";
-		case ECONNABORTED:
-			return "Software caused connection abort";
-		case ECONNRESET:
-			return "Connection reset by peer";
-		case ENOBUFS:
-			return "No buffer space available";
-		case EISCONN:
-			return "Transport endpoint is already connected";
-		case ENOTCONN:
-			return "Transport endpoint is not connected";
-		case ETIMEDOUT:
-			return "Connection timed out";
-		case ECONNREFUSED:
-			return "Connection refused";
-		case EHOSTUNREACH:
-			return "No route to host";
-		case EALREADY:
-			return "Operation already in progress";
-		case EINPROGRESS:
-			return "Operation now in progress";
-		case ESTALE:
-			return "Stale file handle";
-		case EDQUOT:
-			return "Disk quota exceeded";
-		case ECANCELED:
-			return "Operation canceled";
-		case EOWNERDEAD:
-			return "Owner died";
-		case ENOTRECOVERABLE:
-			return "State not recoverable";
-		default:
-			return "Unknown error";
+	const unsigned char *p = (const unsigned char *)messages;
+
+	while (*p != 0) {
+		if (*p - 1 == errnum)
+			return (char *)p + 1;
+		while (*++p != 0);
+		++p;
 	}
+
+	return (char *)"Unknown error";
 }

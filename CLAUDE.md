@@ -67,9 +67,12 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
 - **Arm toolchain:** arm-none-eabi GCC 16.2 lives in `local/` (gitignored). The
   first build downloads it (`make setup`, `tools/makefiles/setup.mk`).
 - **Allocator:** `LIBC_MALLOC` picks the allocator built into `libc.a`:
-  `nano` (default, set in the board file) or `tlsf`
-  (`make LIBC_MALLOC=tlsf ...`; run `make clean` after changing it). Both
-  variants under `libc/malloc/` are always built and tested (D32).
+  `nano` (default, set in the board file), `tlsf` or `tiny`
+  (`make LIBC_MALLOC=tlsf ...`; run `make clean` after changing it). Every
+  variant under `libc/malloc/` is always built and tested (D32, D54).
+- **Flavour archives (D53, D54):** `libc-nofloat.a`, `libc-minimal-printf.a`
+  and `libc-tinymalloc.a` are `libc.a` with some members replaced; a program
+  links one instead of `libc.a`.
 - **Output:** `build/<board>/<build-type>/<module path>/`; installs go to
   `images/<board>/<build-type>/`.
 - **Modules:** every source directory is a module with its own `<dirname>.mk`

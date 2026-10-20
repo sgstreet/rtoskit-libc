@@ -13,6 +13,7 @@
 
 #include <time.h>
 
+#include "internal/div64.h"
 #include "internal/time.h"
 
 /*
@@ -65,16 +66,37 @@ static void put_text(struct output *out, const char *text, size_t limit, int wid
 		put(out, text[i]);
 }
 
+/* The digits of value, least significant first, without the 64-bit division helpers (PLAN D54) */
 static int render(char *digits, unsigned long long value)
 {
 	int n = 0;
 
 	do {
-		digits[n++] = '0' + value % 10;
-		value /= 10;
+		uint32_t digit;
+
+		value = __libc_udivmod64(value, 10, &digit);
+		digits[n++] = (char)('0' + digit);
 	} while (value != 0);
 
 	return n;
+}
+
+/* The year's last two digits, 00 to 99 also for negative years */
+static int year_in_century(long long year)
+{
+	uint32_t rest;
+
+	__libc_floor_divmod64(year, 100, &rest);
+	return (int)rest;
+}
+
+/* %C: the year divided by 100, truncated toward zero as C division is */
+static long long century(long long year)
+{
+	uint32_t rest;
+	long long magnitude = (long long)__libc_udivmod64(year < 0 ? -(unsigned long long)year : (unsigned long long)year, 100, &rest);
+
+	return year < 0 ? -magnitude : magnitude;
 }
 
 /* A field of at least digits digits padded with pad, widened to width by the flag's zeros or by spaces */
@@ -201,7 +223,7 @@ static void convert(struct output *out, char conversion, char flag, int width, s
 			format(out, "%a %b %e %T %Y", context);
 			break;
 		case 'C':
-			put_year(out, full_year(tm) / 100, flag == '\0' ? '0' : flag, width < 0 ? 2 : width, 2);
+			put_year(out, century(full_year(tm)), flag == '\0' ? '0' : flag, width < 0 ? 2 : width, 2);
 			break;
 		case 'd':
 			put_number(out, tm->tm_mday, 2, '0', flag, width);
@@ -219,7 +241,7 @@ static void convert(struct output *out, char conversion, char flag, int width, s
 			break;
 		case 'g':
 			year = iso_week(tm, &week);
-			put_number(out, (year % 100 + 100) % 100, 2, '0', flag, width);
+			put_number(out, year_in_century(year), 2, '0', flag, width);
 			break;
 		case 'G':
 			put_year(out, iso_week(tm, &week), flag == '\0' ? '+' : flag, width < 0 ? 4 : width, 4);
@@ -285,7 +307,7 @@ static void convert(struct output *out, char conversion, char flag, int width, s
 			format(out, "%m/%d/%y", context);
 			break;
 		case 'y':
-			put_number(out, (full_year(tm) % 100 + 100) % 100, 2, '0', flag, width);
+			put_number(out, year_in_century(full_year(tm)), 2, '0', flag, width);
 			break;
 		case 'Y':
 			put_year(out, full_year(tm), flag == '\0' ? '+' : flag, width < 0 ? 4 : width, 4);

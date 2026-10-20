@@ -28,8 +28,11 @@ static long long rule_day(const struct __libc_tz_rule *rule, long long year)
 			/* The day-th weekday of week week (5 means the last) of month */
 			long long first = __libc_days_from_civil(year, rule->month, 1);
 			long long start = first - __libc_days_from_civil(year, 1, 1);
-			int first_wday = (int)(((first + 4) % 7 + 7) % 7);
-			int day = (rule->day - first_wday + 7) % 7 + (rule->week - 1) * 7;
+			uint32_t first_wday;
+			int day;
+
+			__libc_floor_divmod64(first + 4, 7, &first_wday);
+			day = (rule->day - (int)first_wday + 7) % 7 + (rule->week - 1) * 7;
 			static const unsigned char lengths[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 			int length = lengths[rule->month - 1] + (rule->month == 2 && leap);
 
