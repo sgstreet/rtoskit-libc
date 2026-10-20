@@ -20,7 +20,8 @@
  * subnormal one is rounded on the 2^-149 grid directly: scaled by 2^126 it
  * lies below 1 in magnitude, where adding +-1 (the sign of v) puts the grid
  * at the ulp of [1, 2), so the sum rounds exactly as the subnormal result
- * must (PLAN D57).
+ * must (PLAN D57). The path follows the magnitude of the result, whatever
+ * the scale of v.
  */
 float __libc_exp2f_scale(struct __libc_ff v, int exponent)
 {
@@ -28,13 +29,12 @@ float __libc_exp2f_scale(struct __libc_ff v, int exponent)
 	float bias;
 	struct __libc_ff sum;
 
-	if (exponent > -126)
+	if (v.hi == 0)
+		return v.hi;
+	if (ilogbf(v.hi) + exponent >= -126)
 		return scalbnf(v.hi + v.lo, exponent);
 
 	high = scalbnf(v.hi, exponent + 126);
-	if (fabsf(high) >= 1.0f)
-		return scalbnf(v.hi + v.lo, exponent);
-
 	bias = copysignf(1.0f, v.hi);
 	sum = __libc_ff_sum(bias, high);
 

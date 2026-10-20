@@ -650,8 +650,10 @@
      "libgcc: __aeabi_fcmpeq",
      "libgcc: __aeabi_fcmpge",
      "libgcc: __aeabi_fcmpgt",
+     "libgcc: __aeabi_fcmple",
      "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
+     "libgcc: __aeabi_fdiv",
      "libgcc: __aeabi_fmul",
      "libgcc: __aeabi_i2d",
      "libgcc: __aeabi_i2f",
@@ -675,10 +677,10 @@
     "libc": {
      "bss": 0,
      "data": 0,
-     "rodata": 2912,
+     "rodata": 3188,
      "tbss": 0,
      "tdata": 0,
-     "text": 13482,
+     "text": 14646,
      "unwind": 0
     },
     "libgcc": {
@@ -687,16 +689,16 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 7472,
+     "text": 7984,
      "unwind": 0
     },
     "other": {
      "bss": 0,
      "data": 0,
-     "rodata": 0,
+     "rodata": 4,
      "tbss": 0,
      "tdata": 0,
-     "text": 14,
+     "text": 18,
      "unwind": 0
     },
     "port": {
@@ -721,10 +723,10 @@
    "sections": {
     "bss": 20,
     "data": 0,
-    "rodata": 2912,
+    "rodata": 3192,
     "tbss": 0,
     "tdata": 0,
-    "text": 21384,
+    "text": 23064,
     "unwind": 0
    }
   },
@@ -749,8 +751,10 @@
      "libgcc: __aeabi_fcmpeq",
      "libgcc: __aeabi_fcmpge",
      "libgcc: __aeabi_fcmpgt",
+     "libgcc: __aeabi_fcmple",
      "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
+     "libgcc: __aeabi_fdiv",
      "libgcc: __aeabi_fmul",
      "libgcc: __aeabi_i2d",
      "libgcc: __aeabi_i2f",
@@ -774,10 +778,10 @@
     "libc": {
      "bss": 0,
      "data": 0,
-     "rodata": 3440,
+     "rodata": 3716,
      "tbss": 0,
      "tdata": 0,
-     "text": 17738,
+     "text": 19090,
      "unwind": 0
     },
     "libgcc": {
@@ -786,7 +790,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 7472,
+     "text": 7984,
      "unwind": 0
     },
     "other": {
@@ -820,10 +824,10 @@
    "sections": {
     "bss": 20,
     "data": 0,
-    "rodata": 3440,
+    "rodata": 3716,
     "tbss": 0,
     "tdata": 0,
-    "text": 25928,
+    "text": 27792,
     "unwind": 0
    }
   }
@@ -1169,7 +1173,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 172,
+    "text": 176,
     "unwind": 0
    },
    "__libc_exp2m1f_scale.o": {
@@ -1485,6 +1489,24 @@
     "tbss": 0,
     "tdata": 0,
     "text": 244,
+    "unwind": 0
+   },
+   "__libc_log2f_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 276,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 956,
+    "unwind": 0
+   },
+   "__libc_log2p1f_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 576,
     "unwind": 0
    },
    "__libc_log_core.o": {
@@ -4994,7 +5016,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 324,
     "unwind": 0
    },
    "log10l.o": {
@@ -5021,7 +5043,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 496,
     "unwind": 0
    },
    "log10p1l.o": {
@@ -5048,7 +5070,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 184,
+    "text": 340,
     "unwind": 0
    },
    "log1pl.o": {
@@ -5075,7 +5097,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 128,
     "unwind": 0
    },
    "log2l.o": {
@@ -5102,7 +5124,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 364,
     "unwind": 0
    },
    "log2p1l.o": {
@@ -5147,7 +5169,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 324,
     "unwind": 0
    },
    "logl.o": {
@@ -5174,7 +5196,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 184,
+    "text": 8,
     "unwind": 0
    },
    "logp1l.o": {
@@ -7746,10 +7768,10 @@
   "totals": {
    "bss": 1184,
    "data": 108,
-   "rodata": 8614,
+   "rodata": 8890,
    "tbss": 358,
    "tdata": 8,
-   "text": 116294,
+   "text": 119366,
    "unwind": 0
   }
  },
@@ -7940,7 +7962,7 @@
     "notes": [
      "libgcc: __aeabi_f2iz",
      "libgcc: __aeabi_fadd",
-     "libgcc: __aeabi_fcmpge",
+     "libgcc: __aeabi_fcmpeq",
      "libgcc: __aeabi_fcmpgt",
      "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
@@ -8753,6 +8775,10 @@
    "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:stirling": 144,
    "__libc_log1p_core.o:__libc_log1p_core": 64,
    "__libc_log1p_dd.o:__libc_log1p_dd": 64,
+   "__libc_log2f_core.o:__libc_log2f_core": 64,
+   "__libc_log2f_core.o:libc/math/sp-nearest/__libc_log2f_core.c:__libc_ff_product": 32,
+   "__libc_log2p1f_core.o:__libc_log2p1f_core": 40,
+   "__libc_log2p1f_core.o:libc/math/sp-nearest/__libc_log2p1f_core.c:__libc_ff_product": 32,
    "__libc_log_core.o:__libc_log_core": 144,
    "__libc_log_core.o:libc/math/__libc_log_core.c:__libc_dd_product": 56,
    "__libc_malloc_check.o:__libc_malloc_check": 40,
@@ -9173,27 +9199,28 @@
    "localtime_r.o:localtime_r": 104,
    "log.o:log": 40,
    "log10.o:log10": 80,
-   "log10f.o:log10f": 8,
+   "log10f.o:log10f": 40,
    "log10l.o:log10l": 8,
    "log10p1.o:log10p1": 80,
-   "log10p1f.o:log10p1f": 8,
+   "log10p1f.o:libc/math/sp-nearest/log10p1f.c:__libc_ff_product": 32,
+   "log10p1f.o:log10p1f": 32,
    "log10p1l.o:log10p1l": 8,
    "log1p.o:log1p": 40,
-   "log1pf.o:log1pf": 16,
+   "log1pf.o:log1pf": 40,
    "log1pl.o:log1pl": 8,
    "log2.o:log2": 80,
-   "log2f.o:log2f": 8,
+   "log2f.o:log2f": 24,
    "log2l.o:log2l": 8,
    "log2p1.o:log2p1": 80,
-   "log2p1f.o:log2p1f": 8,
+   "log2p1f.o:log2p1f": 40,
    "log2p1l.o:log2p1l": 8,
    "logb.o:logb": 8,
    "logbf.o:logbf": 8,
    "logbl.o:logbl": 8,
-   "logf.o:logf": 8,
+   "logf.o:logf": 40,
    "logl.o:logl": 8,
    "logp1.o:logp1": 8,
-   "logp1f.o:logp1f": 16,
+   "logp1f.o:logp1f": 8,
    "logp1l.o:logp1l": 8,
    "lrint.o:lrint": 16,
    "lrintf.o:lrintf": 8,

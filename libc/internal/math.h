@@ -545,12 +545,13 @@ static inline struct __libc_ff __libc_ff_add(struct __libc_ff a, struct __libc_f
 	return __libc_ff_fast_sum(sum.hi, sum.lo + a.lo + b.lo);
 }
 
-/* ln 2, 1/ln 2, ln 10, log2(10) and log10(2) as float-float */
+/* ln 2, 1/ln 2, ln 10, log2(10), log10(2) and 1/ln 10 as float-float */
 #define __LIBC_LN2F ((struct __libc_ff){ .hi = 0x1.62e43p-1f, .lo = -0x1.05c61p-29f })
 #define __LIBC_INV_LN2F ((struct __libc_ff){ .hi = 0x1.715476p0f, .lo = 0x1.4ae0cp-26f })
 #define __LIBC_LN10F ((struct __libc_ff){ .hi = 0x1.26bb1cp1f, .lo = -0x1.12aabap-25f })
 #define __LIBC_LOG2_10F ((struct __libc_ff){ .hi = 0x1.a934fp1f, .lo = 0x1.2f346ep-24f })
 #define __LIBC_LOG10_2F ((struct __libc_ff){ .hi = 0x1.344136p-2f, .lo = -0x1.ec10cp-27f })
+#define __LIBC_INV_LN10F ((struct __libc_ff){ .hi = 0x1.bcb7b2p-2f, .lo = -0x1.5b235ep-27f })
 
 /*
  * e^r - 1 for |r| below 0.011 (Taylor to r^5; the r^6 term is below 2^-41
@@ -562,6 +563,22 @@ static inline struct __libc_ff __libc_ff_expm1_series(struct __libc_ff r)
 	float tail = h * h * (0.5f + h * (0x1.555556p-3f + h * (0x1.555556p-5f + h * 0x1.111112p-7f)));
 
 	return __libc_ff_fast_sum(h, r.lo + tail);
+}
+
+/*
+ * log(1 + f) for |f| below 0.022 (Taylor to f^7; the f^8 term is below
+ * 2^-46 of the result): f.hi leads and -f.hi^2/2 is added exactly (Dekker
+ * square), so the rounding of the rest is below 2^-38 of the result; f.lo
+ * enters through its first-order term f.lo (1 - f.hi).
+ */
+static inline struct __libc_ff __libc_ff_log1p_series(struct __libc_ff f)
+{
+	float h = f.hi;
+	struct __libc_ff square = __libc_ff_product(h, h);
+	struct __libc_ff head = __libc_ff_fast_sum(h, -0.5f * square.hi);
+	float tail = h * square.hi * (0x1.555556p-2f + h * (-0.25f + h * (0x1.99999ap-3f + h * (-0x1.555556p-3f + h * 0x1.24924ap-3f))));
+
+	return __libc_ff_fast_sum(head.hi, head.lo + (-0.5f * square.lo + f.lo * (1.0f - h) + tail));
 }
 
 /* x * c as float-float for a float-float constant c */
@@ -578,8 +595,14 @@ static inline struct __libc_ff __libc_ff_scale(float x, struct __libc_ff c)
  */
 struct __libc_ff __libc_exp2f_core(struct __libc_ff z, int *exponent);
 
-/* 2^exponent * (v.hi + v.lo) rounded once to nearest, subnormal results included, for |v.hi| in about [1/2, 4) */
+/* 2^exponent * (v.hi + v.lo) rounded once to nearest, subnormal results included */
 float __libc_exp2f_scale(struct __libc_ff v, int exponent);
+
+/* log2(x + tail) for positive finite x and |tail| at most half an ulp of x, to about 2^-40 (relative near 1) */
+struct __libc_ff __libc_log2f_core(float x, float tail);
+
+/* log2(1 + x) for finite x > -1 with |x| at least 2^-90 */
+struct __libc_ff __libc_log2p1f_core(float x);
 
 /* 2^exponent * (v.hi + v.lo) - 1 rounded once to nearest, for exponent in [-27, 128] */
 float __libc_exp2m1f_scale(struct __libc_ff v, int exponent);

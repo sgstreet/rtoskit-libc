@@ -260,3 +260,36 @@ Members that grew or are new, justified:
 - `__libc_exp2m1f_scale.o` 0 → 132 (+132): new: the core result minus one, rounded once.
 - `exp2f.o` 16 → 100 (+84): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
 - Transitional growth, justified: `math-mix` and `math-float` now link the float-float exponentials *and*, through `logf`, `powf`, `sinf` and `cosf` (still wrappers until P2.05c2–d), the double cores and soft double. A float program sheds soft double only when every float function it calls is float-only; the reductions are measured at the end of P2.05 (D57).
+
+## P2.05c2 — float-float logarithms
+
+Decision D58, `docs/research/libm-float-log.md`. Before → after, release build.
+
+`libc.a`: code 124908 → 128256 (+3348), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 2211 → 2211 | 380 → 380 | 1428 → 1428 | 0 → 0 |
+| hello-printf-int | 7945 → 7945 | 380 → 380 | 6709 → 6709 | 420 → 420 |
+| hello-printf-float | 10550 → 10550 | 380 → 380 | 6709 → 6709 | 2984 → 2984 |
+| malloc-heavy | 2286 → 2286 | 80 → 80 | 1346 → 1346 | 0 → 0 |
+| math-mix | 29368 → 31508 | 20 → 20 | 21178 → 22806 | 7472 → 7984 |
+| float-exact | 3908 → 3908 | 20 → 20 | 1444 → 1444 | 1946 → 1946 |
+| math-float | 24296 → 26256 | 20 → 20 | 16394 → 17834 | 7472 → 7984 |
+| hello-printf-int-nofloat | 5047 → 5047 | 380 → 380 | 3811 → 3811 | 420 → 420 |
+| hello-printf-int-minimal | 4779 → 4779 | 380 → 380 | 3593 → 3593 | 372 → 372 |
+| malloc-heavy-tiny | 2206 → 2206 | 76 → 76 | 1266 → 1266 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `__libc_log2f_core.o` 0 → 1232 (+1232): new: the float-float log2 core with its 23-entry table (276 bytes).
+- `__libc_log2p1f_core.o` 0 → 576 (+576): new: log2(1 + x), the series near 0, the core elsewhere.
+- `log10p1f.o` 16 → 496 (+480): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `log2p1f.o` 16 → 364 (+348): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `log10f.o` 16 → 324 (+308): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `logf.o` 16 → 324 (+308): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `log1pf.o` 184 → 340 (+156): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `log2f.o` 16 → 128 (+112): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `__libc_exp2f_scale.o` 172 → 176 (+4): takes the subnormal path from the magnitude of the result (D58).
+- Reduced: 1 members, -176 bytes; the largest: `logp1f.o` 184 → 8.
+- Transitional growth, justified as in P2.05c1: `math-mix` and `math-float` still link the double cores through `powf`, `sinf` and `cosf` (P2.05c3, P2.05d) besides the new float-float logarithm (D58).
