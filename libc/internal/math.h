@@ -683,6 +683,12 @@ float __libc_ff_round_product(struct __libc_ff a, struct __libc_ff b, int expone
 /* sinh x and cosh x as float-float for |x| below 16, to about 2^-42 */
 void __libc_sinhcoshf_core(float x, struct __libc_ff *sinh, struct __libc_ff *cosh);
 
+/* asinh t as float-float for a finite float-float t, to about 2^-42 */
+struct __libc_ff __libc_asinhf_core(struct __libc_ff t);
+
+/* log(1 + t) as float-float for a float-float t above -1, to about 2^-42 */
+struct __libc_ff __libc_log1pf_core(struct __libc_ff t);
+
 /* 2^z m rounded once, for finite z and a sine or cosine m */
 float __libc_exp2f_times(struct __libc_ff z, struct __libc_ff m);
 

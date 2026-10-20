@@ -512,3 +512,33 @@ Members that grew or are new, justified:
 - `csinh.o` 612 → 632 (+20): the sign fix beyond 709 (one multiply).
 - `ccosh.o` 704 → 720 (+16): the sign fix beyond 709 (one multiply).
 - Reduced: 4 members, -310 bytes; the largest: `__libc_exp2f_times.o` 260 → 92, `ccosf.o` 74 → 16, `csinf.o` 74 → 32, `ctanf.o` 74 → 32.
+
+## P2.05e3c — float complex inverse functions
+
+Decision D67, `docs/research/libm-float-complex.md`. Before → after, release build.
+
+`libc.a`: code 149038 → 155102 (+6064), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 1931 → 1931 | 380 → 380 | 1178 → 1178 | 0 → 0 |
+| hello-printf-int | 7333 → 7333 | 380 → 380 | 6545 → 6545 | 0 → 0 |
+| hello-printf-float | 9318 → 9318 | 380 → 380 | 6545 → 6545 | 1948 → 1948 |
+| malloc-heavy | 1982 → 1982 | 80 → 80 | 1066 → 1066 | 0 → 0 |
+| math-mix | 27472 → 27472 | 20 → 20 | 24324 → 24324 | 2344 → 2344 |
+| float-exact | 2048 → 2048 | 20 → 20 | 1518 → 1518 | 0 → 0 |
+| math-float | 5426 → 5426 | 20 → 20 | 5014 → 5014 | 0 → 0 |
+| hello-printf-int-nofloat | 4511 → 4511 | 380 → 380 | 3723 → 3723 | 0 → 0 |
+| hello-printf-int-minimal | 4271 → 4271 | 380 → 380 | 3487 → 3487 | 0 → 0 |
+| malloc-heavy-tiny | 1922 → 1922 | 76 → 76 | 1006 → 1006 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `cacosf.o` 74 → 1442 (+1368): computed in float (the complex `sp-nearest` layer) instead of a wrapper of the double function.
+- `casinhf.o` 74 → 1430 (+1356): computed in float (the complex `sp-nearest` layer) instead of a wrapper of the double function.
+- `catanhf.o` 74 → 1338 (+1264): computed in float (the complex `sp-nearest` layer) instead of a wrapper of the double function.
+- `__libc_csqrtf_core.o` 0 → 760 (+760): new: float-float sqrt(a + ib), shared by cacosf and casinhf.
+- `__libc_asinhf_core.o` 0 → 678 (+678): new: asinh of a float-float argument.
+- `__libc_clogf_modulus.o` 0 → 368 (+368): new: log|z| as float-float, shared by the inverse functions.
+- `__libc_log1pf_core.o` 0 → 368 (+368): new: log1p of a float-float argument.
+- Reduced: 3 members, -98 bytes; the largest: `casinf.o` 74 → 32, `catanf.o` 74 → 32, `cacoshf.o` 74 → 60.

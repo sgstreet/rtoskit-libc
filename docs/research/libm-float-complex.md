@@ -224,3 +224,79 @@ Fourteen mutants:
   - `ccoshf(±∞ ± i0)` without the sign of zero.
 - insignificant: 1/6's low part dropped in the sinh series. That is
   2^−32 relative at ¼ (2^−9 ulp), as for `sinhf` (D62).
+
+## e3c: inverse functions
+
+- **Helpers:**
+  - `__libc_csqrtf_core(a, b)` (complex layer): √(a + ib) as float-float
+    parts for a float-float a, for √(1 ± z) with 1 ± x exact.
+    - The other part divides |b| by 2t rather than halving b, which would
+      round a subnormal b.
+    - Below 2^−60 the operands are scaled by 2^100 and the parts by 2^−50:
+      for x = ±1 and y = 2^−149, y² underflows, while √(iy) is 2^−75.
+  - `__libc_clogf_modulus` (complex layer): log|z| as float-float, the
+    `clogf` path away from |z| = 1.
+  - `__libc_asinhf_core(t)` and `__libc_log1pf_core(t)` (libm layer):
+    asinh and log1p of a float-float argument. They use `asinhf`'s
+    regions, with the identity below 2^−20, and the log1p series below
+    2^−6.
+- **`cacosf`:** Kahan's formula with u = √(1 − z), v = √(1 + z), in
+  float-float.
+  - Re = 2 atan2(Re u, Re v); Im = asinh(Re v Im u − Im v Re u). The two
+    products have the same sign, so the difference does not cancel.
+  - From |z| = 2^24 it uses atan2(|y|, x) − i copysign(log 2|z|, y), good
+    to 2^−48.
+  - For |y| < 2^−60 it uses the first-order forms acos x − i y/√(1 − x²)
+    and |y|/√(x² − 1) − i copysign(acosh|x|, y) (π for x < −1), exact to
+    2^−120. The general path would carry y through subnormal products.
+  - x = ±1 with y = ±0 is exact (0 or π, −y).
+- **`cacoshf`:** from `cacosf`, as the double function.
+- **`casinhf`:** −i asin(iz) with Kahan's asin.
+  - From 2^24 it uses copysign(log 2|z|, x) + i atan2(y, |x|).
+  - For |x| < 2^−60 it uses x/√(1 − y²) + i asin y, or
+    copysign(acosh|y|, x) + i copysign(π/2, y).
+  - For |y| < 2^−60 the imaginary part is y / Re √(1 + z²).
+  - x = ±0 with |y| = 1 is exact.
+- **`catanhf`:** on x ≥ 0 (odd),
+  ¼ log1p(4x/((1 − x)² + y²)) + i ½ atan2(2y, (1 − x)(1 + x) − y²),
+  in float-float.
+  - Where 4x/D or 2y/d is below 2^−60, the parts are x/D and y/d, formed
+    from x or y scaled by 2^64. The quotient would otherwise be below
+    2^−120, and its low part subnormal: 0.69 ulp before.
+  - x = 1 with |y| < 2^−60 gives (ln 2 − ln|y|)/2.
+  - From 2^40: Re(1/z) and ±π/2. The first cutoff, 2^60, let the
+    squares reach 2^120. Veltkamp's split (×4097) then overflowed to NaN,
+    and the atan2 core indexed its table with it (a crash).
+- **`casinf`, `catanf`:** by rotation.
+
+| Function | normwise max (ulp) | parts max, own ulp | not correctly rounded |
+|---|---:|---:|---:|
+| `cacosf` | 0.500 | 0.5 | 0 |
+| `casinf` | 0.500 | 0.5 | 0 |
+| `catanf` | 0.500 | 0.5 | 0 |
+| `cacoshf` | 0.500 | 0.5 | 0 |
+| `casinhf` | 0.500 | 0.5 | 0 |
+| `catanhf` | 0.500 | 0.5 | 0 |
+| `catanhf`, x in [½, 2], \|y\| ≤ 1 | 0.500 | 0.5 | 0 |
+| `cacosf` near the cut, \|y\| ≤ 2^−10 | 0.500 | 0.5 | 0 |
+| `casinhf` near the cut, \|x\| ≤ 2^−10 | 0.500 | 0.5 | 0 |
+
+Fifteen mutants, all caught:
+- the csqrt core's tiny scaling disabled;
+- its other part over t;
+- the asinh identity to 2^−12;
+- log(2t) from 2^4;
+- the log1p series to 2^−2;
+- `cacosf`'s asymptotic form from 2^12;
+- its tiny-y real part dropped;
+- the sign at x = 1;
+- `casinhf`'s tiny-y path off;
+- u and v swapped;
+- `catanhf`'s x = 1 path off;
+- its asymptotic form from 2^20;
+- its first-order real part off;
+- `cacoshf`'s sign dropped;
+- the modulus' scale dropped.
+
+`asinhf` itself still has its own copy of the asinh regions. Sharing it
+with `__libc_asinhf_core` is left to P2.05e4, the kernel-sharing step.
