@@ -80,8 +80,9 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] An exact integer argument reduction (`__libc_rem_pio2f`) and a Tang sin core; `sinf`, `cosf`, `tanf`, `sinpif`, `cospif`, `tanpif`.
   *All 0.500 ulp; 10 mutants (8 caught, 1 equivalent, 1 marginal at 2^-12 ulp) (D60).*
 
-## P2.05d2 — The inverse trigonometric functions
-- [ ] An atan2 core; `atanf`, `atan2f`, `asinf`, `acosf` and their pi-scaled forms.
+## P2.05d2 — The inverse trigonometric functions  `[x]`
+- [x] An atan2 core; `atanf`, `atan2f`, `asinf`, `acosf` and their pi-scaled forms.
+  *All 0.500 ulp; 9 mutants (7 caught, 2 benign) (D61).*
 
 ## P2.05d3 — The hyperbolic functions
 - [ ] `sinhf`, `coshf`, `tanhf`, `asinhf`, `acoshf`, `atanhf`.

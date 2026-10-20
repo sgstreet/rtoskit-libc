@@ -66,13 +66,20 @@ static const struct unary unary[] = {
 	{ "sinpif", sinpif, sinpi, -FLT_MAX, FLT_MAX, 0x1.fcp-1f, 0x1.02p0f },
 	{ "cospif", cospif, cospi, -FLT_MAX, FLT_MAX, 0x1.fcp-2f, 0x1.02p-1f },
 	{ "tanpif", tanpif, tanpi, -FLT_MAX, FLT_MAX, 0x1.fcp-2f, 0x1.02p-1f },
+	/* The inverse functions, sweeping where the table and the octant swap meet (around 1) or where sqrt(1 - x^2) cancels */
+	{ "atanf", atanf, atan, -FLT_MAX, FLT_MAX, 0x1.f8p-1f, 0x1.04p0f },
+	{ "asinf", asinf, asin, -1.0f, 1.0f, 0x1.f8p-1f, 1.0f },
+	{ "acosf", acosf, acos, -1.0f, 1.0f, -1.0f, -0x1.f8p-1f },
+	{ "atanpif", atanpif, atanpi, -FLT_MAX, FLT_MAX, 0x1.f8p-1f, 0x1.04p0f },
+	{ "asinpif", asinpif, asinpi, -1.0f, 1.0f, 0x1.f8p-1f, 1.0f },
+	{ "acospif", acospif, acospi, -1.0f, 1.0f, -1.0f, -0x1.f8p-1f },
 	/* The roots sweep [1, 2), every significand once */
 	{ "sqrtf", sqrtf, sqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },
 	{ "rsqrtf", rsqrtf, rsqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },
 	{ "cbrtf", cbrtf, cbrt, -FLT_MAX, FLT_MAX, 1.0f, 2.0f },
 };
 
-/* f(x, y): kind 0 picks y so that x^y stays in range, kind 1 picks pairs of any and of close magnitudes */
+/* f(x, y): kind 0 picks y so that x^y stays in range, kind 1 picks pairs of any and of close magnitudes, kind 2 as 1 with both signs */
 struct binary {
 	const char *name;
 	float (*function)(float, float);
@@ -84,6 +91,8 @@ static const struct binary binary[] = {
 	{ "powf", powf, pow, 0 },
 	{ "powrf", powrf, powr, 0 },
 	{ "hypotf", hypotf, hypot, 1 },
+	{ "atan2f", atan2f, atan2, 2 },
+	{ "atan2pif", atan2pif, atan2pi, 2 },
 };
 
 /* f(x, n): kind 0 pown, 1 rootn, 2 compoundn */
@@ -336,6 +345,8 @@ static void check_binary(const struct binary *test)
 			y = (i & 1) != 0 ? x * (0.5f + (float)(next(&state) >> 8) * 0x1p-23f) : positive(&state);
 			if ((i & 2) != 0)
 				x = -x;
+			if (test->kind == 2 && (i & 4) != 0)
+				y = -y;
 		}
 		record(&statistics, test->name, x, y, test->function(x, y), test->reference(x, y));
 	}
