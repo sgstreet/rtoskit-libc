@@ -49,7 +49,7 @@ automatically; there is nothing to configure per function.
 | `armv7e-m` | FPv4-SP | soft | `sp sp-nearest fpv4-sp` | `thumb1`; speed: `thumb2 thumb1` |
 | `armv8-m.main` | FPv5-SP | soft | `sp sp-nearest fpv5-sp` | `thumb1`; speed: `thumb2 thumb1` |
 | `armv7e-m-dp` | FPv5-DP | full: every direction and flag | `sp fpv5-sp fpv5-dp` | `thumb1`; speed: `thumb2 thumb1` |
-| `x86_64` (tests) | SSE | full | `x86_64` | none (C) |
+| `x86_64` (tests) | SSE | full | `x86_64` | none (C); speed: `x86_64` (SSE2) |
 
 What the layers mean for a program:
 
