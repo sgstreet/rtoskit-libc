@@ -351,3 +351,40 @@ Throughput, per call (the latency counts are the same under qemu).
 | `mtx/trylock` | 78.0 |
 | `tss_get` | 34.0 |
 
+## P3.02b — Speed flavour: Thumb-2 `strcmp`/`strchr`
+
+Word-at-a-time `strcmp` and DSP `strchr` in `libc/string/thumb2` (PLAN D74); `strlen` stays the Thumb-1 one
+(the speed budget, Q16). Change against the P3.02a speed baseline; every other program is unchanged.
+
+### string
+
+Aligned / worst of the misaligned offsets.
+
+| Function | 0 | 1 | 4 | 16 | 64 | 256 | 1024 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| `memcpy` | 19.0 / 19.0 | 34.0 / 34.0 | 34.0 / 34.0 | 42.0 / 42.0 | 54.0 / 81.0 | 78.0 / 153 | 174 / 441 |
+| `memmove-down` | 23.0 / 23.0 | 38.0 / 38.0 | 38.0 / 38.0 | 46.0 / 46.0 | 58.0 / 85.0 | 82.0 / 157 | 178 / 445 |
+| `memmove-up` | 23.0 / 23.0 | 38.0 / 38.0 | 38.0 / 38.0 | 44.0 / 44.0 | 54.0 / 77.0 | 78.0 / 143 | 174 / 407 |
+| `memset` | 18.0 / 18.0 | 35.0 / 35.0 | 35.0 / 35.0 | 39.0 / 39.0 | 57.0 / 59.0 | 81.0 / 83.0 | 177 / 179 |
+| `memcmp` | 27.0 / 27.0 | 35.0 / 35.0 | 59.0 / 59.0 | 155 / 155 | 539 / 539 | 2075 / 2075 | 8219 / 8219 |
+| `memchr` | 29.0 / 29.0 | 36.0 / 28.0 | 65.0 / 66.0 | 95.0 / 98.0 | 215 / 218 | 695 / 698 | 2615 / 2618 |
+| `strlen` | 35.0 / 28.0 | 42.0 / 42.0 | 40.0 / 63.0 | 55.0 / 78.0 | 115 / 138 | 355 / 378 | 1315 / 1338 |
+| `strchr` | 43.0 (-17 %) / 28.0 | 43.0 (-10 %) / 24.0 | 43.0 (-38 %) / 67.0 | 67.0 (-34 %) / 91.0 | 163 (-30 %) / 187 | 547 (-28 %) / 571 | 2083 (-28 %) / 2107 |
+| `strcmp` | 27.0 (-4 %) / 27.0 | 33.0 (-8 %) / 33.0 | 53.0 (-12 %) / 53.0 | 144 (-8 %) / 133 | 240 (-56 %) / 430 | 624 (-70 %) / 1582 | 2160 (-74 %) / 6190 |
+| `strcpy` | 62.0 / 62.0 | 69.0 / 69.0 | 69.0 / 92.0 | 92.0 / 115 | 164 / 212 | 428 / 524 | 1484 / 1772 |
+| `mix/memcpy` (per call) | 54.1 | | | | | | |
+| `mix/memset` (per call) | 41.7 | | | | | | |
+| `mix/strlen` (per call) | 113 | | | | | | |
+
+### qsort
+
+| Case | insns/op |
+|---|---:|
+| `bsearch/1024` | 143 |
+| `qsort/equal/1024` | 114 |
+| `qsort/random/1024` | 640 |
+| `qsort/random/16` | 224 |
+| `qsort/random/256` | 497 |
+| `qsort/reversed/1024` | 602 |
+| `qsort/sorted/1024` | 677 |
+| `qsort/strings/256` | 585 (-2 %) |

@@ -22,8 +22,10 @@
  * guard bytes on both sides, the return values; memmove in both directions
  * over every overlap; strlen and strcmp with bytes that trip a careless
  * zero-byte test (0x01, 0x80, 0xff) around the terminator and the
- * difference, compared as unsigned char (C23 7.26.4p1). The references are
- * plain byte loops.
+ * difference, compared as unsigned char (C23 7.26.4p1); strchr at every
+ * offset, length and position, for characters that alias those bytes, the
+ * terminator and int values beyond a byte. The references are plain byte
+ * loops.
  */
 
 #define SIZE 320
@@ -167,6 +169,38 @@ static void check_strcmp(size_t a, size_t b, size_t n)
 	}
 }
 
+static const unsigned char *reference_strchr(const unsigned char *s, unsigned char c)
+{
+	while (*s != c && *s != '\0')
+		++s;
+	return *s == c ? s : nullptr;
+}
+
+/* Every character position, characters that alias a careless zero test, the terminator, an absent character, and int values with high bits (converted to unsigned char, 7.26.5.2p2) */
+static void check_strchr(size_t d, size_t n)
+{
+	static const int characters[] = { 0x01, 0x80, 0xff, 0x41, 0x7f, 0x141, -1, 0x55 };
+
+	for (unsigned seed = 0; seed < 7; ++seed) {
+		const char *text = (const char *)target + 16 + d;
+
+		make_string(target, d, n, seed);
+		for (size_t i = 0; i < sizeof(characters) / sizeof(characters[0]); ++i)
+			if ((const unsigned char *)strchr(text, characters[i]) != reference_strchr(target + 16 + d, (unsigned char)characters[i]))
+				fail("strchr", d, (size_t)characters[i] & 0x1ff, n);
+		if (strchr(text, '\0') != text + n || strchr(text, 0x100) != text + n)
+			fail("strchr (terminator)", d, seed, n);
+		for (size_t at = 0; at < n; ++at) {
+			unsigned char saved = target[16 + d + at];
+
+			target[16 + d + at] = 0x55;
+			if ((const unsigned char *)strchr(text, 0x55) != reference_strchr(target + 16 + d, 0x55))
+				fail("strchr (position)", d, at, n);
+			target[16 + d + at] = saved;
+		}
+	}
+}
+
 int main(void)
 {
 	static const int values[] = { 0, 0xff, 0x5a, 0x1a5, 0x15a, 0x7fffff00, -1 };
@@ -198,6 +232,9 @@ int main(void)
 		for (size_t b = 0; b < 8; ++b)
 			for (size_t n = 0; n <= 40; ++n)
 				check_strcmp(a, b, n);
+	for (size_t d = 0; d < 8; ++d)
+		for (size_t n = 0; n <= LIMIT; ++n)
+			check_strchr(d, n);
 
 	fputs(failures == 0 ? "string_kernels: pass\n" : "string_kernels: FAIL\n", stdout);
 	return failures == 0 ? 0 : 1;
