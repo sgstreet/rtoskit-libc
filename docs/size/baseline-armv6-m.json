@@ -631,18 +631,8 @@
   },
   "math-float": {
    "main": {
-    "depth": 376,
+    "depth": 312,
     "notes": [
-     "libgcc: __aeabi_d2f",
-     "libgcc: __aeabi_d2iz",
-     "libgcc: __aeabi_dadd",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_dmul",
-     "libgcc: __aeabi_f2d",
      "libgcc: __aeabi_f2iz",
      "libgcc: __aeabi_fadd",
      "libgcc: __aeabi_fcmpeq",
@@ -658,24 +648,25 @@
      "libgcc: __aeabi_llsr",
      "libgcc: __aeabi_lmul",
      "libgcc: __aeabi_ui2f",
-     "libgcc: __aeabi_ul2d"
+     "libgcc: __clzsi2"
     ],
     "path": [
      "main",
      "sinf",
-     "sin",
-     "__libc_rem_pio2",
-     "libc/math/__libc_rem_pio2.c:bits_at.constprop.0"
+     "__libc_sinf_core",
+     "libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_multiply",
+     "libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_product",
+     "__aeabi_fsub"
     ]
    },
    "origin": {
     "libc": {
      "bss": 0,
      "data": 0,
-     "rodata": 692,
+     "rodata": 708,
      "tbss": 0,
      "tdata": 0,
-     "text": 8740,
+     "text": 5892,
      "unwind": 0
     },
     "libgcc": {
@@ -684,109 +675,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 6496,
-     "unwind": 0
-    },
-    "other": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 16,
-     "unwind": 0
-    },
-    "port": {
-     "bss": 20,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 256,
-     "unwind": 0
-    },
-    "program": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 160,
-     "unwind": 0
-    }
-   },
-   "sections": {
-    "bss": 20,
-    "data": 0,
-    "rodata": 692,
-    "tbss": 0,
-    "tdata": 0,
-    "text": 15668,
-    "unwind": 0
-   }
-  },
-  "math-mix": {
-   "main": {
-    "depth": 576,
-    "notes": [
-     "libgcc: __aeabi_d2f",
-     "libgcc: __aeabi_d2iz",
-     "libgcc: __aeabi_dadd",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_ddiv",
-     "libgcc: __aeabi_dmul",
-     "libgcc: __aeabi_f2d",
-     "libgcc: __aeabi_f2iz",
-     "libgcc: __aeabi_fadd",
-     "libgcc: __aeabi_fcmpeq",
-     "libgcc: __aeabi_fcmpge",
-     "libgcc: __aeabi_fcmpgt",
-     "libgcc: __aeabi_fcmple",
-     "libgcc: __aeabi_fcmplt",
-     "libgcc: __aeabi_fcmpun",
-     "libgcc: __aeabi_fdiv",
-     "libgcc: __aeabi_fmul",
-     "libgcc: __aeabi_i2d",
-     "libgcc: __aeabi_i2f",
-     "libgcc: __aeabi_lasr",
-     "libgcc: __aeabi_llsl",
-     "libgcc: __aeabi_llsr",
-     "libgcc: __aeabi_lmul",
-     "libgcc: __aeabi_ui2f",
-     "libgcc: __aeabi_ul2d",
-     "libgcc: __clzdi2"
-    ],
-    "path": [
-     "main",
-     "atan2",
-     "__libc_atan2_core",
-     "libc/math/__libc_atan2_core.c:atan_unit",
-     "libc/math/__libc_atan2_core.c:__libc_dd_product",
-     "__aeabi_dsub"
-    ]
-   },
-   "origin": {
-    "libc": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 3716,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 20244,
-     "unwind": 0
-    },
-    "libgcc": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 8104,
+     "text": 2708,
      "unwind": 0
     },
     "other": {
@@ -813,6 +702,107 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
+     "text": 160,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 20,
+    "data": 0,
+    "rodata": 708,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 9028,
+    "unwind": 0
+   }
+  },
+  "math-mix": {
+   "main": {
+    "depth": 576,
+    "notes": [
+     "libgcc: __aeabi_d2iz",
+     "libgcc: __aeabi_dadd",
+     "libgcc: __aeabi_dcmpeq",
+     "libgcc: __aeabi_dcmpge",
+     "libgcc: __aeabi_dcmpgt",
+     "libgcc: __aeabi_dcmple",
+     "libgcc: __aeabi_dcmplt",
+     "libgcc: __aeabi_dcmpun",
+     "libgcc: __aeabi_ddiv",
+     "libgcc: __aeabi_dmul",
+     "libgcc: __aeabi_f2iz",
+     "libgcc: __aeabi_fadd",
+     "libgcc: __aeabi_fcmpeq",
+     "libgcc: __aeabi_fcmpge",
+     "libgcc: __aeabi_fcmpgt",
+     "libgcc: __aeabi_fcmple",
+     "libgcc: __aeabi_fcmplt",
+     "libgcc: __aeabi_fcmpun",
+     "libgcc: __aeabi_fdiv",
+     "libgcc: __aeabi_fmul",
+     "libgcc: __aeabi_i2d",
+     "libgcc: __aeabi_i2f",
+     "libgcc: __aeabi_lasr",
+     "libgcc: __aeabi_llsl",
+     "libgcc: __aeabi_llsr",
+     "libgcc: __aeabi_lmul",
+     "libgcc: __aeabi_ui2f",
+     "libgcc: __aeabi_ul2d",
+     "libgcc: __clzdi2",
+     "libgcc: __clzsi2"
+    ],
+    "path": [
+     "main",
+     "atan2",
+     "__libc_atan2_core",
+     "libc/math/__libc_atan2_core.c:atan_unit",
+     "libc/math/__libc_atan2_core.c:__libc_dd_product",
+     "__aeabi_dsub"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 3892,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 21910,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 7752,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 14,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 20,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 256,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
      "text": 448,
      "unwind": 0
     }
@@ -820,10 +810,10 @@
    "sections": {
     "bss": 20,
     "data": 0,
-    "rodata": 3716,
+    "rodata": 3892,
     "tbss": 0,
     "tdata": 0,
-    "text": 29064,
+    "text": 30380,
     "unwind": 0
    }
   }
@@ -1712,6 +1702,15 @@
     "text": 1746,
     "unwind": 0
    },
+   "__libc_rem_pio2f.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 32,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 692,
+    "unwind": 0
+   },
    "__libc_remainder.o": {
     "bss": 0,
     "data": 0,
@@ -1782,6 +1781,15 @@
     "tbss": 0,
     "tdata": 0,
     "text": 956,
+    "unwind": 0
+   },
+   "__libc_sinf_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 144,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 920,
     "unwind": 0
    },
    "__libc_sinh_core.o": {
@@ -3032,7 +3040,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 124,
     "unwind": 0
    },
    "cosh.o": {
@@ -3086,7 +3094,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 384,
     "unwind": 0
    },
    "cospil.o": {
@@ -6200,7 +6208,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 196,
+    "text": 144,
     "unwind": 0
    },
    "sinh.o": {
@@ -6251,10 +6259,10 @@
    "sinpif.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 0,
+    "rodata": 16,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 492,
     "unwind": 0
    },
    "sinpil.o": {
@@ -7271,7 +7279,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 184,
+    "text": 396,
     "unwind": 0
    },
    "tanh.o": {
@@ -7325,7 +7333,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 712,
     "unwind": 0
    },
    "tanpil.o": {
@@ -7773,10 +7781,10 @@
   "totals": {
    "bss": 1184,
    "data": 108,
-   "rodata": 8890,
+   "rodata": 9082,
    "tbss": 358,
    "tdata": 8,
-   "text": 124390,
+   "text": 127810,
    "unwind": 0
   }
  },
@@ -8393,31 +8401,23 @@
     ]
    },
    "sinf": {
-    "depth": 336,
+    "depth": 272,
     "notes": [
-     "libgcc: __aeabi_d2f",
-     "libgcc: __aeabi_d2iz",
-     "libgcc: __aeabi_dadd",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_dmul",
-     "libgcc: __aeabi_f2d",
-     "libgcc: __aeabi_fcmpeq",
-     "libgcc: __aeabi_fcmpge",
-     "libgcc: __aeabi_fcmpgt",
+     "libgcc: __aeabi_fadd",
+     "libgcc: __aeabi_fcmple",
+     "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
-     "libgcc: __aeabi_llsr",
+     "libgcc: __aeabi_fmul",
      "libgcc: __aeabi_lmul",
-     "libgcc: __aeabi_ul2d"
+     "libgcc: __aeabi_ui2f",
+     "libgcc: __clzsi2"
     ],
     "path": [
      "sinf",
-     "sin",
-     "__libc_rem_pio2",
-     "libc/math/__libc_rem_pio2.c:bits_at.constprop.0"
+     "__libc_sinf_core",
+     "libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_multiply",
+     "libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_product",
+     "__aeabi_fsub"
     ]
    },
    "snprintf": {
@@ -8799,6 +8799,8 @@
    "__libc_pow_integer.o:libc/math/__libc_pow_integer.c:__libc_dd_product": 56,
    "__libc_rem_pio2.o:__libc_rem_pio2": 168,
    "__libc_rem_pio2.o:libc/math/__libc_rem_pio2.c:bits_at.constprop.0": 40,
+   "__libc_rem_pio2f.o:__libc_rem_pio2f": 104,
+   "__libc_rem_pio2f.o:libc/math/sp-nearest/__libc_rem_pio2f.c:bits32": 8,
    "__libc_remainder.o:__libc_remainder": 56,
    "__libc_remainderf.o:__libc_remainderf": 40,
    "__libc_scan.o:__libc_scan": 152,
@@ -8814,6 +8816,10 @@
    "__libc_secs_to_tm.o:libc/time/__libc_secs_to_tm.c:__libc_floor_divmod64": 16,
    "__libc_sin_core.o:__libc_sin_core": 120,
    "__libc_sin_core.o:libc/math/__libc_sin_core.c:__libc_dd_product": 56,
+   "__libc_sinf_core.o:__libc_sinf_core": 160,
+   "__libc_sinf_core.o:libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_add": 40,
+   "__libc_sinf_core.o:libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_multiply": 40,
+   "__libc_sinf_core.o:libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_product": 32,
    "__libc_sinh_core.o:__libc_sinh_core": 112,
    "__libc_sinh_core.o:libc/math/__libc_sinh_core.c:__libc_dd_product": 56,
    "__libc_start_main.o:__libc_start_main": 24,
@@ -8972,13 +8978,13 @@
    "copysignf.o:copysignf": 0,
    "copysignl.o:copysignl": 8,
    "cos.o:cos": 104,
-   "cosf.o:cosf": 8,
+   "cosf.o:cosf": 32,
    "cosh.o:cosh": 160,
    "coshf.o:coshf": 8,
    "coshl.o:coshl": 8,
    "cosl.o:cosl": 8,
    "cospi.o:cospi": 144,
-   "cospif.o:cospif": 8,
+   "cospif.o:cospif": 48,
    "cospil.o:cospil": 8,
    "cpow.o:cpow": 576,
    "cpow.o:libc/complex/cpow.c:__libc_dd_multiply": 56,
@@ -9369,13 +9375,14 @@
    "setvbuf.o:setvbuf": 24,
    "signal.o:signal": 4,
    "sin.o:sin": 104,
-   "sinf.o:sinf": 24,
+   "sinf.o:sinf": 32,
    "sinh.o:sinh": 152,
    "sinhf.o:sinhf": 24,
    "sinhl.o:sinhl": 8,
    "sinl.o:sinl": 8,
    "sinpi.o:sinpi": 168,
-   "sinpif.o:sinpif": 8,
+   "sinpif.o:libc/math/sp-nearest/sinpif.c:__libc_ff_scale": 48,
+   "sinpif.o:sinpif": 40,
    "sinpil.o:sinpil": 8,
    "snprintf.o:snprintf": 16,
    "sprintf.o:sprintf": 12,
@@ -9503,7 +9510,7 @@
    "system.o:system": 8,
    "tan.o:libc/math/tan.c:__libc_dd_divide": 88,
    "tan.o:tan": 168,
-   "tanf.o:tanf": 24,
+   "tanf.o:tanf": 72,
    "tanh.o:libc/math/tanh.c:__libc_dd_divide": 88,
    "tanh.o:tanh": 152,
    "tanhf.o:tanhf": 24,
@@ -9511,7 +9518,8 @@
    "tanl.o:tanl": 8,
    "tanpi.o:libc/math/tanpi.c:__libc_dd_product": 56,
    "tanpi.o:tanpi": 160,
-   "tanpif.o:tanpif": 8,
+   "tanpif.o:libc/math/sp-nearest/tanpif.c:__libc_ff_product": 32,
+   "tanpif.o:tanpif": 64,
    "tanpil.o:tanpil": 8,
    "tgamma.o:tgamma": 80,
    "tgammaf.o:tgammaf": 8,

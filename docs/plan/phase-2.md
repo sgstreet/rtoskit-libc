@@ -73,8 +73,18 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `powf`, `pownf`, `powrf`, `rootnf`, `compoundnf`, `rsqrtf`, `cbrtf`, `hypotf`.
   *Plus a float-only `sqrtf` in `sp` (armv6-m). All within 0.509 ulp; 12 mutants (11 caught, 1 numerically insignificant). Fixed the double `compoundn` for tiny x and large n, and the sign of zero in `__libc_exp2f_scale` (D59).*
 
-## P2.05d — Single-precision trigonometric and hyperbolic functions
-- [ ] `sinf`, `cosf`, `tanf` (with a single-precision reduction), the pi-scaled forms, the inverse and hyperbolic functions, within the D48 accuracy.
+## P2.05d — Single-precision trigonometric and hyperbolic functions (split into P2.05d1–d3)
+- `sinf`, `cosf`, `tanf` (with a single-precision reduction), the pi-scaled forms, the inverse and hyperbolic functions, within the D48 accuracy.
+
+## P2.05d1 — sin, cos, tan and the pi-scaled forms  `[x]`
+- [x] An exact integer argument reduction (`__libc_rem_pio2f`) and a Tang sin core; `sinf`, `cosf`, `tanf`, `sinpif`, `cospif`, `tanpif`.
+  *All 0.500 ulp; 10 mutants (8 caught, 1 equivalent, 1 marginal at 2^-12 ulp) (D60).*
+
+## P2.05d2 — The inverse trigonometric functions
+- [ ] An atan2 core; `atanf`, `atan2f`, `asinf`, `acosf` and their pi-scaled forms.
+
+## P2.05d3 — The hyperbolic functions
+- [ ] `sinhf`, `coshf`, `tanhf`, `asinhf`, `acoshf`, `atanhf`.
 
 ## P2.05e — Single-precision special and complex functions; shared kernels
 - [ ] `erff`, `erfcf`, `lgammaf`, `tgammaf` and the `float complex` functions on the single-precision layer.

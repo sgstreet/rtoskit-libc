@@ -325,3 +325,34 @@ Members that grew or are new, justified:
 - `compoundn.o` 320 → 348 (+28): the tiny-x case goes through the power core (D59 fix).
 - `__libc_exp2f_scale.o` 168 → 176 (+8): keeps the sign of a result that rounds to zero (D59 fix).
 - `math-mix` grows (justified): it links the float-float layer next to the double functions it also calls. `math-float` now links no double exp/log/pow core: 18044 → 10408 on armv7e-m since the start of P2.05; `sinf`/`cosf` (P2.05d) still pull the double sin/cos core and soft double.
+
+## P2.05d1 — float-float sin, cos, tan and the pi-scaled forms
+
+Decision D60, `docs/research/libm-float-trig.md`. Before → after, release build.
+
+`libc.a`: code 128480 → 131236 (+2756), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 1915 → 1915 | 380 → 380 | 1170 → 1170 | 0 → 0 |
+| hello-printf-int | 7313 → 7313 | 380 → 380 | 6539 → 6539 | 0 → 0 |
+| hello-printf-float | 9298 → 9298 | 380 → 380 | 6539 → 6539 | 1948 → 1948 |
+| malloc-heavy | 1966 → 1966 | 80 → 80 | 1060 → 1060 | 0 → 0 |
+| math-mix | 26132 → 27400 | 20 → 20 | 22820 → 24246 | 2504 → 2344 |
+| float-exact | 1612 → 1612 | 20 → 20 | 1122 → 1122 | 0 → 0 |
+| math-float | 10328 → 5358 | 20 → 20 | 7868 → 4946 | 2040 → 0 |
+| hello-printf-int-nofloat | 4479 → 4479 | 380 → 380 | 3707 → 3707 | 0 → 0 |
+| hello-printf-int-minimal | 4243 → 4243 | 380 → 380 | 3471 → 3471 | 0 → 0 |
+| malloc-heavy-tiny | 1906 → 1906 | 76 → 76 | 1000 → 1000 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `__libc_sinf_core.o` 0 → 734 (+734): new: the Tang sin core with sin/cos of j pi/32 (144 bytes).
+- `__libc_rem_pio2f.o` 0 → 662 (+662): new: the exact integer argument reduction (Payne-Hanek, 32-byte 2/pi table).
+- `tanpif.o` 32 → 620 (+588): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `sinpif.o` 32 → 416 (+384): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `cospif.o` 32 → 324 (+292): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `cosf.o` 32 → 136 (+104): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `tanf.o` 232 → 296 (+64): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- Reduced: 1 members, -72 bytes; the largest: `sinf.o` 236 → 164.
+- `math-float` (float only) now links no double code at all: 18044 → 5426 bytes on armv7e-m (no libgcc) and 23064 → 9736 on armv6-m since the start of P2.05. `math-mix` grows (justified): it links the float-float layer next to the double functions it also calls.
