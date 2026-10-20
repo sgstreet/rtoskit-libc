@@ -32,12 +32,12 @@
    },
    "origin": {
     "libc": {
-     "bss": 148,
-     "data": 76,
+     "bss": 16,
+     "data": 40,
      "rodata": 185,
      "tbss": 4,
      "tdata": 0,
-     "text": 6920,
+     "text": 6654,
      "unwind": 0
     },
     "libgcc": {
@@ -55,16 +55,16 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 16,
+     "text": 18,
      "unwind": 0
     },
     "port": {
-     "bss": 132,
+     "bss": 100,
      "data": 0,
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 852,
+     "text": 808,
      "unwind": 0
     },
     "program": {
@@ -78,12 +78,12 @@
     }
    },
    "sections": {
-    "bss": 280,
-    "data": 76,
+    "bss": 116,
+    "data": 40,
     "rodata": 198,
     "tbss": 8,
     "tdata": 0,
-    "text": 11168,
+    "text": 10860,
     "unwind": 8
    }
   },
@@ -113,12 +113,12 @@
    },
    "origin": {
     "libc": {
-     "bss": 148,
-     "data": 76,
+     "bss": 16,
+     "data": 40,
      "rodata": 185,
      "tbss": 4,
      "tdata": 0,
-     "text": 6920,
+     "text": 6654,
      "unwind": 0
     },
     "libgcc": {
@@ -136,16 +136,16 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 16,
+     "text": 18,
      "unwind": 0
     },
     "port": {
-     "bss": 132,
+     "bss": 100,
      "data": 0,
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 852,
+     "text": 808,
      "unwind": 0
     },
     "program": {
@@ -159,12 +159,12 @@
     }
    },
    "sections": {
-    "bss": 280,
-    "data": 76,
+    "bss": 116,
+    "data": 40,
     "rodata": 201,
     "tbss": 8,
     "tdata": 0,
-    "text": 8620,
+    "text": 8312,
     "unwind": 8
    }
   },
@@ -189,12 +189,12 @@
    },
    "origin": {
     "libc": {
-     "bss": 148,
-     "data": 76,
+     "bss": 16,
+     "data": 40,
      "rodata": 2,
      "tbss": 4,
      "tdata": 0,
-     "text": 1994,
+     "text": 1728,
      "unwind": 0
     },
     "libgcc": {
@@ -212,16 +212,16 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 10,
+     "text": 12,
      "unwind": 0
     },
     "port": {
-     "bss": 132,
+     "bss": 100,
      "data": 0,
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 852,
+     "text": 808,
      "unwind": 0
     },
     "program": {
@@ -235,12 +235,12 @@
     }
    },
    "sections": {
-    "bss": 280,
-    "data": 76,
+    "bss": 116,
+    "data": 40,
     "rodata": 15,
     "tbss": 8,
     "tdata": 0,
-    "text": 2872,
+    "text": 2564,
     "unwind": 0
    }
   },
@@ -263,12 +263,12 @@
    },
    "origin": {
     "libc": {
-     "bss": 144,
+     "bss": 12,
      "data": 0,
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 1390,
+     "text": 1346,
      "unwind": 0
     },
     "libgcc": {
@@ -286,11 +286,11 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 12,
+     "text": 10,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 68,
      "data": 0,
      "rodata": 0,
      "tbss": 4,
@@ -309,12 +309,12 @@
     }
    },
    "sections": {
-    "bss": 228,
+    "bss": 80,
     "data": 0,
     "rodata": 0,
     "tbss": 8,
     "tdata": 0,
-    "text": 2332,
+    "text": 2286,
     "unwind": 0
    }
   },
@@ -361,12 +361,12 @@
    },
    "origin": {
     "libc": {
-     "bss": 132,
+     "bss": 0,
      "data": 0,
      "rodata": 3184,
      "tbss": 0,
      "tdata": 0,
-     "text": 17014,
+     "text": 16756,
      "unwind": 0
     },
     "libgcc": {
@@ -384,16 +384,16 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 18,
+     "text": 12,
      "unwind": 0
     },
     "port": {
-     "bss": 68,
+     "bss": 20,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
+     "tbss": 0,
      "tdata": 0,
-     "text": 688,
+     "text": 256,
      "unwind": 0
     },
     "program": {
@@ -407,12 +407,12 @@
     }
    },
    "sections": {
-    "bss": 200,
+    "bss": 20,
     "data": 0,
     "rodata": 3184,
-    "tbss": 4,
+    "tbss": 0,
     "tdata": 0,
-    "text": 27536,
+    "text": 26840,
     "unwind": 0
    }
   }
@@ -539,19 +539,19 @@
    "__libc_asctime.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 114,
-    "tbss": 64,
+    "rodata": 86,
+    "tbss": 26,
     "tdata": 0,
-    "text": 120,
+    "text": 386,
     "unwind": 0
    },
    "__libc_assert_fail.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 35,
+    "rodata": 37,
     "tbss": 0,
     "tdata": 0,
-    "text": 44,
+    "text": 228,
     "unwind": 0
    },
    "__libc_atan2_core.o": {
@@ -563,13 +563,13 @@
     "text": 1868,
     "unwind": 0
    },
-   "__libc_atexit_handlers.o": {
-    "bss": 264,
+   "__libc_atexit_run.o": {
+    "bss": 132,
     "data": 0,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 0,
+    "text": 16,
     "unwind": 0
    },
    "__libc_cond_wait.o": {
@@ -799,11 +799,11 @@
    },
    "__libc_file_new.o": {
     "bss": 0,
-    "data": 0,
+    "data": 4,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 88,
+    "text": 112,
     "unwind": 0
    },
    "__libc_file_position.o": {
@@ -857,7 +857,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 288,
+    "text": 290,
     "unwind": 0
    },
    "__libc_files.o": {
@@ -1058,6 +1058,15 @@
     "text": 784,
     "unwind": 0
    },
+   "__libc_quick_exit_handlers.o": {
+    "bss": 132,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 0,
+    "unwind": 0
+   },
    "__libc_rand_state.o": {
     "bss": 0,
     "data": 0,
@@ -1112,15 +1121,6 @@
     "text": 580,
     "unwind": 0
    },
-   "__libc_signal_handlers.o": {
-    "bss": 128,
-    "data": 0,
-    "rodata": 0,
-    "tbss": 0,
-    "tdata": 0,
-    "text": 0,
-    "unwind": 0
-   },
    "__libc_sin_core.o": {
     "bss": 0,
     "data": 0,
@@ -1166,22 +1166,13 @@
     "text": 0,
     "unwind": 0
    },
-   "__libc_stdio_exit.o": {
-    "bss": 0,
-    "data": 0,
-    "rodata": 0,
-    "tbss": 0,
-    "tdata": 0,
-    "text": 28,
-    "unwind": 0
-   },
    "__libc_stdio_flush_all.o": {
     "bss": 0,
     "data": 0,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 132,
+    "text": 144,
     "unwind": 0
    },
    "__libc_stdout.o": {
@@ -1307,7 +1298,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 12,
+    "text": 24,
     "unwind": 0
    },
    "abs.o": {
@@ -2801,7 +2792,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 44,
+    "text": 48,
     "unwind": 0
    },
    "exp.o": {
@@ -5118,7 +5109,7 @@
     "unwind": 0
    },
    "raise.o": {
-    "bss": 0,
+    "bss": 128,
     "data": 0,
     "rodata": 0,
     "tbss": 0,
@@ -7109,11 +7100,11 @@
   },
   "totals": {
    "bss": 672,
-   "data": 116,
-   "rodata": 8815,
-   "tbss": 396,
+   "data": 120,
+   "rodata": 8789,
+   "tbss": 358,
    "tdata": 8,
-   "text": 112594,
+   "text": 113086,
    "unwind": 0
   }
  },
@@ -7278,18 +7269,15 @@
     ]
    },
    "exit": {
-    "depth": 120,
+    "depth": 48,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "indirect call"
+     "indirect call",
+     "unknown: __libc_atexit_run"
     ],
     "path": [
      "exit",
-     "__libc_exit_run",
-     "__rtos_lock_acquire",
-     "__atomic_compare_exchange_4",
-     "libc/atomic/__atomic_compare_exchange.c:__libc_atomic_cas_small",
-     "__rtos_atomic_cas"
+     "__rtos_exit"
     ]
    },
    "exp": {
@@ -7363,7 +7351,7 @@
     "path": [
      "fflush",
      "__libc_stdio_flush_all",
-     "libc/stdio/__libc_stdio_flush_all.c:flush_one",
+     "libc/stdio/__libc_stdio_flush_all.c:flush_one.part.0",
      "__rtos_lock_acquire",
      "__atomic_compare_exchange_4",
      "libc/atomic/__atomic_compare_exchange.c:__libc_atomic_cas_small",
@@ -7380,7 +7368,7 @@
      "fgets",
      "__libc_file_before_input",
      "__libc_stdio_flush_all",
-     "libc/stdio/__libc_stdio_flush_all.c:flush_one",
+     "libc/stdio/__libc_stdio_flush_all.c:flush_one.part.0",
      "__rtos_lock_acquire",
      "__atomic_compare_exchange_4",
      "libc/atomic/__atomic_compare_exchange.c:__libc_atomic_cas_small",
@@ -8070,11 +8058,15 @@
    "__atomic_xor.o:__atomic_xor_fetch_8": 32,
    "__atomic_xor.o:libc/atomic/__atomic_xor.c:__libc_atomic_cas_small": 32,
    "__flt_rounds.o:__flt_rounds": 0,
-   "__libc_asctime.o:__libc_asctime": 56,
-   "__libc_assert_fail.o:__libc_assert_fail": 288,
+   "__libc_asctime.o:__libc_asctime": 40,
+   "__libc_asctime.o:libc/time/__libc_asctime.c:put": 8,
+   "__libc_asctime.o:libc/time/__libc_asctime.c:put_number": 56,
+   "__libc_assert_fail.o:__libc_assert_fail": 320,
+   "__libc_assert_fail.o:libc/assert/__libc_assert_fail.c:append": 0,
    "__libc_atan2_core.o:__libc_atan2_core": 120,
    "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:__libc_dd_product": 56,
    "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:atan_unit": 112,
+   "__libc_atexit_run.o:libc/stdlib/__libc_atexit_run.c:__libc_atexit_run": 8,
    "__libc_cond_wait.o:__libc_cond_wait": 32,
    "__libc_cos_core.o:__libc_cos_core": 80,
    "__libc_cosh_core.o:__libc_cosh_core": 72,
@@ -8103,6 +8095,7 @@
    "__libc_file_link.o:__libc_file_link": 16,
    "__libc_file_mode.o:__libc_file_mode": 32,
    "__libc_file_new.o:__libc_file_new": 16,
+   "__libc_file_new.o:libc/stdio/__libc_file_new.c:close_at_exit": 8,
    "__libc_file_position.o:__libc_file_position": 32,
    "__libc_file_read.o:__libc_file_read": 32,
    "__libc_file_refill.o:__libc_file_refill": 8,
@@ -8166,9 +8159,8 @@
    "__libc_sinh_core.o:__libc_sinh_core": 112,
    "__libc_sinh_core.o:libc/math/__libc_sinh_core.c:__libc_dd_product": 56,
    "__libc_start_main.o:__libc_start_main": 24,
-   "__libc_stdio_exit.o:__libc_stdio_exit": 8,
    "__libc_stdio_flush_all.o:__libc_stdio_flush_all": 24,
-   "__libc_stdio_flush_all.o:libc/stdio/__libc_stdio_flush_all.c:flush_one": 16,
+   "__libc_stdio_flush_all.o:libc/stdio/__libc_stdio_flush_all.c:flush_one.part.0": 16,
    "__libc_strchrnul.o:__libc_strchrnul": 20,
    "__libc_strtofloat.o:__libc_strtofloat": 112,
    "__libc_strtofloat.o:libc/stdlib/__libc_strtofloat.c:hex_value": 0,

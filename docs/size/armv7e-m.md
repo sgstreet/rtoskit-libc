@@ -62,3 +62,33 @@ Largest members (text+rodata+unwind+data+bss+tdata+tbss), top 15:
 | `atan2pi.o` | 1612 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `catanh.o` | 1512 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `atan2.o` | 1464 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+## P2.02 — build and structure levers
+
+Decision D52, `docs/research/size-levers.md`. Before → after, release build.
+
+`libc.a`: code 121457 → 121899 (+442), RAM 788 → 792 (+4), TLS 404 → 366 (-38).
+
+| Program | code | RAM | TLS | libc code | main stack |
+|---|---|---|---|---|---|
+| hello-puts | 2595 → 2279 | 356 → 156 | 8 → 8 | 1738 → 1464 | 136 → 136 |
+| hello-printf-int | 8577 → 8261 | 356 → 156 | 8 → 8 | 6931 → 6657 | 1268 → 1268 |
+| hello-printf-float | 10562 → 10246 | 356 → 156 | 8 → 8 | 6931 → 6657 | 1284 → 1284 |
+| malloc-heavy | 2024 → 1982 | 228 → 80 | 8 → 8 | 1106 → 1066 | 184 → 184 |
+| math-mix | 23900 → 23460 | 200 → 20 | 4 → 0 | 20188 → 20148 | 896 → 896 |
+
+Members that grew, justified:
+
+- `__libc_asctime.o` 294 → 502 (+208): formats by hand instead of calling `snprintf` (on Arm the `asctime` probe image shrinks by 5.7–6.2 KB).
+- `__libc_assert_fail.o` 79 → 253 (+174): formats by hand instead of calling `snprintf` (on Arm the `assert` probe image shrinks by 6.4–6.6 KB).
+- `__libc_atexit_run.o` 0 → 144 (+144): new: the atexit table (moved from `__libc_atexit_handlers.o`) and its runner.
+- `__libc_quick_exit_handlers.o` 0 → 132 (+132): renamed from `__libc_atexit_handlers.o`, now only the `at_quick_exit` table.
+- `raise.o` 60 → 188 (+128): now holds the signal table (moved from `__libc_signal_handlers.o`).
+- `__libc_file_new.o` 84 → 108 (+24): closes the streams it made at exit (moved from `__libc_stdio_exit.o`).
+- `abort.o` 12 → 20 (+8): tests the weak reference to `raise`.
+- `__libc_stdio_flush_all.o` 130 → 134 (+4): tests the weak references to `stdout` and `stderr`.
+- `exit.o` 44 → 48 (+4): tests the weak reference to `__libc_atexit_run`.
+- `__libc_file_write.o` 280 → 282 (+2): calls `__libc_stdio_flush_all` directly.
+- Removed: `__libc_atexit_handlers.o`, `__libc_signal_handlers.o`, `__libc_stdio_exit.o`.
+
+The worst stack depth of `exit` drops from 88 to 32 bytes.

@@ -5,13 +5,17 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * __libc_atexit_handlers.c
+ * close-trace.h
  *
- * Created on: Oct 18, 2026
+ * Created on: Oct 20, 2026
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#include "internal/stdlib.h"
+#ifndef _CLOSE_TRACE_H
+#define _CLOSE_TRACE_H
 
-struct __libc_exit_handlers __libc_atexit_handlers;
-struct __libc_exit_handlers __libc_quick_exit_handlers;
+/* stdio.mk links with --wrap=__rtos_close: the library's closes reach the wrapper first */
+int __real___rtos_close(int handle);
+int __wrap___rtos_close(int handle);
+
+#endif /* _CLOSE_TRACE_H */

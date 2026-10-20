@@ -88,9 +88,10 @@ size_t __libc_file_write(FILE *stream, const void *buffer, size_t count)
 /*
  * C23 7.24.4.4p4: exit flushes and closes the streams after the atexit
  * handlers; exit runs .fini_array then. Buffered output can only exist when
- * this object is linked, so the destructor lives here.
+ * this object is linked, so the destructor lives here. The standard streams
+ * stay open; __libc_file_new closes the streams it made (PLAN D52).
  */
 [[gnu::destructor]] static void flush_at_exit(void)
 {
-	__libc_stdio_exit();
+	__libc_stdio_flush_all(false);
 }

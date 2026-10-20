@@ -25,6 +25,9 @@ include ${PROJECT_ROOT}/tools/makefiles/project.mk
 # Exercise the library, not the compiler's built-in versions of the functions
 CFLAGS += -fno-builtin
 
+# The exit-file mode counts the library's closes (close-trace.h)
+LDFLAGS += -Wl,--wrap=__rtos_close
+
 all: ${CURDIR}/stdio.elf
 
 endif

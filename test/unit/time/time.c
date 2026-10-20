@@ -259,6 +259,11 @@ static void check_zones(void)
 
 	CHECK(strcmp(ctime(&t), "Sun Mar 10 03:00:00 2024\n") == 0);
 	CHECK(ctime(&t) == asctime(gmtime(&t)) && strcmp(asctime(gmtime(&t)), "Sun Mar 10 07:00:00 2024\n") == 0);
+	/* Single-digit fields: the day is padded with a space, the time with zeros (C23 7.29.3.1) */
+	struct tm early = make_tm(1999, 1, 2, 3, 4, 5, 0);
+
+	early.tm_wday = 6;
+	CHECK(strcmp(asctime(&early), "Sat Jan  2 03:04:05 1999\n") == 0);
 	set_tz("UTC0");
 }
 

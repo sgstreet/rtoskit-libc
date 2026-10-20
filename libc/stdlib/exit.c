@@ -19,11 +19,13 @@
 
 /*
  * C23 7.24.4.4: the atexit handlers, newest first, then the static
- * destructors in reverse order. Stream flushing joins with P1.09.
+ * destructors in reverse order; stdio flushes and closes the streams from
+ * there. The handlers run only when atexit is linked (PLAN D52).
  */
 void exit(int status)
 {
-	__libc_exit_run(&__libc_atexit_handlers);
+	if (__libc_atexit_run != nullptr)
+		__libc_atexit_run();
 
 	for (void (*const *entry)(void) = __fini_array_end; entry > __fini_array_start; --entry)
 		entry[-1]();

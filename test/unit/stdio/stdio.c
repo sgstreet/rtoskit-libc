@@ -13,10 +13,13 @@
 
 #include <errno.h>
 #include <limits.h>
+#include <rtos/rtos-port.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "close-trace.h"
 
 /*
  * <stdio.h> streams (P1.09, docs/research/stdio.md). Without arguments: files
@@ -27,6 +30,17 @@
  */
 
 static int failures;
+
+/* In exit-file mode each close the library makes is reported on the standard output handle */
+static bool trace_close;
+
+int __wrap___rtos_close(int handle)
+{
+	if (trace_close)
+		__rtos_write(1, "close\n", 6);
+
+	return __real___rtos_close(handle);
+}
 
 static void fail(int line, const char *what)
 {
@@ -303,6 +317,16 @@ static int run_mode(const char *mode)
 	if (strcmp(mode, "exit") == 0) {
 		printf("partial %d", 7);
 		return 3;
+	}
+
+	/* A file left open, its output still buffered: exit flushes and closes it (C23 7.24.4.4p4) */
+	if (strcmp(mode, "exit-file") == 0) {
+		FILE *f = fopen("stdio-exit-file.txt", "w");
+
+		if (f == nullptr || fputs("kept", f) == EOF)
+			return 1;
+		trace_close = true;
+		return 4;
 	}
 
 	/* perror with a prefix, without one, and an empty one */
