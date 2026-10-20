@@ -12,6 +12,8 @@
 #
 
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
+# The hand-written kernels of this core, if it has any (PLAN D69)
+SUBDIRS := ${LIBC_STRING_KERNELS}
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else
 

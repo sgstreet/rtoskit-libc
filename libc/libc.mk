@@ -40,6 +40,7 @@ TARGET_OBJ_LIBS += libc/stdbit
 TARGET_OBJ_LIBS += libc/stdio
 TARGET_OBJ_LIBS += libc/stdlib
 TARGET_OBJ_LIBS += libc/string
+TARGET_OBJ_LIBS += $(addprefix libc/string/,${LIBC_STRING_KERNELS})
 TARGET_OBJ_LIBS += libc/threads
 TARGET_OBJ_LIBS += libc/time
 TARGET_OBJ_LIBS += libc/tls/${ARCH_FAMILY}
