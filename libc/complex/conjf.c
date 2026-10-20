@@ -13,8 +13,10 @@
 
 #include <complex.h>
 
-/* C23 7.3.9.4: evaluated in double, then rounded part by part */
+#include "internal/complex.h"
+
+/* C23 7.3.9.4: the imaginary part negated (a sign flip, not arithmetic) */
 float complex conjf(float complex z)
 {
-	return (float complex)conj(z);
+	return CMPLXF(__libc_ref(z), -__libc_imf(z));
 }

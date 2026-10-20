@@ -13,8 +13,10 @@
 
 #include <complex.h>
 
-/* C23 7.3.9.2: evaluated in double, then rounded part by part */
+#include "internal/complex.h"
+
+/* C23 7.3.9.2: the imaginary part, read from the representation (no conversion through double) */
 float cimagf(float complex z)
 {
-	return (float)cimag(z);
+	return __libc_imf(z);
 }

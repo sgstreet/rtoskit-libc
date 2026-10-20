@@ -20,6 +20,6 @@ export LIBC_FPU := fpv5-sp
 # <fenv.h> implementation: x86_64, fpv5-dp (every floating type in the FPU), or soft (D44)
 export LIBC_FENV := soft
 # libm layers: libc/math/<layer> replaces the generic files of the same name and may add helpers (D46, D55)
-export LIBC_MATH_LAYERS := fpv5-sp
+export LIBC_MATH_LAYERS := sp fpv5-sp
 
 include ${PROJECT_ROOT}/tools/makefiles/arm-none-eabi.mk

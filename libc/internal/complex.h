@@ -36,6 +36,21 @@ static inline double __libc_im(double complex z)
 	return ((union __libc_complex){ .z = z }).parts[1];
 }
 
+union __libc_complexf {
+	float complex z;
+	float parts[2];
+};
+
+static inline float __libc_ref(float complex z)
+{
+	return ((union __libc_complexf){ .z = z }).parts[0];
+}
+
+static inline float __libc_imf(float complex z)
+{
+	return ((union __libc_complexf){ .z = z }).parts[1];
+}
+
 /* i z and -i z, exactly (no arithmetic on the parts) */
 static inline double complex __libc_times_i(double complex z)
 {

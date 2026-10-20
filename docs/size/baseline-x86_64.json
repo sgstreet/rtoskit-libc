@@ -3,6 +3,74 @@
  "board": "linux-x86_64",
  "build_type": "release",
  "images": {
+  "float-exact": {
+   "main": {
+    "depth": 168,
+    "notes": [],
+    "path": [
+     "main",
+     "modff",
+     "modf",
+     "trunc"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 108,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 2380,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 12,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 40,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 301,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 32,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 423,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 40,
+    "data": 0,
+    "rodata": 152,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 3104,
+    "unwind": 0
+   }
+  },
   "hello-printf-float": {
    "main": {
     "depth": 1760,
@@ -2473,7 +2541,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 31,
+    "text": 9,
     "unwind": 0
    },
    "cimagl.o": {
@@ -2623,10 +2691,10 @@
    "conjf.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 0,
+    "rodata": 16,
     "tbss": 0,
     "tdata": 0,
-    "text": 59,
+    "text": 43,
     "unwind": 0
    },
    "conjl.o": {
@@ -2785,10 +2853,10 @@
    "cprojf.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 0,
+    "rodata": 24,
     "tbss": 0,
     "tdata": 0,
-    "text": 59,
+    "text": 98,
     "unwind": 0
    },
    "cprojl.o": {
@@ -2815,7 +2883,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 31,
+    "text": 5,
     "unwind": 0
    },
    "creall.o": {
@@ -7421,10 +7489,10 @@
   "totals": {
    "bss": 1848,
    "data": 188,
-   "rodata": 17122,
+   "rodata": 17162,
    "tbss": 618,
    "tdata": 8,
-   "text": 99090,
+   "text": 99065,
    "unwind": 0
   }
  },
@@ -8272,7 +8340,7 @@
    "cexpf.o:cexpf": 32,
    "cexpl.o:cexpl": 8,
    "cimag.o:cimag": 8,
-   "cimagf.o:cimagf": 16,
+   "cimagf.o:cimagf": 8,
    "cimagl.o:cimagl": 8,
    "clearerr.o:clearerr": 16,
    "clock.o:clock": 32,
@@ -8291,7 +8359,7 @@
    "compoundnf.o:compoundnf": 16,
    "compoundnl.o:compoundnl": 8,
    "conj.o:conj": 8,
-   "conjf.o:conjf": 32,
+   "conjf.o:conjf": 8,
    "conjl.o:conjl": 8,
    "copysign.o:copysign": 8,
    "copysignf.o:copysignf": 8,
@@ -8315,7 +8383,7 @@
    "cprojf.o:cprojf": 32,
    "cprojl.o:cprojl": 8,
    "creal.o:creal": 8,
-   "crealf.o:crealf": 16,
+   "crealf.o:crealf": 8,
    "creall.o:creall": 8,
    "csin.o:csin": 16,
    "csinf.o:csinf": 32,

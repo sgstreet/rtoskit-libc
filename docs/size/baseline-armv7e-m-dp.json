@@ -3,6 +3,74 @@
  "board": "linux-armv7e-m-dp",
  "build_type": "release",
  "images": {
+  "float-exact": {
+   "main": {
+    "depth": 104,
+    "notes": [],
+    "path": [
+     "main",
+     "fmodf",
+     "__libc_remainderf",
+     "__libc_math_invalidf"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 1198,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 2,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 20,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 248,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 240,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 20,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 1688,
+    "unwind": 0
+   }
+  },
   "hello-printf-float": {
    "main": {
     "depth": 1284,
@@ -1059,6 +1127,15 @@
     "text": 772,
     "unwind": 0
    },
+   "__libc_float_to_i64.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 82,
+    "unwind": 0
+   },
    "__libc_format.o": {
     "bss": 0,
     "data": 0,
@@ -1120,6 +1197,15 @@
     "tbss": 0,
     "tdata": 0,
     "text": 208,
+    "unwind": 0
+   },
+   "__libc_fromfpf.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 192,
     "unwind": 0
    },
    "__libc_i64_to_double.o": {
@@ -1390,6 +1476,15 @@
     "tbss": 0,
     "tdata": 0,
     "text": 526,
+    "unwind": 0
+   },
+   "__libc_remainderf.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 392,
     "unwind": 0
    },
    "__libc_scan.o": {
@@ -2487,7 +2582,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 24,
+    "text": 6,
     "unwind": 0
    },
    "cimagl.o": {
@@ -2640,7 +2735,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 28,
+    "text": 6,
     "unwind": 0
    },
    "conjl.o": {
@@ -2802,7 +2897,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 28,
+    "text": 84,
     "unwind": 0
    },
    "cprojl.o": {
@@ -2829,7 +2924,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 24,
+    "text": 2,
     "unwind": 0
    },
    "creall.o": {
@@ -3936,7 +4031,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 24,
+    "text": 8,
     "unwind": 0
    },
    "fmodl.o": {
@@ -4062,7 +4157,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 68,
     "unwind": 0
    },
    "frexpl.o": {
@@ -4089,7 +4184,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 20,
+    "text": 8,
     "unwind": 0
    },
    "fromfpl.o": {
@@ -4116,7 +4211,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 20,
+    "text": 8,
     "unwind": 0
    },
    "fromfpxl.o": {
@@ -4323,7 +4418,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 8,
+    "text": 80,
     "unwind": 0
    },
    "ilogbl.o": {
@@ -4566,7 +4661,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 8,
+    "text": 80,
     "unwind": 0
    },
    "llogbl.o": {
@@ -4593,7 +4688,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 8,
+    "text": 64,
     "unwind": 0
    },
    "llrintl.o": {
@@ -4620,7 +4715,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 8,
+    "text": 100,
     "unwind": 0
    },
    "llroundl.o": {
@@ -4818,7 +4913,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 80,
     "unwind": 0
    },
    "logbl.o": {
@@ -4899,7 +4994,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 8,
+    "text": 64,
     "unwind": 0
    },
    "lrintl.o": {
@@ -4926,7 +5021,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 8,
+    "text": 92,
     "unwind": 0
    },
    "lroundl.o": {
@@ -5070,7 +5165,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 34,
+    "text": 88,
     "unwind": 0
    },
    "modfl.o": {
@@ -5259,7 +5354,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 160,
+    "text": 304,
     "unwind": 0
    },
    "nexttowardl.o": {
@@ -5484,7 +5579,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 24,
+    "text": 8,
     "unwind": 0
    },
    "remainderl.o": {
@@ -5520,7 +5615,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 24,
+    "text": 8,
     "unwind": 0
    },
    "remquol.o": {
@@ -7302,7 +7397,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 20,
+    "text": 8,
     "unwind": 0
    },
    "ufromfpl.o": {
@@ -7329,7 +7424,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 20,
+    "text": 8,
     "unwind": 0
    },
    "ufromfpxl.o": {
@@ -7438,7 +7533,7 @@
    "rodata": 8406,
    "tbss": 358,
    "tdata": 8,
-   "text": 77192,
+   "text": 78502,
    "unwind": 0
   }
  },
@@ -8096,6 +8191,7 @@
    "__libc_file_write.o:libc/stdio/__libc_file_write.c:write_through": 24,
    "__libc_float_pack.o:__libc_float_pack": 64,
    "__libc_float_pack.o:libc/stdlib/__libc_float_pack.c:overflow": 20,
+   "__libc_float_to_i64.o:__libc_float_to_i64": 16,
    "__libc_format.o:__libc_format": 80,
    "__libc_format.o:libc/stdio/__libc_format.c:emit": 16,
    "__libc_format.o:libc/stdio/__libc_format.c:emit_fill": 24,
@@ -8112,6 +8208,7 @@
    "__libc_format_float.o:libc/stdio/__libc_format_float.c:write_field": 48,
    "__libc_format_float.o:libc/stdio/__libc_format_float.c:write_fill": 24,
    "__libc_fromfp.o:__libc_fromfp": 32,
+   "__libc_fromfpf.o:__libc_fromfpf": 24,
    "__libc_i64_to_double.o:__libc_i64_to_double": 0,
    "__libc_iseqsig.o:__libc_iseqsig": 8,
    "__libc_iseqsigf.o:__libc_iseqsigf": 8,
@@ -8150,6 +8247,7 @@
    "__libc_rem_pio2.o:libc/math/__libc_rem_pio2.c:__libc_dd_product": 32,
    "__libc_rem_pio2.o:libc/math/__libc_rem_pio2.c:bits_at.constprop.0": 20,
    "__libc_remainder.o:__libc_remainder": 48,
+   "__libc_remainderf.o:__libc_remainderf": 32,
    "__libc_scan.o:__libc_scan": 136,
    "__libc_scan.o:libc/stdio/__libc_scan.c:__libc_scan_get": 8,
    "__libc_scan.o:libc/stdio/__libc_scan.c:__libc_scan_unget": 8,
@@ -8297,7 +8395,7 @@
    "cexpf.o:cexpf": 8,
    "cexpl.o:cexpl": 0,
    "cimag.o:cimag": 0,
-   "cimagf.o:cimagf": 8,
+   "cimagf.o:cimagf": 0,
    "cimagl.o:cimagl": 0,
    "clearerr.o:clearerr": 8,
    "clock.o:clock": 24,
@@ -8315,7 +8413,7 @@
    "compoundnf.o:compoundnf": 8,
    "compoundnl.o:compoundnl": 0,
    "conj.o:conj": 0,
-   "conjf.o:conjf": 8,
+   "conjf.o:conjf": 0,
    "conjl.o:conjl": 0,
    "copysign.o:copysign": 8,
    "copysignf.o:copysignf": 0,
@@ -8339,7 +8437,7 @@
    "cprojf.o:cprojf": 8,
    "cprojl.o:cprojl": 0,
    "creal.o:creal": 0,
-   "crealf.o:crealf": 8,
+   "crealf.o:crealf": 0,
    "creall.o:creall": 0,
    "csin.o:csin": 8,
    "csinf.o:csinf": 8,
@@ -8461,7 +8559,7 @@
    "fminimuml.o:fminimuml": 0,
    "fminl.o:fminl": 0,
    "fmod.o:fmod": 0,
-   "fmodf.o:fmodf": 8,
+   "fmodf.o:fmodf": 0,
    "fmodl.o:fmodl": 0,
    "fmul.o:fmul": 88,
    "fmull.o:fmull": 0,
@@ -8475,13 +8573,13 @@
    "free_sized.o:free_sized": 0,
    "freopen.o:freopen": 24,
    "frexp.o:frexp": 24,
-   "frexpf.o:frexpf": 8,
+   "frexpf.o:frexpf": 0,
    "frexpl.o:frexpl": 0,
    "fromfp.o:fromfp": 0,
-   "fromfpf.o:fromfpf": 8,
+   "fromfpf.o:fromfpf": 0,
    "fromfpl.o:fromfpl": 0,
    "fromfpx.o:fromfpx": 0,
-   "fromfpxf.o:fromfpxf": 8,
+   "fromfpxf.o:fromfpxf": 0,
    "fromfpxl.o:fromfpxl": 0,
    "fscanf.o:fscanf": 12,
    "fseek.o:fseek": 32,
@@ -8505,7 +8603,7 @@
    "hypotf.o:hypotf": 8,
    "hypotl.o:hypotl": 0,
    "ilogb.o:ilogb": 16,
-   "ilogbf.o:ilogbf": 0,
+   "ilogbf.o:ilogbf": 8,
    "ilogbl.o:ilogbl": 0,
    "imaxabs.o:imaxabs": 0,
    "imaxdiv.o:imaxdiv": 8,
@@ -8532,13 +8630,13 @@
    "llabs.o:llabs": 0,
    "lldiv.o:lldiv": 8,
    "llogb.o:llogb": 16,
-   "llogbf.o:llogbf": 0,
+   "llogbf.o:llogbf": 8,
    "llogbl.o:llogbl": 0,
    "llrint.o:llrint": 8,
-   "llrintf.o:llrintf": 0,
+   "llrintf.o:llrintf": 8,
    "llrintl.o:llrintl": 0,
    "llround.o:llround": 24,
-   "llroundf.o:llroundf": 0,
+   "llroundf.o:llroundf": 16,
    "llroundl.o:llroundl": 0,
    "localeconv.o:localeconv": 0,
    "localtime.o:localtime": 4,
@@ -8568,10 +8666,10 @@
    "logp1f.o:logp1f": 16,
    "logp1l.o:logp1l": 0,
    "lrint.o:lrint": 8,
-   "lrintf.o:lrintf": 0,
+   "lrintf.o:lrintf": 8,
    "lrintl.o:lrintl": 0,
    "lround.o:lround": 24,
-   "lroundf.o:lroundf": 0,
+   "lroundf.o:lroundf": 16,
    "lroundl.o:lroundl": 0,
    "malloc.o:malloc": 8,
    "mblen.o:mblen": 0,
@@ -8608,7 +8706,7 @@
    "nextdownf.o:nextdownf": 8,
    "nextdownl.o:nextdownl": 0,
    "nexttoward.o:nexttoward": 0,
-   "nexttowardf.o:nexttowardf": 16,
+   "nexttowardf.o:nexttowardf": 40,
    "nexttowardl.o:nexttowardl": 0,
    "nextup.o:nextup": 0,
    "nextupf.o:nextupf": 0,
@@ -8672,11 +8770,11 @@
    "rand.o:rand": 20,
    "realloc.o:realloc": 16,
    "remainder.o:remainder": 0,
-   "remainderf.o:remainderf": 8,
+   "remainderf.o:remainderf": 0,
    "remainderl.o:remainderl": 0,
    "remove.o:remove": 8,
    "remquo.o:remquo": 0,
-   "remquof.o:remquof": 8,
+   "remquof.o:remquof": 0,
    "remquol.o:remquol": 0,
    "rename.o:rename": 8,
    "rewind.o:rewind": 8,
@@ -8891,10 +8989,10 @@
    "tss_get.o:tss_get": 8,
    "tss_set.o:tss_set": 12,
    "ufromfp.o:ufromfp": 0,
-   "ufromfpf.o:ufromfpf": 8,
+   "ufromfpf.o:ufromfpf": 0,
    "ufromfpl.o:ufromfpl": 0,
    "ufromfpx.o:ufromfpx": 0,
-   "ufromfpxf.o:ufromfpxf": 8,
+   "ufromfpxf.o:ufromfpxf": 0,
    "ufromfpxl.o:ufromfpxl": 0,
    "ungetc.o:ungetc": 16,
    "vfprintf.o:libc/stdio/vfprintf.c:stream_write": 0,

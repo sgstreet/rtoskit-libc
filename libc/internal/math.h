@@ -130,6 +130,16 @@ double __libc_fromfp(double x, int rnd, unsigned int width, bool is_unsigned, bo
 double __libc_remainder(double x, double y, bool nearest, int *quotient);
 
 /*
+ * The single-precision layer (libc/math/sp, PLAN D56): the float functions
+ * computed in float only, for cores whose FPU has no double precision.
+ */
+float __libc_remainderf(float x, float y, bool nearest, int *quotient);
+float __libc_fromfpf(float x, int rnd, unsigned int width, bool is_unsigned, bool exact);
+
+/* An integral float in [-2^63, 2^63) to int64_t, from its bits (no __aeabi_f2lz, which computes in double) */
+int64_t __libc_float_to_i64(float x);
+
+/*
  * An exact value for one final rounding (docs/research/fenv-libm.md):
  * (-1)^negative * (high * 2^64 + low + e) * 2^exponent, where e is 0 when
  * sticky is false and strictly between 0 and 1 otherwise.
@@ -384,7 +394,7 @@ static inline float __libc_math_tinyf(float x, double direction)
 		return x;
 	}
 
-	return (float)(x + copysign(fabs((double)x) * 0x1p-40, direction));
+	return (float)((double)x + copysign(fabs((double)x) * 0x1p-40, direction));
 }
 
 /* (a.hi + a.lo) + (b.hi + b.lo), to about 2^-105 */

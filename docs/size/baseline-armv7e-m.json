@@ -3,6 +3,73 @@
  "board": "linux-armv7e-m",
  "build_type": "release",
  "images": {
+  "float-exact": {
+   "main": {
+    "depth": 96,
+    "notes": [],
+    "path": [
+     "main",
+     "fmodf",
+     "__libc_remainderf"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 1518,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 2,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 20,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 248,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 280,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 20,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 2048,
+    "unwind": 0
+   }
+  },
   "hello-printf-float": {
    "main": {
     "depth": 1292,
@@ -1078,6 +1145,15 @@
     "text": 772,
     "unwind": 0
    },
+   "__libc_float_to_i64.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 82,
+    "unwind": 0
+   },
    "__libc_format.o": {
     "bss": 0,
     "data": 0,
@@ -1139,6 +1215,15 @@
     "tbss": 0,
     "tdata": 0,
     "text": 260,
+    "unwind": 0
+   },
+   "__libc_fromfpf.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 192,
     "unwind": 0
    },
    "__libc_i64_to_double.o": {
@@ -1409,6 +1494,15 @@
     "tbss": 0,
     "tdata": 0,
     "text": 558,
+    "unwind": 0
+   },
+   "__libc_remainderf.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 392,
     "unwind": 0
    },
    "__libc_scan.o": {
@@ -2452,7 +2546,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 92,
     "unwind": 0
    },
    "ceill.o": {
@@ -2506,7 +2600,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 52,
+    "text": 6,
     "unwind": 0
    },
    "cimagl.o": {
@@ -2659,7 +2753,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 74,
+    "text": 6,
     "unwind": 0
    },
    "conjl.o": {
@@ -2821,7 +2915,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 74,
+    "text": 84,
     "unwind": 0
    },
    "cprojl.o": {
@@ -2848,7 +2942,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 52,
+    "text": 2,
     "unwind": 0
    },
    "creall.o": {
@@ -3631,7 +3725,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 92,
     "unwind": 0
    },
    "floorl.o": {
@@ -3955,7 +4049,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 56,
+    "text": 8,
     "unwind": 0
    },
    "fmodl.o": {
@@ -4081,7 +4175,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 36,
+    "text": 68,
     "unwind": 0
    },
    "frexpl.o": {
@@ -4108,7 +4202,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 44,
+    "text": 8,
     "unwind": 0
    },
    "fromfpl.o": {
@@ -4135,7 +4229,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 44,
+    "text": 8,
     "unwind": 0
    },
    "fromfpxl.o": {
@@ -4342,7 +4436,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 22,
+    "text": 80,
     "unwind": 0
    },
    "ilogbl.o": {
@@ -4585,7 +4679,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 22,
+    "text": 80,
     "unwind": 0
    },
    "llogbl.o": {
@@ -4612,7 +4706,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 22,
+    "text": 64,
     "unwind": 0
    },
    "llrintl.o": {
@@ -4639,7 +4733,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 22,
+    "text": 100,
     "unwind": 0
    },
    "llroundl.o": {
@@ -4837,7 +4931,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 80,
     "unwind": 0
    },
    "logbl.o": {
@@ -4918,7 +5012,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 22,
+    "text": 64,
     "unwind": 0
    },
    "lrintl.o": {
@@ -4945,7 +5039,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 22,
+    "text": 92,
     "unwind": 0
    },
    "lroundl.o": {
@@ -5089,7 +5183,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 56,
+    "text": 88,
     "unwind": 0
    },
    "modfl.o": {
@@ -5197,7 +5291,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 68,
     "unwind": 0
    },
    "nearbyintl.o": {
@@ -5278,7 +5372,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 204,
+    "text": 300,
     "unwind": 0
    },
    "nexttowardl.o": {
@@ -5503,7 +5597,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 56,
+    "text": 8,
     "unwind": 0
    },
    "remainderl.o": {
@@ -5539,7 +5633,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 58,
+    "text": 8,
     "unwind": 0
    },
    "remquol.o": {
@@ -5584,7 +5678,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 100,
     "unwind": 0
    },
    "rintl.o": {
@@ -5647,7 +5741,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 96,
     "unwind": 0
    },
    "roundevenl.o": {
@@ -5665,7 +5759,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 72,
     "unwind": 0
    },
    "roundl.o": {
@@ -7258,7 +7352,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 48,
     "unwind": 0
    },
    "truncl.o": {
@@ -7321,7 +7415,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 44,
+    "text": 8,
     "unwind": 0
    },
    "ufromfpl.o": {
@@ -7348,7 +7442,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 44,
+    "text": 8,
     "unwind": 0
    },
    "ufromfpxl.o": {
@@ -7457,7 +7551,7 @@
    "rodata": 8390,
    "tbss": 358,
    "tdata": 8,
-   "text": 112014,
+   "text": 113136,
    "unwind": 0
   }
  },
@@ -8293,6 +8387,7 @@
    "__libc_file_write.o:libc/stdio/__libc_file_write.c:write_through": 24,
    "__libc_float_pack.o:__libc_float_pack": 64,
    "__libc_float_pack.o:libc/stdlib/__libc_float_pack.c:overflow": 20,
+   "__libc_float_to_i64.o:__libc_float_to_i64": 16,
    "__libc_format.o:__libc_format": 80,
    "__libc_format.o:libc/stdio/__libc_format.c:emit": 16,
    "__libc_format.o:libc/stdio/__libc_format.c:emit_fill": 24,
@@ -8309,6 +8404,7 @@
    "__libc_format_float.o:libc/stdio/__libc_format_float.c:write_field": 48,
    "__libc_format_float.o:libc/stdio/__libc_format_float.c:write_fill": 24,
    "__libc_fromfp.o:__libc_fromfp": 40,
+   "__libc_fromfpf.o:__libc_fromfpf": 24,
    "__libc_i64_to_double.o:__libc_i64_to_double": 8,
    "__libc_iseqsig.o:__libc_iseqsig": 24,
    "__libc_iseqsigf.o:__libc_iseqsigf": 8,
@@ -8347,6 +8443,7 @@
    "__libc_rem_pio2.o:libc/math/__libc_rem_pio2.c:__libc_dd_product": 88,
    "__libc_rem_pio2.o:libc/math/__libc_rem_pio2.c:bits_at.constprop.0": 20,
    "__libc_remainder.o:__libc_remainder": 48,
+   "__libc_remainderf.o:__libc_remainderf": 32,
    "__libc_scan.o:__libc_scan": 136,
    "__libc_scan.o:libc/stdio/__libc_scan.c:__libc_scan_get": 8,
    "__libc_scan.o:libc/stdio/__libc_scan.c:__libc_scan_unget": 8,
@@ -8488,13 +8585,13 @@
    "ccoshl.o:ccoshl": 0,
    "ccosl.o:ccosl": 0,
    "ceil.o:ceil": 24,
-   "ceilf.o:ceilf": 8,
+   "ceilf.o:ceilf": 0,
    "ceill.o:ceill": 0,
    "cexp.o:cexp": 32,
    "cexpf.o:cexpf": 16,
    "cexpl.o:cexpl": 0,
    "cimag.o:cimag": 0,
-   "cimagf.o:cimagf": 16,
+   "cimagf.o:cimagf": 0,
    "cimagl.o:cimagl": 0,
    "clearerr.o:clearerr": 8,
    "clock.o:clock": 24,
@@ -8512,7 +8609,7 @@
    "compoundnf.o:compoundnf": 16,
    "compoundnl.o:compoundnl": 0,
    "conj.o:conj": 0,
-   "conjf.o:conjf": 16,
+   "conjf.o:conjf": 0,
    "conjl.o:conjl": 0,
    "copysign.o:copysign": 8,
    "copysignf.o:copysignf": 0,
@@ -8533,10 +8630,10 @@
    "cpowf.o:cpowf": 40,
    "cpowl.o:cpowl": 0,
    "cproj.o:cproj": 40,
-   "cprojf.o:cprojf": 16,
+   "cprojf.o:cprojf": 8,
    "cprojl.o:cprojl": 0,
    "creal.o:creal": 0,
-   "crealf.o:crealf": 16,
+   "crealf.o:crealf": 0,
    "creall.o:creall": 0,
    "csin.o:csin": 8,
    "csinf.o:csinf": 16,
@@ -8622,7 +8719,7 @@
    "fgetpos.o:fgetpos": 24,
    "fgets.o:fgets": 24,
    "floor.o:floor": 24,
-   "floorf.o:floorf": 8,
+   "floorf.o:floorf": 0,
    "floorl.o:floorl": 0,
    "fma.o:fma": 112,
    "fmaf.o:fmaf": 0,
@@ -8658,7 +8755,7 @@
    "fminimuml.o:fminimuml": 0,
    "fminl.o:fminl": 0,
    "fmod.o:fmod": 0,
-   "fmodf.o:fmodf": 24,
+   "fmodf.o:fmodf": 0,
    "fmodl.o:fmodl": 0,
    "fmul.o:fmul": 96,
    "fmull.o:fmull": 0,
@@ -8672,13 +8769,13 @@
    "free_sized.o:free_sized": 0,
    "freopen.o:freopen": 24,
    "frexp.o:frexp": 16,
-   "frexpf.o:frexpf": 8,
+   "frexpf.o:frexpf": 0,
    "frexpl.o:frexpl": 0,
    "fromfp.o:fromfp": 0,
-   "fromfpf.o:fromfpf": 16,
+   "fromfpf.o:fromfpf": 0,
    "fromfpl.o:fromfpl": 0,
    "fromfpx.o:fromfpx": 0,
-   "fromfpxf.o:fromfpxf": 16,
+   "fromfpxf.o:fromfpxf": 0,
    "fromfpxl.o:fromfpxl": 0,
    "fscanf.o:fscanf": 12,
    "fseek.o:fseek": 32,
@@ -8735,7 +8832,7 @@
    "llrintf.o:llrintf": 8,
    "llrintl.o:llrintl": 0,
    "llround.o:llround": 24,
-   "llroundf.o:llroundf": 8,
+   "llroundf.o:llroundf": 16,
    "llroundl.o:llroundl": 0,
    "localeconv.o:localeconv": 0,
    "localtime.o:localtime": 4,
@@ -8768,7 +8865,7 @@
    "lrintf.o:lrintf": 8,
    "lrintl.o:lrintl": 0,
    "lround.o:lround": 24,
-   "lroundf.o:lroundf": 8,
+   "lroundf.o:lroundf": 16,
    "lroundl.o:lroundl": 0,
    "malloc.o:malloc": 8,
    "mblen.o:mblen": 0,
@@ -8784,7 +8881,7 @@
    "memset_explicit.o:memset_explicit": 8,
    "mktime.o:mktime": 112,
    "modf.o:modf": 32,
-   "modff.o:modff": 24,
+   "modff.o:modff": 16,
    "modfl.o:modfl": 16,
    "mtx_destroy.o:mtx_destroy": 0,
    "mtx_init.o:mtx_init": 0,
@@ -8796,7 +8893,7 @@
    "nanf.o:nanf": 0,
    "nanl.o:nanl": 0,
    "nearbyint.o:nearbyint": 32,
-   "nearbyintf.o:nearbyintf": 8,
+   "nearbyintf.o:nearbyintf": 24,
    "nearbyintl.o:nearbyintl": 0,
    "nextafter.o:nextafter": 32,
    "nextafterf.o:nextafterf": 16,
@@ -8805,7 +8902,7 @@
    "nextdownf.o:nextdownf": 8,
    "nextdownl.o:nextdownl": 0,
    "nexttoward.o:nexttoward": 0,
-   "nexttowardf.o:nexttowardf": 32,
+   "nexttowardf.o:nexttowardf": 40,
    "nexttowardl.o:nexttowardl": 0,
    "nextup.o:nextup": 16,
    "nextupf.o:nextupf": 0,
@@ -8869,16 +8966,16 @@
    "rand.o:rand": 20,
    "realloc.o:realloc": 16,
    "remainder.o:remainder": 0,
-   "remainderf.o:remainderf": 24,
+   "remainderf.o:remainderf": 0,
    "remainderl.o:remainderl": 0,
    "remove.o:remove": 8,
    "remquo.o:remquo": 0,
-   "remquof.o:remquof": 24,
+   "remquof.o:remquof": 0,
    "remquol.o:remquol": 0,
    "rename.o:rename": 8,
    "rewind.o:rewind": 8,
    "rint.o:rint": 32,
-   "rintf.o:rintf": 8,
+   "rintf.o:rintf": 24,
    "rintl.o:rintl": 0,
    "rootn.o:rootn": 136,
    "rootnf.o:rootnf": 16,
@@ -8887,7 +8984,7 @@
    "roundeven.o:roundeven": 24,
    "roundevenf.o:roundevenf": 8,
    "roundevenl.o:roundevenl": 0,
-   "roundf.o:roundf": 8,
+   "roundf.o:roundf": 0,
    "roundl.o:roundl": 0,
    "rsqrt.o:rsqrt": 80,
    "rsqrtf.o:rsqrtf": 8,
@@ -9081,17 +9178,17 @@
    "totalordermagl.o:totalordermagl": 24,
    "toupper.o:toupper": 0,
    "trunc.o:trunc": 16,
-   "truncf.o:truncf": 8,
+   "truncf.o:truncf": 0,
    "truncl.o:truncl": 0,
    "tss_create.o:tss_create": 20,
    "tss_delete.o:tss_delete": 0,
    "tss_get.o:tss_get": 8,
    "tss_set.o:tss_set": 12,
    "ufromfp.o:ufromfp": 0,
-   "ufromfpf.o:ufromfpf": 16,
+   "ufromfpf.o:ufromfpf": 0,
    "ufromfpl.o:ufromfpl": 0,
    "ufromfpx.o:ufromfpx": 0,
-   "ufromfpxf.o:ufromfpxf": 16,
+   "ufromfpxf.o:ufromfpxf": 0,
    "ufromfpxl.o:ufromfpxl": 0,
    "ungetc.o:ungetc": 16,
    "vfprintf.o:libc/stdio/vfprintf.c:stream_write": 0,

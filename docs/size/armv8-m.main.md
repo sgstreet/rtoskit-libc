@@ -190,3 +190,39 @@ Members that grew or are new, justified:
 - `__libc_math_raise_underflow.o` 0 → 2 (+2): new: out-of-line exception raising (empty where `<fenv.h>` records nothing).
 - `difftime.o` 66 → 68 (+2): calls `__libc_i64_to_double`.
 - Reduced: 66 members, -1494 bytes; the largest: `__libc_fromfp.o` 322 → 260, `rootn.o` 724 → 668, `pow.o` 1460 → 1408, `__libc_exp_scale.o` 488 → 440.
+
+## P2.05b — single-precision layer: the exact float functions
+
+Decision D56, `docs/research/libm-float-exact.md`. Before → after, release build.
+
+`libc.a`: code 119894 → 120672 (+778), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 1915 → 1915 | 380 → 380 | 1170 → 1170 | 0 → 0 |
+| hello-printf-int | 7313 → 7313 | 380 → 380 | 6539 → 6539 | 0 → 0 |
+| hello-printf-float | 9298 → 9298 | 380 → 380 | 6539 → 6539 | 1948 → 1948 |
+| malloc-heavy | 1966 → 1966 | 80 → 80 | 1060 → 1060 | 0 → 0 |
+| math-mix | 23244 → 23244 | 20 → 20 | 19940 → 19940 | 2504 → 2504 |
+| float-exact | 4552 → 1612 | 20 → 20 | 2014 → 1122 | 2040 → 0 |
+| hello-printf-int-nofloat | 4479 → 4479 | 380 → 380 | 3707 → 3707 | 0 → 0 |
+| hello-printf-int-minimal | 4243 → 4243 | 380 → 380 | 3471 → 3471 | 0 → 0 |
+| malloc-heavy-tiny | 1906 → 1906 | 76 → 76 | 1000 → 1000 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `__libc_remainderf.o` 0 → 388 (+388): new: the float remainder core of `fmodf`, `remainderf` and `remquof`.
+- `__libc_fromfpf.o` 0 → 192 (+192): new: the float core of the four `fromfp` functions.
+- `nexttowardf.o` 204 → 304 (+100): compares through widened bits instead of double arithmetic.
+- `__libc_float_to_i64.o` 0 → 82 (+82): new: float to `int64_t` from the bits (libgcc's `__aeabi_f2lz` computes in double).
+- `llroundf.o` 22 → 100 (+78): computed in float (the `sp` layer) instead of a wrapper of the double function.
+- `lroundf.o` 22 → 92 (+70): computed in float (the `sp` layer) instead of a wrapper of the double function.
+- `ilogbf.o` 22 → 80 (+58): computed in float (the `sp` layer) instead of a wrapper of the double function.
+- `llogbf.o` 22 → 80 (+58): computed in float (the `sp` layer) instead of a wrapper of the double function.
+- `logbf.o` 32 → 80 (+48): computed in float (the `sp` layer) instead of a wrapper of the double function.
+- `llrintf.o` 22 → 64 (+42): computed in float (the `sp` layer) instead of a wrapper of the double function.
+- `lrintf.o` 22 → 64 (+42): computed in float (the `sp` layer) instead of a wrapper of the double function.
+- `frexpf.o` 36 → 68 (+32): computed in float (the `sp` layer) instead of a wrapper of the double function.
+- `modff.o` 56 → 88 (+32): computed in float (the `sp` layer) instead of a wrapper of the double function.
+- `cprojf.o` 74 → 84 (+10): tests the parts directly.
+- Reduced: 10 members, -454 bytes; the largest: `conjf.o` 74 → 6, `crealf.o` 52 → 2, `remquof.o` 58 → 8, `fmodf.o` 56 → 8.
