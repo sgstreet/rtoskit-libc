@@ -81,6 +81,9 @@ static const struct unary unary[] = {
 	{ "asinhf", asinhf, asinh, -FLT_MAX, FLT_MAX, 0x1.cp-4f, 0x1.2p-3f },
 	{ "acoshf", acoshf, acosh, 1.0f, FLT_MAX, 1.0f, 0x1.02p0f },
 	{ "atanhf", atanhf, atanh, -1.0f, 1.0f, 0x1.cp-4f, 0x1.2p-3f },
+	/* The error functions, sweeping where erff becomes +-1 and where erfcf turns subnormal */
+	{ "erff", erff, erf, -5.0f, 5.0f, 0x1.fp1f, 0x1.f8p1f },
+	{ "erfcf", erfcf, erfc, -5.0f, 11.0f, 0x1.28p3f, 0x1.48p3f },
 	/* The roots sweep [1, 2), every significand once */
 	{ "sqrtf", sqrtf, sqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },
 	{ "rsqrtf", rsqrtf, rsqrt, 0.0f, FLT_MAX, 1.0f, 2.0f },

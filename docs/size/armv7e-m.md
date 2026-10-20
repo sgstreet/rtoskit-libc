@@ -401,3 +401,29 @@ Members that grew or are new, justified:
 - `asinf.o` 232 → 388 (+156): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
 - `coshf.o` 32 → 180 (+148): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
 - Reduced: 1 members, -92 bytes; the largest: `atanf.o` 236 → 144.
+
+## P2.05e1 — float-float error functions
+
+Decision D63, `docs/research/libm-float-erf.md`. Before → after, release build.
+
+`libc.a`: code 138552 → 139896 (+1344), RAM 1292 → 1292 (+0), TLS 366 → 366 (+0).
+
+| Program | code | RAM | libc code | libgcc code |
+|---|---|---|---|---|
+| hello-puts | 1931 → 1931 | 380 → 380 | 1178 → 1178 | 0 → 0 |
+| hello-printf-int | 7333 → 7333 | 380 → 380 | 6545 → 6545 | 0 → 0 |
+| hello-printf-float | 9318 → 9318 | 380 → 380 | 6545 → 6545 | 1948 → 1948 |
+| malloc-heavy | 1982 → 1982 | 80 → 80 | 1066 → 1066 | 0 → 0 |
+| math-mix | 27472 → 27472 | 20 → 20 | 24324 → 24324 | 2344 → 2344 |
+| float-exact | 2048 → 2048 | 20 → 20 | 1518 → 1518 | 0 → 0 |
+| math-float | 5426 → 5426 | 20 → 20 | 5014 → 5014 | 0 → 0 |
+| hello-printf-int-nofloat | 4511 → 4511 | 380 → 380 | 3723 → 3723 | 0 → 0 |
+| hello-printf-int-minimal | 4271 → 4271 | 380 → 380 | 3487 → 3487 | 0 → 0 |
+| malloc-heavy-tiny | 1922 → 1922 | 76 → 76 | 1006 → 1006 | 0 → 0 |
+
+Members that grew or are new, justified:
+
+- `erfcf.o` 32 → 648 (+616): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- `__libc_erff_core.o` 0 → 488 (+488): new: the erf series with positive terms, shared by erff and erfcf.
+- `erff.o` 32 → 272 (+240): computed in float-float (the `sp-nearest` layer) instead of a wrapper of the double function.
+- Reduced: 0 members, 0 bytes; the largest: .

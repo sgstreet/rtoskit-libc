@@ -22,7 +22,7 @@ TARGET_OBJ_LIBS := port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_FAMILY}
 
 # On x86_64 the float-float layer of the single-precision cores is compiled into the test, so that
 # millions of arguments run natively; elsewhere the test measures the library's own functions (PLAN D57).
-# Every run stays well inside run-unit's 60 s limit, the unoptimised debug build included
+# The release run takes most of a minute natively, so float_accuracy.timeout raises run-unit's limit
 ifeq (${ARCH_FAMILY},x86_64)
 SP_NEAREST_SRC := $(wildcard ${PROJECT_ROOT}/libc/math/sp-nearest/*.c)
 EXTRA_OBJS := $(patsubst ${PROJECT_ROOT}/libc/math/sp-nearest/%.c,${CURDIR}/sp-nearest/%.o,${SP_NEAREST_SRC})

@@ -1014,6 +1014,15 @@
     "text": 984,
     "unwind": 0
    },
+   "__libc_erff_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 16,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 472,
+    "unwind": 0
+   },
    "__libc_exact_fma.o": {
     "bss": 0,
     "data": 0,
@@ -3351,7 +3360,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 648,
     "unwind": 0
    },
    "erfcl.o": {
@@ -3369,7 +3378,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 32,
+    "text": 272,
     "unwind": 0
    },
    "erfl.o": {
@@ -7705,10 +7714,10 @@
   "totals": {
    "bss": 1184,
    "data": 108,
-   "rodata": 9282,
+   "rodata": 9298,
    "tbss": 358,
    "tdata": 8,
-   "text": 129270,
+   "text": 130598,
    "unwind": 0
   }
  },
@@ -8481,6 +8490,9 @@
    "__libc_erfc_table.o:__libc_erfc_table": 128,
    "__libc_erfc_tail.o:__libc_erfc_tail": 160,
    "__libc_erfc_tail.o:libc/math/__libc_erfc_tail.c:__libc_dd_product": 88,
+   "__libc_erff_core.o:__libc_erff_core": 112,
+   "__libc_erff_core.o:libc/math/sp-nearest/__libc_erff_core.c:__libc_ff_multiply": 48,
+   "__libc_erff_core.o:libc/math/sp-nearest/__libc_erff_core.c:__libc_ff_product": 16,
    "__libc_exact_fma.o:__libc_exact_fma": 64,
    "__libc_exact_to_double.o:__libc_exact_to_double": 32,
    "__libc_exact_to_float.o:__libc_exact_to_float": 32,
@@ -8813,9 +8825,10 @@
    "dsubl.o:dsubl": 8,
    "erf.o:erf": 144,
    "erfc.o:erfc": 112,
-   "erfcf.o:erfcf": 8,
+   "erfcf.o:erfcf": 64,
+   "erfcf.o:libc/math/sp-nearest/erfcf.c:__libc_ff_product": 16,
    "erfcl.o:erfcl": 0,
-   "erff.o:erff": 8,
+   "erff.o:erff": 24,
    "erfl.o:erfl": 0,
    "exit.o:exit": 8,
    "exp.o:exp": 48,
