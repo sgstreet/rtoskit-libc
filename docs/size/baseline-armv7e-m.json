@@ -870,6 +870,15 @@
     "text": 372,
     "unwind": 0
    },
+   "__libc_asinhf_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 8,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 670,
+    "unwind": 0
+   },
    "__libc_assert_fail.o": {
     "bss": 0,
     "data": 0,
@@ -906,6 +915,15 @@
     "text": 12,
     "unwind": 0
    },
+   "__libc_clogf_modulus.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 368,
+    "unwind": 0
+   },
    "__libc_cond_wait.o": {
     "bss": 0,
     "data": 0,
@@ -931,6 +949,15 @@
     "tbss": 0,
     "tdata": 0,
     "text": 572,
+    "unwind": 0
+   },
+   "__libc_csqrtf_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 760,
     "unwind": 0
    },
    "__libc_decimal_round.o": {
@@ -1444,6 +1471,15 @@
     "tbss": 0,
     "tdata": 0,
     "text": 244,
+    "unwind": 0
+   },
+   "__libc_log1pf_core.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 368,
     "unwind": 0
    },
    "__libc_log2f_core.o": {
@@ -2442,7 +2478,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 74,
+    "text": 1442,
     "unwind": 0
    },
    "cacosh.o": {
@@ -2460,7 +2496,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 74,
+    "text": 60,
     "unwind": 0
    },
    "cacoshl.o": {
@@ -2568,7 +2604,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 74,
+    "text": 32,
     "unwind": 0
    },
    "casinh.o": {
@@ -2586,7 +2622,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 74,
+    "text": 1430,
     "unwind": 0
    },
    "casinhl.o": {
@@ -2622,7 +2658,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 74,
+    "text": 32,
     "unwind": 0
    },
    "catanh.o": {
@@ -2637,10 +2673,10 @@
    "catanhf.o": {
     "bss": 0,
     "data": 0,
-    "rodata": 0,
+    "rodata": 8,
     "tbss": 0,
     "tdata": 0,
-    "text": 74,
+    "text": 1330,
     "unwind": 0
    },
    "catanhl.o": {
@@ -7759,10 +7795,10 @@
   "totals": {
    "bss": 1184,
    "data": 108,
-   "rodata": 10286,
+   "rodata": 10302,
    "tbss": 358,
    "tdata": 8,
-   "text": 138752,
+   "text": 144800,
    "unwind": 0
   }
  },
@@ -8509,6 +8545,10 @@
    "__libc_asctime.o:__libc_asctime": 32,
    "__libc_asctime.o:libc/time/__libc_asctime.c:put": 8,
    "__libc_asctime.o:libc/time/__libc_asctime.c:put_number": 64,
+   "__libc_asinhf_core.o:__libc_asinhf_core": 104,
+   "__libc_asinhf_core.o:libc/math/sp-nearest/__libc_asinhf_core.c:__libc_ff_add": 32,
+   "__libc_asinhf_core.o:libc/math/sp-nearest/__libc_asinhf_core.c:__libc_ff_multiply": 48,
+   "__libc_asinhf_core.o:libc/math/sp-nearest/__libc_asinhf_core.c:__libc_ff_product": 16,
    "__libc_assert_fail.o:__libc_assert_fail": 280,
    "__libc_assert_fail.o:libc/assert/__libc_assert_fail.c:append": 0,
    "__libc_atan2_core.o:__libc_atan2_core": 224,
@@ -8521,9 +8561,14 @@
    "__libc_atan2f_core.o:libc/math/sp-nearest/__libc_atan2f_core.c:__libc_ff_product": 16,
    "__libc_atan2f_core.o:libc/math/sp-nearest/__libc_atan2f_core.c:atan_unit": 88,
    "__libc_atexit_run.o:libc/stdlib/__libc_atexit_run.c:__libc_atexit_run": 0,
+   "__libc_clogf_modulus.o:__libc_clogf_modulus": 72,
+   "__libc_clogf_modulus.o:libc/complex/sp-nearest/__libc_clogf_modulus.c:__libc_ff_product": 16,
    "__libc_cond_wait.o:__libc_cond_wait": 24,
    "__libc_cos_core.o:__libc_cos_core": 128,
    "__libc_cosh_core.o:__libc_cosh_core": 96,
+   "__libc_csqrtf_core.o:__libc_csqrtf_core": 104,
+   "__libc_csqrtf_core.o:libc/complex/sp-nearest/__libc_csqrtf_core.c:__libc_ff_product": 16,
+   "__libc_csqrtf_core.o:libc/complex/sp-nearest/__libc_csqrtf_core.c:__libc_ff_sqrt": 48,
    "__libc_decimal_round.o:__libc_decimal_round": 20,
    "__libc_decimal_set.o:__libc_decimal_set": 48,
    "__libc_decimal_shift_left.o:__libc_decimal_shift_left": 24,
@@ -8611,6 +8656,8 @@
    "__libc_lgammaf_core.o:libc/math/sp-nearest/__libc_lgammaf_core.c:ln": 32,
    "__libc_log1p_core.o:__libc_log1p_core": 88,
    "__libc_log1p_dd.o:__libc_log1p_dd": 112,
+   "__libc_log1pf_core.o:__libc_log1pf_core": 48,
+   "__libc_log1pf_core.o:libc/math/sp-nearest/__libc_log1pf_core.c:__libc_ff_product": 16,
    "__libc_log2f_core.o:__libc_log2f_core": 56,
    "__libc_log2f_core.o:libc/math/sp-nearest/__libc_log2f_core.c:__libc_ff_product": 16,
    "__libc_log2p1f_core.o:__libc_log2p1f_core": 32,
@@ -8770,9 +8817,13 @@
    "cabsf.o:cabsf": 0,
    "cabsl.o:cabsl": 0,
    "cacos.o:cacos": 56,
-   "cacosf.o:cacosf": 16,
+   "cacosf.o:cacosf": 144,
+   "cacosf.o:libc/complex/sp-nearest/cacosf.c:__libc_ff_multiply": 48,
+   "cacosf.o:libc/complex/sp-nearest/cacosf.c:__libc_ff_product": 16,
+   "cacosf.o:libc/complex/sp-nearest/cacosf.c:__libc_ff_sqrt": 48,
+   "cacosf.o:libc/complex/sp-nearest/cacosf.c:__libc_ff_sum": 16,
    "cacosh.o:cacosh": 32,
-   "cacoshf.o:cacoshf": 16,
+   "cacoshf.o:cacoshf": 24,
    "cacoshl.o:cacoshl": 0,
    "cacosl.o:cacosl": 0,
    "call_once.o:call_once": 16,
@@ -8784,16 +8835,23 @@
    "cargf.o:cargf": 0,
    "cargl.o:cargl": 0,
    "casin.o:casin": 8,
-   "casinf.o:casinf": 16,
+   "casinf.o:casinf": 8,
    "casinh.o:casinh": 72,
-   "casinhf.o:casinhf": 16,
+   "casinhf.o:casinhf": 160,
+   "casinhf.o:libc/complex/sp-nearest/casinhf.c:__libc_ff_multiply": 48,
+   "casinhf.o:libc/complex/sp-nearest/casinhf.c:__libc_ff_product": 16,
+   "casinhf.o:libc/complex/sp-nearest/casinhf.c:__libc_ff_sum": 16,
    "casinhl.o:casinhl": 0,
    "casinl.o:casinl": 0,
    "catan.o:catan": 8,
-   "catanf.o:catanf": 16,
+   "catanf.o:catanf": 8,
    "catanh.o:catanh": 104,
    "catanh.o:libc/complex/catanh.c:__libc_dd_product": 88,
-   "catanhf.o:catanhf": 16,
+   "catanhf.o:catanhf": 152,
+   "catanhf.o:libc/complex/sp-nearest/catanhf.c:__libc_ff_add": 32,
+   "catanhf.o:libc/complex/sp-nearest/catanhf.c:__libc_ff_divide.constprop.0": 48,
+   "catanhf.o:libc/complex/sp-nearest/catanhf.c:__libc_ff_multiply": 48,
+   "catanhf.o:libc/complex/sp-nearest/catanhf.c:__libc_ff_product": 16,
    "catanhl.o:catanhl": 0,
    "catanl.o:catanl": 0,
    "cbrt.o:cbrt": 56,

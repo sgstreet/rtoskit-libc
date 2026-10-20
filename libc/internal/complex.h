@@ -62,6 +62,14 @@ static inline double complex __libc_times_minus_i(double complex z)
 	return CMPLX(__libc_im(z), -__libc_re(z));
 }
 
+struct __libc_ff;
+
+/* sqrt(a + ib) as float-float parts, for finite a and b below 2^60 (the float complex layer) */
+void __libc_csqrtf_core(struct __libc_ff a, float b, struct __libc_ff *real, struct __libc_ff *imag);
+
+/* log|x + iy| as float-float, for finite parts not both zero (the float complex layer) */
+struct __libc_ff __libc_clogf_modulus(float x, float y);
+
 static inline float complex __libc_times_if(float complex z)
 {
 	return CMPLXF(-__libc_imf(z), __libc_ref(z));

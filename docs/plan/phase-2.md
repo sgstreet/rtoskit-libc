@@ -100,7 +100,7 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `lgammaf` and `tgammaf` on float-float, within the D47 accuracy.
   *Both 0.500 ulp, every float of (-9, -0.5] and [0.5, 16) swept; Taylor expansions at the 14 negative zeros of lgamma replace the cancelling reflection there (11 ulp before); 15 mutants (12 caught, 3 insignificant) (D64).*
 
-## P2.05e3 — The `float complex` functions (split into P2.05e3a–e3c)
+## P2.05e3 — The `float complex` functions (split into P2.05e3a–e3c)  `[x]`
 - The `float complex` functions on the single-precision cores (a complex `sp-nearest` layer), within the D49 accuracy.
 
 ## P2.05e3a — Layer, test, exponential, logarithm, powers and roots  `[x]`
@@ -111,8 +111,9 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `csinhf`, `ccoshf`, `ctanhf`, `csinf`, `ccosf`, `ctanf`.
   *All 0.500 ulp normwise and 0.5 per part; fixed the sign of the double `csinh`/`ccosh` beyond |x| = 709; 14 mutants (13 caught, 1 insignificant) (D66).*
 
-## P2.05e3c — Inverse functions
-- [ ] `casinhf`, `cacoshf`, `catanhf`, `casinf`, `cacosf`, `catanf`.
+## P2.05e3c — Inverse functions  `[x]`
+- [x] `casinhf`, `cacoshf`, `catanhf`, `casinf`, `cacosf`, `catanf`.
+  *All 0.500 ulp normwise and 0.5 per part, none misrounded; 15 mutants caught (D67).*
 
 ## P2.05e4 — Kernel sharing and table sizes
 - [ ] Share the reduction and polynomial kernels between the `f`/`d` variants where accuracy allows; re-derive the table sizes with the size/accuracy trade-off documented.
