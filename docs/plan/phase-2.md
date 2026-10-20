@@ -96,8 +96,9 @@ hello-printf-float, malloc-heavy, math-mix}` linked with `--gc-sections`;
 - [x] `erff` and `erfcf` on float-float, within the D47 accuracy.
   *Both 0.500 ulp, from the series with positive terms and Laplace's continued fraction; 14 mutants (12 caught, 2 equivalent) (D63).*
 
-## P2.05e2 — The gamma functions
-- [ ] `lgammaf` and `tgammaf` on float-float, within the D47 accuracy.
+## P2.05e2 — The gamma functions  `[x]`
+- [x] `lgammaf` and `tgammaf` on float-float, within the D47 accuracy.
+  *Both 0.500 ulp, every float of (-9, -0.5] and [0.5, 16) swept; Taylor expansions at the 14 negative zeros of lgamma replace the cancelling reflection there (11 ulp before); 15 mutants (12 caught, 3 insignificant) (D64).*
 
 ## P2.05e3 — The `float complex` functions
 - [ ] The `float complex` functions on the single-precision cores (a complex `sp-nearest` layer), within the D49 accuracy.
