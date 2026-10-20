@@ -50,6 +50,7 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug info
 make help | clean | distclean
 V=1 make ...                           # verbose
 make check                             # build, then run the unit tests (+ libc-test from P1.02) for every board and build type
+make bench                             # build, then run the benchmarks (release, every board) against docs/perf
 make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
 ```
 
@@ -211,6 +212,13 @@ Any exception needs a PLAN.md decision entry.
   members, images and stack depths with `docs/size/baseline-<arch>.json` and
   exits 1 on any growth; `size-report report` rewrites the baselines once a
   step's reductions are recorded in `docs/size/<arch>.md`.
+- **Speed (phase 3, D72):** `test/bench/` holds the benchmark programs (built,
+  run only by `tools/scripts/bench-runner`). `make bench` measures the release
+  build of every board: guest instructions per operation under a qemu built with
+  TCG plugins (`make setup-bench`, into `local/`), plus `rdtsc` cycles on x86_64
+  (not gated). It fails when a case grew by more than 1 %; record a step's
+  improvements with `make bench BENCH_UPDATE=1` and the tables in
+  `docs/perf/<arch>.md` (`bench-runner markdown --previous <rev>`).
 - Never skip, disable or weaken a test to get green. Fix the code, or record a
   justified `skip:` that refers to the scope in PLAN.md §1.
 
