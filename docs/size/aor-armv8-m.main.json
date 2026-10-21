@@ -1,0 +1,977 @@
+{
+ "aor": "f67e7daa5457646fad9f75580263dba654c988aa",
+ "arch": "armv8-m.main",
+ "board": "linux-armv8-m.main",
+ "images": {
+  "float-exact": {
+   "aor": {
+    "code": 1612,
+    "ram": 20
+   },
+   "size": {
+    "code": 1612,
+    "ram": 20
+   },
+   "speed": {
+    "code": 1612,
+    "ram": 20
+   },
+   "substituted": []
+  },
+  "hello-printf-float": {
+   "aor": {
+    "code": 8962,
+    "ram": 348
+   },
+   "size": {
+    "code": 9138,
+    "ram": 348
+   },
+   "speed": {
+    "code": 9658,
+    "ram": 348
+   },
+   "substituted": [
+    "__aeabi_ddiv",
+    "__aeabi_dmul",
+    "__aeabi_i2d",
+    "memchr",
+    "memset"
+   ]
+  },
+  "hello-printf-int": {
+   "aor": {
+    "code": 7361,
+    "ram": 348
+   },
+   "size": {
+    "code": 7153,
+    "ram": 348
+   },
+   "speed": {
+    "code": 7673,
+    "ram": 348
+   },
+   "substituted": [
+    "memchr",
+    "memset"
+   ]
+  },
+  "hello-puts": {
+   "aor": {
+    "code": 5907,
+    "ram": 348
+   },
+   "size": {
+    "code": 1871,
+    "ram": 348
+   },
+   "speed": {
+    "code": 1991,
+    "ram": 348
+   },
+   "substituted": [
+    "memchr",
+    "strlen"
+   ]
+  },
+  "malloc-heavy": {
+   "aor": {
+    "code": 5868,
+    "ram": 52
+   },
+   "size": {
+    "code": 1898,
+    "ram": 52
+   },
+   "speed": {
+    "code": 2078,
+    "ram": 52
+   },
+   "substituted": [
+    "memset",
+    "strlen"
+   ]
+  },
+  "math-float": {
+   "aor": {
+    "code": 7892,
+    "ram": 20
+   },
+   "size": {
+    "code": 4750,
+    "ram": 20
+   },
+   "speed": {
+    "code": 4750,
+    "ram": 20
+   },
+   "substituted": [
+    "__aeabi_d2f",
+    "__aeabi_d2iz",
+    "__aeabi_dadd",
+    "__aeabi_dcmpeq",
+    "__aeabi_dcmpgt",
+    "__aeabi_dcmple",
+    "__aeabi_dmul",
+    "__aeabi_drsub",
+    "__aeabi_dsub",
+    "__aeabi_f2d",
+    "__aeabi_i2d",
+    "__aeabi_l2d",
+    "cosf",
+    "expf",
+    "logf",
+    "powf",
+    "sinf"
+   ]
+  },
+  "math-mix": {
+   "aor": {
+    "code": 35780,
+    "ram": 20
+   },
+   "size": {
+    "code": 26772,
+    "ram": 20
+   },
+   "speed": {
+    "code": 26828,
+    "ram": 20
+   },
+   "substituted": [
+    "__aeabi_cdcmpeq",
+    "__aeabi_cdcmple",
+    "__aeabi_cdrcmple",
+    "__aeabi_d2f",
+    "__aeabi_d2iz",
+    "__aeabi_dadd",
+    "__aeabi_dcmpeq",
+    "__aeabi_dcmpge",
+    "__aeabi_dcmpgt",
+    "__aeabi_dcmple",
+    "__aeabi_dcmplt",
+    "__aeabi_dcmpun",
+    "__aeabi_ddiv",
+    "__aeabi_dmul",
+    "__aeabi_drsub",
+    "__aeabi_dsub",
+    "__aeabi_f2d",
+    "__aeabi_i2d",
+    "__aeabi_l2d",
+    "__aeabi_ui2d",
+    "__aeabi_ul2d",
+    "__gedf2",
+    "__ledf2",
+    "cosf",
+    "exp",
+    "expf",
+    "log",
+    "logf",
+    "memset",
+    "pow",
+    "powf",
+    "sinf"
+   ]
+  }
+ },
+ "order": [
+  "memchr",
+  "memset",
+  "strlen",
+  "cosf",
+  "erf",
+  "erff",
+  "exp",
+  "exp2",
+  "exp2f",
+  "expf",
+  "log",
+  "log10f",
+  "log2",
+  "log2f",
+  "logf",
+  "pow",
+  "powf",
+  "sinf",
+  "__aeabi_cdcmpeq",
+  "__aeabi_cdcmple",
+  "__aeabi_cdrcmple",
+  "__aeabi_d2f",
+  "__aeabi_d2iz",
+  "__aeabi_d2lz",
+  "__aeabi_d2uiz",
+  "__aeabi_d2ulz",
+  "__aeabi_dadd",
+  "__aeabi_dcmpeq",
+  "__aeabi_dcmpge",
+  "__aeabi_dcmpgt",
+  "__aeabi_dcmple",
+  "__aeabi_dcmplt",
+  "__aeabi_dcmpun",
+  "__aeabi_ddiv",
+  "__aeabi_dmul",
+  "__aeabi_drsub",
+  "__aeabi_dsub",
+  "__aeabi_f2d",
+  "__aeabi_f2lz",
+  "__aeabi_f2ulz",
+  "__aeabi_fadd",
+  "__aeabi_frsub",
+  "__aeabi_fsub",
+  "__aeabi_i2d",
+  "__aeabi_i2f",
+  "__aeabi_l2d",
+  "__aeabi_l2f",
+  "__aeabi_ui2d",
+  "__aeabi_ui2f",
+  "__aeabi_ul2d",
+  "__aeabi_ul2f",
+  "__gedf2",
+  "__ledf2"
+ ],
+ "routines": {
+  "__aeabi_cdcmpeq": {
+   "aor": {
+    "code": 124,
+    "ram": 0
+   },
+   "size": {
+    "code": 272,
+    "ram": 0
+   },
+   "speed": {
+    "code": 272,
+    "ram": 0
+   }
+  },
+  "__aeabi_cdcmple": {
+   "aor": {
+    "code": 128,
+    "ram": 0
+   },
+   "size": {
+    "code": 272,
+    "ram": 0
+   },
+   "speed": {
+    "code": 272,
+    "ram": 0
+   }
+  },
+  "__aeabi_cdrcmple": {
+   "aor": {
+    "code": 128,
+    "ram": 0
+   },
+   "size": {
+    "code": 272,
+    "ram": 0
+   },
+   "speed": {
+    "code": 272,
+    "ram": 0
+   }
+  },
+  "__aeabi_d2f": {
+   "aor": {
+    "code": 228,
+    "ram": 0
+   },
+   "size": {
+    "code": 160,
+    "ram": 0
+   },
+   "speed": {
+    "code": 160,
+    "ram": 0
+   }
+  },
+  "__aeabi_d2iz": {
+   "aor": {
+    "code": 80,
+    "ram": 0
+   },
+   "size": {
+    "code": 80,
+    "ram": 0
+   },
+   "speed": {
+    "code": 80,
+    "ram": 0
+   }
+  },
+  "__aeabi_d2lz": {
+   "aor": {
+    "code": 140,
+    "ram": 0
+   },
+   "size": {
+    "code": 1928,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1928,
+    "ram": 0
+   }
+  },
+  "__aeabi_d2uiz": {
+   "aor": {
+    "code": 72,
+    "ram": 0
+   },
+   "size": {
+    "code": 64,
+    "ram": 0
+   },
+   "speed": {
+    "code": 64,
+    "ram": 0
+   }
+  },
+  "__aeabi_d2ulz": {
+   "aor": {
+    "code": 92,
+    "ram": 0
+   },
+   "size": {
+    "code": 1608,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1608,
+    "ram": 0
+   }
+  },
+  "__aeabi_dadd": {
+   "aor": {
+    "code": 1300,
+    "ram": 0
+   },
+   "size": {
+    "code": 888,
+    "ram": 0
+   },
+   "speed": {
+    "code": 888,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmpeq": {
+   "aor": {
+    "code": 168,
+    "ram": 0
+   },
+   "size": {
+    "code": 272,
+    "ram": 0
+   },
+   "speed": {
+    "code": 272,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmpge": {
+   "aor": {
+    "code": 180,
+    "ram": 0
+   },
+   "size": {
+    "code": 272,
+    "ram": 0
+   },
+   "speed": {
+    "code": 272,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmpgt": {
+   "aor": {
+    "code": 180,
+    "ram": 0
+   },
+   "size": {
+    "code": 272,
+    "ram": 0
+   },
+   "speed": {
+    "code": 272,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmple": {
+   "aor": {
+    "code": 180,
+    "ram": 0
+   },
+   "size": {
+    "code": 272,
+    "ram": 0
+   },
+   "speed": {
+    "code": 272,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmplt": {
+   "aor": {
+    "code": 180,
+    "ram": 0
+   },
+   "size": {
+    "code": 272,
+    "ram": 0
+   },
+   "speed": {
+    "code": 272,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmpun": {
+   "aor": {
+    "code": 32,
+    "ram": 0
+   },
+   "size": {
+    "code": 44,
+    "ram": 0
+   },
+   "speed": {
+    "code": 44,
+    "ram": 0
+   }
+  },
+  "__aeabi_ddiv": {
+   "aor": {
+    "code": 1156,
+    "ram": 0
+   },
+   "size": {
+    "code": 1060,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1060,
+    "ram": 0
+   }
+  },
+  "__aeabi_dmul": {
+   "aor": {
+    "code": 804,
+    "ram": 0
+   },
+   "size": {
+    "code": 596,
+    "ram": 0
+   },
+   "speed": {
+    "code": 596,
+    "ram": 0
+   }
+  },
+  "__aeabi_drsub": {
+   "aor": {
+    "code": 1300,
+    "ram": 0
+   },
+   "size": {
+    "code": 888,
+    "ram": 0
+   },
+   "speed": {
+    "code": 888,
+    "ram": 0
+   }
+  },
+  "__aeabi_dsub": {
+   "aor": {
+    "code": 1300,
+    "ram": 0
+   },
+   "size": {
+    "code": 888,
+    "ram": 0
+   },
+   "speed": {
+    "code": 888,
+    "ram": 0
+   }
+  },
+  "__aeabi_f2d": {
+   "aor": {
+    "code": 104,
+    "ram": 0
+   },
+   "size": {
+    "code": 888,
+    "ram": 0
+   },
+   "speed": {
+    "code": 888,
+    "ram": 0
+   }
+  },
+  "__aeabi_f2lz": {
+   "aor": {
+    "code": 124,
+    "ram": 0
+   },
+   "size": {
+    "code": 1652,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1652,
+    "ram": 0
+   }
+  },
+  "__aeabi_f2ulz": {
+   "aor": {
+    "code": 76,
+    "ram": 0
+   },
+   "size": {
+    "code": 1612,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1612,
+    "ram": 0
+   }
+  },
+  "__aeabi_fadd": {
+   "aor": {
+    "code": 716,
+    "ram": 0
+   },
+   "size": {
+    "code": 540,
+    "ram": 0
+   },
+   "speed": {
+    "code": 540,
+    "ram": 0
+   }
+  },
+  "__aeabi_frsub": {
+   "aor": {
+    "code": 716,
+    "ram": 0
+   },
+   "size": {
+    "code": 540,
+    "ram": 0
+   },
+   "speed": {
+    "code": 540,
+    "ram": 0
+   }
+  },
+  "__aeabi_fsub": {
+   "aor": {
+    "code": 716,
+    "ram": 0
+   },
+   "size": {
+    "code": 540,
+    "ram": 0
+   },
+   "speed": {
+    "code": 540,
+    "ram": 0
+   }
+  },
+  "__aeabi_i2d": {
+   "aor": {
+    "code": 48,
+    "ram": 0
+   },
+   "size": {
+    "code": 888,
+    "ram": 0
+   },
+   "speed": {
+    "code": 888,
+    "ram": 0
+   }
+  },
+  "__aeabi_i2f": {
+   "aor": {
+    "code": 48,
+    "ram": 0
+   },
+   "size": {
+    "code": 540,
+    "ram": 0
+   },
+   "speed": {
+    "code": 540,
+    "ram": 0
+   }
+  },
+  "__aeabi_l2d": {
+   "aor": {
+    "code": 164,
+    "ram": 0
+   },
+   "size": {
+    "code": 888,
+    "ram": 0
+   },
+   "speed": {
+    "code": 888,
+    "ram": 0
+   }
+  },
+  "__aeabi_l2f": {
+   "aor": {
+    "code": 100,
+    "ram": 0
+   },
+   "size": {
+    "code": 540,
+    "ram": 0
+   },
+   "speed": {
+    "code": 540,
+    "ram": 0
+   }
+  },
+  "__aeabi_ui2d": {
+   "aor": {
+    "code": 40,
+    "ram": 0
+   },
+   "size": {
+    "code": 888,
+    "ram": 0
+   },
+   "speed": {
+    "code": 888,
+    "ram": 0
+   }
+  },
+  "__aeabi_ui2f": {
+   "aor": {
+    "code": 40,
+    "ram": 0
+   },
+   "size": {
+    "code": 540,
+    "ram": 0
+   },
+   "speed": {
+    "code": 540,
+    "ram": 0
+   }
+  },
+  "__aeabi_ul2d": {
+   "aor": {
+    "code": 140,
+    "ram": 0
+   },
+   "size": {
+    "code": 888,
+    "ram": 0
+   },
+   "speed": {
+    "code": 888,
+    "ram": 0
+   }
+  },
+  "__aeabi_ul2f": {
+   "aor": {
+    "code": 100,
+    "ram": 0
+   },
+   "size": {
+    "code": 540,
+    "ram": 0
+   },
+   "speed": {
+    "code": 540,
+    "ram": 0
+   }
+  },
+  "__gedf2": {
+   "aor": {
+    "code": 216,
+    "ram": 0
+   },
+   "size": {
+    "code": 272,
+    "ram": 0
+   },
+   "speed": {
+    "code": 272,
+    "ram": 0
+   }
+  },
+  "__ledf2": {
+   "aor": {
+    "code": 216,
+    "ram": 0
+   },
+   "size": {
+    "code": 272,
+    "ram": 0
+   },
+   "speed": {
+    "code": 272,
+    "ram": 0
+   }
+  },
+  "cosf": {
+   "aor": {
+    "code": 3460,
+    "ram": 0
+   },
+   "size": {
+    "code": 1508,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1508,
+    "ram": 0
+   }
+  },
+  "erf": {
+   "aor": {
+    "code": 10926,
+    "ram": 0
+   },
+   "size": {
+    "code": 11028,
+    "ram": 0
+   },
+   "speed": {
+    "code": 11028,
+    "ram": 0
+   }
+  },
+  "erff": {
+   "aor": {
+    "code": 3172,
+    "ram": 0
+   },
+   "size": {
+    "code": 1362,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1362,
+    "ram": 0
+   }
+  },
+  "exp": {
+   "aor": {
+    "code": 5124,
+    "ram": 0
+   },
+   "size": {
+    "code": 5092,
+    "ram": 0
+   },
+   "speed": {
+    "code": 5092,
+    "ram": 0
+   }
+  },
+  "exp2": {
+   "aor": {
+    "code": 5124,
+    "ram": 0
+   },
+   "size": {
+    "code": 5560,
+    "ram": 0
+   },
+   "speed": {
+    "code": 5560,
+    "ram": 0
+   }
+  },
+  "exp2f": {
+   "aor": {
+    "code": 2840,
+    "ram": 0
+   },
+   "size": {
+    "code": 854,
+    "ram": 0
+   },
+   "speed": {
+    "code": 854,
+    "ram": 0
+   }
+  },
+  "expf": {
+   "aor": {
+    "code": 2860,
+    "ram": 0
+   },
+   "size": {
+    "code": 946,
+    "ram": 0
+   },
+   "speed": {
+    "code": 946,
+    "ram": 0
+   }
+  },
+  "log": {
+   "aor": {
+    "code": 7884,
+    "ram": 0
+   },
+   "size": {
+    "code": 5456,
+    "ram": 0
+   },
+   "speed": {
+    "code": 5456,
+    "ram": 0
+   }
+  },
+  "log10f": {
+   "aor": {
+    "code": 2852,
+    "ram": 0
+   },
+   "size": {
+    "code": 1068,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1068,
+    "ram": 0
+   }
+  },
+  "log2": {
+   "aor": {
+    "code": 5816,
+    "ram": 0
+   },
+   "size": {
+    "code": 6140,
+    "ram": 0
+   },
+   "speed": {
+    "code": 6140,
+    "ram": 0
+   }
+  },
+  "log2f": {
+   "aor": {
+    "code": 2856,
+    "ram": 0
+   },
+   "size": {
+    "code": 1016,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1016,
+    "ram": 0
+   }
+  },
+  "logf": {
+   "aor": {
+    "code": 2844,
+    "ram": 0
+   },
+   "size": {
+    "code": 1068,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1068,
+    "ram": 0
+   }
+  },
+  "memchr": {
+   "aor": {
+    "code": 248,
+    "ram": 0
+   },
+   "size": {
+    "code": 86,
+    "ram": 0
+   },
+   "speed": {
+    "code": 86,
+    "ram": 0
+   }
+  },
+  "memset": {
+   "aor": {
+    "code": 88,
+    "ram": 0
+   },
+   "size": {
+    "code": 48,
+    "ram": 0
+   },
+   "speed": {
+    "code": 108,
+    "ram": 0
+   }
+  },
+  "pow": {
+   "aor": {
+    "code": 11528,
+    "ram": 0
+   },
+   "size": {
+    "code": 12376,
+    "ram": 0
+   },
+   "speed": {
+    "code": 12376,
+    "ram": 0
+   }
+  },
+  "powf": {
+   "aor": {
+    "code": 4432,
+    "ram": 0
+   },
+   "size": {
+    "code": 2202,
+    "ram": 0
+   },
+   "speed": {
+    "code": 2202,
+    "ram": 0
+   }
+  },
+  "sinf": {
+   "aor": {
+    "code": 3464,
+    "ram": 0
+   },
+   "size": {
+    "code": 1536,
+    "ram": 0
+   },
+   "speed": {
+    "code": 1536,
+    "ram": 0
+   }
+  },
+  "strlen": {
+   "aor": {
+    "code": 4116,
+    "ram": 0
+   },
+   "size": {
+    "code": 44,
+    "ram": 0
+   },
+   "speed": {
+    "code": 44,
+    "ram": 0
+   }
+  }
+ }
+}

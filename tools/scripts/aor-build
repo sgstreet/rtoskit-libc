@@ -257,15 +257,16 @@ def link_once(board, build, objects, libraries, elf, forced):
 	return mapfile
 
 
-def link(board, build, objects, libraries, elf, provided):
+def link(board, build, objects, libraries, elf, provided, undefined=()):
 	"""Link objects with the AOR archives ahead of libc.a and libgcc, as tools/makefiles/<arch>.mk links
 	every program, so that every routine AOR provides comes from AOR (D92). Leading the group is not
 	enough: a libgcc member pulled in for another symbol takes the helpers it calls from libgcc itself.
 	So each AOR symbol the program turns out to contain is forced undefined (-u) from the start, where
 	the first archive, AOR's, defines it, and the link repeats until that set stops growing; the
 	duplicate definitions libgcc members then bring are ignored (--allow-multiple-definition, the first
-	wins). check_substitution() verifies the result."""
-	forced = set()
+	wins). check_substitution() verifies the result. Symbols in undefined are forced from the start, so a
+	program can be linked for one routine alone (size-report aor)."""
+	forced = set(undefined)
 	while True:
 		mapfile = link_once(board, build, objects, libraries, elf, forced)
 		present = set(defined_addresses(board, elf)) & set(provided)

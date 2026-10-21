@@ -24,6 +24,10 @@
 #                                                        docs/size/budget.json (P2.07, PLAN D71);
 #                                                        exit status 1 when one is over
 #   tools/scripts/size-report budget --lock              write docs/size/budget.json from the build
+#   tools/scripts/size-report aor [--record | --from-record]
+#                                                        what each Arm Optimized Routines routine costs against
+#                                                        ours, and test/size relinked with AOR ("make aor" first);
+#                                                        --record keeps docs/size/aor-<arch>.json (P4.04, D92)
 #
 # Figures: per libc.a member, the bytes of each section class (text, rodata, unwind,
 # data, bss, tdata, tbss) from the ELF section flags; per test/size image, the same
@@ -32,7 +36,10 @@
 # points from the -fcallgraph-info=su call graphs (.ci files).
 
 import argparse
+import glob
 import hashlib
+import importlib.machinery
+import importlib.util
 import json
 import os
 import re
@@ -821,6 +828,150 @@ def command_budget(args):
 	return 1 if over else 0
 
 
+# Comparison with Arm Optimized Routines (P4.04, PLAN D92, D93): what each routine AOR provides costs a
+# program, and the reference programs relinked with AOR's string, math (-Os) and fp archives
+AOR_LIBRARIES = ['string', 'math-size', 'fp']
+CODE = ['text', 'rodata', 'unwind']
+RAM = ['data', 'bss', 'tdata', 'tbss']
+
+
+def aor_build():
+	loader = importlib.machinery.SourceFileLoader('aor_build', os.path.join('tools', 'scripts', 'aor-build'))
+	module = importlib.util.module_from_spec(importlib.util.spec_from_loader('aor_build', loader))
+	loader.exec_module(module)
+	return module
+
+
+def aor_entry_point(symbol):
+	"""A routine a program calls, not one of AOR's tables or internal helpers."""
+	if symbol.startswith('__'):
+		return symbol.startswith('__aeabi_') or re.fullmatch(r'__(le|ge)[sd]f2', symbol) is not None
+	return not symbol.startswith('arm_math_')
+
+
+def used_symbols(aor, board, build_root):
+	"""The symbols the board's own reference and benchmark programs contain: the routines worth sizing
+	(a soft-float helper the FPU makes unnecessary never appears)."""
+	used = set()
+	for build_type in ('release', 'speed'):
+		build = os.path.join(build_root, board, build_type)
+		for elf in glob.glob(os.path.join(build, 'test', 'size', '*', '*.elf')) + glob.glob(os.path.join(build, 'test', 'bench', '*', '*.elf')):
+			used |= set(aor.defined_addresses(board, elf))
+	return used
+
+
+def image_totals(elf, map_path, obj):
+	sections = analyze_image(elf, map_path, [obj])['sections']
+	return {'code': total(sections, CODE), 'ram': total(sections, RAM)}
+
+
+def aor_routine_costs(aor, board, build_root, routines):
+	"""Code and RAM each routine adds to an empty program: rtoskit's size and speed flavours with libgcc,
+	and AOR (-Os math) on the size flavour."""
+	top = os.path.join(aor.aor_dir(build_root, board), 'size')
+	os.makedirs(top, exist_ok=True)
+	obj = os.path.join(top, 'size-main.o')
+	aor.run([aor.tool(board, 'gcc')] + aor.c_flags(board) + ['-std=c23', '-Os', '-c', os.path.join('tools', 'aor', 'size-main.c'), '-o', obj])
+	manifest = aor.read_manifest(build_root, board)
+	names = [name for name in AOR_LIBRARIES if name in manifest['provided']]
+	provided = [symbol for name in names for symbol in manifest['provided'][name]]
+	variants = {
+		'size': (os.path.join(build_root, board, 'release'), []),
+		'speed': (os.path.join(build_root, board, 'speed'), []),
+		'aor': (os.path.join(build_root, board, 'release'), [aor.library_path(build_root, board, name) for name in names]),
+	}
+	costs = {}
+	for variant, (build, libraries) in variants.items():
+		elf = os.path.join(top, f'{variant}-empty.elf')
+		mapfile = aor.link(board, build, [obj], libraries, elf, provided if libraries else [])
+		empty = image_totals(elf, mapfile, obj)
+		for routine in routines:
+			elf = os.path.join(top, f'{variant}-{routine}.elf')
+			mapfile = aor.link(board, build, [obj], libraries, elf, provided if libraries else [], undefined=[routine])
+			if routine not in aor.defined_addresses(board, elf):
+				continue
+			if libraries:
+				aor.check_substitution(board, elf, mapfile, provided)
+			sizes = image_totals(elf, mapfile, obj)
+			costs.setdefault(routine, {})[variant] = {key: sizes[key] - empty[key] for key in sizes}
+	return costs
+
+
+def aor_images(aor, board, build_root):
+	"""The reference programs of the release (size) build relinked with AOR's archives."""
+	build = os.path.join(build_root, board, 'release')
+	manifest = aor.read_manifest(build_root, board)
+	names = [name for name in AOR_LIBRARIES if name in manifest['provided']]
+	libraries = [aor.library_path(build_root, board, name) for name in names]
+	provided = [symbol for name in names for symbol in manifest['provided'][name]]
+	top = os.path.join(aor.aor_dir(build_root, board), 'size')
+	images = {}
+	for program in PROGRAMS:
+		directory = os.path.join(build, 'test', 'size', program)
+		obj = os.path.join(directory, program + '.o')
+		ours = {build_type: image_totals(os.path.join(build_root, board, build_type, 'test', 'size', program, program + '.elf'),
+						 os.path.join(build_root, board, build_type, 'test', 'size', program, program + '.map'),
+						 os.path.join(build_root, board, build_type, 'test', 'size', program, program + '.o')) for build_type in ('release', 'speed')}
+		elf = os.path.join(top, program + '.elf')
+		mapfile = aor.link(board, build, [obj], libraries, elf, provided)
+		substituted = [symbol for symbol in aor.check_substitution(board, elf, mapfile, provided) if aor_entry_point(symbol)]
+		images[program] = {'size': ours['release'], 'speed': ours['speed'], 'aor': image_totals(elf, mapfile, obj), 'substituted': substituted}
+	return images
+
+
+def aor_record_path(directory, board):
+	return os.path.join(directory, f'aor-{arch_of(board)}.json')
+
+
+def aor_markdown(data):
+	lines = [f'### {data["arch"]}', '', 'Reference programs, release build: code (text + rodata + unwind) and RAM (data + bss + TLS) in bytes; '
+		 'AOR is the size flavour with AOR\'s string, math (-Os) and fp archives linked in.', '',
+		 '| Program | code size | code speed | code AOR | AOR − size | RAM size | RAM AOR | AOR routines linked |', '|---|---:|---:|---:|---:|---:|---:|---|']
+	for program in [p for p in PROGRAMS if p in data['images']]:
+		image = data['images'][program]
+		lines.append(f'| {program} | {image["size"]["code"]} | {image["speed"]["code"]} | {image["aor"]["code"]} | {signed(image["aor"]["code"] - image["size"]["code"])} | '
+			     f'{image["size"]["ram"]} | {image["aor"]["ram"]} | ' + (', '.join(f'`{s}`' for s in image['substituted']) or '—') + ' |')
+	lines += ['', 'What one routine adds to an empty program (code bytes, its tables and helpers included; RAM where any).', '',
+		  '| Routine | size flavour | speed flavour | AOR | AOR − size |', '|---|---:|---:|---:|---:|']
+	for routine in data['order']:
+		cost = data['routines'][routine]
+
+		def cell(variant):
+			if variant not in cost:
+				return '—'
+			ram = f' + {cost[variant]["ram"]} RAM' if cost[variant]['ram'] else ''
+			return f'{cost[variant]["code"]}{ram}'
+		delta = signed(cost['aor']['code'] - cost['size']['code']) if 'aor' in cost and 'size' in cost else '—'
+		lines.append(f'| `{routine}` | {cell("size")} | {cell("speed")} | {cell("aor")} | {delta} |')
+	lines.append('')
+	return lines
+
+
+def command_aor(args):
+	aor = aor_build()
+	for board in args.board:
+		if args.from_record:
+			with open(aor_record_path(args.baseline_dir, board)) as f:
+				data = json.load(f)
+		else:
+			manifest = aor.read_manifest(args.build_root, board)
+			used = used_symbols(aor, board, args.build_root)
+			order = []
+			for name in AOR_LIBRARIES:
+				for symbol in manifest['provided'].get(name, []):
+					if aor_entry_point(symbol) and symbol in used and symbol not in order:
+						order.append(symbol)
+			data = {'board': board, 'arch': arch_of(board), 'aor': manifest['revision'], 'order': order,
+				'routines': aor_routine_costs(aor, board, args.build_root, order), 'images': aor_images(aor, board, args.build_root)}
+			data['order'] = [routine for routine in order if routine in data['routines']]
+			if args.record:
+				with open(aor_record_path(args.baseline_dir, board), 'w') as f:
+					json.dump(data, f, indent=1, sort_keys=True)
+					f.write('\n')
+		print('\n'.join(aor_markdown(data)))
+	return 0
+
+
 def main():
 	parser = argparse.ArgumentParser(description='Phase 2 size measurements (PLAN D51)')
 	parser.add_argument('--build-type', default='release')
@@ -837,10 +988,14 @@ def main():
 	p.add_argument('--lock', action='store_true', help='write the budget from this build')
 	p = sub.add_parser('compare')
 	p.add_argument('--work', default=os.path.join('tmp', 'size-compare'))
+	p = sub.add_parser('aor')
+	p.add_argument('--board', action='append', choices=BOARDS)
+	p.add_argument('--record', action='store_true', help='also write the results to docs/size/aor-<arch>.json')
+	p.add_argument('--from-record', action='store_true', help='print the tables of docs/size/aor-<arch>.json without building')
 	args = parser.parse_args()
 	if getattr(args, 'board', None) is None:
 		args.board = BOARDS
-	commands = {'report': command_report, 'diff': command_diff, 'markdown': command_markdown, 'compare': command_compare, 'budget': command_budget}
+	commands = {'report': command_report, 'diff': command_diff, 'markdown': command_markdown, 'compare': command_compare, 'budget': command_budget, 'aor': command_aor}
 	return commands[args.command](args)
 
 
