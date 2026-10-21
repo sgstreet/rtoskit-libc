@@ -1,0 +1,256 @@
+#!/usr/bin/env python3
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# aor-accuracy
+#
+# Created on: Oct 22, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+# The accuracy comparison with Arm Optimized Routines (P4.05, PLAN D92,
+# docs/research/optimized-routines.md). Needs the x86_64 release build,
+# "make aor" and the host MPFR development files (libmpfr-dev). Run from the
+# project root:
+#
+#   tools/scripts/aor-accuracy host [--quick]   build tools/aor/accuracy.c against rtoskit-libc's x86_64
+#                                               libc.a (every symbol prefixed rt_) and AOR's x86_64 math
+#                                               (entry points renamed aor_), run it, and write the raw
+#                                               results to build/linux-x86_64/aor/accuracy/results.txt
+#   tools/scripts/aor-accuracy arm [--board B ...]
+#                                               evaluate tools/aor/arm-sample.c on Arm boards under their
+#                                               runner (rtoskit size and speed flavours, and AOR), and
+#                                               measure the records on the host: arm-results.txt
+#   tools/scripts/aor-accuracy markdown [FILE]  print the tables of a results file (host or arm)
+#
+# The full host run takes about an hour on four threads: every float
+# argument of eight functions, 2^24 samples of each double function and
+# 2^26 of powf, 2^20 per directed rounding mode. --quick divides every
+# count by 64 and skips the exhaustive runs, for a check of the tooling.
+
+import argparse
+import os
+import re
+import subprocess
+import sys
+
+BUILD = os.path.join('build', 'linux-x86_64')
+WORK = os.path.join(BUILD, 'aor', 'accuracy')
+FLOAT_FUNCTIONS = ['expf', 'exp2f', 'logf', 'log2f', 'log10f', 'sinf', 'cosf', 'erff']
+DOUBLE_FUNCTIONS = ['exp', 'exp2', 'exp10', 'log', 'log2', 'erf', 'pow']
+ALL_FUNCTIONS = FLOAT_FUNCTIONS + ['powf'] + DOUBLE_FUNCTIONS
+
+
+def run(command, **kwargs):
+	result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, **kwargs)
+	if result.returncode != 0:
+		raise SystemExit(' '.join(command) + '\n' + result.stdout)
+	return result.stdout
+
+
+def build(name='accuracy'):
+	os.makedirs(WORK, exist_ok=True)
+	ours = os.path.join(BUILD, 'release', 'libc', 'libc.a')
+	theirs = os.path.join(BUILD, 'aor', 'libaor-math.a')
+	for path in (ours, theirs):
+		if not os.path.exists(path):
+			raise SystemExit(f'{path}: missing; build the x86_64 release and run "make aor" first')
+	# rtoskit-libc: every symbol, defined or referenced, gains the prefix, so the library stays whole beside glibc
+	rt = os.path.join(WORK, 'librt.a')
+	run(['cp', ours, rt])
+	run(['objcopy', '--prefix-symbols=rt_', rt])
+	# AOR: only its entry points are renamed; its internal arm_math_* names cannot clash, and fma comes from glibc
+	names = sorted({line.split()[2] for line in run(['nm', '-g', '--defined-only', theirs]).splitlines() if len(line.split()) == 3 and not line.split()[2].startswith('arm_math_')})
+	table = os.path.join(WORK, 'aor.redefine')
+	with open(table, 'w') as f:
+		f.writelines(f'{name} aor_{name}\n' for name in names)
+	aor = os.path.join(WORK, 'libaor.a')
+	run(['cp', theirs, aor])
+	run(['objcopy', f'--redefine-syms={table}', aor])
+	program = os.path.join(WORK, name)
+	run(['gcc-14', '-std=c23', '-O2', '-Wall', '-Werror', '-no-pie', '-o', program, os.path.join('tools', 'aor', 'accuracy.c'), rt, aor, '-lmpfr', '-lgmp', '-lm', '-lpthread'])
+	return program
+
+
+def command_host(args):
+	program = build()
+	scale = 64 if args.quick else 1
+	steps = []
+	if not args.quick:
+		steps += [['exhaustive', name] for name in FLOAT_FUNCTIONS]
+	steps += [['sample', 'powf', str((1 << 26) // scale)]]
+	steps += [['sample', name, str((1 << 24) // scale)] for name in DOUBLE_FUNCTIONS]
+	steps += [['modes', name, str((1 << 20) // scale)] for name in ALL_FUNCTIONS]
+	steps += [['special']]
+	results = os.path.join(WORK, 'results.txt')
+	with open(results, 'w') as out:
+		for step in steps:
+			print(' '.join(step), file=sys.stderr, flush=True)
+			out.write(run([program] + step))
+			out.flush()
+	print(results)
+	return 0
+
+
+# The Arm check: tools/aor/arm-sample.c on these boards, linked three ways, its records measured on the host
+ARM_BOARDS = ['linux-armv6-m', 'linux-armv7e-m', 'linux-armv7e-m-dp']
+ARM_SAMPLES = 16384
+
+
+def aor_build():
+	import importlib.machinery
+	import importlib.util
+	loader = importlib.machinery.SourceFileLoader('aor_build', os.path.join('tools', 'scripts', 'aor-build'))
+	module = importlib.util.module_from_spec(importlib.util.spec_from_loader('aor_build', loader))
+	loader.exec_module(module)
+	return module
+
+
+def command_arm(args):
+	# Its own executable, so an arm run can go on while a host run uses the other
+	program = build('accuracy-arm')
+	aor = aor_build()
+	results = os.path.join(WORK, 'arm-results.txt')
+	with open(results, 'w') as out:
+		for board in args.board:
+			top = os.path.join(aor.aor_dir('build', board), 'accuracy')
+			os.makedirs(top, exist_ok=True)
+			obj = os.path.join(top, 'arm-sample.o')
+			aor.run([aor.tool(board, 'gcc')] + aor.c_flags(board) + ['-std=c23', '-O2', '-fno-builtin', '-c', os.path.join('tools', 'aor', 'arm-sample.c'), '-o', obj])
+			manifest = aor.read_manifest('build', board)
+			names = [name for name in ('string', 'math', 'fp') if name in manifest['provided']]
+			provided = [symbol for name in names for symbol in manifest['provided'][name]]
+			variants = {
+				'size': (os.path.join('build', board, 'release'), []),
+				'speed': (os.path.join('build', board, 'speed'), []),
+				'aor': (os.path.join('build', board, 'release'), [aor.library_path('build', board, name) for name in names]),
+			}
+			for variant, (build_dir, libraries) in variants.items():
+				elf = os.path.join(top, f'arm-sample-{variant}.elf')
+				mapfile = aor.link(board, build_dir, [obj], libraries, elf, provided if libraries else [])
+				if libraries:
+					aor.check_substitution(board, elf, mapfile, provided)
+				print(f'{board} {variant}', file=sys.stderr, flush=True)
+				data = subprocess.run(aor.target_runner(board) + [elf], stdout=subprocess.PIPE, check=True, timeout=7200).stdout
+				records = os.path.join(top, f'{variant}.bin')
+				with open(records, 'wb') as f:
+					f.write(data)
+				out.write(run([program, 'records', f'{aor.arch_of(board)}/{variant}', records, str(ARM_SAMPLES)]))
+				out.flush()
+	print(results)
+	return 0
+
+
+LINE = re.compile(r'^(exhaustive|sample|modes) (\S+) (\S+) (rt|aor) max (\S+) at (\S+) (\S+) wrong (\d+) of (\d+)$')
+RECORDS = re.compile(r'^records (\S+) (\S+) nearest max (\S+) at (\S+) (\S+) wrong (\d+) of (\d+)$')
+ARGS = re.compile(r'^(exhaustive|sample|modes) (\S+) (\S+) arguments (\d+) differ (\d+)$')
+
+
+def parse(path):
+	runs = {}
+	special = []
+	with open(path) as f:
+		for line in f:
+			line = line.strip()
+			match = LINE.match(line)
+			if match:
+				kind, name, mode, library, error, x, y, wrong, checked = match.groups()
+				runs.setdefault((kind, name, mode), {})[library] = {'max': float(error), 'x': x, 'y': y, 'wrong': int(wrong), 'checked': int(checked)}
+				continue
+			match = ARGS.match(line)
+			if match:
+				kind, name, mode, arguments, differ = match.groups()
+				runs.setdefault((kind, name, mode), {}).update({'arguments': int(arguments), 'differ': int(differ)})
+				continue
+			match = RECORDS.match(line)
+			if match:
+				label, name, error, x, y, wrong, checked = match.groups()
+				runs.setdefault(('records', name, label), {})['records'] = {'max': float(error), 'x': x, 'y': y, 'wrong': int(wrong), 'checked': int(checked)}
+				continue
+			if line.startswith('special '):
+				special.append(line.split()[1:])
+	return runs, special
+
+
+def fraction(wrong, checked):
+	if not wrong:
+		return '0'
+	return f'{wrong} ({wrong / checked * 100:.3g} %)'
+
+
+def records_markdown(runs):
+	labels = sorted({label for kind, _, label in runs if kind == 'records'}, key=lambda l: (l.split('/')[0], ['size', 'speed', 'aor'].index(l.split('/')[1])))
+	print('#### On the Arm targets\n')
+	print(f'{ARM_SAMPLES:,} sampled arguments per function, round to nearest: maximum ulp error / results not correctly rounded.\n')
+	print('| Function | ' + ' | '.join(labels) + ' |')
+	print('|---|' + '---|' * len(labels))
+	for name in ALL_FUNCTIONS:
+		cells = []
+		for label in labels:
+			entry = runs.get(('records', name, label))
+			cells.append(f'{entry["records"]["max"]:.3f} / {entry["records"]["wrong"]}' if entry else '—')
+		if any(cell != '—' for cell in cells):
+			print(f'| `{name}` | ' + ' | '.join(cells) + ' |')
+	return 0
+
+
+def command_markdown(args):
+	runs, special = parse(args.file)
+	if any(kind == 'records' for kind, _, _ in runs):
+		return records_markdown(runs)
+	print('#### Round to nearest\n')
+	print('| Function | Arguments | Checked | Results that differ | rtoskit max ulp | rtoskit not correctly rounded | AOR max ulp | AOR not correctly rounded |')
+	print('|---|---|---:|---:|---:|---:|---:|---:|')
+	for name in ALL_FUNCTIONS:
+		for kind in ('exhaustive', 'sample'):
+			entry = runs.get((kind, name, 'nearest'))
+			if not entry:
+				continue
+			what = 'all 2^32' if kind == 'exhaustive' else f'{entry["arguments"]:,} sampled'
+			rt = entry['rt']
+			aor = entry['aor']
+			print(f'| `{name}` | {what} | {rt["checked"]:,} | {entry["differ"]:,} | {rt["max"]:.4f} | {fraction(rt["wrong"], rt["checked"])} | {aor["max"]:.4f} | {fraction(aor["wrong"], aor["checked"])} |')
+	print('\n#### Directed rounding modes\n')
+	print('Maximum ulp error and the share not correctly rounded in that mode (rtoskit / AOR).\n')
+	print('| Function | upward | downward | toward zero |')
+	print('|---|---|---|---|')
+	for name in ALL_FUNCTIONS:
+		cells = []
+		for mode in ('upward', 'downward', 'towardzero'):
+			entry = runs.get(('modes', name, mode))
+			if not entry:
+				cells.append('—')
+				continue
+			rt = entry['rt']
+			aor = entry['aor']
+			cells.append(f'{rt["max"]:.3f} ({rt["wrong"] / max(rt["checked"], 1) * 100:.2g} %) / {aor["max"]:.3f} ({aor["wrong"] / max(aor["checked"], 1) * 100:.2g} %)')
+		print(f'| `{name}` | ' + ' | '.join(cells) + ' |')
+	print('\n#### Special arguments\n')
+	print('Result and exceptions raised (I invalid, Z divide-by-zero, O overflow, U underflow, X inexact); rows where the libraries differ are marked.\n')
+	print('| Function | x | y | rtoskit | AOR | |')
+	print('|---|---|---|---|---|---|')
+	for name, x, y, _, rt, rt_flags, _, aor, aor_flags in special:
+		mark = '**differs**' if (rt, rt_flags) != (aor, aor_flags) else ''
+		second = y if name in ('powf', 'pow') else ''
+		print(f'| `{name}` | `{x}` | {f"`{second}`" if second else ""} | `{rt}` {rt_flags} | `{aor}` {aor_flags} | {mark} |')
+	return 0
+
+
+def main():
+	parser = argparse.ArgumentParser(description='Accuracy comparison with Arm Optimized Routines (P4.05)')
+	sub = parser.add_subparsers(dest='command', required=True)
+	p = sub.add_parser('host')
+	p.add_argument('--quick', action='store_true')
+	p = sub.add_parser('arm')
+	p.add_argument('--board', nargs='+', default=ARM_BOARDS)
+	p = sub.add_parser('markdown')
+	p.add_argument('file', nargs='?', default=os.path.join(WORK, 'results.txt'))
+	args = parser.parse_args()
+	return {'host': command_host, 'arm': command_arm, 'markdown': command_markdown}[args.command](args)
+
+
+if __name__ == '__main__':
+	sys.exit(main())
