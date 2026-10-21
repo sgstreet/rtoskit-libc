@@ -78,11 +78,24 @@ Split in two (locks, then the allocators).
   *`docs/research/malloc-speed.md` has every variant's numbers per board. The allocator is unchanged, so there is no fragmentation regression; one pinned small chunk was enough to break in-place `realloc` growth, which is the evidence against deferred coalescing here.*
 
 ## P3.05 — libm hot paths
-- [ ] armv7e-m and v8-m.main: the single-precision functions use the FPU fully (`vsqrt.f32`, `vfma`), with table-driven reductions in the speed flavour.
+
+Split by target (the speed baseline after P3.04: `sinf` 19k instructions on Armv6-M, 690 on FPv4/FPv5-SP, 225 on FPv5-DP).
+
+### P3.05a — x86_64  `[x]`
+- [x] x86_64: use `sqrtsd`/`roundsd` (SSE4.1 only if the baseline ISA is raised; decide and record).
+  *D81: the baseline stays SSE2 (x86_64 is the test host and perf reference, which must run on any x86-64). `sqrt`/`sqrtf` already use `sqrtsd`/`sqrtss` (the `x86_64` libm layer). The SSE2 rounding alternative, a `cvttsd2si` round trip, raises inexact, which `floor`/`ceil`/`trunc`/`round` must not and libc-test checks; saving and restoring MXCSR costs more than the 30 instructions of the generic bit manipulation. So the rounding stays generic.*
+
+### P3.05b — Single precision on FPv4-SP and FPv5-SP
+- [ ] armv7e-m and v8-m.main: the single-precision functions use the FPU fully (`vsqrt.f32`, `vfma`), with table-driven reductions in the speed flavour (`sinf`/`cosf`/`tanf` 690–1030 instructions against 225–325 on FPv5-DP; `erff`/`erfcf`, `tgammaf`, `lgammaf`).
+
+### P3.05c — Double precision on FPv5-DP
 - [ ] armv7e-m-dp: the double-precision functions use the DP unit fully (`vsqrt.f64`, `vfma.f64`, `vrint*.f64`). Re-tune the `double` algorithms for hardware FMA, where polynomial and error-compensation choices differ from soft-float. The `fpv5-dp` layer is shared, so a later Armv8.1-M DP target (Q10) can reuse it.
+
+### P3.05d — Cortex-M7 specifics
 - [ ] Cortex-M7 specifics for armv7e-m-dp: the dual-issue pipeline and the 64-bit AXI/TCM path; `LDRD`/`VLDM` for `memcpy`. Measure with the DWT cycle counter on hardware if available (Q5).
-- [ ] armv6-m: integer-only `float` implementations where they beat soft-float emulation.
-- [ ] x86_64: use `sqrtsd`/`roundsd` (SSE4.1 only if the baseline ISA is raised; decide and record).
+
+### P3.05e — Armv6-M integer-only float
+- [ ] armv6-m: integer-only `float` implementations where they beat soft-float emulation (`sqrtf` 2k, `expf`/`logf` 11–13k, `sinf`/`cosf` 19k, `erff` 152k instructions).
 
 ## P3.06 — Phase wrap-up
 - [ ] Final perf report against the Phase 2 baseline, and against picolibc/newlib for context.
