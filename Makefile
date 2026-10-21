@@ -46,6 +46,12 @@ bench:
 	done
 .PHONY: bench
 
+aor:
+	@for board in ${BOARDS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BOARD_TYPE=$$board aor || exit $$?; \
+	done
+.PHONY: aor
+
 else ifeq (${BUILD_TYPE},all)
 
 export INSTALL_ROOT := ${PREFIX}$(if ${BOARD_TYPE},/${BOARD_TYPE},)
@@ -76,6 +82,11 @@ bench:
 	done
 .PHONY: bench
 
+# The AOR archives do not depend on the build type; the smoke test links the release build (PLAN D92)
+aor:
+	@${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=release aor
+.PHONY: aor
+
 else
 
 export INSTALL_ROOT := ${PREFIX}$(if ${BOARD_TYPE},/${BOARD_TYPE},)$(if ${BUILD_TYPE},/${BUILD_TYPE},)
@@ -93,7 +104,7 @@ include ${TOOLS_ROOT}/makefiles/tree.mk
 
 # Dependency ordering only active for full builds (all/clean/install)
 # Individual module targets (make libc, make test/unit/smoke) are dep-free
-ifneq ($(filter-out all target clean install check bench,${MAKECMDGOALS}),)
+ifneq ($(filter-out all target clean install check bench aor,${MAKECMDGOALS}),)
 target:
 else
 # The cross toolchain is downloaded into local/ on first use (tools/makefiles/setup.mk)
@@ -115,6 +126,13 @@ bench: target setup-bench
 	cd ${PROJECT_ROOT} && tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} run --board ${BOARD_TYPE}
 	cd ${PROJECT_ROOT} && $(if ${BENCH_UPDATE},tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} report --board ${BOARD_TYPE},tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} diff --board ${BOARD_TYPE})
 .PHONY: bench
+
+# Build Arm Optimized Routines for the board into build/<board>/aor/ and run its smoke test
+# against this build (tools/scripts/aor-build, Phase 4, PLAN D92); measurement only, never part of libc.a
+aor: target setup-aor
+	cd ${PROJECT_ROOT} && tools/scripts/aor-build --build-root ${OUTPUT_ROOT} build --board ${BOARD_TYPE}
+	cd ${PROJECT_ROOT} && tools/scripts/aor-build --build-root ${OUTPUT_ROOT} smoke --board ${BOARD_TYPE} --build-type ${BUILD_TYPE}
+.PHONY: aor
 
 endif
 
@@ -153,6 +171,7 @@ help:
 	@echo "  check                  Build and run the tests"
 	@echo "  bench                  Build release and speed, run the benchmarks against docs/perf"
 	@echo "  setup-bench            Build the instruction-counting qemu for bench into local/"
+	@echo "  aor                    Fetch and build Arm Optimized Routines for comparison, run its smoke test"
 	@echo "  db                     Generate compilation database (bear)"
 	@echo "  setup                  Download and install host build tools"
 	@echo "  distclean              Delete all build artifacts and output directories"

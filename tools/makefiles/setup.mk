@@ -20,6 +20,14 @@ QEMU_ROOT := ${PROJECT_ROOT}/local/qemu-${QEMU_VERSION}
 QEMU_TARGET := ${QEMU_ROOT}/bin/qemu-arm
 BENCH_PLUGIN := ${QEMU_ROOT}/lib/bench-roi.so
 
+# Arm Optimized Routines (Phase 4, PLAN D91, D92): fetched only to measure rtoskit-libc against it,
+# built by tools/scripts/aor-build into build/<board>/aor/ and never into libc.a ("make setup-aor").
+# A shallow fetch of the pinned commit; the commit ID is the content check.
+AOR_URL := https://github.com/ARM-software/optimized-routines.git
+AOR_REVISION := f67e7daa5457646fad9f75580263dba654c988aa
+AOR_ROOT := ${PROJECT_ROOT}/local/aor-${AOR_REVISION}
+AOR_TARGET := ${AOR_ROOT}/.fetched
+
 SETUP_TARGETS := ${COMPILER_TARGET}
 SETUP_PATHS := ${COMPILER_PATH}
 
@@ -55,6 +63,19 @@ ${BENCH_PLUGIN}: ${PROJECT_ROOT}/tools/qemu-plugins/bench-roi.c ${QEMU_TARGET}
 setup-bench: ${QEMU_TARGET} ${BENCH_PLUGIN}
 	@:
 .PHONY: setup-bench
+
+${AOR_TARGET}: | ${COMPILER_TARGET}
+	@echo "FETCHING ${AOR_URL} ${AOR_REVISION}"
+	$(RM) -r ${AOR_ROOT}
+	git init -q ${AOR_ROOT}
+	git -C ${AOR_ROOT} fetch -q --depth 1 ${AOR_URL} ${AOR_REVISION}
+	git -C ${AOR_ROOT} checkout -q FETCH_HEAD
+	test "$$(git -C ${AOR_ROOT} rev-parse HEAD)" = ${AOR_REVISION}
+	touch ${@}
+
+setup-aor: ${AOR_TARGET}
+	@:
+.PHONY: setup-aor
 
 setup-realclean:
 	@echo "REMOVING ${SETUP_PATHS}"

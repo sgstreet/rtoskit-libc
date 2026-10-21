@@ -46,10 +46,19 @@ It is fetched with a shallow `git fetch` of that commit; the commit ID is the co
   - *A new `softfloat` bench program.*
 - [x] Research note `docs/research/optimized-routines.md`: URLs, the routine-by-routine map to our functions, the build design, and the caveats (AOR's math assumes an FPU or a soft-float runtime; `errno` and `math_errhandling` differences).
 
-## P4.02 — Fetch and build AOR  `[ ]`
-- [ ] A pinned fetch (shallow `git fetch` of the revision, checked against the commit ID) into `local/`, by a make target in the style of `make setup-bench`; no submodule, nothing in `libc/`.
-- [ ] Build AOR's string, math and soft-float libraries per Arm board with our toolchain and each board's `-march`/`-mfloat-abi` flags, and for `x86_64` where meaningful, into `build/<board>/<build-type>/aor/`. Record which routines build for which core.
-- [ ] A smoke test: each AOR library links against our `libc.a` and runs under `TARGET_RUNNER`.
+## P4.02 — Fetch and build AOR  `[x]`
+- [x] A pinned fetch (shallow `git fetch` of the revision, checked against the commit ID) into `local/`, by a make target in the style of `make setup-bench`; no submodule, nothing in `libc/`.
+  *`make setup-aor` (`tools/makefiles/setup.mk`). `make aor` fetches AOR, then builds it and runs the smoke test for every board.*
+- [x] Build AOR's string, math and soft-float libraries per Arm board with our toolchain and each board's `-march`/`-mfloat-abi` flags, and for `x86_64` where meaningful, into `build/<board>/<build-type>/aor/`. Record which routines build for which core.
+  *D93. `tools/scripts/aor-build` writes `build/<board>/aor/` (independent of the build type).*
+  - *Archives: string has 1 symbol on Armv6-M and 3 on Thumb-2. math has 41 symbols at `-O3` and again at `-Os`. fp has 32 symbols on Armv6-M and 56 on Thumb-2; x86_64 has math only.*
+  - *`aor.json` lists what each archive provides, and the research note has the table.*
+  - *`memchr.S`/`memset.S` are assembled without their forced `.arch armv7-a`, so they are built and checked as M-profile code.*
+- [x] A smoke test: each AOR library links against our `libc.a` and runs under `TARGET_RUNNER`.
+  *`tools/aor/smoke.c` passes on all six boards.*
+  - *The map check found that on Armv6-M libgcc had kept its own double comparisons. `link()` now forces each AOR symbol the program contains (`-u`) and relinks until the set is stable.*
+  - *The check also found a naming bug (`__leff2`), now fixed.*
+  - *The library is unchanged: `make check` on linux-x86_64 release still passes 219/219 and the unit tests.*
 
 ## P4.03 — Performance comparison  `[ ]`
 - [ ] `bench-runner compare` gains an AOR column: the test/bench programs relinked with AOR's routines ahead of `libc.a`, in the size and speed flavours.
