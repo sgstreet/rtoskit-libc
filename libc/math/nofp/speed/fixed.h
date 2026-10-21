@@ -46,4 +46,12 @@ static inline int32_t __libc_fixed_high_signed(int32_t a, int32_t b)
 	return (int32_t)high;
 }
 
+/* The 64-bit product of two signed numbers */
+static inline int64_t __libc_fixed_wide_signed(int32_t a, int32_t b)
+{
+	uint64_t product = __libc_fixed_wide(a < 0 ? -(uint32_t)a : (uint32_t)a, b < 0 ? -(uint32_t)b : (uint32_t)b);
+
+	return (a < 0) != (b < 0) ? -(int64_t)product : (int64_t)product;
+}
+
 #endif /* _FIXED_H */

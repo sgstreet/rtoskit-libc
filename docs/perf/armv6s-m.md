@@ -948,3 +948,49 @@ Throughput, per call (the latency counts are the same under qemu).
 | `tan` | 36223 | 32490 |
 | `tanh` | 15977 | 20192 |
 | `tgamma` | 55326 | 64762 |
+
+## P3.05g — Fixed-point sine, cosine and tangent (speed flavour)
+
+`sinf`, `cosf` and `tanf` take a 32-bit fixed-point fast path after the integer reduction, with a rounding test
+before the float-float code (PLAN D87). The release flavour is unchanged. Change against the P3.05f baselines; only
+the program that changed is shown.
+
+### Speed flavour
+
+#### math
+
+Throughput, per call (the latency counts are the same under qemu).
+
+| Function | float | double |
+|---|---:|---:|
+| `acos` | 23828 | 35757 |
+| `acosh` | 19926 | 34288 |
+| `asin` | 23011 | 34665 |
+| `asinh` | 19353 | 39824 |
+| `atan` | 17750 | 21215 |
+| `atan2` | 18422 | 22642 |
+| `atanh` | 15868 | 25874 |
+| `cbrt` | 8590 | 14545 |
+| `cos` | 3742 (-80 %) | 17700 |
+| `cosh` | 15181 | 16736 |
+| `erf` | 141024 | 40695 |
+| `erfc` | 119604 | 112996 |
+| `exp` | 375 | 10356 |
+| `exp2` | 316 | 14172 |
+| `expm1` | 12310 | 10978 |
+| `floor` | 105 | 212 |
+| `fmod` | 273 | 486 |
+| `hypot` | 6293 | 14812 |
+| `lgamma` | 36729 | 47123 |
+| `log` | 2210 | 17003 |
+| `log10` | 12365 | 21106 |
+| `log1p` | 12789 | 18064 |
+| `log2` | 583 | 21459 |
+| `pow` | 22158 | 31562 |
+| `round` | 103 | 210 |
+| `sin` | 4729 (-74 %) | 17710 |
+| `sinh` | 15310 | 17881 |
+| `sqrt` | 461 | 4208 |
+| `tan` | 5140 (-86 %) | 32490 |
+| `tanh` | 15977 | 20192 |
+| `tgamma` | 55326 | 64762 |

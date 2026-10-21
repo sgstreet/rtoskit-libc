@@ -18,9 +18,10 @@
 
 /*
  * Dense sweeps where the speed flavour's fixed-point float functions on
- * Armv6-M (PLAN D86) have their largest error: the logarithms around 1,
- * where the result is the series alone and the neighbouring table entries
- * cancel against it, and the exponentials over their whole fast range.
+ * Armv6-M (PLAN D86, D87) have their largest error: the logarithms around
+ * 1, where the result is the series alone and the neighbouring table
+ * entries cancel against it, and the exponentials and the trigonometric
+ * functions over their whole fast range.
  * Each result is compared with the double function rounded to float; at most
  * one in ten thousand, plus one, may differ (the float-float paths' own
  * allowance, D57, and the reference's double rounding). A fast path that
@@ -72,6 +73,33 @@ static void sweep(const char *name, float (*function)(float), double (*reference
 		++failures;
 }
 
+/* Results near a halfway point must be correctly rounded: a fast path that rounded without its error test fails here */
+static const struct {
+	float (*function)(float);
+	float x;
+	float want;
+} near[] = {
+#include "near.inc"
+};
+
+static void check_near(void)
+{
+	int wrong = 0;
+
+	for (unsigned int i = 0; i < sizeof(near) / sizeof(near[0]); ++i) {
+		float result = near[i].function(near[i].x);
+
+		if (bits_of(result) != bits_of(near[i].want)) {
+			printf("near %u: f(%a) = %a, want %a\n", i, (double)near[i].x, (double)result, (double)near[i].want);
+			++wrong;
+		}
+	}
+
+	printf("near: %d of %u not correctly rounded\n", wrong, (unsigned int)(sizeof(near) / sizeof(near[0])));
+	if (wrong != 0)
+		++failures;
+}
+
 int main(void)
 {
 	/* Around 1 and across sqrt(2), where the reduction changes binade */
@@ -85,6 +113,16 @@ int main(void)
 	sweep("exp2f", exp2f, exp2, 0x1p4f, 0x1p5f, 1021, true);
 	sweep("expf", expf, exp, 0x1p-30f, 0x1.5cp6f, 1u << 17, true);
 	sweep("exp2f", exp2f, exp2, 0x1p-30f, 0x1.f8p6f, 1u << 17, true);
+
+	/* The trigonometric functions: the table angles and both signs of s, and every binade up to the large arguments */
+	sweep("sinf", sinf, sin, 0x1p-12f, 0x1p3f, 2039, true);
+	sweep("cosf", cosf, cos, 0x1p-12f, 0x1p3f, 2039, true);
+	sweep("tanf", tanf, tan, 0x1p-12f, 0x1p3f, 2039, true);
+	sweep("sinf", sinf, sin, 0x1p3f, 0x1p127f, 1u << 17, true);
+	sweep("cosf", cosf, cos, 0x1p3f, 0x1p127f, 1u << 17, true);
+	sweep("tanf", tanf, tan, 0x1p3f, 0x1p127f, 1u << 17, true);
+
+	check_near();
 
 	if (failures == 0)
 		puts("pass: libm_dense");

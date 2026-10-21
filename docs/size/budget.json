@@ -214,5 +214,11 @@
  "margins_percent": {
   "size": 0,
   "speed": 10
+ },
+ "program_margins_percent": {
+  "speed": {
+   "math-float": 20,
+   "math-mix": 20
+  }
  }
 }
