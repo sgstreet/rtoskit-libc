@@ -196,16 +196,16 @@
     "insns": 112995.75
    },
    "erfcf/latency": {
-    "insns": 119606.75
+    "insns": 2876.62
    },
    "erfcf/throughput": {
-    "insns": 119603.62
+    "insns": 2873.5
    },
    "erff/latency": {
-    "insns": 141018.44
+    "insns": 2961.44
    },
    "erff/throughput": {
-    "insns": 141024.06
+    "insns": 2967.06
    },
    "exp/latency": {
     "insns": 10396.25

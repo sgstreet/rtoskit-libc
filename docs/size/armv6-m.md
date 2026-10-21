@@ -683,3 +683,9 @@ before → after:
 Other programs are unchanged. Grew, justified: the fast paths are the step's purpose. `math-float` would have been
 over the former +10 % (10604); by the user's choice the speed flavour's math images may grow by +20 %
 (`budget.json`, `program_margins_percent`). The frames of `sinf`, `cosf` and `tanf` grow by 16–24 bytes.
+
+## P3.05h — fixed-point error functions (speed flavour)
+
+Decision D88, `docs/research/libm-fixed.md`. The release build is unchanged. The speed build adds
+`__libc_erff_fixed` (2328 bytes, about 1 KB of it tables) and fast paths in `erff` (+68) and `erfcf` (+64). No
+reference program links the error functions, so every image is unchanged; both budgets hold.

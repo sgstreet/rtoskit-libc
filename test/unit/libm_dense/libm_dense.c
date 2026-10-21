@@ -18,10 +18,10 @@
 
 /*
  * Dense sweeps where the speed flavour's fixed-point float functions on
- * Armv6-M (PLAN D86, D87) have their largest error: the logarithms around
+ * Armv6-M (PLAN D86, D87, D88) have their largest error: the logarithms around
  * 1, where the result is the series alone and the neighbouring table
- * entries cancel against it, and the exponentials and the trigonometric
- * functions over their whole fast range.
+ * entries cancel against it, and the exponentials, the trigonometric and
+ * the error functions over their whole fast range.
  * Each result is compared with the double function rounded to float; at most
  * one in ten thousand, plus one, may differ (the float-float paths' own
  * allowance, D57, and the reference's double rounding). A fast path that
@@ -121,6 +121,11 @@ int main(void)
 	sweep("sinf", sinf, sin, 0x1p3f, 0x1p127f, 1u << 17, true);
 	sweep("cosf", cosf, cos, 0x1p3f, 0x1p127f, 1u << 17, true);
 	sweep("tanf", tanf, tan, 0x1p3f, 0x1p127f, 1u << 17, true);
+
+	/* The error functions: both branches of the fixed-point core and erfc down to its subnormal results */
+	sweep("erff", erff, erf, 0x1p-19f, 0x1.f5c28ep1f, 1u << 14, true);
+	sweep("erfcf", erfcf, erfc, 0x1p-19f, 0x1p1f, 1u << 14, true);
+	sweep("erfcf", erfcf, erfc, 0x1p1f, 0x1.28p3f, 4093, false);
 
 	check_near();
 
