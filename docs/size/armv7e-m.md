@@ -631,3 +631,19 @@ Decision D79, `docs/research/locks.md`. Before → after, release build; `libc.a
 | malloc-heavy-tiny | 1874 → 1854 | 76 → 40 | 8 → 8 |
 
 Other programs are unchanged. The port drops `__rtos_thread_self` from the lock path and the owner pointer from every lock (4 bytes on 32-bit cores, 8 on x86-64), and gains the thread-local token.
+
+## P3.05b — float-float products by fma
+
+Decision D82, `docs/research/libm-fma.md`. Before → after, release build: `__libc_ff_product` takes the exact error of a
+float product from one `VFMA.F32` instead of Dekker's split products.
+
+`libc.a` text: 144216 → 139904 (-4312).
+
+| Program | code |
+|---|---|
+| math-mix | 27312 → 26844 |
+| math-float | 5282 → 4818 |
+
+Members that grew or are new, justified: none.
+
+- Reduced: the float-float members, -4312 bytes of text in all; the largest: `__libc_asinhf_core.o` 678 → 568, `__libc_erff_core.o` 488 → 378, `__libc_lgammaf_core.o` 2698 → 2592, `acospif.o` 460 → 356.

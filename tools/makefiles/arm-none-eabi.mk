@@ -30,7 +30,8 @@ INSTALL := install
 INSTALL_STRIP := install --strip-program=${CROSS_COMPILE}strip -s
 
 # The predefined feature macros a hosted compiler would take from <stdc-predef.h> (D50)
-CPPFLAGS := -nostdinc -isystem ${PROJECT_ROOT}/include -include ${PROJECT_ROOT}/include/stdc-predef.h
+# libc/internal/fpu/${LIBC_FPU} holds the private libm header saying what the FPU computes (PLAN D82)
+CPPFLAGS := -nostdinc -isystem ${PROJECT_ROOT}/include -include ${PROJECT_ROOT}/include/stdc-predef.h -I${PROJECT_ROOT}/libc/internal/fpu/${LIBC_FPU}
 ARFLAGS := cr
 
 # Assembler sources are preprocessed by the compiler driver, which needs the target selection too

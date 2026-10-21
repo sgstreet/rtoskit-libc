@@ -23,6 +23,9 @@ export LIBC_MATH_LAYERS := x86_64
 # Hand-written string kernels (libc/string/<kernels>; the first directory with a function wins)
 # per flavour: the speed build type sets LIBC_FLAVOUR (PLAN D73, D76); the size flavour is the C code
 LIBC_FLAVOUR ?= size
+
+# The FPU for the private libm headers (PLAN D82): the SSE2 baseline (D81)
+export LIBC_FPU := sse2
 LIBC_STRING_KERNELS_size :=
 LIBC_STRING_KERNELS_speed := x86_64
 export LIBC_STRING_KERNELS = ${LIBC_STRING_KERNELS_${LIBC_FLAVOUR}}
@@ -40,7 +43,8 @@ INSTALL := install
 INSTALL_STRIP := install --strip-program=strip -s
 
 # The predefined feature macros a hosted compiler would take from <stdc-predef.h> (D50)
-CPPFLAGS := -nostdinc -isystem ${PROJECT_ROOT}/include -include ${PROJECT_ROOT}/include/stdc-predef.h
+# libc/internal/fpu/${LIBC_FPU} holds the private libm header saying what the FPU computes (PLAN D82)
+CPPFLAGS := -nostdinc -isystem ${PROJECT_ROOT}/include -include ${PROJECT_ROOT}/include/stdc-predef.h -I${PROJECT_ROOT}/libc/internal/fpu/${LIBC_FPU}
 ARFLAGS := cr
 ASFLAGS :=
 
