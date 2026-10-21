@@ -31,9 +31,12 @@
  */
 #define __LIBC_FIXED_EXP2_ERROR 6u
 #define __LIBC_FIXED_LOG2_ERROR 8u
+#define __LIBC_FIXED_SIN_ERROR 3u
+#define __LIBC_FIXED_TAN_ERROR 4u
 
 uint32_t __libc_exp2f_fixed(int64_t z, int *exponent);
 uint64_t __libc_log2f_fixed(uint32_t bits, int *exponent, bool *negative);
+uint64_t __libc_sinf_fixed(int k, float high, float low, int *exponent, bool *negative);
 
 /*
  * The float 2^exponent (1 + f 2^-32) rounded to nearest, for an exponent of

@@ -668,3 +668,18 @@ holds. `logf`'s frame grows from 40 to 48 bytes.
 
 `-Os` had kept a local copy of the 64-bit product in each object, and the log table had 16-byte entries. With those,
 `math-float` was 10728 bytes, over the budget; one shared helper and two arrays fixed it.
+
+## P3.05g — fixed-point sine, cosine and tangent (speed flavour)
+
+Decision D87, `docs/research/libm-fixed.md`. The release build is unchanged. The speed build adds `__libc_sinf_fixed`
+(782 bytes, with a 144-byte table) and fast paths in `sinf` (+76), `cosf` (+76) and `tanf` (+256). Speed build,
+before → after:
+
+| Program | code | budget (Phase 2 + 20 %, D87) |
+|---|---|---|
+| math-float | 10520 → 11460 | 11568 |
+| math-mix | 35120 → 36060 | 40939 |
+
+Other programs are unchanged. Grew, justified: the fast paths are the step's purpose. `math-float` would have been
+over the former +10 % (10604); by the user's choice the speed flavour's math images may grow by +20 %
+(`budget.json`, `program_margins_percent`). The frames of `sinf`, `cosf` and `tanf` grow by 16–24 bytes.

@@ -112,8 +112,9 @@ Split (the step named four function families; each fixed-point rewrite needs its
 - [x] armv6-m: `expf`/`exp2f`/`logf`/`log2f` (11–13k instructions) in fixed point, correctly rounded as the `sp-nearest` layer is (D57); research note with the error analysis; tests; both budgets.
   *D86: speed flavour only (`libc/math/nofp/speed`), a 32-bit fixed-point fast path with Ziv's rounding test before the float-float code. `exp2f` 9269 → 316, `expf` 11034 → 375, `log2f` 10547 → 583, `logf` 12367 → 2210. The error bounds hold over every float argument (core code run on the host, `docs/research/libm-fixed.md`). New `test/unit/libm_dense` (dense sweeps where the error peaks) catches a fast path without the rounding test, which `float_accuracy` missed for the logarithms. Size flavour unchanged; speed budget holds (`math-float` 10520 of 10604).*
 
-### P3.05g — Armv6-M fixed-point sine and cosine
-- [ ] armv6-m: `sinf`/`cosf`/`tanf` (18–36k instructions) in fixed point after the integer reduction (D60); research note; tests; both budgets.
+### P3.05g — Armv6-M fixed-point sine and cosine  `[x]`
+- [x] armv6-m: `sinf`/`cosf`/`tanf` (18–36k instructions) in fixed point after the integer reduction (D60); research note; tests; both budgets.
+  *D87: speed flavour, `__libc_sinf_fixed` after the existing reduction, with Ziv's test before the float-float code. `sinf` 18350 → 4729, `cosf` 18281 → 3742, `tanf` 36223 → 5140. The bounds hold over every argument (host). `math-float` went over the speed budget by 856 bytes; by the user's choice the speed flavour's math images may grow by +20 % (`budget.json`, `program_margins_percent`). `test/unit/libm_dense` gains trig sweeps and 46 arguments that only a correct error test rounds right.*
 
 ### P3.05h — Armv6-M fixed-point error function
 - [ ] armv6-m: `erff`/`erfcf` (120–142k instructions) in fixed point; research note; tests; both budgets.

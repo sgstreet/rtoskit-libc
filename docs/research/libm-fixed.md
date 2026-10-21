@@ -113,3 +113,66 @@ The logarithms' error is largest just below 1 and at the bucket edges near |log2
   - The three results not correctly rounded on armv6-m come from the float-float path and are the same in the size flavour.
   - A mutant with both bounds set to 0, so that it never falls back, fails on all four functions; `test/unit/float_accuracy` alone missed it for the logarithms.
 - **`test/unit/float_accuracy` and libc-test** run every board and flavour.
+
+## P3.05g: sine, cosine and tangent
+
+Decision: PLAN D87.
+
+### Starting point (speed flavour, armv6-m, instructions per call)
+
+| Function | Instructions |
+|---|---:|
+| `sinf` | 18350 |
+| `cosf` | 18281 |
+| `tanf` | 36223 |
+
+### Design
+
+- **Reduction:** the existing integer Payne–Hanek reduction (D60) is kept, with its float-float output s, |s| ≤ π/64. Its float-float work, two `scalbnf` calls and a product by π/32, is now most of the remaining cost.
+- **`__libc_sinf_fixed(k, s)`:**
+  - s becomes a signed integer in units of 2^-48, exact for |s| ≥ 2^-24;
+  - u = s² in units of 2^-38;
+  - cos s − 1 = u(−1/2 + u/24 − u²/720) and sin s = s(1 + u(−1/6 + u/120)), each by Horner's rule in Q31 (the next terms are below 2^-40);
+  - the angle sum uses a 9-entry table of sin and cos of jπ/32 in units of 2^-62, and the same quadrant logic as the float-float core: first·(1 + cm) + second·sin s, summed in units of 2^-62.
+  - second·s uses four 32-bit partial products, so the table's and s's low bits count.
+  - Sine quadrants at j = 0, where the result is s itself, decline when |s| < 2^-14, because 2^-48 units no longer give 32 bits of relative accuracy there.
+- **`tanf`:** the sine over the cosine of the same core:
+  - divide by the cosine's top 32 bits (Armv6-M's `__aeabi_uldivmod`);
+  - take one more quotient bit from the remainder when the sine is the smaller;
+  - subtract the quotient times the cosine's low 32 bits over the cosine, at most 3 by a short loop.
+  - A first version divided by the cosine's top 31 bits alone and measured 8.16 units of error; this one measures 1.39.
+
+### Error bounds, verified over every argument
+
+As for P3.05f, the host ran the core code, together with the real `__libc_rem_pio2f` (x86-64 with `-mlong-double-64`, which the library's headers require), over every float from 2^-12 up (2^-13 for `tanf`), against the double functions:
+
+| Function | Arguments | Largest error (units of 2^-32) | Bound used | Falls back | Not correctly rounded on the fast path |
+|---|---:|---:|---:|---:|---:|
+| `sinf` | 1,174,405,120 | 1.28 | 3 | 1.38 % | 0 |
+| `cosf` | 1,174,405,120 | 1.29 | 3 | 1.37 % | 0 |
+| `tanf` | 1,182,793,728 | 1.39 | 4 | 1.75 % | 0 |
+
+For `tanf`, the first version's divisor of 31 bits had a largest error of 8.16 units, above its bound of 8. Its fallback rate was 3.3 %, and no result was wrong, but only by luck; the exhaustive run found it.
+
+### Size: the speed budget
+
+- `math-float` links `sinf` and `cosf`. With the fast paths it is 11460 bytes, against 10604 under the speed flavour's +10 % (Phase 2 + 10 %).
+- The cost is the core (782 bytes, with its 144-byte table) and 76 bytes each in `sinf` and `cosf`.
+- The user chose to raise the budget for the speed flavour's math images, `math-float` and `math-mix`, to +20 % (`docs/size/budget.json`, `program_margins_percent`; D87), rather than leave the trigonometric functions out.
+- `math-float` is at +18.9 %. The other images keep +10 %, and the size flavour +0 %.
+
+### Results (armv6-m speed flavour; armv6s-m the same)
+
+| Function | Before | After |
+|---|---:|---:|
+| `sinf` | 18350 | 4729 |
+| `cosf` | 18281 | 3742 |
+| `tanf` | 36223 | 5140 |
+
+### Tests
+
+- **`test/unit/libm_dense`:**
+  - sweeps `sinf`, `cosf` and `tanf` over every 2039th float in ±[2^-12, 8) and every 2^17th float from 8 to 2^127;
+  - 46 arguments that the fast path rounds the wrong way without its error test, found on the host over every binade, must be correctly rounded on every board (expected values from mpmath at 200 bits).
+  - A mutant with every bound at 0 misses all of them. The sweeps alone tolerated it (7 of 123424 wrong, within the 1/10000 allowance).
+  - Two `tanf` arguments the float-float quotient misses on every float-float board (D57's allowance) are left out.
