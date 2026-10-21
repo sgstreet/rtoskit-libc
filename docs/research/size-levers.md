@@ -51,7 +51,7 @@ unwind):
 | `-fno-common` | — | — | Already on (P1.01) |
 | `-fshort-enums` | `libc.a` −0.1 % | 0 | Rejected: an ABI change (`Tag_ABI_enum_size`, every enum in the public headers) for nothing |
 | `-flto -ffat-lto-objects`, library and port | the link fails | the link fails | Rejected. The port's `__rtos_*_lock` objects are LTO IR; LTO drops them before the `libc.a` members that need them are extracted |
-| `-flto` on `libc.a` only, port without | images −5.7 to −17.6 % | armv6-m images −3.0 to −12.5 %; armv7e-m-dp −2.2 to −9.2 % | Not adopted. An LTO archive is tied to one GCC version (users bring their own compiler until Phase 5); `-fcallgraph-info` stack data disappears (D51); the U-Boot and picolibc failures show the risk. Revisit with the Phase 5 toolchain (Q13) |
+| `-flto` on `libc.a` only, port without | images −5.7 to −17.6 % | armv6-m images −3.0 to −12.5 %; armv7e-m-dp −2.2 to −9.2 % | Not adopted. An LTO archive is tied to one GCC version (users bring their own compiler until the toolchain of issue #65); `-fcallgraph-info` stack data disappears (D51); the U-Boot and picolibc failures show the risk. Revisit with the issue #65 toolchain (Q13) |
 | `-mslow-flash-data` (v7e-m, v8-m) | — | does not compile: "accessing thread-local storage is not currently supported"; on the 699 members that compile, +3.9 % code | Rejected: incompatible with `thread_local` (D6) and larger |
 | `-fno-plt` | — | — | Irrelevant: everything links statically |
 | `-fno-jump-tables` | `libc.a` −0.5 % | `libc.a` +0.1 %, printf images −0.6 to +0.6 % | Rejected: mixed and below 1 % |
