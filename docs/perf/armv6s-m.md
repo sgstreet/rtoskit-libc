@@ -519,3 +519,64 @@ Throughput, per call (the latency counts are the same under qemu).
 | `mtx/timed` | 205 |
 | `mtx/trylock` | 203 |
 | `tss_get` | 37.0 |
+
+## P3.03a — Speed flavour: integer conversions
+
+Division-free `strtol` and relatives, 64-bit decimals in 10^9 chunks, 32-bit shifts for hex and octal, and a
+`memcpy` buffer sink, all in the speed flavour's `libc/stdlib/speed` and `libc/stdio/speed` (PLAN D77); the scanf
+engine at `-O2`. Change against the P3.02 speed baseline; only the programs that changed are shown, and the release
+build is unchanged.
+
+### stdio
+
+| Case | insns/op |
+|---|---:|
+| `fprintf/mix` | 4086 (-1 %) |
+| `fputs/line` | 451 |
+| `snprintf/%-20s` | 1131 (-3 %) |
+| `snprintf/%.17g` | 13887 (-0 %) |
+| `snprintf/%.3f` | 13778 (-0 %) |
+| `snprintf/%08x` | 801 (-13 %) |
+| `snprintf/%a` | 1101 (-2 %) |
+| `snprintf/%c` | 291 (+0 %) |
+| `snprintf/%d` | 1622 (-1 %) |
+| `snprintf/%e` | 16901 (-0 %) |
+| `snprintf/%f` | 13202 (-0 %) |
+| `snprintf/%g` | 14761 (-0 %) |
+| `snprintf/%lld` | 3702 (-66 %) |
+| `snprintf/%p` | 495 (-8 %) |
+| `snprintf/%s` | 428 (-5 %) |
+| `snprintf/%u-small` | 429 |
+| `snprintf/%x` | 514 (-18 %) |
+| `snprintf/literal` | 354 (-36 %) |
+| `snprintf/mix` | 3439 (-3 %) |
+| `sscanf/%d` | 655 (-16 %) |
+| `sscanf/%lf` | 5088 (-0 %) |
+| `sscanf/%x` | 815 (-16 %) |
+| `sscanf/mix` | 2756 (-16 %) |
+
+### strto
+
+| Case | insns/op |
+|---|---:|
+| `atoi` | 277 (-77 %) |
+| `strtod/17-digits` | 23288 |
+| `strtod/exp-large` | 689247 |
+| `strtod/exp-small` | 413319 |
+| `strtod/fixed` | 3863 |
+| `strtod/hex` | 2101 |
+| `strtod/integer` | 2909 |
+| `strtod/long` | 46683 |
+| `strtod/micro` | 3368 |
+| `strtod/min-normal` | 1839969 |
+| `strtod/short` | 3352 |
+| `strtod/subnormal` | 2028570 |
+| `strtof/9-digits` | 16152 |
+| `strtof/exp` | 77753 |
+| `strtof/short` | 1634 |
+| `strtol/hex` | 458 (-73 %) |
+| `strtol/int` | 422 (-72 %) |
+| `strtol/short` | 170 (-81 %) |
+| `strtoll/long` | 1060 (-55 %) |
+| `strtoul/hex16` | 436 (-74 %) |
+| `strtoull/hex` | 1027 (-60 %) |

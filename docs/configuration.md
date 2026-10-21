@@ -30,7 +30,7 @@ Each board builds two optimised libraries (D73):
 | Build type | Install | What it is |
 |---|---|---|
 | `release` | `images/<board>/release/` | the size flavour: the smallest code, the default |
-| `speed` | `images/<board>/speed/` | the speed flavour: the same `-Os` library with faster kernels (on the Thumb-2 cores, `memcpy`/`memmove`/`memset` that copy 32 bytes per iteration and use unaligned word access, and word-at-a-time `strcmp`/`strchr`; on Armv6-M, block copies and shift-merged misaligned copies), within 10 % of the size flavour's code size (`docs/size/budget.json`) |
+| `speed` | `images/<board>/speed/` | the speed flavour: the same `-Os` library with faster kernels (on the Thumb-2 cores, `memcpy`/`memmove`/`memset` that copy 32 bytes per iteration and use unaligned word access, and word-at-a-time `strcmp`/`strchr`; on Armv6-M, block copies and shift-merged misaligned copies; on every core, `strtol` and printf integer conversions without 64-bit division), within 10 % of the size flavour's code size (`docs/size/budget.json`) |
 
 Both flavours ship the same headers and archives (`libc.a`, the flavour
 archives, `libm.a`). The speed flavour's Thumb-2 kernels use unaligned

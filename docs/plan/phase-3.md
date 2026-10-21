@@ -44,8 +44,20 @@ speed flavour itself (D12, Q3, D73).
 - [x] Research note. Exhaustive tests plus libc-test. *`docs/research/string-speed.md` (P3.02d section). `test/unit/string_kernels` now covers offsets modulo 16, strings across a page boundary and zero bytes before a string, on every board and build type; 14 of 18 mutants killed, 3 survivors equivalent and 1 (the `strcmp` page check) observable only with a guard page. From-scratch `make -j8 check`: libc-test 219/219 and all unit tests on the 18 configurations; the size flavour is unchanged and both budgets hold.*
 
 ## P3.03 — Conversions: printf/scanf and strtod/strtol
-- [ ] Fast paths for common formats (`%d`, `%s`, `%x`) and a digit-pair table (in the speed flavour only).
+
+Split in two (integers, then floating point).
+
+### P3.03a — Integer conversions  `[x]`
+- [x] `strtol` and relatives: no 64-bit division per call (the P3.01 baseline: `strtol("42")` costs 949 instructions on armv7e-m, mostly `__libc_udivmod64` for the overflow cutoff); both flavours, as long as the size flavour does not grow.
+  *Speed flavour only (D77): the division-free version grew the size flavour's `__libc_strtoint` by 16–19 %. It accumulates in 32 bits while no digit can overflow, then uses `ckd_mul`/`ckd_add`; `strtol("42")` 949 → 135 on armv7e-m, 914 → 170 on armv6-m.*
+- [x] Fast paths for common formats (`%d`, `%s`, `%x`) and a digit-pair table (in the speed flavour only), through a per-module `speed/` directory that overrides generic files (D12).
+  *`libc/stdio/speed` and `libc/stdlib/speed` (D77). 64-bit decimals go in 10^9 chunks with computed digit pairs (a 200-byte table broke the speed budget); hex and octal shift 32 bits once the value fits; the buffer sink copies with `memcpy` from 16 bytes. `%lld` 7636 → 1353 on armv7e-m; 32-bit `%d` is unchanged (already one `UMULL` a digit), and on Armv6-M left for P3.06.*
+- [x] Research note. Tests plus libc-test; size and speed budgets.
+  *`docs/research/conversions-speed.md`; `test/unit/conversions` (strto* in every base around the limits against a reference parse; 64-bit printf), 11 mutants killed; size budget unchanged, speed budget holds.*
+
+### P3.03b — Floating-point conversions
 - [ ] An Eisel–Lemire-style fast path for `strtod` (if P1.07 chose a slower core); table trade-offs per flavour.
+- [ ] Research note. Tests plus libc-test; size and speed budgets.
 
 ## P3.04 — malloc and locking
 - [ ] Fast paths for small size classes, and uncontended lock fast paths in the seam contract (an inline atomic check before calling `__rtos_*`).

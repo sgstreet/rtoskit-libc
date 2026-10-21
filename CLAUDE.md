@@ -75,8 +75,9 @@ make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
   flavour, `speed` the speed flavour (`-Os`, `LIBC_FLAVOUR := speed`, its own
   build tree and install). Arch files select per-flavour kernels through
   `LIBC_STRING_KERNELS_size`/`_speed`; in a kernel list the first directory
-  with a function wins. Speed-only C goes in a directory selected the same
-  way, never behind `#if`.
+  with a function wins. Speed-only C goes in the module's `speed/` directory
+  (D77): a file there replaces the generic file of the same name in the speed
+  flavour only; never `#if`.
 - **Flavour archives (D53, D54):** `libc-nofloat.a`, `libc-minimal-printf.a`
   and `libc-tinymalloc.a` are `libc.a` with some members replaced; a program
   links one instead of `libc.a`.
