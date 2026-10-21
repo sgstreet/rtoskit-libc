@@ -15,8 +15,8 @@
      "libgcc: __aeabi_fcmple",
      "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
-     "libgcc: __aeabi_fmul",
-     "libgcc: __aeabi_i2f"
+     "libgcc: __aeabi_i2f",
+     "libgcc: __clzsi2"
     ],
     "path": [
      "main",
@@ -32,7 +32,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 1444,
+     "text": 1784,
      "unwind": 0
     },
     "libgcc": {
@@ -41,7 +41,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 1946,
+     "text": 1442,
      "unwind": 0
     },
     "other": {
@@ -78,7 +78,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 3908,
+    "text": 3744,
     "unwind": 0
    }
   },
@@ -643,7 +643,7 @@
   },
   "math-float": {
    "main": {
-    "depth": 312,
+    "depth": 336,
     "notes": [
      "libgcc: __aeabi_f2iz",
      "libgcc: __aeabi_fadd",
@@ -653,11 +653,7 @@
      "libgcc: __aeabi_fcmple",
      "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
-     "libgcc: __aeabi_fdiv",
-     "libgcc: __aeabi_fmul",
      "libgcc: __aeabi_i2f",
-     "libgcc: __aeabi_llsl",
-     "libgcc: __aeabi_llsr",
      "libgcc: __aeabi_lmul",
      "libgcc: __aeabi_ui2f",
      "libgcc: __clzsi2"
@@ -668,7 +664,7 @@
      "__libc_sinf_core",
      "libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_multiply",
      "libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_product",
-     "__aeabi_fsub"
+     "__aeabi_fmul"
     ]
    },
    "origin": {
@@ -678,7 +674,7 @@
      "rodata": 516,
      "tbss": 0,
      "tdata": 0,
-     "text": 5988,
+     "text": 6470,
      "unwind": 0
     },
     "libgcc": {
@@ -687,7 +683,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 2708,
+     "text": 1624,
      "unwind": 0
     },
     "other": {
@@ -696,7 +692,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 12,
+     "text": 10,
      "unwind": 0
     },
     "port": {
@@ -724,7 +720,7 @@
     "rodata": 516,
     "tbss": 0,
     "tdata": 0,
-    "text": 9124,
+    "text": 8520,
     "unwind": 0
    }
   },
@@ -752,8 +748,6 @@
      "libgcc: __aeabi_fcmple",
      "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
-     "libgcc: __aeabi_fdiv",
-     "libgcc: __aeabi_fmul",
      "libgcc: __aeabi_i2d",
      "libgcc: __aeabi_i2f",
      "libgcc: __aeabi_lasr",
@@ -781,7 +775,7 @@
      "rodata": 3700,
      "tbss": 0,
      "tdata": 0,
-     "text": 21946,
+     "text": 22428,
      "unwind": 0
     },
     "libgcc": {
@@ -790,7 +784,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 7752,
+     "text": 6736,
      "unwind": 0
     },
     "other": {
@@ -799,7 +793,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 14,
+     "text": 16,
      "unwind": 0
     },
     "port": {
@@ -827,7 +821,7 @@
     "rodata": 3700,
     "tbss": 0,
     "tdata": 0,
-    "text": 30416,
+    "text": 29884,
     "unwind": 0
    }
   }
@@ -841,6 +835,24 @@
     "tbss": 0,
     "tdata": 0,
     "text": 14,
+    "unwind": 0
+   },
+   "__aeabi_fdiv.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 296,
+    "unwind": 0
+   },
+   "__aeabi_fmul.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 340,
     "unwind": 0
    },
    "__aeabi_fsub.o": {
@@ -6429,7 +6441,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 320,
+    "text": 166,
     "unwind": 0
    },
    "sqrtl.o": {
@@ -7906,7 +7918,7 @@
    "rodata": 9934,
    "tbss": 358,
    "tdata": 8,
-   "text": 157196,
+   "text": 157678,
    "unwind": 0
   }
  },
@@ -8099,7 +8111,7 @@
     ]
    },
    "expf": {
-    "depth": 160,
+    "depth": 184,
     "notes": [
      "libgcc: __aeabi_f2iz",
      "libgcc: __aeabi_fadd",
@@ -8107,13 +8119,13 @@
      "libgcc: __aeabi_fcmpgt",
      "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
-     "libgcc: __aeabi_fmul"
+     "libgcc: __clzsi2"
     ],
     "path": [
      "expf",
      "__libc_exp2f_core",
      "libc/math/sp-nearest/__libc_exp2f_core.c:__libc_ff_product",
-     "__aeabi_fsub"
+     "__aeabi_fmul"
     ]
    },
    "fclose": {
@@ -8434,7 +8446,7 @@
     ]
    },
    "powf": {
-    "depth": 208,
+    "depth": 232,
     "notes": [
      "libgcc: __aeabi_f2iz",
      "libgcc: __aeabi_fadd",
@@ -8444,16 +8456,15 @@
      "libgcc: __aeabi_fcmple",
      "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
-     "libgcc: __aeabi_fdiv",
-     "libgcc: __aeabi_fmul",
-     "libgcc: __aeabi_i2f"
+     "libgcc: __aeabi_i2f",
+     "libgcc: __clzsi2"
     ],
     "path": [
      "powf",
      "__libc_exp2f_signed",
      "__libc_exp2f_core",
      "libc/math/sp-nearest/__libc_exp2f_core.c:__libc_ff_product",
-     "__aeabi_fsub"
+     "__aeabi_fmul"
     ]
    },
    "printf": {
@@ -8548,13 +8559,12 @@
     ]
    },
    "sinf": {
-    "depth": 272,
+    "depth": 296,
     "notes": [
      "libgcc: __aeabi_fadd",
      "libgcc: __aeabi_fcmple",
      "libgcc: __aeabi_fcmplt",
      "libgcc: __aeabi_fcmpun",
-     "libgcc: __aeabi_fmul",
      "libgcc: __aeabi_lmul",
      "libgcc: __aeabi_ui2f",
      "libgcc: __clzsi2"
@@ -8564,7 +8574,7 @@
      "__libc_sinf_core",
      "libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_multiply",
      "libc/math/sp-nearest/__libc_sinf_core.c:__libc_ff_product",
-     "__aeabi_fsub"
+     "__aeabi_fmul"
     ]
    },
    "snprintf": {
@@ -8769,6 +8779,8 @@
   },
   "frames": {
    "__aeabi_dsub.o:__aeabi_dsub": 16,
+   "__aeabi_fdiv.o:__aeabi_fdiv": 32,
+   "__aeabi_fmul.o:__aeabi_fmul": 32,
    "__aeabi_fsub.o:__aeabi_fsub": 8,
    "__atomic_add.o:__atomic_add_fetch_1": 24,
    "__atomic_add.o:__atomic_add_fetch_2": 24,
@@ -9612,7 +9624,7 @@
    "snprintf.o:snprintf": 16,
    "sprintf.o:sprintf": 12,
    "sqrt.o:sqrt": 72,
-   "sqrtf.o:sqrtf": 64,
+   "sqrtf.o:sqrtf": 16,
    "sqrtl.o:sqrtl": 8,
    "srand.o:srand": 8,
    "sscanf.o:sscanf": 12,

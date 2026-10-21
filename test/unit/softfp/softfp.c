@@ -17,6 +17,7 @@
 #include <string.h>
 
 #include "internal/math.h"
+#include "softfp.h"
 
 /*
  * The soft-float helper replacements of P2.05a (PLAN D55): the 64-bit
@@ -28,7 +29,7 @@
 
 static int failures;
 
-static void fail(const char *what, uint64_t value)
+void fail(const char *what, uint64_t value)
 {
 	char message[128];
 
@@ -38,7 +39,7 @@ static void fail(const char *what, uint64_t value)
 }
 
 /* xorshift64: deterministic test values */
-static uint64_t next(uint64_t *state)
+uint64_t next(uint64_t *state)
 {
 	*state ^= *state << 13;
 	*state ^= *state >> 7;
@@ -54,7 +55,7 @@ static uint64_t bits_of(double x)
 	return bits;
 }
 
-static uint32_t bits_of_float(float x)
+uint32_t bits_of_float(float x)
 {
 	uint32_t bits;
 
@@ -308,6 +309,7 @@ int main(void)
 	test_subtraction();
 	test_special_results();
 	test_exact_products();
+	test_float_operations();
 
 	fputs(failures == 0 ? "softfp: pass\n" : "softfp: FAIL\n", stdout);
 	return failures == 0 ? 0 : 1;

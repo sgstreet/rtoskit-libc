@@ -20,6 +20,13 @@ EXTRA_ELF_DEPS := ${BUILD_ROOT}/libc/libc.a
 
 TARGET_OBJ_LIBS := port/${RTOS_PORT} port/${RTOS_PORT}/${ARCH_FAMILY}
 
+# On x86_64 the integer single-precision helpers of the nofp layer are compiled into the test, so that the
+# comparison with the hardware runs natively (PLAN D85)
+ifeq (${ARCH_FAMILY},x86_64)
+SOFTFLOAT_SRC := ${PROJECT_ROOT}/libc/math/nofp/__aeabi_fmul.c ${PROJECT_ROOT}/libc/math/nofp/__aeabi_fdiv.c
+EXTRA_OBJS := $(patsubst ${PROJECT_ROOT}/libc/math/nofp/%.c,${CURDIR}/nofp/%.o,${SOFTFLOAT_SRC})
+endif
+
 include ${PROJECT_ROOT}/tools/makefiles/project.mk
 
 # Exercise the library, not the compiler's built-in versions of the functions
@@ -27,6 +34,14 @@ CFLAGS += -fno-builtin
 
 # The helpers are internal to the library
 CPPFLAGS += -I${PROJECT_ROOT}/libc
+
+
+${CURDIR}/nofp/%.o: ${PROJECT_ROOT}/libc/math/nofp/%.c ${EXTRA_DEPS}
+	@echo "COMPILING ${<}"
+	@mkdir -p $(dir $@)
+	${CC} ${CPPFLAGS} ${CFLAGS} -MMD -MP -c -o $@ $<
+
+-include ${EXTRA_OBJS:.o=.d}
 
 all: ${CURDIR}/softfp.elf
 
