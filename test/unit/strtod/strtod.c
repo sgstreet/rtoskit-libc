@@ -29,7 +29,9 @@
  *   decimal expansion of the value and of the midpoint to its successor,
  *   and the midpoint nudged up and down, in every rounding direction (the
  *   directed ones through the internal core). The expansions are computed
- *   here with a decimal multiplier, independently of the library.
+ *   here with a decimal multiplier, independently of the library;
+ * - short random inputs, the speed flavour's middle path (P3.03b), checked
+ *   in every direction by exact comparison with the result's neighbourhood.
  */
 
 static int failures;
@@ -411,7 +413,116 @@ static void random_values(const struct __libc_float_format *format, int count)
 	check_value(format, infinity - 2);
 }
 
-/* Directed overflow (F.5): infinity or the largest value, by direction and sign */
+/* Compare a * 10^ea with b * 10^eb: negative, zero or positive */
+static int big_compare(const struct big *a, int ea, const struct big *b, int eb)
+{
+	int top_a = a->count - 1 + ea;
+	int top_b = b->count - 1 + eb;
+
+	if (top_a != top_b)
+		return top_a < top_b ? -1 : 1;
+
+	/* Walk the decimal positions from the top; a missing digit is zero */
+	for (int position = top_a; position >= (ea < eb ? ea : eb); --position) {
+		int i = position - ea;
+		int k = position - eb;
+		int da = i >= 0 && i < a->count ? a->digit[i] : 0;
+		int db = k >= 0 && k < b->count ? b->digit[k] : 0;
+
+		if (da != db)
+			return da < db ? -1 : 1;
+	}
+
+	return 0;
+}
+
+/* The exact value of the positive finite format bits, as an integer times a power of ten */
+static int expand_bits(struct big *b, const struct __libc_float_format *format, uint64_t bits, bool midpoint)
+{
+	unsigned int fraction_bits = format->precision - 1;
+	uint64_t fraction = bits & (((uint64_t)1 << fraction_bits) - 1);
+	int field = (int)(bits >> fraction_bits);
+	uint64_t significand = field == 0 ? fraction : fraction | (uint64_t)1 << fraction_bits;
+	int exponent = (field == 0 ? 1 : field) + format->emin - 1 - (int)fraction_bits;
+
+	return midpoint ? expand(b, 2 * significand + 1, exponent - 1) : expand(b, significand, exponent);
+}
+
+/*
+ * Short decimal inputs (P3.03b): up to 24 random digits times a random power
+ * of ten, the inputs of the speed flavour's middle path. Each direction's
+ * result is checked against the input by exact comparison: rounding down
+ * gives the largest value not above it, rounding up the next one unless the
+ * input is exact, and nearest the side of their midpoint, ties to even.
+ */
+static void short_inputs(const struct __libc_float_format *format, int count)
+{
+	static struct big input;
+	static struct big bound;
+	char text[48];
+	char message[160];
+	uint64_t infinity = __libc_float_infinity(format);
+	bool binary64 = format->precision == 53;
+	int max10 = binary64 ? 308 : 38;
+	int min10 = binary64 ? -323 : -45;
+
+	for (int i = 0; i < count; ++i) {
+		int length = 1 + (int)(random64() % (i % 4 == 0 ? 24 : 19));
+		int top10 = min10 + (int)(random64() % (uint64_t)(max10 - min10 + 1));
+		int exponent10 = top10 - (length - 1);
+
+		input.count = length;
+		for (int k = 0; k < length; ++k)
+			input.digit[k] = (unsigned char)(random64() % 10);
+		if (input.digit[length - 1] == 0)
+			input.digit[length - 1] = 1;
+
+		/* Every eighth input is an integer of one bit more than the precision, a tie when odd, times a small power of two */
+		if (i % 8 == 1) {
+			uint64_t tie = ((uint64_t)1 << format->precision) + (random64() % 4096) * 2 + (i % 16 == 1);
+
+			big_set(&input, tie << (random64() % (64 - format->precision - 1)));
+			length = input.count;
+			exponent10 = 0;
+		}
+		for (int k = 0; k < length; ++k)
+			text[k] = (char)('0' + input.digit[length - 1 - k]);
+		snprintf(text + length, sizeof(text) - length, "e%d", exponent10);
+
+		uint64_t down = __libc_strtofloat(text, nullptr, format, __LIBC_ROUND_DOWNWARD);
+		uint64_t up = __libc_strtofloat(text, nullptr, format, __LIBC_ROUND_UPWARD);
+		uint64_t zero = __libc_strtofloat(text, nullptr, format, __LIBC_ROUND_TOWARD_ZERO);
+		uint64_t nearest = binary64 ? double_bits(strtod(text, nullptr)) : float_bits(strtof(text, nullptr));
+		bool ok = zero == down && (up == down || up == down + 1);
+
+		/* Results at the ends of the range are checked by the fixed cases */
+		if (down == 0 || up >= infinity)
+			continue;
+
+		int bound10 = expand_bits(&bound, format, down, false);
+		int below = big_compare(&input, exponent10, &bound, bound10);
+
+		ok = ok && below >= 0 && (up == down) == (below == 0);
+		if (ok && up != down) {
+			bound10 = expand_bits(&bound, format, up, false);
+			ok = big_compare(&input, exponent10, &bound, bound10) < 0;
+
+			bound10 = expand_bits(&bound, format, down, true);
+			int side = big_compare(&input, exponent10, &bound, bound10);
+
+			ok = ok && nearest == (side < 0 || (side == 0 && (down & 1) == 0) ? down : up);
+		} else {
+			ok = ok && nearest == down;
+		}
+
+		if (!ok) {
+			snprintf(message, sizeof(message), "%s: down %#" PRIx64 " up %#" PRIx64 " zero %#" PRIx64 " nearest %#" PRIx64, text, down, up, zero, nearest);
+			fail(__LINE__, message);
+		}
+	}
+}
+
+/* Directed overflow (F.5): infinity or the largest value, by direction and sign; and fixed cases by direction */
 static void directed_overflow(void)
 {
 	static const struct {
@@ -435,11 +546,28 @@ static void directed_overflow(void)
 		{ "0.1", __LIBC_ROUND_DOWNWARD, 0x3fb9999999999999, 0 },
 		{ "0.1", __LIBC_ROUND_UPWARD, 0x3fb999999999999a, 0 },
 		{ "-0.1", __LIBC_ROUND_TOWARD_ZERO, 0xbfb9999999999999, 0 },
+		/* 2^60 * 10^5 = 3125 * 2^65 exactly, with digits beyond the 19th that are all zero, or not */
+		{ "115292150460684697600000", __LIBC_ROUND_UPWARD, 0x44b86a0000000000, 0 },
+		{ "115292150460684697600000", __LIBC_ROUND_DOWNWARD, 0x44b86a0000000000, 0 },
+		{ "115292150460684697600001", __LIBC_ROUND_DOWNWARD, 0x44b86a0000000000, 0 },
+		{ "115292150460684697600001", __LIBC_ROUND_UPWARD, 0x44b86a0000000001, 0 },
+		/* Inputs that a wrong carry or sticky bit in the speed flavour's 128-bit middle path rounds wrongly (found with a model of it) */
+		{ "796210998486705e-241", __LIBC_ROUND_UPWARD, 0x10fe2dd32b301fef, 0 },
+		{ "796210998486705e-241", __LIBC_ROUND_DOWNWARD, 0x10fe2dd32b301fee, 0 },
+		{ "965149760051976222e-207", __LIBC_ROUND_NEAREST, 0x18b133703f656e43, 0 },
+		{ "965149760051976222e-207", __LIBC_ROUND_UPWARD, 0x18b133703f656e43, 0 },
+		{ "243156669188261288e20", __LIBC_ROUND_UPWARD, 0x47b24b06f04425fe, 0 },
+		{ "67312353146e13", __LIBC_ROUND_UPWARD, 0x44e1d1433137b1b3, 0 },
+		{ "562559949264444e15", __LIBC_ROUND_UPWARD, 0x461c66eabbd52b49, 0 },
+		/* Ten times the significand wraps to 4 in 64 bits */
+		{ "1844674407370955162e30", __LIBC_ROUND_NEAREST, 0x49f431e0fae6d721, 0 },
 	};
 
 	for (size_t i = 0; i < sizeof(cases) / sizeof(cases[0]); ++i) {
 		errno = 0;
-		uint64_t got = __libc_strtofloat(cases[i].text, nullptr, &test_binary64, cases[i].rounding);
+
+		/* The test format has no fast path, so round-to-nearest goes through strtod */
+		uint64_t got = cases[i].rounding == __LIBC_ROUND_NEAREST ? double_bits(strtod(cases[i].text, nullptr)) : __libc_strtofloat(cases[i].text, nullptr, &test_binary64, cases[i].rounding);
 
 		if (got != cases[i].want) {
 			char message[128];
@@ -457,6 +585,8 @@ int main(void)
 	directed_overflow();
 	random_values(&test_binary64, 48);
 	random_values(&test_binary32, 48);
+	short_inputs(&test_binary64, 400);
+	short_inputs(&test_binary32, 200);
 
 	if (failures == 0)
 		puts("pass: strtod");

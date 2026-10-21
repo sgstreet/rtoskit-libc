@@ -524,7 +524,7 @@
     "insns": 374.0
    },
    "sscanf/%lf": {
-    "insns": 3378.0
+    "insns": 2390.0
    },
    "sscanf/%x": {
     "insns": 435.0
@@ -2349,46 +2349,46 @@
     "insns": 207.0
    },
    "strtod/17-digits": {
-    "insns": 4472.0
+    "insns": 1377.0
    },
    "strtod/exp-large": {
-    "insns": 170760.0
+    "insns": 1314.0
    },
    "strtod/exp-small": {
-    "insns": 24686.0
+    "insns": 1440.0
    },
    "strtod/fixed": {
-    "insns": 2232.0
+    "insns": 1341.0
    },
    "strtod/hex": {
-    "insns": 1112.0
+    "insns": 1092.0
    },
    "strtod/integer": {
-    "insns": 1497.0
+    "insns": 648.0
    },
    "strtod/long": {
-    "insns": 7433.0
+    "insns": 2399.0
    },
    "strtod/micro": {
-    "insns": 2086.0
+    "insns": 1217.0
    },
    "strtod/min-normal": {
-    "insns": 86186.0
+    "insns": 1439.0
    },
    "strtod/short": {
-    "insns": 1962.0
+    "insns": 1137.0
    },
    "strtod/subnormal": {
-    "insns": 94698.0
+    "insns": 2036.0
    },
    "strtof/9-digits": {
-    "insns": 3338.0
+    "insns": 895.0
    },
    "strtof/exp": {
-    "insns": 7360.0
+    "insns": 939.0
    },
    "strtof/short": {
-    "insns": 1125.0
+    "insns": 300.0
    },
    "strtol/hex": {
     "insns": 322.0

@@ -55,9 +55,11 @@ Split in two (integers, then floating point).
 - [x] Research note. Tests plus libc-test; size and speed budgets.
   *`docs/research/conversions-speed.md`; `test/unit/conversions` (strto* in every base around the limits against a reference parse; 64-bit printf), 11 mutants killed; size budget unchanged, speed budget holds.*
 
-### P3.03b — Floating-point conversions
-- [ ] An Eisel–Lemire-style fast path for `strtod` (if P1.07 chose a slower core); table trade-offs per flavour.
-- [ ] Research note. Tests plus libc-test; size and speed budgets.
+### P3.03b — Floating-point conversions  `[x]`
+- [x] An Eisel–Lemire-style fast path for `strtod` (if P1.07 chose a slower core); table trade-offs per flavour.
+  *Speed flavour only (D78): a middle path between Clinger and Simple Decimal Conversion, with 5^q rebuilt from two tables (624 bytes rather than Eisel–Lemire's 10 KiB) and an explicit error bound, in every rounding direction; Clinger's guard no longer divides and digits are tested in line. armv7e-m `DBL_MIN` 86186 → 1439, `6.02e300` 170760 → 1314; armv6-m `DBL_MIN` 1839969 → 3853. The size flavour keeps D38's small code.*
+- [x] Research note. Tests plus libc-test; size and speed budgets.
+  *`docs/research/conversions-speed.md`; `test/unit/strtod` gains short random inputs checked exactly in every direction and model-found fixed cases; 10 of 12 mutants killed, 2 equivalent; budgets hold, no benchmark case slower.*
 
 ## P3.04 — malloc and locking
 - [ ] Fast paths for small size classes, and uncontended lock fast paths in the seam contract (an inline atomic check before calling `__rtos_*`).

@@ -580,3 +580,64 @@ build is unchanged.
 | `strtoll/long` | 1060 (-55 %) |
 | `strtoul/hex16` | 436 (-74 %) |
 | `strtoull/hex` | 1027 (-60 %) |
+
+## P3.03b — Speed flavour: `strtod` middle path
+
+A compact-table Eisel–Lemire-style middle path between Clinger's fast path and Simple Decimal Conversion, in-line
+digit tests and a division-free Clinger guard, in the speed flavour's `libc/stdlib/speed/__libc_strtofloat.c`
+(PLAN D78). Change against the P3.03a speed baseline; only the programs that changed are shown, and the release
+build is unchanged.
+
+### stdio
+
+| Case | insns/op |
+|---|---:|
+| `fprintf/mix` | 4086 |
+| `fputs/line` | 451 |
+| `snprintf/%-20s` | 1131 |
+| `snprintf/%.17g` | 13887 |
+| `snprintf/%.3f` | 13778 |
+| `snprintf/%08x` | 801 |
+| `snprintf/%a` | 1101 |
+| `snprintf/%c` | 291 |
+| `snprintf/%d` | 1622 |
+| `snprintf/%e` | 16901 |
+| `snprintf/%f` | 13202 |
+| `snprintf/%g` | 14761 |
+| `snprintf/%lld` | 3702 |
+| `snprintf/%p` | 495 |
+| `snprintf/%s` | 428 |
+| `snprintf/%u-small` | 429 |
+| `snprintf/%x` | 514 |
+| `snprintf/literal` | 354 |
+| `snprintf/mix` | 3439 |
+| `sscanf/%d` | 655 |
+| `sscanf/%lf` | 4076 (-20 %) |
+| `sscanf/%x` | 815 |
+| `sscanf/mix` | 2756 |
+
+### strto
+
+| Case | insns/op |
+|---|---:|
+| `atoi` | 277 |
+| `strtod/17-digits` | 3799 (-84 %) |
+| `strtod/exp-large` | 4087 (-99 %) |
+| `strtod/exp-small` | 3838 (-99 %) |
+| `strtod/fixed` | 2928 (-24 %) |
+| `strtod/hex` | 2116 (+1 %) |
+| `strtod/integer` | 2005 (-31 %) |
+| `strtod/long` | 5026 (-89 %) |
+| `strtod/micro` | 2435 (-28 %) |
+| `strtod/min-normal` | 3853 (-100 %) |
+| `strtod/short` | 2459 (-27 %) |
+| `strtod/subnormal` | 3849 (-100 %) |
+| `strtof/9-digits` | 2402 (-85 %) |
+| `strtof/exp` | 2433 (-97 %) |
+| `strtof/short` | 1008 (-38 %) |
+| `strtol/hex` | 458 |
+| `strtol/int` | 422 |
+| `strtol/short` | 170 |
+| `strtoll/long` | 1060 |
+| `strtoul/hex16` | 436 |
+| `strtoull/hex` | 1027 |
