@@ -101,7 +101,10 @@ It is fetched with a shallow `git fetch` of that commit; the commit ID is the co
 - [x] Gaps worth closing are recorded as Q* in PLAN.md or as new steps in this phase file; nothing is adopted here.
   *Q18–Q25 cover the double fast paths, the misrounded floats (a correctness defect, to fix first), double-evaluated float kernels, Thumb-2 `memchr`, Armv6-M `strcmp`, Armv6-M soft-float assembly, Thumb-2 double helpers and Armv6-M `log10f`/`powf`. Nothing from AOR is adopted.*
 
-## P4.07 — Wrap-up  `[ ]`
-- [ ] `docs/perf/phase-4.md` and `docs/size/phase-4.md` complete, with the summary tables and the commands to reproduce them.
-- [ ] Recheck both budgets. Full libc-test on all boards and flavours.
+## P4.07 — Wrap-up  `[~]`
+- [x] `docs/perf/phase-4.md` and `docs/size/phase-4.md` complete, with the summary tables and the commands to reproduce them.
+  *`docs/perf/phase-4.md` opens with the phase summary (speed, size, accuracy, follow-up Q18–Q25) and the reproduction commands. `--from-record` regenerates the speed and size tables byte for byte.*
+- [x] Recheck both budgets. Full libc-test on all boards and flavours.
+  *From-scratch `make -j8 check`: libc-test 219/219 and every unit test pass in all 18 board × build-type configurations. `size-report diff` shows no change; the size flavour is within +0 %, and the speed flavour within +10 % (+20 % for `math-float`/`math-mix`). The library did not change in this phase.*
 - [ ] Tag `phase-4-complete` (pushed by the user: this environment cannot push tags).
+  *Waiting on the user: the tag goes on the merge commit of this step.*
