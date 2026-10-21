@@ -1,71 +1,66 @@
-# Phase 4 — crosstool-NG multilib GCC cross-toolchain integration
+# Phase 4 — Comparison with Arm Optimized Routines
 
-Prerequisite: `phase-3-complete`. The groundwork is already in earlier phases:
-D15 (one header set per target triple) and D16 (a build that can be driven from
-outside) must hold from Phase 1 on.
+Prerequisite: `phase-3-complete`. Targets: `armv6-m`, `armv7e-m`, `armv7e-m-dp`,
+`armv8-m.main` and `x86_64` (where AOR has a generic or x86 version).
 
-**Goal:** crosstool-NG builds a multilib `arm-none-eabi` GCC whose C library is
-rtoskit-libc. A user can then run `arm-none-eabi-gcc -march=armv8-m.main+fp+dsp -mfloat-abi=hard ... foo.c` (or any `-mcpu` mapping to it)
-and get the right libc variant, crt and RTOS port library with no extra flags
-(or with one documented `--specs=`).
+**Goal:** measure rtoskit-libc's size and speed against
+[Arm Optimized Routines](https://github.com/ARM-software/optimized-routines)
+(AOR), the reference implementations Arm maintains for string functions, libm
+and soft-float. The outcome is a set of comparison tables and a list of gaps,
+not adopted code (PLAN D91).
 
-Open questions that shape this phase: **Q8** (C++ / `libstdc++`) and **Q9**
-(where the integration lives; which multilib set). See PLAN.md.
+**Clean-room (D91):** AOR is licensed MIT OR Apache-2.0 WITH LLVM-exception,
+but the clean-room rule applies whatever the licence. AOR is fetched, built and
+linked **only** into measurement programs outside `libc.a`. No AOR source is
+copied, translated or read as a model for our code. A gap found here becomes a
+Q* or a later step that is researched from papers and the standard in the usual
+way.
+
+**Pinned revision:** `f67e7daa5457646fad9f75580263dba654c988aa` (2026-10-16).
+P4.02 records its archive's SHA-256.
 
 **Every step's definition of done (DoD)** is the Phase 1 DoD plus:
 
-- libc-test passes for **every multilib** of the produced toolchain (run under
-  `qemu-arm` against `librtos-linux.a`).
-- The libc objects built by the toolchain flow match the in-tree build for the
-  same arch and flags (identical `size` output per member).
-
-Note: a full crosstool-NG build takes 30–90 minutes and several GB of disk.
-Check the session's disk allowance first, and keep `ct-ng` build directories
-outside the repo.
+- The library is unchanged unless a step says otherwise. libc-test passes in
+  full on every board and build type, the size flavour stays within its
+  budget, and the speed flavour within its +10 % budget (+20 % for
+  `math-float` and `math-mix`, D87).
+- Comparison results are reproducible from a clean checkout with one command,
+  and are recorded in `docs/perf/` (speed) and `docs/size/` (size) with the
+  AOR revision and the toolchain version.
 
 ---
 
-## P4.01 — Research and integration design
-- [ ] Research how other C libraries plug into crosstool-NG: the libc backends (`scripts/build/libc/{newlib,picolibc,musl}.sh`, `config/libc/*.in`), the companion-libs mechanism, and the build order (`libc_headers` → core gcc → `libc` per multilib → final gcc).
-- [ ] Research GCC multilib for `arm-none-eabi`: `--with-multilib-list=rmprofile` vs a custom `t-*` multilib file, `-print-multi-lib`/`-print-multi-directory`, `MULTILIB_REUSE`, and how picolibc and newlib install per multilib and ship `.specs` files.
-- [ ] Decide (record in PLAN.md):
-  - Integration form: a new crosstool-NG libc backend `rtoskit`, kept as a patch series in `toolchain/crosstool-ng/`, vs a fork vs `libc=none` with a post-step (Q9).
-  - The multilib list (Q9).
-  - Default port library linkage: `librtos-none.a` by default and `--specs=rtoskit-linux.specs` for the test port, vs explicit `-lrtos-<port>`.
-  - C++ (Q8).
-- [ ] Write the research note `docs/research/crosstool-ng-integration.md`.
+## P4.01 — Research: what AOR provides  `[ ]`
+- [ ] Survey AOR's `string/`, `math/` and `fp/` subprojects: which routines exist per core (`string/arm` for Thumb-2 and the Armv6-M `strcmp`; `fp/armv6-m` and `fp/at32` soft-float; the C `math/` everywhere), their build (`config.mk`: `SUBS`, `ARCH`, `CROSS_COMPILE`, `CFLAGS`), their stated accuracy (ulp bounds, rounding modes, `errno` handling) and their size/speed trade-offs.
+- [ ] Decide how AOR routines are substituted: linked ahead of `libc.a` in the bench and size programs, symbol renaming where AOR's names differ (`__strcmp_arm`, `arm_math_*`), and which of our flavours each comparison uses.
+- [ ] Research note `docs/research/optimized-routines.md`: URLs, the routine-by-routine map to our functions, the build design, and the caveats (AOR's math assumes an FPU or a soft-float runtime; `errno` and `math_errhandling` differences).
 
-## P4.02 — Make the libc build multilib-ready (in-tree)
-- [ ] Generic multilib toolchain mode: `tools/makefiles/arm-none-eabi.mk`, where the arch flags come from `MULTILIB_FLAGS` and `MULTIDIR` (D16). The existing `armv6-m`/`armv7e-m`/`armv7e-m-dp`/`armv8-m.main` files become thin presets over it.
-- [ ] Map each multilib to a board/`ARCH_CROSS` toolchain file and its variant subdirectories (D22) (e.g. the v7e-m soft-float multilib reuses the v7e-m code with the soft-float `fenv`, and the `thumb/v7e-m+dp/hard` multilib maps to the `armv7e-m-dp` layers). Multilibs outside the optimization matrix (if the list includes them) fall back to generic C, plus the minimal arch files they need (`setjmp`, `fenv`, crt).
-- [ ] `install` target: headers to `${PREFIX}/include`; and `libc.a`, `libm.a`, `crt0.o`, `librtos-none.a`, `librtos-linux.a` and the `.specs` files to `${PREFIX}/lib/${MULTIDIR}`.
-- [ ] `install-headers` target (headers only, no compiler needed beyond the preprocessor).
-- [ ] Header audit for D15: one header set compiles and gives identical `sizeof`/`alignof` for every type across all multilib flag sets (an automated test).
-- [ ] `make multilib CROSS_COMPILE=…`: iterate `$(CC) -print-multi-lib`, then build and install every variant. Run the libc-test gate per variant.
+## P4.02 — Fetch and build AOR  `[ ]`
+- [ ] A pinned download (revision and SHA-256) into `local/`, fetched by a make target in the style of `make setup-bench`; no submodule, nothing in `libc/`.
+- [ ] Build AOR's string, math and soft-float libraries per Arm board with our toolchain and each board's `-march`/`-mfloat-abi` flags, and for `x86_64` where meaningful, into `build/<board>/<build-type>/aor/`. Record which routines build for which core.
+- [ ] A smoke test: each AOR library links against our `libc.a` and runs under `TARGET_RUNNER`.
 
-## P4.03 — Bootstrap compatibility
-- [ ] Build libc with a **stage-1 GCC** (configured `--without-headers`, no libc, `inhibit_libc`). Confirm that nothing needs libgcc headers or a prebuilt sysroot.
-- [ ] Check what libgcc needs from the libc headers when GCC is configured with our sysroot (`--with-sysroot`, `--with-native-system-header-dir=/include`). Fix any gaps (for example `<stdint.h>` via `--enable-stdint=provide`/`wrap`, `<limits.h>` include_next interplay with `fixincludes`; consider `--disable-fixincludes` or a no-op fixinc).
-- [ ] TLS: check that `--enable-tls` and the `__aeabi_read_tp` contract work with GCC's ARM EABI TLS model on M-profile (D10).
+## P4.03 — Performance comparison  `[ ]`
+- [ ] `bench-runner compare` gains an AOR column: the test/bench programs relinked with AOR's routines ahead of `libc.a`, in the size and speed flavours.
+- [ ] Per-function tables for string (`memcpy`, `memset`, `memchr`, `strcmp`, `strlen`, `strcpy`), libm (float and double, throughput and latency) and soft-float (`__aeabi_fadd`/`fmul`/`fdiv`, `dcmp`, conversions on Armv6-M), with the geometric means.
+- [ ] Results in `docs/perf/phase-4.md`.
 
-## P4.04 — crosstool-NG backend
-- [ ] `toolchain/crosstool-ng/`: the libc backend (`config/libc/rtoskit.in`, `scripts/build/libc/rtoskit.sh` with `do_rtoskit_get/extract/headers/build/post_cc`), with the source taken from this repo's git URL at a tag or commit, or from a local directory for development.
-- [ ] Patch series for a pinned crosstool-NG release, plus an `apply` script. Also upstreamable as a stand-alone PR if desired.
-- [ ] Sample config `toolchain/crosstool-ng/samples/arm-none-eabi-rtoskit/crosstool.config`: GCC version (≥ 14, preferably matching the 15.2 in `setup.mk`), binutils, the multilib list, `--enable-languages=c` (or C/C++ per Q8), and `--disable-nls`.
-- [ ] `make toolchain` target that drives `ct-ng` (download, apply the patches, build) into `local/` or `tmp/`, consistent with `setup.mk` conventions.
+## P4.04 — Size comparison  `[ ]`
+- [ ] Per-routine code size (`.text` + `.rodata`, tables included) for each AOR routine against ours, both flavours, per core.
+- [ ] The `test/size` reference programs relinked with AOR's routines: image sizes and stack depths through `size-report`.
+- [ ] Results in `docs/size/phase-4.md`.
 
-## P4.05 — GCC driver integration
-- [ ] `.specs` files: the default `startfile` (`crt0.o`), `lib` (`-lc -lrtos-none -lgcc`), and `rtoskit-linux.specs` for the test port. Check `-nostartfiles`/`-nodefaultlibs` behaviour.
-- [ ] The multilib directory layout matches `gcc -print-multi-directory` for every supported `-mcpu`/`-march`/`-mfloat-abi` combination, including `MULTILIB_REUSE` fallbacks.
-- [ ] If Q8 = C++: build `libstdc++` against rtoskit-libc (the configure flags for the missing wide-character support), and run a C++ smoke test.
+## P4.05 — Accuracy comparison  `[ ]`
+- [ ] Float functions exhaustively on the host (all 2^32 inputs, or a documented subset where too slow), double functions on random and hard-case sets: max ulp error and the count of results not correctly rounded, for AOR and for us, against an MPFR or mpmath reference.
+- [ ] `errno`, special values and rounding-mode behaviour per C23 Annex F for both.
+- [ ] Results in `docs/research/optimized-routines.md` (accuracy section).
 
-## P4.06 — End-to-end validation
-- [ ] Build the full toolchain with crosstool-NG from a clean state.
-- [ ] Build libc-test with the **installed toolchain** (no in-tree include or lib paths), for every multilib. Run it under `qemu-arm` and compare with the in-tree baselines (results must be identical).
-- [ ] Object equivalence check: toolchain-built vs in-tree-built archives (`size` per member).
-- [ ] Rebuild `example/hello-world` and the `test/size` reference programs with the installed toolchain; the sizes must match the Phase 2/3 budgets.
+## P4.06 — Analysis  `[ ]`
+- [ ] For each function where AOR is faster, smaller or more accurate: the cause as far as measurements show it (algorithm, tables, register use), and whether a clean-room change could close it within our budgets.
+- [ ] Gaps worth closing are recorded as Q* in PLAN.md or as new steps in this phase file; nothing is adopted here.
 
-## P4.07 — Packaging and wrap-up
-- [ ] Release tarball of the toolchain (naming as in `setup.mk`'s `COMPILER_ARCHIVE` convention). Wire `tools/makefiles/setup.mk` (`COMPILER_URL`/`COMPILER_TARGET`) so `make setup` can fetch it.
-- [ ] `docs/toolchain.md`: how to build the toolchain, use it, choose a port library, and add a multilib.
-- [ ] Tag `phase-4-complete`.
+## P4.07 — Wrap-up  `[ ]`
+- [ ] `docs/perf/phase-4.md` and `docs/size/phase-4.md` complete, with the summary tables and the commands to reproduce them.
+- [ ] Recheck both budgets. Full libc-test on all boards and flavours.
+- [ ] Tag `phase-4-complete` (pushed by the user: this environment cannot push tags).

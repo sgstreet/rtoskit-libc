@@ -177,4 +177,4 @@ The per-core variables (`ARCH_CROSS`, `LIBC_FENV`, `LIBC_MATH_LAYERS`,
 `LIBC_STRING_KERNELS`) come from the board's toolchain file under
 `tools/makefiles/`. They are not meant to be overridden on the command
 line. A crosstool-NG build drives the same makefiles per multilib (D16,
-Phase 4).
+Phase 5).

@@ -80,7 +80,7 @@ Decision: PLAN D73.
     gets its own tree (`build/<board>/speed/`) and install
     (`images/<board>/speed/`). `make check` runs every unit test and
     libc-test on it. `size-report --build-type speed budget --flavour speed`
-    checks its budget, and `make bench` measures it. A Phase 4 multilib can
+    checks its budget, and `make bench` measures it. A Phase 5 (toolchain) multilib can
     point at either install.
 - **Kernel directories:**
   - Each arch file now gives one list per flavour,
