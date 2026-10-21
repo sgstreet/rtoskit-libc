@@ -497,10 +497,11 @@ Result and exceptions raised (I invalid, Z divide-by-zero, O overflow, U underfl
 
 ### What the accuracy comparison shows
 
-**Our float functions on x86_64.**
+**Our float functions.**
 
-- They are correctly rounded to nearest for all but 8 of the 2^32 arguments,
-  which falls short of D47's claim.
+- On x86_64 they are correctly rounded to nearest for all but 8 of the 2^32
+  arguments, which falls short of D47's and D57's claims. The same 8
+  arguments are misrounded on every core.
 - The 8 arguments are all in the set where the two libraries differ. The
   1-in-16 sample of agreeing arguments found no more, and the per-function
   counts match the exhaustive run exactly:
@@ -515,10 +516,17 @@ Result and exceptions raised (I invalid, Z divide-by-zero, O overflow, U underfl
   | `log10f` | `0x1.fddcf4p-98` | `-0x1.d33a44p+4` |
   | `cosf` | `±0x1.2b9622p+67` | `0x1.f0285cp-1` |
 
-- These cores compute in double and round to float. For these arguments
-  the exact value lies so close to a float halfway point that rounding it
-  to double first moves it onto, or across, that point, and the second
-  rounding then goes the wrong way.
+- A follow-up run (P4.06) evaluated the same 8 arguments on every Arm core,
+  in both flavours: armv6-m (the float-float `sp-nearest` layer, and in the
+  speed flavour its fixed-point paths), armv7e-m (FMA float-float) and
+  armv7e-m-dp (double).
+  - All of them return the same wrong results as x86_64, 1 ulp from the
+    correctly rounded value.
+  - So the cause is not double rounding in one layer. These arguments are
+    hard-to-round cases on which every one of our paths makes the same
+    decision, which points at a component the layers share (P4.06, Q19).
+  - Random samples cannot find such cases (the Arm runs saw none in 16,384);
+    only an exhaustive run can.
 
 **Directed rounding modes.** Ours are correctly rounded in every mode for
 float (0 % misrounded), and within 1.02 ulp for double.
@@ -554,3 +562,140 @@ float (0 % misrounded), and within 1.02 ulp for double.
 - **AOR:** its results are the same on every core, which is expected because
   soft double is exact IEEE. They show the same misrounding pattern as on
   x86_64 (`erff` 6.5–7.9 %, `erf` 9.5 %).
+
+## Analysis (P4.06)
+
+For each gap where AOR is faster, smaller or more accurate: the cause as far
+as the measurements show it, and whether a clean-room change could close it
+within our budgets. Speed and size figures are from `docs/perf/phase-4.md`
+and `docs/size/phase-4.md`.
+
+Speed-flavour headroom, code bytes left under the +10 % budget (+20 % for the
+math images), from the build of this step:
+
+| Image | armv6-m | armv7e-m | armv7e-m-dp | armv8-m.main |
+|---|---:|---:|---:|---:|
+| `hello-printf-int` | 344 | 206 | 210 | 208 |
+| `hello-printf-int-nofloat` | 178 | 97 | 97 | 93 |
+| `malloc-heavy` | 105 | 33 | 33 | 27 |
+| `math-float` | 108 | 1520 | 2258 | 1506 |
+| `math-mix` | 4879 | 5866 | 3036 | 5850 |
+
+**1. Double `exp`, `exp2`, `exp10`, `log`, `log2`, `pow` (speed, Q18).**
+
+- **Gap:** AOR takes 0.16–0.45 of our instructions on every core. Its code
+  size is within −1.5 to +2.4 KB of ours.
+- **Cause:** our cores (D47) are double-double: Tang's table, then series in
+  double-double arithmetic for every argument. AOR's evaluate once in double
+  with a larger table and a short polynomial. The rounding error that leaves
+  is about 0.52 ulp.
+- **Clean-room route:** the one D86–D88 took for float on Armv6-M. A
+  double-precision first pass with a proven error bound, a Ziv rounding test,
+  and the double-double core only when the test fails. That keeps our
+  accuracy (the fallback decides the hard cases) at close to AOR's average
+  cost.
+- **Budget:** `math-mix` has 3.0–5.9 KB left.
+
+**2. Our float functions misround 8 arguments on every core (correctness, Q19).**
+
+- **Gap:** the arguments are `exp2f` ×2, `logf` ×3, `log10f` ×1 and `cosf` ×2,
+  each 1 ulp off. AOR is not better here (it misrounds 170,000 to 29 M
+  arguments per function); the gap is to our own claim (D47, D57).
+- **Cause:** not found yet. Every layer gives the same wrong result: double on
+  x86_64 and armv7e-m-dp, FMA float-float on armv7e-m, float-float and
+  fixed-point on armv6-m. That points at a shared step, such as the final
+  rounding decision or a hard-case path, rather than at any one layer's
+  precision.
+- **Route:** find the shared cause, fix it, and add the 8 arguments to
+  `test/unit/libm_dense` (near-halfway vectors, D88). Keep an exhaustive
+  host run, as `aor-accuracy` does, as the check for every float function.
+- **Budget:** a fix of this kind should cost little or no code.
+
+**3. Float functions where the FPU has double, and on x86_64 (speed and size, Q20).**
+
+- **Gap:** AOR takes 0.14–0.31 of our instructions and 0.6–1.7 KB of code
+  where ours take 2.3–8.4 KB. For example, `powf` is 1452 bytes against 5534
+  on armv7e-m-dp.
+- **Cause:** our float functions on these cores call our double cores, so
+  they carry the double-double tables and series. AOR's evaluate a short
+  polynomial in double. Double's 29 extra bits leave AOR's results within
+  0.51–0.82 ulp.
+- **Route:** float kernels that evaluate in double with an error bound and a
+  rounding test, falling back to the double core. They would be smaller and
+  faster, and correctly rounded.
+- **Budget:** helps every image; `math-float` would shrink.
+
+**4. Thumb-2 `memchr` (speed, Q21).**
+
+- **Gap:** AOR's takes 0.51 of our instructions at 1 KiB and 0.66 at 16
+  bytes. Ours is the generic C loop in both flavours.
+- **Route:** a word-at-a-time kernel with the DSP byte compares, as our
+  `strchr` uses (D74).
+- **Budget:** printf links `memchr`, and `hello-printf-int-nofloat` has only
+  93–97 bytes left on Thumb-2. AOR's kernel is 160 bytes larger than our C.
+  Q16's budget question decides this together with the 21 % `strlen` gap
+  that Q16 already records.
+
+**5. Armv6-M `strcmp` (speed, Q22).**
+
+- **Gap:** AOR's word loop takes 0.29 of our instructions at 1 KiB, but is
+  slower for strings of 0–1 bytes. `qsort/strings` is 6 % slower with it.
+- **Route:** a speed-flavour word-at-a-time Thumb-1 `strcmp`: aligned word
+  compares with a zero-byte test, and our byte loop kept for short or
+  unaligned strings.
+- **Budget:** no reference image links `strcmp`, so the budget barely
+  constrains it.
+
+**6. Armv6-M soft-float `fadd`/`fsub`/`fmul` and the comparisons (speed and size, Q23; comparisons Q14).**
+
+- **Gap:**
+  - AOR's Thumb-1 assembly takes 0.52–0.61 of the instructions of our
+    `fmul`/`fsub` (C, D85) and of libgcc's `fadd`;
+  - for the comparisons, it takes 0.36–0.54 of libgcc's;
+  - the comparisons are a quarter to a third of libgcc's size.
+- **Cause:** AOR's routines are hand-scheduled Thumb-1 with no rounding-mode
+  or flag handling. Ours carry the soft `<fenv.h>` contract.
+- **Route:** hand-written Thumb-1 versions that keep the contract: a
+  round-to-nearest fast path and the flags written once at the end. Q14 is
+  already open for the comparisons.
+- **Budget:** smaller comparisons make room in every float image.
+
+**7. Double helpers and 64-bit conversions on the single-precision cores (speed and size, Q24).**
+
+- **Gap:** on armv7e-m and armv8-m.main every double operation is libgcc's.
+  - AOR's at32 `ddiv` takes 0.14 of libgcc's instructions, and `f2lz`/`d2lz`
+    0.15.
+  - libgcc's 64-bit conversions cost 1.6–1.9 KB each, because they pull in
+    soft double; AOR's cost 0.1 KB.
+  - `strtod` (`strto` 0.70) and every double libm function feel this.
+- **Route:** our own Thumb-2 `__aeabi_d*` and conversion helpers, as D85 did
+  for Armv6-M's `fmul`/`fdiv`. On armv7e-m-dp only the 64-bit conversions
+  are calls.
+- **Budget:** the conversions alone save 1.5–1.8 KB wherever they are
+  linked.
+
+**8. Armv6-M `log10f` and `powf` (speed, Q25).**
+
+- **Gap:** AOR takes 0.22–0.25 of our speed flavour's instructions.
+- **Cause:** D86–D88 gave `expf`, `exp2f`, `logf`, `log2f`, `sinf`, `cosf`,
+  `tanf` and the error functions fixed-point paths, but not `log10f` or
+  `powf`.
+- **Route:** the same pattern. `log10f` is log2 times a constant with one
+  more rounding test; `powf` is exp2(y·log2 x), with the 64-bit product
+  bounded the same way.
+- **Budget:** `math-float` has only 108 bytes left on armv6-m, and it links
+  `powf`. This needs a budget decision like D87's.
+
+**Not gaps, and recorded only:**
+
+- AOR's float functions on the single-precision and soft-float cores are
+  slower (4–7×) and larger (+1.3–2.2 KB) than ours.
+- AOR's `memset` is slower than ours at 1 KiB, and larger.
+- AOR's `erf`/`erff` without hardware FMA are slower.
+- Every AOR accuracy result trails ours.
+- AOR's string assembly carries unwind tables, which pull libgcc's unwinder
+  (3.6 KB). Our assembly must keep carrying none, and the P4.04 measurement
+  checks it.
+
+Nothing is adopted in this phase: each item above is an open question, to be
+researched clean-room from the papers and our own notes if it is taken up.

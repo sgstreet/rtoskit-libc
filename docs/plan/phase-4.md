@@ -85,7 +85,7 @@ It is fetched with a shallow `git fetch` of that commit; the commit ID is the co
 ## P4.05 — Accuracy comparison  `[x]`
 - [x] Float functions exhaustively on the host (all 2^32 inputs, or a documented subset where too slow), double functions on random and hard-case sets: max ulp error and the count of results not correctly rounded, for AOR and for us, against an MPFR or mpmath reference.
   *D97, `tools/scripts/aor-accuracy` against MPFR at 200 bits.*
-  - *Float, all 2^32 arguments (every disagreement plus 1 in 16 agreements): AOR misrounds 0.004–0.01 % of exp/log arguments, 0.7 % of `sinf`/`cosf` and 3.9 % of `erff` (max 1.09 ulp). Ours misround 8 arguments in total (`exp2f` 2, `logf` 3, `log10f` 1, `cosf` 2): double rounding in the x86_64 layer, against D47's claim.*
+  - *Float, all 2^32 arguments (every disagreement plus 1 in 16 agreements): AOR misrounds 0.004–0.01 % of exp/log arguments, 0.7 % of `sinf`/`cosf` and 3.9 % of `erff` (max 1.09 ulp). Ours misround 8 arguments in total (`exp2f` 2, `logf` 3, `log10f` 1, `cosf` 2), against D47's claim; P4.06 found the same 8 misrounded on every core (Q19).*
   - *Doubles (2^24 samples each), `powf` (2^26), and an Arm check under qemu (16,384 samples per function on three cores, both flavours): ours had no misrounded Arm result.*
 - [x] `errno`, special values and rounding-mode behaviour per C23 Annex F for both.
   *Neither library sets `errno` (`MATH_ERREXCEPT`).*
@@ -94,9 +94,12 @@ It is fetched with a shallow `git fetch` of that commit; the commit ID is the co
 - [x] Results in `docs/research/optimized-routines.md` (accuracy section).
   *Tables, method and findings, with the raw results in `docs/research/aor-accuracy-{host,arm}.txt`. The library is unchanged.*
 
-## P4.06 — Analysis  `[ ]`
-- [ ] For each function where AOR is faster, smaller or more accurate: the cause as far as measurements show it (algorithm, tables, register use), and whether a clean-room change could close it within our budgets.
-- [ ] Gaps worth closing are recorded as Q* in PLAN.md or as new steps in this phase file; nothing is adopted here.
+## P4.06 — Analysis  `[x]`
+- [x] For each function where AOR is faster, smaller or more accurate: the cause as far as measurements show it (algorithm, tables, register use), and whether a clean-room change could close it within our budgets.
+  *`docs/research/optimized-routines.md`, Analysis: eight gaps, each with its measured size, cause, clean-room route and speed-budget headroom.*
+  - *A follow-up run showed that the 8 misrounded float arguments are wrong on every core and flavour, so the cause is shared rather than one layer's double rounding.*
+- [x] Gaps worth closing are recorded as Q* in PLAN.md or as new steps in this phase file; nothing is adopted here.
+  *Q18–Q25 cover the double fast paths, the misrounded floats (a correctness defect, to fix first), double-evaluated float kernels, Thumb-2 `memchr`, Armv6-M `strcmp`, Armv6-M soft-float assembly, Thumb-2 double helpers and Armv6-M `log10f`/`powf`. Nothing from AOR is adopted.*
 
 ## P4.07 — Wrap-up  `[ ]`
 - [ ] `docs/perf/phase-4.md` and `docs/size/phase-4.md` complete, with the summary tables and the commands to reproduce them.

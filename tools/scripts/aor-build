@@ -121,7 +121,7 @@ def c_flags(board):
 	flags = cross_flags(board) + ['-nostdinc', '-isystem', 'include', '-include', os.path.join('include', 'stdc-predef.h'), '-ffunction-sections', '-fdata-sections', '-Wall', '-Werror', '-g']
 	if not is_arm(board):
 		# As tools/makefiles/x86_64.mk: no PIE, no unwind tables, no sincos fusion
-		flags += ['-muclibc', '-fno-pie', '-fno-asynchronous-unwind-tables', '-fno-unwind-tables']
+		flags += ['-muclibc', '-fno-pie', '-fno-stack-protector', '-fno-asynchronous-unwind-tables', '-fno-unwind-tables']
 	return flags
 
 
