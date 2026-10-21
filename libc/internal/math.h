@@ -17,6 +17,7 @@
 #include <fenv.h>
 #include <float.h>
 #include <math.h>
+#include <stddef.h>
 #include <stdint.h>
 
 /* The FPU of the build (libc/internal/fpu/${LIBC_FPU}, on the include path through CPPFLAGS) */
@@ -99,6 +100,44 @@ static inline int __libc_double_exponent(uint64_t bits)
 static inline int __libc_float_exponent(uint32_t bits)
 {
 	return (int)((bits >> 23) & 0xff);
+}
+
+/*
+ * An argument whose function value lies so near the point halfway between
+ * two floats that the double result cannot decide its rounding (PLAN D98,
+ * docs/research/float-hard-cases.md): the correctly rounded result and the
+ * side of it (+1 above, -1 below) on which the exact value lies.
+ */
+struct __libc_float_case {
+	uint32_t x;
+	uint32_t result;
+	int32_t direction;
+};
+
+/*
+ * The double result y of f(x) rounded to float, also for f's hard cases.
+ * Only a y within 2^8 double ulps of a float halfway point (its 29 bits below
+ * float precision within 256 of 2^28) looks x up. A hard case returns its
+ * result nudged by 2^-30 of itself toward the exact value, so the current
+ * direction rounds it as the exact value and raises inexact. The cases have
+ * normal results, where the 29 bits are the ones below float precision.
+ */
+static inline float __libc_float_round(double y, float x, const struct __libc_float_case *cases, size_t count)
+{
+	if ((__libc_double_bits(y) & 0x1fffffff) - (0x10000000 - 0x100) < 0x200) {
+		uint32_t bits = __libc_float_bits(x);
+
+		for (size_t i = 0; i < count; ++i) {
+			if (cases[i].x == bits) {
+				float result = __libc_float_from(cases[i].result);
+				float nudge = result * 0x1p-30f;
+
+				return result + ((cases[i].direction > 0) == (result > 0) ? nudge : -nudge);
+			}
+		}
+	}
+
+	return (float)y;
 }
 
 /*
