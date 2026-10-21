@@ -245,3 +245,58 @@ Each substituted routine is called once in a program run under
 
 The program checks that each result is within 1 ulp of a constant. It is a
 link and run check, not an accuracy test.
+
+## The build (P4.02)
+
+`make aor` fetches AOR into `local/aor-<rev>/` (`make setup-aor`, a shallow
+`git fetch` checked against the commit ID). For every board it then runs
+`tools/scripts/aor-build build` and `tools/scripts/aor-build smoke` against the
+release build.
+
+Archives in `build/<board>/aor/`, with the global symbols each defines after
+renaming (listed in `aor.json`):
+
+| Board | `libaor-string.a` | `libaor-math.a` / `libaor-math-size.a` | `libaor-fp.a` |
+|---|---|---|---|
+| linux-x86_64 | — | 41 | — |
+| linux-armv6-m, linux-armv6s-m | `strcmp` | 41 | 32 (`fp/armv6-m` + `fp/common`) |
+| linux-armv7e-m, -dp, linux-armv8-m.main | `memchr`, `memset`, `strlen` | 41 | 56 (`fp/at32` + `fp/common`) |
+
+The 41 math symbols are:
+
+- the public functions;
+- `sincosf`;
+- AOR's internal tables and error helpers, which are named `arm_math_*`.
+  These are not reserved names, which is harmless in a measurement build.
+
+Three things only the build showed:
+
+- **`memchr.S` and `memset.S` force `.arch armv7-a`.** The objects then carry
+  the A profile, and the linker refuses to mix them with ours ("conflicting
+  architecture profiles A/M").
+  - The build copies those two files and drops the directive. The assembler
+    then accepts and checks them against the board's own `-march`, and both
+    assemble unchanged for armv7e-m and armv8-m.main.
+  - This is the only check that the instructions are M-profile ones:
+    `qemu-arm -cpu max` emulates an A-profile core, so it would run A-only
+    Thumb-2 code without complaint.
+- **Leading the link group is not enough.** On Armv6-M, libgcc's
+  `_fixunsdfsi.o`, pulled in by `libc.a`, calls `__aeabi_dcmpge`. ld resolved
+  that call from libgcc itself, in the same archive scan, so the program held
+  libgcc's comparisons.
+  - `aor-build`'s `link()` now forces (`-u`) every AOR symbol the program
+    contains, and relinks until that set stops growing. The first archive in
+    the group, AOR's, then defines each one.
+  - Duplicates that libgcc members bring along are ignored
+    (`--allow-multiple-definition`, the first definition wins).
+  - `check_substitution()` reads the map file's input sections, and fails a
+    link in which a provided symbol's address is outside AOR's code. It caught
+    this case before the fix.
+- **Naming bug in the first version.** The float GNU three-way compares came
+  out as `__leff2`/`__geff2`; they are now `__lesf2`/`__gesf2`.
+
+**Smoke test:** `tools/aor/smoke.c` calls each substituted routine once (the
+vectors above) and passes on all six boards. On armv7e-m it links 45 AOR
+symbols: the string functions, the math functions with their tables, and the
+soft double helpers. On armv7e-m-dp only `__aeabi_d2lz` and `__aeabi_l2d` of
+the fp set are needed.

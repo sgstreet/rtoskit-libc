@@ -51,6 +51,7 @@ make help | clean | distclean
 V=1 make ...                           # verbose
 make check                             # build, then run the unit tests (+ libc-test from P1.02) for every board and build type
 make bench                             # build, then run the benchmarks (release and speed, every board) against docs/perf
+make aor                               # Phase 4: fetch and build Arm Optimized Routines into build/<board>/aor/ (measurement only, D92, D93)
 make BOARD_TYPE=linux-x86_64 BUILD_TYPE=debug check
 ```
 
