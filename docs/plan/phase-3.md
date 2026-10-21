@@ -120,7 +120,9 @@ Split (the step named four function families; each fixed-point rewrite needs its
 - [x] armv6-m: `erff`/`erfcf` (120–142k instructions) in fixed point; research note; tests; both budgets.
   *D88: speed flavour, Taylor steps from ODE recurrences (erf below 2, erfc·e^(x²) from 2 to 9.25) with e^(-x²) from the exp2 core, and Ziv's test before the float-float code. `erff` 141024 → 2967, `erfcf` 119604 → 2874. The bound holds over every argument (host); the exhaustive check found and fixed three precision losses on the way. `test/unit/libm_dense` gains erf/erfc sweeps and 32 arguments that only a correct error test rounds right. No size image links the error functions; both budgets hold.*
 
-## P3.06 — Phase wrap-up
-- [ ] Final perf report against the Phase 2 baseline, and against picolibc/newlib for context.
-- [ ] Recheck the size budgets for both flavours. Full libc-test on all arches and flavours.
-- [ ] Tag `phase-3-complete`.
+## P3.06 — Phase wrap-up  `[x]`
+- [x] Final perf report against the Phase 2 baseline, and against picolibc/newlib for context.
+  *`docs/perf/phase-3.md` (D89): speed flavour against phase 2, string 0.52–0.89, strto 0.13–0.26, malloc 0.77–0.93, math 0.65–0.87 (geometric means of instruction counts). `bench-runner compare` builds the same benchmarks against picolibc 1.8.6 and newlib-nano 4.4.0 (shims in `tools/bench-compare`). rtoskit is faster in string, strto and (against picolibc) malloc, and slower in math (correct rounding) and qsort (Q17).*
+- [x] Recheck the size budgets for both flavours. Full libc-test on all arches and flavours.
+  *Both budgets hold on every board. The size flavour is 0.1–8.9 % below the phase 2 lock in every image, and the speed flavour is within +8.8 % (+18.9 % for Armv6-M `math-float`, D87). libc-test 219/219 and every unit test pass in all 18 configurations.*
+- [x] Tag `phase-3-complete`.

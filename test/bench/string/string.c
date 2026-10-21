@@ -201,10 +201,11 @@ static void sweep(const char *function, void (*body)(void *context, unsigned lon
 			size_t first = two_pointers ? offsets[o][0] : single_offsets[o];
 			struct string_case c = { sizes[s], BASE + first, BASE + (two_pointers ? offsets[o][1] : first) };
 
+			/* unsigned long, not %zu: newlib-nano's printf has no z modifier (bench-runner compare) */
 			if (two_pointers)
-				snprintf(name, sizeof(name), "%s/%zu/%zu:%zu", function, sizes[s], offsets[o][0], offsets[o][1]);
+				snprintf(name, sizeof(name), "%s/%lu/%lu:%lu", function, (unsigned long)sizes[s], (unsigned long)offsets[o][0], (unsigned long)offsets[o][1]);
 			else
-				snprintf(name, sizeof(name), "%s/%zu/%zu", function, sizes[s], first);
+				snprintf(name, sizeof(name), "%s/%lu/%lu", function, (unsigned long)sizes[s], (unsigned long)first);
 			prepare(&c);
 			bench_run(name, 1, body, &c);
 		}
