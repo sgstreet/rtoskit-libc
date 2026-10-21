@@ -116,8 +116,9 @@ Split (the step named four function families; each fixed-point rewrite needs its
 - [x] armv6-m: `sinf`/`cosf`/`tanf` (18–36k instructions) in fixed point after the integer reduction (D60); research note; tests; both budgets.
   *D87: speed flavour, `__libc_sinf_fixed` after the existing reduction, with Ziv's test before the float-float code. `sinf` 18350 → 4729, `cosf` 18281 → 3742, `tanf` 36223 → 5140. The bounds hold over every argument (host). `math-float` went over the speed budget by 856 bytes; by the user's choice the speed flavour's math images may grow by +20 % (`budget.json`, `program_margins_percent`). `test/unit/libm_dense` gains trig sweeps and 46 arguments that only a correct error test rounds right.*
 
-### P3.05h — Armv6-M fixed-point error function
-- [ ] armv6-m: `erff`/`erfcf` (120–142k instructions) in fixed point; research note; tests; both budgets.
+### P3.05h — Armv6-M fixed-point error function  `[x]`
+- [x] armv6-m: `erff`/`erfcf` (120–142k instructions) in fixed point; research note; tests; both budgets.
+  *D88: speed flavour, Taylor steps from ODE recurrences (erf below 2, erfc·e^(x²) from 2 to 9.25) with e^(-x²) from the exp2 core, and Ziv's test before the float-float code. `erff` 141024 → 2967, `erfcf` 119604 → 2874. The bound holds over every argument (host); the exhaustive check found and fixed three precision losses on the way. `test/unit/libm_dense` gains erf/erfc sweeps and 32 arguments that only a correct error test rounds right. No size image links the error functions; both budgets hold.*
 
 ## P3.06 — Phase wrap-up
 - [ ] Final perf report against the Phase 2 baseline, and against picolibc/newlib for context.

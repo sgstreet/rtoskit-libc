@@ -176,3 +176,80 @@ For `tanf`, the first version's divisor of 31 bits had a largest error of 8.16 u
   - 46 arguments that the fast path rounds the wrong way without its error test, found on the host over every binade, must be correctly rounded on every board (expected values from mpmath at 200 bits).
   - A mutant with every bound at 0 misses all of them. The sweeps alone tolerated it (7 of 123424 wrong, within the 1/10000 allowance).
   - Two `tanf` arguments the float-float quotient misses on every float-float board (D57's allowance) are left out.
+
+## P3.05h: the error functions
+
+Decision: PLAN D88.
+
+### Starting point (speed flavour, armv6-m, instructions per call)
+
+| Function | Instructions |
+|---|---:|
+| `erff` | 141024 |
+| `erfcf` | 119604 |
+
+The float-float `erff` (D63) sums the Maclaurin series of e^(x²)·erf(x), up to 55 float-float terms with a division each. `erfcf` from 1 runs Laplace's continued fraction, with 150/x² + 10 float-float divisions.
+
+### Sources reviewed
+
+- **The C23 standard**, 7.12.8.1–2 and F.10.5.
+- **W. J. Cody, *Rational Chebyshev approximations for the error function*** (Math. Comp. 23, 1969): piecewise rational approximations for erf and erfc in three ranges. These are what fdlibm and musl implement.
+- **NIST DLMF §7** (<https://dlmf.nist.gov/7>):
+  - erf' = (2/√π)e^(-x²);
+  - erfc(x)·e^(x²) is smooth and behaves as 1/(x√π) for large x (7.12.1);
+  - the continued fraction 7.9.2.
+- **CORE-MATH `erff`/`erfcf`:** polynomials on subintervals in double precision, with a rounding test.
+
+A rational or minimax fit per interval needs a set of coefficients for each interval. Instead, the Taylor coefficients are generated from an ODE recurrence. That needs only the function and one derivative per node, so the tables are small, and every coefficient comes from the same short loop.
+
+### Design (`__libc_erff_fixed`)
+
+- **|x| < 2:**
+  - erf(x0 + h) = erf(x0) + g(x0)·h·(1 + S), with nodes x0 = i/8, |h| ≤ 1/16, and g = (2/√π)e^(-x0²);
+  - S is the integral series of e^(-2x0t − t²), whose coefficients follow (k + 1)·q_{k+1} = a·q_k + b·q_{k−1}, with a = −2x0h and b = −2h²;
+  - 12 terms; past them the terms are below 2^-40;
+  - at the node 0 the result is (2/√π)·x·(1 + S) from x's own significand, so it keeps x's relative accuracy for small x;
+  - erfc(x) is 1 − erf(x), or 1 + erf(|x|) for negative x, in units of 2^-62.
+- **2 ≤ x < 9.25:**
+  - erfc(x) = e^(-x²)·R(x), with R = erfc·e^(x²);
+  - R(x0 + h) = R(x0)·(1 + T), with nodes x0 = 2 + i/8;
+  - T comes from (k + 1)·r_{k+1} = 2x0·r_k + 2·r_{k−1}, which follows from R' = 2xR − 2/√π, with the tabulated R'/R as the first coefficient;
+  - e^(-x²) comes from the exp2 core of P3.05f, with x² exact to 2^-40 and z = x²/ln 2 to 2^-37;
+  - erf(x) is 1 − erfc(x) there;
+  - results below the normal range decline to the float-float path.
+- **Tables:** erf and g at 17 nodes, R and R'/R at 59 nodes, and 1/k for k = 3 … 13, about 1 KB in all.
+- **The series** keeps its terms in Q32 (the erf branch) or Q35 (the R branch, where every term is below 0.03). a and b are in Q30, and every product is exact and then rounded to nearest.
+  - **b·q0:** b is passed again at the series' own precision for the first step, where it multiplies q0 = 1.
+  - **Rounding:** each step rounds to nearest; truncation bias was measured at 11 units.
+  - **h(1 + S):** formed in units of 2^-62 before the product with g.
+
+### Error bounds, verified over every argument
+
+The host ran the core over every float from 2^-19 to 3.92 (`erff`) and from 2^-19 to 9.25 (`erfcf`, both signs), against the double functions:
+
+| Function | Arguments | Largest error (units of 2^-32) | Bound used | Falls back | Not correctly rounded on the fast path |
+|---|---:|---:|---:|---:|---:|
+| `erff` | 351,650,448 | 3.92 | 8 | 3.3 % | 0 |
+| `erfcf` | 361,601,435 | 5.69 | 8 | 3.3 % | 0 |
+
+The first versions measured 11.5 and 33.3 units, with 110 and 191,682 wrong results. Three precision losses caused this, and fixing them gave the figures above:
+- a floored series in which vanishing terms stuck at −1 unit;
+- b in Q30 in the first step (2 units);
+- h(1 + S) floored to 2^-34 before the product with g.
+
+### Results (armv6-m speed flavour; armv6s-m the same)
+
+| Function | Before | After |
+|---|---:|---:|
+| `erff` | 141024 | 2967 |
+| `erfcf` | 119604 | 2874 |
+
+`__libc_erff_fixed` is 2328 bytes in the speed flavour's `libc.a`. No size image links the error functions.
+
+### Tests
+
+- **`test/unit/libm_dense`:**
+  - sweeps `erff` and `erfcf` over both branches and both signs, and `erfcf` up to its subnormal results;
+  - 32 more arguments that the fast path rounds the wrong way without its error test.
+  - These were chosen with F at least one unit from the halfway point: at exactly 0x100 the test falls back even with a bound of 0, so such a vector cannot catch the mutant.
+  - The bounds-at-0 mutant now misses all 78 vectors; the real library rounds all 78 correctly on every board and flavour.

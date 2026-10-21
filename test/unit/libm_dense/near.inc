@@ -12,9 +12,9 @@
  */
 
 /*
- * Arguments whose sin, cos or tan lies so near the point halfway between
- * two floats that the Armv6-M fixed-point fast path (PLAN D87) rounds it the
- * wrong way without its error test (found over every binade on the host),
+ * Arguments whose sin, cos, tan, erf or erfc lies so near the point
+ * halfway between two floats that the Armv6-M fixed-point fast path
+ * (PLAN D87, D88) rounds it the wrong way without its error test (found over every binade on the host),
  * with the correctly rounded result (mpmath, 200 bits). Two tanf arguments
  * found (0x1.3240bcp-3, 0x1.b79bf6p+18) are left out: the float-float
  * quotient (D60) that every float-float board uses misses them as well, within the
@@ -66,3 +66,35 @@
 	{ tanf, 0x1.be8826p-5f, 0x1.bef98p-5f },
 	{ tanf, 0x1.178048p+7f, 0x1.3dac3ap+4f },
 	{ tanf, 0x1.c6037p-9f, 0x1.c603e8p-9f },
+	{ erff, 0x1.ab9f6p-6f, 0x1.e2692ep-6f },
+	{ erff, 0x1.b7f46cp-4f, 0x1.ee8884p-4f },
+	{ erff, 0x1.fab3bp-13f, 0x1.1de03ep-12f },
+	{ erff, -0x1.392b0ep-6f, -0x1.615456p-6f },
+	{ erff, 0x1.a156b8p-7f, 0x1.d6e412p-7f },
+	{ erff, -0x1.2be05ap-18f, -0x1.525fdp-18f },
+	{ erff, 0x1.baf22cp-15f, 0x1.f3cfap-15f },
+	{ erff, -0x1.eb2d7ap-9f, -0x1.151db4p-8f },
+	{ erff, 0x1.356cf8p-9f, 0x1.5d261ap-9f },
+	{ erff, 0x1.a3fca4p-10f, 0x1.d9e77p-10f },
+	{ erff, 0x1.aa6e38p-7f, 0x1.e125fp-7f },
+	{ erff, 0x1.ab5558p-16f, 0x1.e231bp-16f },
+	{ erff, 0x1.006efp-5f, 0x1.214274p-5f },
+	{ erff, 0x1.1c7d24p-1f, 0x1.22d2aap-1f },
+	{ erff, -0x1.8c8f9ep-4f, -0x1.be13b6p-4f },
+	{ erff, -0x1.79cb5ep-19f, -0x1.aa4b9cp-19f },
+	{ erfcf, 0x1.71bef4p+1f, 0x1.717f96p-15f },
+	{ erfcf, 0x1.fadfbcp+2f, 0x1.9b739ap-95f },
+	{ erfcf, 0x1.c9c304p+1f, 0x1.c7df34p-22f },
+	{ erfcf, 0x1.b4ab74p+2f, 0x1.2ba978p-71f },
+	{ erfcf, 0x1.f49388p+2f, 0x1.ea220cp-93f },
+	{ erfcf, -0x1.50c45ap-18f, 0x1.00006p+0f },
+	{ erfcf, -0x1.aeb4eep-17f, 0x1.0000f4p+0f },
+	{ erfcf, 0x1.53866p+1f, 0x1.70ff14p-13f },
+	{ erfcf, 0x1.e9067p+1f, 0x1.1972bep-24f },
+	{ erfcf, 0x1.fbbaf8p+2f, 0x1.4c40d4p-95f },
+	{ erfcf, 0x1.8a3a28p+1f, 0x1.bd342ep-17f },
+	{ erfcf, -0x1.1c0936p-15f, 0x1.000282p+0f },
+	{ erfcf, 0x1.5051ep+1f, 0x1.a8ba84p-13f },
+	{ erfcf, 0x1.69958p+1f, 0x1.0f5fdcp-14f },
+	{ erfcf, 0x1.89120cp+2f, 0x1.15b71ep-58f },
+	{ erfcf, 0x1.496cdcp+1f, 0x1.1e3fdcp-12f },
