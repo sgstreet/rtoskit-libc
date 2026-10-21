@@ -5,7 +5,7 @@ systems, bound to an RTOS through a link-time seam. Licence: MPL-2.0.
 
 **Read first, every session:** `docs/plan/PLAN.md` (goals, architecture, the
 decision log D*, open questions Q*), then the active phase file
-(`docs/plan/phase-{1,2,3,4}.md`).
+(`docs/plan/phase-{1,2,3,4,5}.md`).
 
 ## Session workflow
 
@@ -247,7 +247,7 @@ libc/internal/     private headers (no .mk)
 port/<port>/       linux (test port), none (bare metal), rtoskit (future); port/<port>/<family>/ variants
 test/              unit tests (test/unit/<name>/), libc-test glue, size, bench
 example/           examples
-toolchain/         Phase 4: crosstool-NG libc backend, multilib configs
+toolchain/         Phase 5: crosstool-NG libc backend, multilib configs
 tools/             build system (makefiles, templates, scripts)
 docs/standard/     C23 standard text (N3220 clause 7, Annex B)
 docs/plan/         PLAN.md + phase task lists
