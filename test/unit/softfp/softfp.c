@@ -241,23 +241,63 @@ static void test_special_results(void)
 }
 
 /*
- * The float-float exact product (PLAN D82): the fma form on the FPUs that
- * have one, Dekker's elsewhere; either way hi + lo is the product exactly,
- * which double holds for two 24-bit significands (factors in [2^-30, 2^30),
- * so that the error term stays a normal float).
+ * The exact products (PLAN D82, D83): the fma form on the FPUs that have
+ * one, Dekker's elsewhere. Each board's form must equal Dekker's, written
+ * out here, for factors whose product and error term stay normal; the
+ * float pair is also checked against double, which holds it exactly.
  */
-static void test_ff_product(void)
+static void dekker_float(float a, float b, float *high, float *low)
+{
+	float product = a * b;
+	float ca = 0x1.002p12f * a;
+	float cb = 0x1.002p12f * b;
+	float ah = ca - (ca - a);
+	float bh = cb - (cb - b);
+	float al = a - ah;
+	float bl = b - bh;
+
+	*high = product;
+	*low = ((ah * bh - product) + ah * bl + al * bh) + al * bl;
+}
+
+static void dekker_double(double a, double b, double *high, double *low)
+{
+	double product = a * b;
+	double ca = 0x1.0000002p27 * a;
+	double cb = 0x1.0000002p27 * b;
+	double ah = ca - (ca - a);
+	double bh = cb - (cb - b);
+	double al = a - ah;
+	double bl = b - bh;
+
+	*high = product;
+	*low = ((ah * bh - product) + ah * bl + al * bh) + al * bl;
+}
+
+static void test_exact_products(void)
 {
 	uint64_t state = 0x5851f42d4c957f2dULL;
 
 	for (int i = 0; i < 20000; ++i) {
 		uint64_t r = next(&state);
+		uint64_t q = next(&state);
 		float a = __libc_float_from(((uint32_t)r & 0x807fffff) | (uint32_t)(97 + (r >> 32) % 60) << 23);
 		float b = __libc_float_from(((uint32_t)(r >> 23) & 0x807fffff) | (uint32_t)(97 + (r >> 48) % 60) << 23);
-		struct __libc_ff p = __libc_ff_product(a, b);
+		double c = __libc_double_from((q & 0x800fffffffffffffULL) | (uint64_t)(1023 - 200 + (q >> 52) % 400) << 52);
+		double d = __libc_double_from(((q >> 7) & 0x800fffffffffffffULL) | (uint64_t)(1023 - 200 + (r >> 20) % 400) << 52);
+		struct __libc_ff pf = __libc_ff_product(a, b);
+		struct __libc_dd pd = __libc_dd_product(c, d);
+		float fh;
+		float fl;
+		double dh;
+		double dl;
 
-		if (bits_of_float(p.hi) != bits_of_float(a * b) || !same((double)p.hi + (double)p.lo, (double)a * (double)b))
+		dekker_float(a, b, &fh, &fl);
+		dekker_double(c, d, &dh, &dl);
+		if (bits_of_float(pf.hi) != bits_of_float(fh) || bits_of_float(pf.lo) != bits_of_float(fl) || !same((double)pf.hi + (double)pf.lo, (double)a * (double)b))
 			fail("ff product", bits_of_float(a) | (uint64_t)bits_of_float(b) << 32);
+		if (!same(pd.hi, dh) || !same(pd.lo, dl))
+			fail("dd product", bits_of(c));
 	}
 }
 
@@ -267,7 +307,7 @@ int main(void)
 	test_double_to_i64();
 	test_subtraction();
 	test_special_results();
-	test_ff_product();
+	test_exact_products();
 
 	fputs(failures == 0 ? "softfp: pass\n" : "softfp: FAIL\n", stdout);
 	return failures == 0 ? 0 : 1;

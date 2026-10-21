@@ -19,6 +19,9 @@
  * (PLAN D82; libc/internal/fpu/${LIBC_FPU} is on CPPFLAGS): FPv5-DP (armv7e-m-dp): VFMA.F32 and VFMA.F64.
  */
 
+/* fma is one instruction, so a double product's exact error is too */
+constexpr bool __libc_fpu_fma = true;
+
 /* fmaf is one instruction, so a float product's exact error is too */
 constexpr bool __libc_fpu_fmaf = true;
 

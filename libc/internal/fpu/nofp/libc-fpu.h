@@ -19,6 +19,9 @@
  * (PLAN D82; libc/internal/fpu/${LIBC_FPU} is on CPPFLAGS): Armv6-M: no FPU, every float operation is a call.
  */
 
+/* fma is one instruction, so a double product's exact error is too */
+constexpr bool __libc_fpu_fma = false;
+
 /* fmaf is one instruction, so a float product's exact error is too */
 constexpr bool __libc_fpu_fmaf = false;
 

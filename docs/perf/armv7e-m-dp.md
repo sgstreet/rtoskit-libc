@@ -633,3 +633,89 @@ changed are shown.
 | `fixed/256` | 97.0 (-13 %) |
 | `fixed/4096` | 97.0 (-13 %) |
 | `realloc/grow` | 97.1 (-12 %) |
+
+## P3.05c — Double-double products by fma (both flavours)
+
+`__libc_dd_product` takes the exact error of a double product from one `VFMA.F64` on FPv5-DP (PLAN D83); every double
+function, and the float functions computed in double, use it; the results are unchanged bit for bit. Change against
+the P3.05b baselines; only the programs that changed are shown.
+
+### Release (size flavour)
+
+#### math
+
+Throughput, per call (the latency counts are the same under qemu).
+
+| Function | float | double |
+|---|---:|---:|
+| `acos` | 232 (-33 %) | 228 (-33 %) |
+| `acosh` | 250 (-25 %) | 246 (-25 %) |
+| `asin` | 238 (-33 %) | 220 (-35 %) |
+| `asinh` | 302 (-25 %) | 287 (-26 %) |
+| `atan` | 211 (-25 %) | 195 (-27 %) |
+| `atan2` | 398 (-15 %) | 360 (-17 %) |
+| `atanh` | 234 (-18 %) | 217 (-19 %) |
+| `cbrt` | 137 | 134 |
+| `cos` | 171 (-24 %) | 167 (-24 %) |
+| `cosh` | 196 (-11 %) | 192 (-11 %) |
+| `erf` | 421 (-4 %) | 418 (-4 %) |
+| `erfc` | 787 (-16 %) | 783 (-16 %) |
+| `exp` | 172 (-8 %) | 169 (-8 %) |
+| `exp2` | 186 (-12 %) | 183 (-12 %) |
+| `expm1` | 187 (-7 %) | 172 (-8 %) |
+| `floor` | 10.3 | 11.8 |
+| `fmod` | 164 | 178 |
+| `hypot` | 35.4 | 138 (-31 %) |
+| `lgamma` | 503 (-19 %) | 499 (-19 %) |
+| `log` | 153 (-20 %) | 150 (-21 %) |
+| `log10` | 164 (-25 %) | 161 (-25 %) |
+| `log1p` | 203 (-16 %) | 187 (-17 %) |
+| `log2` | 203 (-20 %) | 200 (-20 %) |
+| `pow` | 396 (-14 %) | 392 (-14 %) |
+| `round` | 10.3 | 11.8 |
+| `sin` | 181 (-23 %) | 165 (-24 %) |
+| `sinh` | 218 (-12 %) | 200 (-13 %) |
+| `sqrt` | 10.3 | 11.6 |
+| `tan` | 225 (-31 %) | 207 (-32 %) |
+| `tanh` | 218 (-17 %) | 202 (-19 %) |
+| `tgamma` | 722 (-17 %) | 719 (-17 %) |
+
+### Speed flavour
+
+#### math
+
+Throughput, per call (the latency counts are the same under qemu).
+
+| Function | float | double |
+|---|---:|---:|
+| `acos` | 232 (-33 %) | 228 (-33 %) |
+| `acosh` | 250 (-25 %) | 246 (-25 %) |
+| `asin` | 238 (-33 %) | 220 (-35 %) |
+| `asinh` | 302 (-25 %) | 287 (-26 %) |
+| `atan` | 211 (-25 %) | 195 (-27 %) |
+| `atan2` | 398 (-15 %) | 360 (-17 %) |
+| `atanh` | 234 (-18 %) | 217 (-19 %) |
+| `cbrt` | 137 | 134 |
+| `cos` | 171 (-24 %) | 167 (-24 %) |
+| `cosh` | 196 (-11 %) | 192 (-11 %) |
+| `erf` | 421 (-4 %) | 418 (-4 %) |
+| `erfc` | 787 (-16 %) | 783 (-16 %) |
+| `exp` | 172 (-8 %) | 169 (-8 %) |
+| `exp2` | 186 (-12 %) | 183 (-12 %) |
+| `expm1` | 187 (-7 %) | 172 (-8 %) |
+| `floor` | 10.3 | 11.8 |
+| `fmod` | 164 | 178 |
+| `hypot` | 35.4 | 138 (-31 %) |
+| `lgamma` | 503 (-19 %) | 499 (-19 %) |
+| `log` | 153 (-20 %) | 150 (-21 %) |
+| `log10` | 164 (-25 %) | 161 (-25 %) |
+| `log1p` | 203 (-16 %) | 187 (-17 %) |
+| `log2` | 203 (-20 %) | 200 (-20 %) |
+| `pow` | 396 (-14 %) | 392 (-14 %) |
+| `round` | 10.3 | 11.8 |
+| `sin` | 181 (-23 %) | 165 (-24 %) |
+| `sinh` | 218 (-12 %) | 200 (-13 %) |
+| `sqrt` | 10.3 | 11.6 |
+| `tan` | 225 (-31 %) | 207 (-32 %) |
+| `tanh` | 218 (-17 %) | 202 (-19 %) |
+| `tgamma` | 722 (-17 %) | 719 (-17 %) |

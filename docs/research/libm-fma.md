@@ -84,3 +84,45 @@ layer (D57–D68) works in float-float to stay within 0.5 ulp:
 - **`test/unit/float_accuracy` and `complex_float`:** still run the whole
   layer on every board and build type, and natively on x86-64 (the Dekker
   form).
+
+## P3.05c: double-double on FPv5-DP
+
+Decision: PLAN D83.
+
+The double functions (D47–D49) work in double-double. Their exact
+product `__libc_dd_product` is Dekker's: two Veltkamp splits at 2^27 + 1
+and four partial products. FPv5-DP has `VFMA.F64`, so `libc-fpu.h` gains
+`constexpr bool __libc_fpu_fma`, true on FPv5-DP only, and the product
+becomes `{ a·b, fma(a, b, -a·b) }` there.
+
+- **Exactness:** the same conditions as Dekker's (no overflow, an error
+  term clear of the subnormal range), so the results stay bit-identical.
+- **Rounding mode:** the double cores already switch to round-to-nearest
+  (D47). The fma form would be exact in any direction anyway.
+- **Float functions on armv7e-m-dp** are the double ones (D57), so they
+  gain too.
+- **The other cores** keep Dekker. FPv4-SP and FPv5-SP have no double
+  precision, `nofp` has no FPU, and x86-64 SSE2 has no FMA (D81).
+
+The plan also asked to re-tune the double polynomials for hardware FMA.
+That was not done: the cores' error budget (about 2^-68, D47) comes from
+the double-double steps, whose results the product change leaves
+bit-identical, so there is no accuracy to trade for fewer terms without a
+new error analysis per core.
+
+**Results (armv7e-m-dp, both flavours, instructions per call):**
+
+| Function | Before | After |
+|---|---:|---:|
+| `asin` | 337 | 221 |
+| `tan` | 307 | 208 |
+| `atan` | 268 | 196 |
+| `sin` | 219 | 166 |
+| `log` | 190 | 151 |
+| `lgamma` | 616 | 500 |
+
+102 cases faster and none slower.
+
+**Test:** `test/unit/softfp` compares the board's float and double
+products with Dekker's, written out in the test, over 20,000 random pairs.
+They must be equal bit for bit.

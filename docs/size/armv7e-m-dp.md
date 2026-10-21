@@ -535,3 +535,19 @@ Decision D79, `docs/research/locks.md`. Before → after, release build; `libc.a
 | malloc-heavy-tiny | 1874 → 1854 | 76 → 40 | 8 → 8 |
 
 Other programs are unchanged. The port drops `__rtos_thread_self` from the lock path and the owner pointer from every lock (4 bytes on 32-bit cores, 8 on x86-64), and gains the thread-local token.
+
+## P3.05c — double-double products by fma
+
+Decision D83, `docs/research/libm-fma.md`. Before → after, release build: `__libc_dd_product` takes the exact error of a
+double product from one `VFMA.F64` instead of Dekker's split products.
+
+`libc.a` text: 78384 → 75006 (-3378).
+
+| Program | code |
+|---|---|
+| math-mix | 12302 → 11662 |
+| math-float | 9494 → 9078 |
+
+Grew, justified: `asinh`'s frame, 200 → 208 bytes (register allocation around the shorter products); no entry point's depth grows.
+
+- Reduced: the double-double members, -3378 bytes of text in all; the largest: `cpow.o` 1490 → 1356, `__libc_atan2_core.o` 1280 → 1170, `acos.o` 416 → 312, `acosh.o` 592 → 488.

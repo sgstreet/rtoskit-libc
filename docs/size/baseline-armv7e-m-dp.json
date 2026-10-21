@@ -600,7 +600,7 @@
   },
   "math-float": {
    "main": {
-    "depth": 288,
+    "depth": 268,
     "notes": [
      "assembly: memset"
     ],
@@ -609,7 +609,7 @@
      "sinf",
      "sin",
      "__libc_rem_pio2",
-     "libc/math/__libc_rem_pio2.c:__libc_dd_product"
+     "libc/math/__libc_rem_pio2.c:bits_at.constprop.0"
     ]
    },
    "origin": {
@@ -619,7 +619,7 @@
      "rodata": 2672,
      "tbss": 0,
      "tdata": 0,
-     "text": 6376,
+     "text": 5960,
      "unwind": 0
     },
     "libgcc": {
@@ -665,13 +665,13 @@
     "rodata": 2672,
     "tbss": 0,
     "tdata": 0,
-    "text": 6822,
+    "text": 6406,
     "unwind": 0
    }
   },
   "math-mix": {
    "main": {
-    "depth": 672,
+    "depth": 536,
     "notes": [
      "assembly: memset"
     ],
@@ -680,8 +680,7 @@
      "atan2",
      "__libc_atan2_core",
      "libc/math/__libc_atan2_core.c:atan_unit",
-     "libc/math/__libc_atan2_core.c:__libc_dd_divide",
-     "libc/math/__libc_atan2_core.c:__libc_dd_product"
+     "libc/math/__libc_atan2_core.c:__libc_dd_divide"
     ]
    },
    "origin": {
@@ -691,7 +690,7 @@
      "rodata": 3200,
      "tbss": 0,
      "tdata": 0,
-     "text": 8414,
+     "text": 7776,
      "unwind": 0
     },
     "libgcc": {
@@ -709,7 +708,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 44,
+     "text": 42,
      "unwind": 0
     },
     "port": {
@@ -737,7 +736,7 @@
     "rodata": 3200,
     "tbss": 0,
     "tdata": 0,
-    "text": 9102,
+    "text": 8462,
     "unwind": 0
    }
   }
@@ -885,7 +884,7 @@
     "rodata": 528,
     "tbss": 0,
     "tdata": 0,
-    "text": 752,
+    "text": 642,
     "unwind": 0
    },
    "__libc_atexit_run.o": {
@@ -912,7 +911,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 248,
+    "text": 208,
     "unwind": 0
    },
    "__libc_cosh_core.o": {
@@ -921,7 +920,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 256,
+    "text": 208,
     "unwind": 0
    },
    "__libc_decimal_round.o": {
@@ -984,7 +983,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 424,
+    "text": 386,
     "unwind": 0
    },
    "__libc_erfc_table.o": {
@@ -993,7 +992,7 @@
     "rodata": 1824,
     "tbss": 0,
     "tdata": 0,
-    "text": 348,
+    "text": 292,
     "unwind": 0
    },
    "__libc_erfc_tail.o": {
@@ -1002,7 +1001,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 400,
+    "text": 354,
     "unwind": 0
    },
    "__libc_exact_fma.o": {
@@ -1056,7 +1055,7 @@
     "rodata": 1024,
     "tbss": 0,
     "tdata": 0,
-    "text": 396,
+    "text": 332,
     "unwind": 0
    },
    "__libc_exp_dd.o": {
@@ -1335,7 +1334,7 @@
     "rodata": 392,
     "tbss": 0,
     "tdata": 0,
-    "text": 1610,
+    "text": 1532,
     "unwind": 0
    },
    "__libc_log1p_core.o": {
@@ -1362,7 +1361,7 @@
     "rodata": 1472,
     "tbss": 0,
     "tdata": 0,
-    "text": 652,
+    "text": 564,
     "unwind": 0
    },
    "__libc_malloc_check.o": {
@@ -1524,7 +1523,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 380,
+    "text": 284,
     "unwind": 0
    },
    "__libc_quick_exit_handlers.o": {
@@ -1551,7 +1550,7 @@
     "rodata": 160,
     "tbss": 0,
     "tdata": 0,
-    "text": 918,
+    "text": 846,
     "unwind": 0
    },
    "__libc_remainder.o": {
@@ -1623,7 +1622,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 400,
+    "text": 304,
     "unwind": 0
    },
    "__libc_sinh_core.o": {
@@ -1632,7 +1631,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 408,
+    "text": 312,
     "unwind": 0
    },
    "__libc_start_main.o": {
@@ -1830,7 +1829,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 416,
+    "text": 312,
     "unwind": 0
    },
    "acosf.o": {
@@ -1848,7 +1847,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 592,
+    "text": 488,
     "unwind": 0
    },
    "acoshf.o": {
@@ -1884,7 +1883,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 504,
+    "text": 400,
     "unwind": 0
    },
    "acospif.o": {
@@ -1929,7 +1928,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 536,
+    "text": 432,
     "unwind": 0
    },
    "asinf.o": {
@@ -1947,7 +1946,7 @@
     "rodata": 16,
     "tbss": 0,
     "tdata": 0,
-    "text": 670,
+    "text": 566,
     "unwind": 0
    },
    "asinhf.o": {
@@ -1983,7 +1982,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 640,
+    "text": 586,
     "unwind": 0
    },
    "asinpif.o": {
@@ -2028,7 +2027,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 792,
+    "text": 736,
     "unwind": 0
    },
    "atan2f.o": {
@@ -2055,7 +2054,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 884,
+    "text": 780,
     "unwind": 0
    },
    "atan2pif.o": {
@@ -2091,7 +2090,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 448,
+    "text": 392,
     "unwind": 0
    },
    "atanhf.o": {
@@ -2127,7 +2126,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 548,
+    "text": 460,
     "unwind": 0
    },
    "atanpif.o": {
@@ -2487,7 +2486,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 696,
+    "text": 600,
     "unwind": 0
    },
    "catanhf.o": {
@@ -2703,7 +2702,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 616,
+    "text": 528,
     "unwind": 0
    },
    "clogf.o": {
@@ -2883,7 +2882,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 496,
+    "text": 448,
     "unwind": 0
    },
    "coshf.o": {
@@ -2919,7 +2918,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 440,
+    "text": 384,
     "unwind": 0
    },
    "cospif.o": {
@@ -2946,7 +2945,7 @@
     "rodata": 16,
     "tbss": 0,
     "tdata": 0,
-    "text": 1474,
+    "text": 1340,
     "unwind": 0
    },
    "cpowf.o": {
@@ -3243,7 +3242,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 620,
+    "text": 564,
     "unwind": 0
    },
    "erfc.o": {
@@ -3324,7 +3323,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 420,
+    "text": 364,
     "unwind": 0
    },
    "exp10f.o": {
@@ -3351,7 +3350,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 328,
+    "text": 272,
     "unwind": 0
    },
    "exp10m1f.o": {
@@ -3378,7 +3377,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 396,
+    "text": 340,
     "unwind": 0
    },
    "exp2f.o": {
@@ -3405,7 +3404,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 336,
+    "text": 280,
     "unwind": 0
    },
    "exp2m1f.o": {
@@ -4467,7 +4466,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 484,
+    "text": 388,
     "unwind": 0
    },
    "hypotf.o": {
@@ -4692,7 +4691,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 504,
+    "text": 440,
     "unwind": 0
    },
    "lgammaf.o": {
@@ -4854,7 +4853,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 272,
+    "text": 200,
     "unwind": 0
    },
    "log10f.o": {
@@ -4881,7 +4880,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 288,
+    "text": 232,
     "unwind": 0
    },
    "log10p1f.o": {
@@ -4935,7 +4934,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 312,
+    "text": 256,
     "unwind": 0
    },
    "log2f.o": {
@@ -4962,7 +4961,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 288,
+    "text": 232,
     "unwind": 0
    },
    "log2p1f.o": {
@@ -5493,7 +5492,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 900,
+    "text": 844,
     "unwind": 0
    },
    "powf.o": {
@@ -5547,7 +5546,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 564,
+    "text": 508,
     "unwind": 0
    },
    "powrf.o": {
@@ -5763,7 +5762,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 384,
+    "text": 336,
     "unwind": 0
    },
    "rootnf.o": {
@@ -6051,7 +6050,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 612,
+    "text": 556,
     "unwind": 0
    },
    "sinhf.o": {
@@ -6087,7 +6086,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 544,
+    "text": 472,
     "unwind": 0
    },
    "sinpif.o": {
@@ -7104,7 +7103,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 488,
+    "text": 432,
     "unwind": 0
    },
    "tanf.o": {
@@ -7122,7 +7121,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 636,
+    "text": 564,
     "unwind": 0
    },
    "tanhf.o": {
@@ -7158,7 +7157,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 768,
+    "text": 714,
     "unwind": 0
    },
    "tanpif.o": {
@@ -7618,7 +7617,7 @@
    "rodata": 8406,
    "tbss": 358,
    "tdata": 8,
-   "text": 78384,
+   "text": 75006,
    "unwind": 0
   }
  },
@@ -7638,14 +7637,13 @@
     ]
    },
    "atan2": {
-    "depth": 560,
+    "depth": 424,
     "notes": [],
     "path": [
      "atan2",
      "__libc_atan2_core",
      "libc/math/__libc_atan2_core.c:atan_unit",
-     "libc/math/__libc_atan2_core.c:__libc_dd_divide",
-     "libc/math/__libc_atan2_core.c:__libc_dd_product"
+     "libc/math/__libc_atan2_core.c:__libc_dd_divide"
     ]
    },
    "bsearch": {
@@ -7683,18 +7681,18 @@
     ]
    },
    "cos": {
-    "depth": 232,
+    "depth": 212,
     "notes": [
      "assembly: memset"
     ],
     "path": [
      "cos",
      "__libc_rem_pio2",
-     "libc/math/__libc_rem_pio2.c:__libc_dd_product"
+     "libc/math/__libc_rem_pio2.c:bits_at.constprop.0"
     ]
    },
    "cpow": {
-    "depth": 1288,
+    "depth": 1112,
     "notes": [
      "assembly: memset",
      "libgcc: __muldc3"
@@ -7705,12 +7703,11 @@
      "atan2",
      "__libc_atan2_core",
      "libc/math/__libc_atan2_core.c:atan_unit",
-     "libc/math/__libc_atan2_core.c:__libc_dd_divide",
-     "libc/math/__libc_atan2_core.c:__libc_dd_product"
+     "libc/math/__libc_atan2_core.c:__libc_dd_divide"
     ]
    },
    "erfc": {
-    "depth": 296,
+    "depth": 248,
     "notes": [],
     "path": [
      "erfc",
@@ -7731,20 +7728,24 @@
     ]
    },
    "exp": {
-    "depth": 136,
+    "depth": 128,
     "notes": [],
     "path": [
      "exp",
-     "__libc_exp_core"
+     "__libc_exp_scale",
+     "ilogb",
+     "__libc_math_raise_invalid"
     ]
    },
    "expf": {
-    "depth": 144,
+    "depth": 136,
     "notes": [],
     "path": [
      "expf",
      "exp",
-     "__libc_exp_core"
+     "__libc_exp_scale",
+     "ilogb",
+     "__libc_math_raise_invalid"
     ]
    },
    "fclose": {
@@ -7877,7 +7878,7 @@
     ]
    },
    "lgamma": {
-    "depth": 888,
+    "depth": 816,
     "notes": [],
     "path": [
      "lgamma",
@@ -7885,8 +7886,7 @@
      "libc/math/__libc_lgamma_core.c:lgamma_positive",
      "libc/math/__libc_lgamma_core.c:stirling",
      "libc/math/__libc_lgamma_core.c:log_dd",
-     "__libc_log_core",
-     "libc/math/__libc_log_core.c:__libc_dd_product"
+     "__libc_log_core"
     ]
    },
    "localtime": {
@@ -7907,12 +7907,11 @@
     ]
    },
    "log": {
-    "depth": 160,
+    "depth": 104,
     "notes": [],
     "path": [
      "log",
-     "__libc_log_core",
-     "libc/math/__libc_log_core.c:__libc_dd_product"
+     "__libc_log_core"
     ]
    },
    "malloc": {
@@ -7955,22 +7954,24 @@
     ]
    },
    "pow": {
-    "depth": 232,
+    "depth": 184,
     "notes": [],
     "path": [
      "pow",
-     "__libc_log_core",
-     "libc/math/__libc_log_core.c:__libc_dd_product"
+     "__libc_exp_scale",
+     "ilogb",
+     "__libc_math_raise_invalid"
     ]
    },
    "powf": {
-    "depth": 240,
+    "depth": 192,
     "notes": [],
     "path": [
      "powf",
      "pow",
-     "__libc_log_core",
-     "libc/math/__libc_log_core.c:__libc_dd_product"
+     "__libc_exp_scale",
+     "ilogb",
+     "__libc_math_raise_invalid"
     ]
    },
    "printf": {
@@ -8031,18 +8032,18 @@
     ]
    },
    "sin": {
-    "depth": 232,
+    "depth": 212,
     "notes": [
      "assembly: memset"
     ],
     "path": [
      "sin",
      "__libc_rem_pio2",
-     "libc/math/__libc_rem_pio2.c:__libc_dd_product"
+     "libc/math/__libc_rem_pio2.c:bits_at.constprop.0"
     ]
    },
    "sinf": {
-    "depth": 256,
+    "depth": 236,
     "notes": [
      "assembly: memset"
     ],
@@ -8050,7 +8051,7 @@
      "sinf",
      "sin",
      "__libc_rem_pio2",
-     "libc/math/__libc_rem_pio2.c:__libc_dd_product"
+     "libc/math/__libc_rem_pio2.c:bits_at.constprop.0"
     ]
    },
    "snprintf": {
@@ -8147,18 +8148,18 @@
     ]
    },
    "tan": {
-    "depth": 280,
+    "depth": 228,
     "notes": [
      "assembly: memset"
     ],
     "path": [
      "tan",
      "__libc_rem_pio2",
-     "libc/math/__libc_rem_pio2.c:__libc_dd_product"
+     "libc/math/__libc_rem_pio2.c:bits_at.constprop.0"
     ]
    },
    "tgamma": {
-    "depth": 864,
+    "depth": 792,
     "notes": [],
     "path": [
      "tgamma",
@@ -8166,8 +8167,7 @@
      "libc/math/__libc_lgamma_core.c:lgamma_positive",
      "libc/math/__libc_lgamma_core.c:stirling",
      "libc/math/__libc_lgamma_core.c:log_dd",
-     "__libc_log_core",
-     "libc/math/__libc_log_core.c:__libc_dd_product"
+     "__libc_log_core"
     ]
    },
    "thrd_create": {
@@ -8271,30 +8271,29 @@
    "__libc_assert_fail.o:__libc_assert_fail": 280,
    "__libc_assert_fail.o:libc/assert/__libc_assert_fail.c:append": 0,
    "__libc_atan2_core.o:__libc_atan2_core": 152,
-   "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:__libc_dd_divide": 120,
-   "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:__libc_dd_product": 32,
-   "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:atan_unit": 160,
+   "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:__libc_dd_divide": 64,
+   "__libc_atan2_core.o:libc/math/__libc_atan2_core.c:atan_unit": 112,
    "__libc_atexit_run.o:libc/stdlib/__libc_atexit_run.c:__libc_atexit_run": 0,
    "__libc_cond_wait.o:__libc_cond_wait": 24,
-   "__libc_cos_core.o:__libc_cos_core": 72,
-   "__libc_cosh_core.o:__libc_cosh_core": 48,
+   "__libc_cos_core.o:__libc_cos_core": 56,
+   "__libc_cosh_core.o:__libc_cosh_core": 32,
    "__libc_decimal_round.o:__libc_decimal_round": 20,
    "__libc_decimal_set.o:__libc_decimal_set": 48,
    "__libc_decimal_shift_left.o:__libc_decimal_shift_left": 24,
    "__libc_decimal_shift_right.o:__libc_decimal_shift_right": 28,
    "__libc_decimal_to_float.o:__libc_decimal_to_float": 888,
    "__libc_double_to_i64.o:__libc_double_to_i64": 0,
-   "__libc_erf_series.o:__libc_erf_series": 88,
+   "__libc_erf_series.o:__libc_erf_series": 80,
    "__libc_erf_series.o:libc/math/__libc_erf_series.c:__libc_dd_product": 32,
-   "__libc_erfc_table.o:__libc_erfc_table": 48,
-   "__libc_erfc_tail.o:__libc_erfc_tail": 120,
+   "__libc_erfc_table.o:__libc_erfc_table": 40,
+   "__libc_erfc_tail.o:__libc_erfc_tail": 96,
    "__libc_erfc_tail.o:libc/math/__libc_erfc_tail.c:__libc_dd_product": 32,
    "__libc_exact_fma.o:__libc_exact_fma": 64,
    "__libc_exact_to_double.o:__libc_exact_to_double": 40,
    "__libc_exact_to_float.o:__libc_exact_to_float": 32,
    "__libc_exit_register.o:__libc_exit_register": 16,
    "__libc_exit_run.o:__libc_exit_run": 16,
-   "__libc_exp_core.o:__libc_exp_core": 96,
+   "__libc_exp_core.o:__libc_exp_core": 72,
    "__libc_exp_dd.o:__libc_exp_dd": 72,
    "__libc_exp_scale.o:__libc_exp_scale": 64,
    "__libc_expm1_core.o:__libc_expm1_core": 56,
@@ -8337,18 +8336,16 @@
    "__libc_iseqsig.o:__libc_iseqsig": 8,
    "__libc_iseqsigf.o:__libc_iseqsigf": 8,
    "__libc_iseqsigl.o:__libc_iseqsigl": 0,
-   "__libc_lgamma_core.o:__libc_lgamma_core": 240,
+   "__libc_lgamma_core.o:__libc_lgamma_core": 224,
    "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:__libc_dd_add": 64,
-   "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:__libc_dd_multiply": 112,
-   "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:__libc_dd_product": 32,
+   "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:__libc_dd_multiply": 64,
    "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:lgamma_positive": 200,
    "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:log_dd": 80,
-   "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:near_zero": 176,
+   "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:near_zero": 160,
    "__libc_lgamma_core.o:libc/math/__libc_lgamma_core.c:stirling": 152,
    "__libc_log1p_core.o:__libc_log1p_core": 72,
    "__libc_log1p_dd.o:__libc_log1p_dd": 88,
-   "__libc_log_core.o:__libc_log_core": 104,
-   "__libc_log_core.o:libc/math/__libc_log_core.c:__libc_dd_product": 32,
+   "__libc_log_core.o:__libc_log_core": 80,
    "__libc_malloc_check.o:__libc_malloc_check": 24,
    "__libc_math_divbyzero.o:__libc_math_divbyzero": 8,
    "__libc_math_invalid.o:__libc_math_invalid": 8,
@@ -8365,10 +8362,8 @@
    "__libc_nano_init.o:__libc_nano_init": 24,
    "__libc_nano_release.o:__libc_nano_release": 16,
    "__libc_nano_trim.o:__libc_nano_trim": 0,
-   "__libc_pow_integer.o:__libc_pow_integer": 144,
-   "__libc_pow_integer.o:libc/math/__libc_pow_integer.c:__libc_dd_product": 32,
-   "__libc_rem_pio2.o:__libc_rem_pio2": 112,
-   "__libc_rem_pio2.o:libc/math/__libc_rem_pio2.c:__libc_dd_product": 32,
+   "__libc_pow_integer.o:__libc_pow_integer": 104,
+   "__libc_rem_pio2.o:__libc_rem_pio2": 104,
    "__libc_rem_pio2.o:libc/math/__libc_rem_pio2.c:bits_at.constprop.0": 20,
    "__libc_remainder.o:__libc_remainder": 48,
    "__libc_remainderf.o:__libc_remainderf": 32,
@@ -8383,10 +8378,8 @@
    "__libc_scan_store.o:__libc_scan_store": 16,
    "__libc_secs_to_tm.o:__libc_secs_to_tm": 32,
    "__libc_secs_to_tm.o:libc/time/__libc_secs_to_tm.c:__libc_floor_divmod64": 16,
-   "__libc_sin_core.o:__libc_sin_core": 112,
-   "__libc_sin_core.o:libc/math/__libc_sin_core.c:__libc_dd_product": 32,
-   "__libc_sinh_core.o:__libc_sinh_core": 88,
-   "__libc_sinh_core.o:libc/math/__libc_sinh_core.c:__libc_dd_product": 32,
+   "__libc_sin_core.o:__libc_sin_core": 64,
+   "__libc_sinh_core.o:__libc_sinh_core": 40,
    "__libc_start_main.o:__libc_start_main": 8,
    "__libc_stdio_flush_all.o:__libc_stdio_flush_all": 16,
    "__libc_stdio_flush_all.o:libc/stdio/__libc_stdio_flush_all.c:flush_one.part.0": 16,
@@ -8416,30 +8409,25 @@
    "_exit.o:_Exit": 8,
    "abort.o:abort": 8,
    "abs.o:abs": 0,
-   "acos.o:acos": 104,
-   "acos.o:libc/math/acos.c:__libc_dd_product": 32,
+   "acos.o:acos": 88,
    "acosf.o:acosf": 8,
    "acosh.o:acosh": 104,
-   "acosh.o:libc/math/acosh.c:__libc_dd_product": 32,
    "acoshf.o:acoshf": 8,
    "acoshl.o:acoshl": 0,
    "acosl.o:acosl": 0,
-   "acospi.o:acospi": 112,
-   "acospi.o:libc/math/acospi.c:__libc_dd_product": 32,
+   "acospi.o:acospi": 88,
    "acospif.o:acospif": 8,
    "acospil.o:acospil": 0,
    "aligned_alloc.o:aligned_alloc": 24,
    "asctime.o:asctime": 0,
-   "asin.o:asin": 96,
-   "asin.o:libc/math/asin.c:__libc_dd_product": 32,
+   "asin.o:asin": 88,
    "asinf.o:asinf": 24,
-   "asinh.o:asinh": 200,
+   "asinh.o:asinh": 208,
    "asinh.o:libc/math/asinh.c:__libc_dd_add": 64,
-   "asinh.o:libc/math/asinh.c:__libc_dd_product": 32,
    "asinhf.o:asinhf": 24,
    "asinhl.o:asinhl": 0,
    "asinl.o:asinl": 0,
-   "asinpi.o:asinpi": 128,
+   "asinpi.o:asinpi": 112,
    "asinpi.o:libc/math/asinpi.c:__libc_dd_product": 32,
    "asinpif.o:asinpif": 8,
    "asinpil.o:asinpil": 0,
@@ -8448,17 +8436,15 @@
    "atan2.o:atan2": 96,
    "atan2f.o:atan2f": 24,
    "atan2l.o:atan2l": 0,
-   "atan2pi.o:atan2pi": 120,
-   "atan2pi.o:libc/math/atan2pi.c:__libc_dd_product": 32,
+   "atan2pi.o:atan2pi": 104,
    "atan2pif.o:atan2pif": 8,
    "atan2pil.o:atan2pil": 0,
    "atanf.o:atanf": 24,
-   "atanh.o:atanh": 56,
+   "atanh.o:atanh": 48,
    "atanhf.o:atanhf": 24,
    "atanhl.o:atanhl": 0,
    "atanl.o:atanl": 0,
-   "atanpi.o:atanpi": 96,
-   "atanpi.o:libc/math/atanpi.c:__libc_dd_product": 32,
+   "atanpi.o:atanpi": 88,
    "atanpif.o:atanpif": 8,
    "atanpil.o:atanpil": 0,
    "atexit.o:atexit": 0,
@@ -8498,8 +8484,7 @@
    "casinl.o:casinl": 0,
    "catan.o:catan": 8,
    "catanf.o:catanf": 8,
-   "catanh.o:catanh": 72,
-   "catanh.o:libc/complex/catanh.c:__libc_dd_product": 32,
+   "catanh.o:catanh": 56,
    "catanhf.o:catanhf": 8,
    "catanhl.o:catanhl": 0,
    "catanl.o:catanl": 0,
@@ -8523,8 +8508,7 @@
    "cimagl.o:cimagl": 0,
    "clearerr.o:clearerr": 8,
    "clock.o:clock": 24,
-   "clog.o:clog": 120,
-   "clog.o:libc/complex/clog.c:__libc_dd_product": 32,
+   "clog.o:clog": 88,
    "clogf.o:clogf": 8,
    "clogl.o:clogl": 0,
    "cnd_broadcast.o:cnd_broadcast": 8,
@@ -8551,10 +8535,9 @@
    "cospi.o:cospi": 96,
    "cospif.o:cospif": 8,
    "cospil.o:cospil": 0,
-   "cpow.o:cpow": 608,
+   "cpow.o:cpow": 600,
    "cpow.o:libc/complex/cpow.c:__libc_dd_add": 64,
-   "cpow.o:libc/complex/cpow.c:__libc_dd_multiply": 112,
-   "cpow.o:libc/complex/cpow.c:__libc_dd_product": 32,
+   "cpow.o:libc/complex/cpow.c:__libc_dd_multiply": 64,
    "cpowf.o:cpowf": 8,
    "cpowl.o:cpowl": 0,
    "cproj.o:cproj": 8,
@@ -8722,8 +8705,7 @@
    "getpayloadl.o:getpayloadl": 16,
    "gmtime.o:gmtime": 4,
    "gmtime_r.o:gmtime_r": 8,
-   "hypot.o:hypot": 80,
-   "hypot.o:libc/math/hypot.c:__libc_dd_product": 32,
+   "hypot.o:hypot": 32,
    "hypotf.o:hypotf": 8,
    "hypotl.o:hypotl": 0,
    "ilogb.o:ilogb": 16,
@@ -8766,7 +8748,7 @@
    "localtime.o:localtime": 4,
    "localtime_r.o:localtime_r": 104,
    "log.o:log": 24,
-   "log10.o:log10": 32,
+   "log10.o:log10": 24,
    "log10f.o:log10f": 8,
    "log10l.o:log10l": 0,
    "log10p1.o:log10p1": 40,
@@ -8937,8 +8919,7 @@
    "sinhf.o:sinhf": 24,
    "sinhl.o:sinhl": 0,
    "sinl.o:sinl": 0,
-   "sinpi.o:libc/math/sinpi.c:__libc_dd_product": 32,
-   "sinpi.o:sinpi": 128,
+   "sinpi.o:sinpi": 112,
    "sinpif.o:sinpif": 8,
    "sinpil.o:sinpil": 0,
    "snprintf.o:snprintf": 16,
@@ -9063,16 +9044,14 @@
    "strtoumax.o:strtoumax": 24,
    "strxfrm.o:strxfrm": 24,
    "system.o:system": 0,
-   "tan.o:libc/math/tan.c:__libc_dd_divide": 80,
-   "tan.o:tan": 136,
+   "tan.o:tan": 104,
    "tanf.o:tanf": 24,
-   "tanh.o:libc/math/tanh.c:__libc_dd_divide": 80,
-   "tanh.o:tanh": 112,
+   "tanh.o:tanh": 80,
    "tanhf.o:tanhf": 24,
    "tanhl.o:tanhl": 0,
    "tanl.o:tanl": 0,
    "tanpi.o:libc/math/tanpi.c:__libc_dd_product": 32,
-   "tanpi.o:tanpi": 160,
+   "tanpi.o:tanpi": 144,
    "tanpif.o:tanpif": 8,
    "tanpil.o:tanpil": 0,
    "tgamma.o:tgamma": 56,
