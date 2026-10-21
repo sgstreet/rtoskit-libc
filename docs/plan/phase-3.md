@@ -91,8 +91,11 @@ Split by target (the speed baseline after P3.04: `sinf` 19k instructions on Armv
 - [x] Research note; tests; size and speed budgets.
   *`docs/research/libm-fma.md`; `test/unit/softfp` checks the product exact on every board; the float accuracy tests are unchanged and pass; both budgets hold, and `libc.a`, `math-float` and `math-mix` shrink.*
 
-### P3.05c — Double precision on FPv5-DP
-- [ ] armv7e-m-dp: the double-precision functions use the DP unit fully (`vsqrt.f64`, `vfma.f64`, `vrint*.f64`). Re-tune the `double` algorithms for hardware FMA, where polynomial and error-compensation choices differ from soft-float. The `fpv5-dp` layer is shared, so a later Armv8.1-M DP target (Q10) can reuse it.
+### P3.05c — Double precision on FPv5-DP  `[x]`
+- [x] armv7e-m-dp: the double-precision functions use the DP unit fully (`vsqrt.f64`, `vfma.f64`, `vrint*.f64`). Re-tune the `double` algorithms for hardware FMA, where polynomial and error-compensation choices differ from soft-float. The `fpv5-dp` layer is shared, so a later Armv8.1-M DP target (Q10) can reuse it.
+  *D83: the double-double exact product is one `VFMA.F64`, with bit-identical results. `vsqrt.f64` and `vrint*.f64` were already in the `fpv5-dp` layer (P1.13, P2.05). `asin` 337 → 221, `tan` 307 → 208, `sin` 219 → 166 instructions; 102 cases faster, none slower; `libc.a` −3.4 KiB. The polynomials are not re-tuned: the error budget lives in the double-double steps, and fewer terms would need a new error analysis per core (research note).*
+- [x] Research note; tests; size and speed budgets.
+  *`docs/research/libm-fma.md` (P3.05c); `test/unit/softfp` compares the board's float and double products with Dekker's, bit for bit. Both budgets hold; `asinh`'s frame grows by 8 bytes (justified in `docs/size/armv7e-m-dp.md`).*
 
 ### P3.05d — Cortex-M7 specifics
 - [ ] Cortex-M7 specifics for armv7e-m-dp: the dual-issue pipeline and the 64-bit AXI/TCM path; `LDRD`/`VLDM` for `memcpy`. Measure with the DWT cycle counter on hardware if available (Q5).

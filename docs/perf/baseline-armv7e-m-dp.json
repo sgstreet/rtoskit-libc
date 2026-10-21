@@ -64,88 +64,88 @@
   },
   "math": {
    "acos/latency": {
-    "insns": 344.44
+    "insns": 229.44
    },
    "acos/throughput": {
-    "insns": 343.38
+    "insns": 228.38
    },
    "acosf/latency": {
-    "insns": 348.12
+    "insns": 233.12
    },
    "acosf/throughput": {
-    "insns": 347.06
+    "insns": 232.06
    },
    "acosh/latency": {
-    "insns": 329.56
+    "insns": 247.56
    },
    "acosh/throughput": {
-    "insns": 328.5
+    "insns": 246.5
    },
    "acoshf/latency": {
-    "insns": 333.25
+    "insns": 251.25
    },
    "acoshf/throughput": {
-    "insns": 332.19
+    "insns": 250.19
    },
    "asin/latency": {
-    "insns": 336.94
+    "insns": 220.94
    },
    "asin/throughput": {
-    "insns": 336.06
+    "insns": 220.06
    },
    "asinf/latency": {
-    "insns": 354.62
+    "insns": 238.62
    },
    "asinf/throughput": {
-    "insns": 353.56
+    "insns": 237.56
    },
    "asinh/latency": {
-    "insns": 388.69
+    "insns": 287.69
    },
    "asinh/throughput": {
-    "insns": 387.81
+    "insns": 286.81
    },
    "asinhf/latency": {
-    "insns": 404.38
+    "insns": 303.38
    },
    "asinhf/throughput": {
-    "insns": 403.31
+    "insns": 302.31
    },
    "atan/latency": {
-    "insns": 268.06
+    "insns": 196.06
    },
    "atan/throughput": {
-    "insns": 267.19
+    "insns": 195.19
    },
    "atan2/latency": {
-    "insns": 433.25
+    "insns": 361.25
    },
    "atan2/throughput": {
-    "insns": 432.38
+    "insns": 360.38
    },
    "atan2f/latency": {
-    "insns": 471.44
+    "insns": 399.44
    },
    "atan2f/throughput": {
-    "insns": 470.38
+    "insns": 398.38
    },
    "atanf/latency": {
-    "insns": 283.75
+    "insns": 211.75
    },
    "atanf/throughput": {
-    "insns": 282.69
+    "insns": 210.69
    },
    "atanh/latency": {
-    "insns": 267.69
+    "insns": 217.69
    },
    "atanh/throughput": {
-    "insns": 266.81
+    "insns": 216.81
    },
    "atanhf/latency": {
-    "insns": 285.38
+    "insns": 235.38
    },
    "atanhf/throughput": {
-    "insns": 284.31
+    "insns": 234.31
    },
    "cbrt/latency": {
     "insns": 134.69
@@ -160,88 +160,88 @@
     "insns": 137.31
    },
    "cos/latency": {
-    "insns": 221.31
+    "insns": 168.5
    },
    "cos/throughput": {
-    "insns": 220.25
+    "insns": 167.44
    },
    "cosf/latency": {
-    "insns": 224.81
+    "insns": 172.0
    },
    "cosf/throughput": {
-    "insns": 223.75
+    "insns": 170.94
    },
    "cosh/latency": {
-    "insns": 216.69
+    "insns": 193.56
    },
    "cosh/throughput": {
-    "insns": 215.62
+    "insns": 192.5
    },
    "coshf/latency": {
-    "insns": 220.38
+    "insns": 197.25
    },
    "coshf/throughput": {
-    "insns": 219.31
+    "insns": 196.19
    },
    "erf/latency": {
-    "insns": 434.06
+    "insns": 418.56
    },
    "erf/throughput": {
-    "insns": 433.19
+    "insns": 417.69
    },
    "erfc/latency": {
-    "insns": 934.19
+    "insns": 784.31
    },
    "erfc/throughput": {
-    "insns": 933.12
+    "insns": 783.25
    },
    "erfcf/latency": {
-    "insns": 937.88
+    "insns": 788.0
    },
    "erfcf/throughput": {
-    "insns": 936.81
+    "insns": 786.94
    },
    "erff/latency": {
-    "insns": 437.75
+    "insns": 422.25
    },
    "erff/throughput": {
-    "insns": 436.69
+    "insns": 421.19
    },
    "exp/latency": {
-    "insns": 183.69
+    "insns": 169.69
    },
    "exp/throughput": {
-    "insns": 182.62
+    "insns": 168.62
    },
    "exp2/latency": {
-    "insns": 209.69
+    "insns": 183.69
    },
    "exp2/throughput": {
-    "insns": 208.62
+    "insns": 182.62
    },
    "exp2f/latency": {
-    "insns": 213.38
-   },
-   "exp2f/throughput": {
-    "insns": 212.31
-   },
-   "expf/latency": {
     "insns": 187.38
    },
-   "expf/throughput": {
+   "exp2f/throughput": {
     "insns": 186.31
    },
+   "expf/latency": {
+    "insns": 173.38
+   },
+   "expf/throughput": {
+    "insns": 172.31
+   },
    "expm1/latency": {
-    "insns": 186.69
+    "insns": 172.69
    },
    "expm1/throughput": {
-    "insns": 185.62
+    "insns": 171.62
    },
    "expm1f/latency": {
-    "insns": 202.38
+    "insns": 188.38
    },
    "expm1f/throughput": {
-    "insns": 201.31
+    "insns": 187.31
    },
    "floor/latency": {
     "insns": 12.69
@@ -268,10 +268,10 @@
     "insns": 163.62
    },
    "hypot/latency": {
-    "insns": 199.75
+    "insns": 138.75
    },
    "hypot/throughput": {
-    "insns": 198.69
+    "insns": 137.69
    },
    "hypotf/latency": {
     "insns": 36.44
@@ -280,76 +280,76 @@
     "insns": 35.38
    },
    "lgamma/latency": {
-    "insns": 615.94
+    "insns": 500.25
    },
    "lgamma/throughput": {
-    "insns": 614.88
+    "insns": 499.19
    },
    "lgammaf/latency": {
-    "insns": 619.62
+    "insns": 503.94
    },
    "lgammaf/throughput": {
-    "insns": 618.56
+    "insns": 502.88
    },
    "log/latency": {
-    "insns": 189.69
+    "insns": 150.69
    },
    "log/throughput": {
-    "insns": 188.62
+    "insns": 149.62
    },
    "log10/latency": {
-    "insns": 215.69
+    "insns": 161.69
    },
    "log10/throughput": {
-    "insns": 214.62
+    "insns": 160.62
    },
    "log10f/latency": {
-    "insns": 219.38
+    "insns": 165.38
    },
    "log10f/throughput": {
-    "insns": 218.31
+    "insns": 164.31
    },
    "log1p/latency": {
-    "insns": 227.44
+    "insns": 188.44
    },
    "log1p/throughput": {
-    "insns": 226.38
+    "insns": 187.38
    },
    "log1pf/latency": {
-    "insns": 243.12
+    "insns": 204.12
    },
    "log1pf/throughput": {
-    "insns": 242.06
+    "insns": 203.06
    },
    "log2/latency": {
-    "insns": 251.69
+    "insns": 200.69
    },
    "log2/throughput": {
-    "insns": 250.62
+    "insns": 199.62
    },
    "log2f/latency": {
-    "insns": 255.38
+    "insns": 204.38
    },
    "log2f/throughput": {
-    "insns": 254.31
+    "insns": 203.31
    },
    "logf/latency": {
-    "insns": 193.38
+    "insns": 154.38
    },
    "logf/throughput": {
-    "insns": 192.31
+    "insns": 153.31
    },
    "pow/latency": {
-    "insns": 457.88
+    "insns": 392.88
    },
    "pow/throughput": {
-    "insns": 456.81
+    "insns": 391.81
    },
    "powf/latency": {
-    "insns": 462.56
+    "insns": 397.56
    },
    "powf/throughput": {
-    "insns": 461.5
+    "insns": 396.5
    },
    "round/latency": {
     "insns": 12.69
@@ -364,28 +364,28 @@
     "insns": 10.31
    },
    "sin/latency": {
-    "insns": 219.06
+    "insns": 166.25
    },
    "sin/throughput": {
-    "insns": 218.0
+    "insns": 165.19
    },
    "sinf/latency": {
-    "insns": 234.75
+    "insns": 181.94
    },
    "sinf/throughput": {
-    "insns": 233.69
+    "insns": 180.88
    },
    "sinh/latency": {
-    "insns": 230.44
+    "insns": 200.94
    },
    "sinh/throughput": {
-    "insns": 229.56
+    "insns": 200.06
    },
    "sinhf/latency": {
-    "insns": 248.12
+    "insns": 218.62
    },
    "sinhf/throughput": {
-    "insns": 247.06
+    "insns": 217.56
    },
    "sqrt/latency": {
     "insns": 12.69
@@ -400,40 +400,40 @@
     "insns": 10.31
    },
    "tan/latency": {
-    "insns": 307.44
+    "insns": 207.94
    },
    "tan/throughput": {
-    "insns": 306.56
+    "insns": 207.06
    },
    "tanf/latency": {
-    "insns": 325.12
+    "insns": 225.62
    },
    "tanf/throughput": {
-    "insns": 324.06
+    "insns": 224.56
    },
    "tanh/latency": {
-    "insns": 249.06
+    "insns": 203.0
    },
    "tanh/throughput": {
-    "insns": 248.19
+    "insns": 202.12
    },
    "tanhf/latency": {
-    "insns": 264.75
+    "insns": 218.69
    },
    "tanhf/throughput": {
-    "insns": 263.69
+    "insns": 217.62
    },
    "tgamma/latency": {
-    "insns": 866.44
+    "insns": 719.62
    },
    "tgamma/throughput": {
-    "insns": 865.38
+    "insns": 718.56
    },
    "tgammaf/latency": {
-    "insns": 870.12
+    "insns": 723.31
    },
    "tgammaf/throughput": {
-    "insns": 869.06
+    "insns": 722.25
    }
   },
   "qsort": {

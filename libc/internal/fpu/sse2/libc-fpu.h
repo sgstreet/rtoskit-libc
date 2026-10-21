@@ -19,6 +19,9 @@
  * (PLAN D82; libc/internal/fpu/${LIBC_FPU} is on CPPFLAGS): x86-64 baseline (SSE2, D81): no FMA.
  */
 
+/* fma is one instruction, so a double product's exact error is too */
+constexpr bool __libc_fpu_fma = false;
+
 /* fmaf is one instruction, so a float product's exact error is too */
 constexpr bool __libc_fpu_fmaf = false;
 

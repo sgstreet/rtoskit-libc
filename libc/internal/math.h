@@ -272,7 +272,7 @@ static inline void __libc_dd_split(double a, double *high, double *low)
 	*low = a - *high;
 }
 
-/* a * b exactly */
+/* a * b exactly: one fma where the FPU has it (libc-fpu.h, PLAN D83), else Dekker's split products */
 static inline struct __libc_dd __libc_dd_product(double a, double b)
 {
 	double product = a * b;
@@ -280,6 +280,9 @@ static inline struct __libc_dd __libc_dd_product(double a, double b)
 	double al;
 	double bh;
 	double bl;
+
+	if (__libc_fpu_fma)
+		return (struct __libc_dd){ .hi = product, .lo = __builtin_fma(a, b, -product) };
 
 	__libc_dd_split(a, &ah, &al);
 	__libc_dd_split(b, &bh, &bl);
