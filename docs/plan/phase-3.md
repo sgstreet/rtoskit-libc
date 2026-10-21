@@ -85,8 +85,11 @@ Split by target (the speed baseline after P3.04: `sinf` 19k instructions on Armv
 - [x] x86_64: use `sqrtsd`/`roundsd` (SSE4.1 only if the baseline ISA is raised; decide and record).
   *D81: the baseline stays SSE2 (x86_64 is the test host and perf reference, which must run on any x86-64). `sqrt`/`sqrtf` already use `sqrtsd`/`sqrtss` (the `x86_64` libm layer). The SSE2 rounding alternative, a `cvttsd2si` round trip, raises inexact, which `floor`/`ceil`/`trunc`/`round` must not and libc-test checks; saving and restoring MXCSR costs more than the 30 instructions of the generic bit manipulation. So the rounding stays generic.*
 
-### P3.05b — Single precision on FPv4-SP and FPv5-SP
-- [ ] armv7e-m and v8-m.main: the single-precision functions use the FPU fully (`vsqrt.f32`, `vfma`), with table-driven reductions in the speed flavour (`sinf`/`cosf`/`tanf` 690–1030 instructions against 225–325 on FPv5-DP; `erff`/`erfcf`, `tgammaf`, `lgammaf`).
+### P3.05b — Single precision on FPv4-SP and FPv5-SP  `[x]`
+- [x] armv7e-m and v8-m.main: the single-precision functions use the FPU fully (`vsqrt.f32`, `vfma`), with table-driven reductions in the speed flavour (`sinf`/`cosf`/`tanf` 690–1030 instructions against 225–325 on FPv5-DP; `erff`/`erfcf`, `tgammaf`, `lgammaf`).
+  *D82: the float-float exact product is one `VFMA.F32` (`libc/internal/fpu/<fpu>/libc-fpu.h`), in both flavours, with bit-identical results. `erff` 2539 → 1384, `expf` 228 → 161, `sinf` 694 → 576, 54 cases faster; `libc.a` −4.3 KiB. `vsqrt.f32` was already used (P1.13). Reductions: the integer Payne–Hanek one is over half of `sinf`, but a float Cody–Waite one cannot keep the 2^-40 budget near the smallest |d| (2^-30, counted over every float), so it stays (research note).*
+- [x] Research note; tests; size and speed budgets.
+  *`docs/research/libm-fma.md`; `test/unit/softfp` checks the product exact on every board; the float accuracy tests are unchanged and pass; both budgets hold, and `libc.a`, `math-float` and `math-mix` shrink.*
 
 ### P3.05c — Double precision on FPv5-DP
 - [ ] armv7e-m-dp: the double-precision functions use the DP unit fully (`vsqrt.f64`, `vfma.f64`, `vrint*.f64`). Re-tune the `double` algorithms for hardware FMA, where polynomial and error-compensation choices differ from soft-float. The `fpv5-dp` layer is shared, so a later Armv8.1-M DP target (Q10) can reuse it.

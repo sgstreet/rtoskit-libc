@@ -19,6 +19,9 @@
 #include <math.h>
 #include <stdint.h>
 
+/* The FPU of the build (libc/internal/fpu/${LIBC_FPU}, on the include path through CPPFLAGS) */
+#include <libc-fpu.h>
+
 /*
  * Helpers of libm (docs/research/fenv-libm.md). Values are taken apart
  * through unions (well defined in C). Exceptions are raised by arithmetic,
@@ -523,7 +526,11 @@ static inline void __libc_ff_split(float a, float *high, float *low)
 	*low = a - *high;
 }
 
-/* a * b exactly (Dekker), for |a| and |b| below 2^115 */
+/*
+ * a * b exactly, for |a| and |b| below 2^115 and a product clear of the
+ * subnormal range: the error of the rounded product is one fma where the
+ * FPU has it (libc-fpu.h, PLAN D82), else Dekker's split products
+ */
 static inline struct __libc_ff __libc_ff_product(float a, float b)
 {
 	float product = a * b;
@@ -531,6 +538,9 @@ static inline struct __libc_ff __libc_ff_product(float a, float b)
 	float al;
 	float bh;
 	float bl;
+
+	if (__libc_fpu_fmaf)
+		return (struct __libc_ff){ .hi = product, .lo = __builtin_fmaf(a, b, -product) };
 
 	__libc_ff_split(a, &ah, &al);
 	__libc_ff_split(b, &bh, &bl);

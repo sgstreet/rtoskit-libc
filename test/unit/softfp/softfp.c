@@ -240,12 +240,34 @@ static void test_special_results(void)
 		fail("public special results", 0);
 }
 
+/*
+ * The float-float exact product (PLAN D82): the fma form on the FPUs that
+ * have one, Dekker's elsewhere; either way hi + lo is the product exactly,
+ * which double holds for two 24-bit significands (factors in [2^-30, 2^30),
+ * so that the error term stays a normal float).
+ */
+static void test_ff_product(void)
+{
+	uint64_t state = 0x5851f42d4c957f2dULL;
+
+	for (int i = 0; i < 20000; ++i) {
+		uint64_t r = next(&state);
+		float a = __libc_float_from(((uint32_t)r & 0x807fffff) | (uint32_t)(97 + (r >> 32) % 60) << 23);
+		float b = __libc_float_from(((uint32_t)(r >> 23) & 0x807fffff) | (uint32_t)(97 + (r >> 48) % 60) << 23);
+		struct __libc_ff p = __libc_ff_product(a, b);
+
+		if (bits_of_float(p.hi) != bits_of_float(a * b) || !same((double)p.hi + (double)p.lo, (double)a * (double)b))
+			fail("ff product", bits_of_float(a) | (uint64_t)bits_of_float(b) << 32);
+	}
+}
+
 int main(void)
 {
 	test_conversions();
 	test_double_to_i64();
 	test_subtraction();
 	test_special_results();
+	test_ff_product();
 
 	fputs(failures == 0 ? "softfp: pass\n" : "softfp: FAIL\n", stdout);
 	return failures == 0 ? 0 : 1;
