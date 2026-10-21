@@ -17,7 +17,7 @@ Q* or a later step that is researched from papers and the standard in the usual
 way.
 
 **Pinned revision:** `f67e7daa5457646fad9f75580263dba654c988aa` (2026-10-16).
-P4.02 records its archive's SHA-256.
+It is fetched with a shallow `git fetch` of that commit; the commit ID is the content check (GitHub archive downloads are blocked here, D92).
 
 **Every step's definition of done (DoD)** is the Phase 1 DoD plus:
 
@@ -31,13 +31,23 @@ P4.02 records its archive's SHA-256.
 
 ---
 
-## P4.01 — Research: what AOR provides  `[ ]`
-- [ ] Survey AOR's `string/`, `math/` and `fp/` subprojects: which routines exist per core (`string/arm` for Thumb-2 and the Armv6-M `strcmp`; `fp/armv6-m` and `fp/at32` soft-float; the C `math/` everywhere), their build (`config.mk`: `SUBS`, `ARCH`, `CROSS_COMPILE`, `CFLAGS`), their stated accuracy (ulp bounds, rounding modes, `errno` handling) and their size/speed trade-offs.
-- [ ] Decide how AOR routines are substituted: linked ahead of `libc.a` in the bench and size programs, symbol renaming where AOR's names differ (`__strcmp_arm`, `arm_math_*`), and which of our flavours each comparison uses.
-- [ ] Research note `docs/research/optimized-routines.md`: URLs, the routine-by-routine map to our functions, the build design, and the caveats (AOR's math assumes an FPU or a soft-float runtime; `errno` and `math_errhandling` differences).
+## P4.01 — Research: what AOR provides  `[x]`
+- [x] Survey AOR's `string/`, `math/` and `fp/` subprojects: which routines exist per core (`string/arm` for Thumb-2 and the Armv6-M `strcmp`; `fp/armv6-m` and `fp/at32` soft-float; the C `math/` everywhere), their build (`config.mk`: `SUBS`, `ARCH`, `CROSS_COMPILE`, `CFLAGS`), their stated accuracy (ulp bounds, rounding modes, `errno` handling) and their size/speed trade-offs.
+  *Every file was trial-compiled with each board's flags.*
+  - *M-profile string: `strcmp` on Armv6-M only, and `memchr`/`memset`/`strlen` on the Thumb-2 cores. `memcpy` and `strcpy` are A32-only, and the Thumb-2 `strcmp` needs the A32 ISA.*
+  - *fp: `fp/armv6-m` has fadd/fsub/fmul and the comparisons. `fp/at32` has the full set and assembles for Thumb-2 with `-Wa,-mimplicit-it=always`.*
+  - *math: all 31 files build against our headers with `-std=c23`.*
+  - *Stated accuracy: AOR's float functions are 0.51–1.1 ulp and compute in double (soft on four of our five Arm boards); its doubles are 0.51–1.01 ulp.*
+- [x] Decide how AOR routines are substituted: linked ahead of `libc.a` in the bench and size programs, symbol renaming where AOR's names differ (`__strcmp_arm`, `arm_math_*`), and which of our flavours each comparison uses.
+  *D92:*
+  - *Archives per board (`libaor-{string,math,fp}.a`), with symbols renamed to the standard and RTABI names.*
+  - *Linked before `libc.a` and libgcc with `--allow-multiple-definition`, because libgcc bundles several helpers per member; the map file is checked.*
+  - *The speed flavour's objects for speed and the release build for size. math is built at `-O3` for speed and `-Os` for size.*
+  - *A new `softfloat` bench program.*
+- [x] Research note `docs/research/optimized-routines.md`: URLs, the routine-by-routine map to our functions, the build design, and the caveats (AOR's math assumes an FPU or a soft-float runtime; `errno` and `math_errhandling` differences).
 
 ## P4.02 — Fetch and build AOR  `[ ]`
-- [ ] A pinned download (revision and SHA-256) into `local/`, fetched by a make target in the style of `make setup-bench`; no submodule, nothing in `libc/`.
+- [ ] A pinned fetch (shallow `git fetch` of the revision, checked against the commit ID) into `local/`, by a make target in the style of `make setup-bench`; no submodule, nothing in `libc/`.
 - [ ] Build AOR's string, math and soft-float libraries per Arm board with our toolchain and each board's `-march`/`-mfloat-abi` flags, and for `x86_64` where meaningful, into `build/<board>/<build-type>/aor/`. Record which routines build for which core.
 - [ ] A smoke test: each AOR library links against our `libc.a` and runs under `TARGET_RUNNER`.
 
