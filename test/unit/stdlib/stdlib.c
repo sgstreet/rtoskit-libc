@@ -162,6 +162,150 @@ static int compare_big(const void *a, const void *b)
 	return (x > y) - (x < y);
 }
 
+/* Comparisons counted, for the bound on the work qsort does */
+static unsigned long comparisons;
+
+static int compare_int_counted(const void *a, const void *b)
+{
+	++comparisons;
+	return compare_int(a, b);
+}
+
+/* An int read from any alignment, for elements at an unaligned base */
+static int compare_unaligned(const void *a, const void *b)
+{
+	int x;
+	int y;
+
+	memcpy(&x, a, sizeof(x));
+	memcpy(&y, b, sizeof(y));
+	return (x > y) - (x < y);
+}
+
+/*
+ * McIlroy's adversary (A killer adversary for quicksort, 1999): every
+ * element starts as "gas", and a value is fixed only when a comparison needs
+ * one, choosing the pivot candidate so that a median-of-three quicksort
+ * keeps partitioning off a few elements. The elements are indices into
+ * adversary_value.
+ */
+#define ADVERSARY_COUNT 1000
+static int adversary_value[ADVERSARY_COUNT];
+static int adversary_solid;
+static int adversary_candidate;
+
+static int compare_adversary(const void *a, const void *b)
+{
+	int i = *(const int *)a;
+	int j = *(const int *)b;
+	int gas = ADVERSARY_COUNT;
+
+	++comparisons;
+	if (adversary_value[i] == gas && adversary_value[j] == gas) {
+		if (i == adversary_candidate)
+			adversary_value[i] = adversary_solid++;
+		else
+			adversary_value[j] = adversary_solid++;
+	}
+	if (adversary_value[i] == gas)
+		adversary_candidate = i;
+	else if (adversary_value[j] == gas)
+		adversary_candidate = j;
+
+	return adversary_value[i] - adversary_value[j];
+}
+
+/* 3 n log2 n: above the typical counts of a heapsort (2 n log2 n) and an introsort (about 1.4 n log2 n), far below n^2 */
+static unsigned long comparison_bound(size_t n)
+{
+	unsigned long log = 0;
+
+	for (size_t m = n; m > 1; m >>= 1)
+		++log;
+	return 3 * (unsigned long)n * (log + 1);
+}
+
+static void insertion_sort_int(int *values, size_t n)
+{
+	for (size_t i = 1; i < n; ++i)
+		for (size_t j = i; j > 0 && values[j - 1] > values[j]; --j) {
+			int t = values[j - 1];
+
+			values[j - 1] = values[j];
+			values[j] = t;
+		}
+}
+
+/*
+ * The flavours' sorts (P3.07, PLAN D90) against an insertion sort, element
+ * for element: every size to 40 and larger ones across the introsort's
+ * thresholds, five patterns, elements at an unaligned base; the comparison
+ * count within the bound on 1000 elements of every pattern, and on McIlroy's
+ * adversary, which only the depth limit's heapsort keeps from n^2.
+ */
+static void test_qsort_paths(void)
+{
+	static int values[1000];
+	static int want[1000];
+	static int input[1000];
+	static unsigned char bytes[1000 * sizeof(int) + 1];
+	static const size_t sizes[] = { 0, 1, 2, 3, 12, 13, 40, 64, 65, 100, 257, 1000 };
+	uint32_t state = 11;
+
+	for (size_t s = 0; s < sizeof(sizes) / sizeof(sizes[0]) + 41; ++s) {
+		size_t n = s < 41 ? s : sizes[s - 41];
+
+		for (int pattern = 0; pattern < 5; ++pattern) {
+			bool same = true;
+
+			for (size_t i = 0; i < n; ++i) {
+				state = state * 1664525 + 1013904223;
+				values[i] = pattern == 0 ? (int)(state >> 8) : pattern == 1 ? (int)i :
+														   pattern == 2		? (int)(n - i) :
+														   pattern == 3		? 7 :
+																			  (int)(state >> 31);
+				want[i] = values[i];
+				input[i] = values[i];
+			}
+			insertion_sort_int(want, n);
+
+			comparisons = 0;
+			qsort(values, n, sizeof(int), compare_int_counted);
+			for (size_t i = 0; i < n; ++i)
+				same &= values[i] == want[i];
+			CHECK(same);
+			if (n == 1000)
+				CHECK(comparisons <= comparison_bound(n));
+
+			/* The same elements one byte past an aligned address: byte swaps */
+			memcpy(bytes + 1, input, n * sizeof(int));
+			qsort(bytes + 1, n, sizeof(int), compare_unaligned);
+			CHECK(memcmp(bytes + 1, want, n * sizeof(int)) == 0);
+		}
+	}
+
+	/* The adversary: elements are indices, values fixed as the sort asks */
+	for (int i = 0; i < ADVERSARY_COUNT; ++i) {
+		adversary_value[i] = ADVERSARY_COUNT;
+		values[i] = i;
+	}
+	/*
+	 * The first two elements are fixed as a descending pair, so a check for an
+	 * input already in order (the speed flavour's) stops at once instead of
+	 * letting the adversary answer every comparison as sorted
+	 */
+	adversary_value[0] = 1;
+	adversary_value[1] = 0;
+	adversary_solid = 2;
+	adversary_candidate = 0;
+	comparisons = 0;
+	qsort(values, ADVERSARY_COUNT, sizeof(int), compare_adversary);
+	/* An introsort spends up to 2 n log2 n in bad partitions before its heapsort's 2 n log2 n (Musser): 4/3 of the bound */
+	CHECK(comparisons <= comparison_bound(ADVERSARY_COUNT) * 4 / 3);
+	for (int i = 1; i < ADVERSARY_COUNT; ++i)
+		CHECK(adversary_value[values[i - 1]] <= adversary_value[values[i]]);
+}
+
 static void test_qsort(void)
 {
 	static int values[1000];
@@ -307,6 +451,7 @@ int main(void)
 	test_strtol();
 	test_arithmetic();
 	test_qsort();
+	test_qsort_paths();
 	test_bsearch();
 	test_multibyte();
 	test_environment();

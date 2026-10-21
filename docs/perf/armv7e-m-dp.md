@@ -719,3 +719,23 @@ Throughput, per call (the latency counts are the same under qemu).
 | `tan` | 225 (-31 %) | 207 (-32 %) |
 | `tanh` | 218 (-17 %) | 202 (-19 %) |
 | `tgamma` | 722 (-17 %) | 719 (-17 %) |
+
+## P3.07 — Introsort qsort (speed flavour)
+
+The speed flavour's `qsort` is a run check and an introsort (PLAN D90). The release flavour is unchanged. Change
+against the P3.05h baselines; only the program that changed is shown.
+
+### Speed flavour
+
+#### qsort
+
+| Case | insns/op |
+|---|---:|
+| `bsearch/1024` | 143 |
+| `qsort/equal/1024` | 27.1 (-76 %) |
+| `qsort/random/1024` | 274 (-57 %) |
+| `qsort/random/16` | 128 (-43 %) |
+| `qsort/random/256` | 216 (-57 %) |
+| `qsort/reversed/1024` | 35.6 (-94 %) |
+| `qsort/sorted/1024` | 27.1 (-96 %) |
+| `qsort/strings/256` | 303 (-48 %) |

@@ -551,3 +551,10 @@ double product from one `VFMA.F64` instead of Dekker's split products.
 Grew, justified: `asinh`'s frame, 200 → 208 bytes (register allocation around the shorter products); no entry point's depth grows.
 
 - Reduced: the double-double members, -3378 bytes of text in all; the largest: `cpow.o` 1490 → 1356, `__libc_atan2_core.o` 1280 → 1170, `acos.o` 416 → 312, `acosh.o` 592 → 488.
+
+## P3.07 — introsort qsort (speed flavour)
+
+Decision D90, `docs/research/qsort-speed.md`. The release build is unchanged. In the speed build, `qsort.o` grows by
+about 625 bytes (the introsort keeps the heapsort as its fallback), and `qsort`'s stack depth by about 440 bytes, most
+of it the stack of waiting ranges (one per bit of `size_t`). No reference program links `qsort`; every image is
+unchanged and both budgets hold.

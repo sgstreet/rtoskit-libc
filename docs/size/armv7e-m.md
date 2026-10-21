@@ -647,3 +647,10 @@ float product from one `VFMA.F32` instead of Dekker's split products.
 Members that grew or are new, justified: none.
 
 - Reduced: the float-float members, -4312 bytes of text in all; the largest: `__libc_asinhf_core.o` 678 → 568, `__libc_erff_core.o` 488 → 378, `__libc_lgammaf_core.o` 2698 → 2592, `acospif.o` 460 → 356.
+
+## P3.07 — introsort qsort (speed flavour)
+
+Decision D90, `docs/research/qsort-speed.md`. The release build is unchanged. In the speed build, `qsort.o` grows by
+about 625 bytes (the introsort keeps the heapsort as its fallback), and `qsort`'s stack depth by about 440 bytes, most
+of it the stack of waiting ranges (one per bit of `size_t`). No reference program links `qsort`; every image is
+unchanged and both budgets hold.
