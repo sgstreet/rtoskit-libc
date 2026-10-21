@@ -97,8 +97,9 @@ Split by target (the speed baseline after P3.04: `sinf` 19k instructions on Armv
 - [x] Research note; tests; size and speed budgets.
   *`docs/research/libm-fma.md` (P3.05c); `test/unit/softfp` compares the board's float and double products with Dekker's, bit for bit. Both budgets hold; `asinh`'s frame grows by 8 bytes (justified in `docs/size/armv7e-m-dp.md`).*
 
-### P3.05d — Cortex-M7 specifics
-- [ ] Cortex-M7 specifics for armv7e-m-dp: the dual-issue pipeline and the 64-bit AXI/TCM path; `LDRD`/`VLDM` for `memcpy`. Measure with the DWT cycle counter on hardware if available (Q5).
+### P3.05d — Cortex-M7 specifics  `[x]`
+- [x] Cortex-M7 specifics for armv7e-m-dp: the dual-issue pipeline and the 64-bit AXI/TCM path; `LDRD`/`VLDM` for `memcpy`. Measure with the DWT cycle counter on hardware if available (Q5).
+  *D84: no hardware is attached, and qemu's instruction count cannot see dual issue or bus width. `memcpy` already moves 32 bytes per `LDM`/`STM` pair, more than `LDRD` per instruction and as much as `VLDM` without touching FPU registers. No M7 variant until DWT cycle counts exist (Q5 stays open).*
 
 ### P3.05e — Armv6-M integer-only float
 - [ ] armv6-m: integer-only `float` implementations where they beat soft-float emulation (`sqrtf` 2k, `expf`/`logf` 11–13k, `sinf`/`cosf` 19k, `erff` 152k instructions).
