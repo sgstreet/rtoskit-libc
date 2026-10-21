@@ -6,60 +6,60 @@
  "programs": {
   "malloc": {
    "batch/churn": {
-    "insns": 133.41
+    "insns": 118.41
    },
    "batch/fifo": {
-    "insns": 111.55
+    "insns": 96.55
    },
    "batch/lifo": {
-    "insns": 106.63
+    "insns": 91.63
    },
    "batch/shuffled": {
-    "insns": 126.02
+    "insns": 111.02
    },
    "calloc/256": {
-    "insns": 146.5
+    "insns": 131.5
    },
    "fixed/16": {
-    "insns": 107.5
+    "insns": 92.5
    },
    "fixed/256": {
-    "insns": 107.5
+    "insns": 92.5
    },
    "fixed/4096": {
-    "insns": 107.5
+    "insns": 92.5
    },
    "realloc/grow": {
-    "insns": 112.82
+    "insns": 99.18
    }
   },
   "malloc-tiny": {
    "batch/churn": {
-    "insns": 237.48
+    "insns": 222.48
    },
    "batch/fifo": {
-    "insns": 221.38
+    "insns": 206.38
    },
    "batch/lifo": {
-    "insns": 221.38
+    "insns": 206.38
    },
    "batch/shuffled": {
-    "insns": 221.89
+    "insns": 206.89
    },
    "calloc/256": {
-    "insns": 151.0
+    "insns": 136.0
    },
    "fixed/16": {
-    "insns": 112.0
+    "insns": 97.0
    },
    "fixed/256": {
-    "insns": 112.0
+    "insns": 97.0
    },
    "fixed/4096": {
-    "insns": 112.0
+    "insns": 97.0
    },
    "realloc/grow": {
-    "insns": 110.73
+    "insns": 97.09
    }
   },
   "math": {
@@ -464,10 +464,10 @@
   },
   "stdio": {
    "fprintf/mix": {
-    "insns": 2166.0
+    "insns": 2151.0
    },
    "fputs/line": {
-    "insns": 270.0
+    "insns": 255.0
    },
    "snprintf/%-20s": {
     "insns": 574.0

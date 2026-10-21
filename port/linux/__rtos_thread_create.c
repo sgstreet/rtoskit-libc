@@ -16,12 +16,18 @@
 
 #include "linux.h"
 
-/* The new thread's first function: record itself, then run the entry */
+static unsigned int last_lock_token = __LINUX_MAIN_LOCK_TOKEN;
+
+/*
+ * The new thread's first function: record itself and take a lock token
+ * (even and nonzero, unique for 2^31 threads), then run the entry
+ */
 static int thread_start(void *argument)
 {
 	struct __rtos_thread *thread = argument;
 
 	__rtos_linux_self = thread;
+	__rtos_lock_token = __atomic_add_fetch(&last_lock_token, 2, __ATOMIC_RELAXED);
 	__rtos_thread_exit(thread->entry(thread->arg));
 }
 

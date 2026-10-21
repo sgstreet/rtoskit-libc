@@ -34,7 +34,7 @@ void __rtos_none_output(const void *buffer, size_t count);
 
 /* Single-threaded: locks need no state */
 struct __rtos_lock {
-	char unused;
+	unsigned int word; /* the seam's lock word (rtos-port.h, PLAN D79); the locks themselves are no-ops */
 };
 
 /* The one thread (P1.12) */

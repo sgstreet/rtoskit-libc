@@ -25,9 +25,8 @@ int __rtos_lock_create(struct __rtos_lock **lock)
 		unsigned int allocated = 0;
 
 		if (__atomic_compare_exchange_n(&pool[i].allocated, &allocated, 1, false, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED)) {
-			pool[i].state = 0;
+			pool[i].word = 0;
 			pool[i].depth = 0;
-			pool[i].owner = nullptr;
 			*lock = &pool[i];
 			return 0;
 		}

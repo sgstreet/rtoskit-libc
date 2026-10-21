@@ -510,3 +510,126 @@ build is unchanged.
 | `strtoll/long` | 516 |
 | `strtoul/hex16` | 309 |
 | `strtoull/hex` | 508 |
+
+## P3.04a — Lock word fast path in the port (both flavours)
+
+The seam's lock word (PLAN D79): the Linux port's `__rtos_lock_acquire` and `__rtos_lock_release` start with one
+compare-and-swap on the word, with the owner's thread-local token, and need neither `__rtos_thread_self` nor an owner
+pointer. libc is unchanged, so both flavours gain alike. Change against the P3.03b baselines; only the programs that
+changed are shown.
+
+### Release (size flavour)
+
+#### stdio
+
+| Case | insns/op |
+|---|---:|
+| `fprintf/mix` | 2323 (-1 %) |
+| `fputs/line` | 360 (-4 %) |
+| `snprintf/%-20s` | 614 |
+| `snprintf/%.17g` | 14926 |
+| `snprintf/%.3f` | 15224 |
+| `snprintf/%08x` | 537 |
+| `snprintf/%a` | 961 |
+| `snprintf/%c` | 266 |
+| `snprintf/%d` | 475 |
+| `snprintf/%e` | 14031 |
+| `snprintf/%f` | 14733 |
+| `snprintf/%g` | 15537 |
+| `snprintf/%lld` | 7643 |
+| `snprintf/%p` | 457 |
+| `snprintf/%s` | 423 |
+| `snprintf/%u-small` | 364 |
+| `snprintf/%x` | 518 |
+| `snprintf/literal` | 512 |
+| `snprintf/mix` | 1959 |
+| `sscanf/%d` | 457 |
+| `sscanf/%lf` | 3403 |
+| `sscanf/%x` | 540 |
+| `sscanf/mix` | 2089 |
+
+#### malloc
+
+| Case | insns/op |
+|---|---:|
+| `batch/churn` | 116 (-11 %) |
+| `batch/fifo` | 94.5 (-14 %) |
+| `batch/lifo` | 89.6 (-14 %) |
+| `batch/shuffled` | 109 (-12 %) |
+| `calloc/256` | 232 (-6 %) |
+| `fixed/16` | 90.5 (-14 %) |
+| `fixed/256` | 90.5 (-14 %) |
+| `fixed/4096` | 90.5 (-14 %) |
+| `realloc/grow` | 97.4 (-12 %) |
+
+#### malloc-tiny
+
+| Case | insns/op |
+|---|---:|
+| `batch/churn` | 220 (-6 %) |
+| `batch/fifo` | 204 (-7 %) |
+| `batch/lifo` | 204 (-7 %) |
+| `batch/shuffled` | 205 (-7 %) |
+| `calloc/256` | 236 (-6 %) |
+| `fixed/16` | 95.0 (-14 %) |
+| `fixed/256` | 95.0 (-14 %) |
+| `fixed/4096` | 95.0 (-14 %) |
+| `realloc/grow` | 95.3 (-13 %) |
+
+### Speed flavour
+
+#### stdio
+
+| Case | insns/op |
+|---|---:|
+| `fprintf/mix` | 2148 (-1 %) |
+| `fputs/line` | 253 (-6 %) |
+| `snprintf/%-20s` | 574 |
+| `snprintf/%.17g` | 14828 |
+| `snprintf/%.3f` | 15138 |
+| `snprintf/%08x` | 469 |
+| `snprintf/%a` | 861 |
+| `snprintf/%c` | 260 |
+| `snprintf/%d` | 455 |
+| `snprintf/%e` | 13866 |
+| `snprintf/%f` | 14651 |
+| `snprintf/%g` | 15452 |
+| `snprintf/%lld` | 1353 |
+| `snprintf/%p` | 420 |
+| `snprintf/%s` | 395 |
+| `snprintf/%u-small` | 353 |
+| `snprintf/%x` | 450 |
+| `snprintf/literal` | 308 |
+| `snprintf/mix` | 1836 |
+| `sscanf/%d` | 398 |
+| `sscanf/%lf` | 2398 |
+| `sscanf/%x` | 463 |
+| `sscanf/mix` | 1669 |
+
+#### malloc
+
+| Case | insns/op |
+|---|---:|
+| `batch/churn` | 116 (-11 %) |
+| `batch/fifo` | 94.5 (-14 %) |
+| `batch/lifo` | 89.6 (-14 %) |
+| `batch/shuffled` | 109 (-12 %) |
+| `calloc/256` | 130 (-10 %) |
+| `fixed/16` | 90.5 (-14 %) |
+| `fixed/256` | 90.5 (-14 %) |
+| `fixed/4096` | 90.5 (-14 %) |
+| `realloc/grow` | 97.4 (-12 %) |
+
+#### malloc-tiny
+
+| Case | insns/op |
+|---|---:|
+| `batch/churn` | 220 (-6 %) |
+| `batch/fifo` | 204 (-7 %) |
+| `batch/lifo` | 204 (-7 %) |
+| `batch/shuffled` | 205 (-7 %) |
+| `calloc/256` | 134 (-10 %) |
+| `fixed/16` | 95.0 (-14 %) |
+| `fixed/256` | 95.0 (-14 %) |
+| `fixed/4096` | 95.0 (-14 %) |
+| `realloc/grow` | 95.3 (-13 %) |

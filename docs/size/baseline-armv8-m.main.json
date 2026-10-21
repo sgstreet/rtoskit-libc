@@ -117,16 +117,16 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 14,
+     "text": 16,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 44,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 704,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 690,
      "unwind": 0
     },
     "program": {
@@ -140,12 +140,12 @@
     }
    },
    "sections": {
-    "bss": 344,
+    "bss": 304,
     "data": 36,
     "rodata": 198,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 8952,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 8940,
     "unwind": 0
    }
   },
@@ -193,16 +193,16 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 14,
+     "text": 16,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 44,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 704,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 690,
      "unwind": 0
     },
     "program": {
@@ -216,12 +216,12 @@
     }
    },
    "sections": {
-    "bss": 344,
+    "bss": 304,
     "data": 36,
     "rodata": 201,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 6964,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 6952,
     "unwind": 0
    }
   },
@@ -269,16 +269,16 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 12,
+     "text": 14,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 44,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 704,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 690,
      "unwind": 0
     },
     "program": {
@@ -292,12 +292,12 @@
     }
    },
    "sections": {
-    "bss": 344,
+    "bss": 304,
     "data": 36,
     "rodata": 111,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 4092,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 4080,
     "unwind": 0
    }
   },
@@ -345,16 +345,16 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 12,
+     "text": 14,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 44,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 704,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 690,
      "unwind": 0
     },
     "program": {
@@ -368,12 +368,12 @@
     }
    },
    "sections": {
-    "bss": 344,
+    "bss": 304,
     "data": 36,
     "rodata": 111,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 4328,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 4316,
     "unwind": 0
    }
   },
@@ -420,16 +420,16 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 10,
+     "text": 12,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 44,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 704,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 690,
      "unwind": 0
     },
     "program": {
@@ -443,12 +443,12 @@
     }
    },
    "sections": {
-    "bss": 344,
+    "bss": 304,
     "data": 36,
     "rodata": 15,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 1868,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 1856,
     "unwind": 0
    }
   },
@@ -494,16 +494,16 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 8,
+     "text": 6,
      "unwind": 0
     },
     "port": {
-     "bss": 68,
+     "bss": 32,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 704,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 690,
      "unwind": 0
     },
     "program": {
@@ -517,12 +517,12 @@
     }
    },
    "sections": {
-    "bss": 80,
+    "bss": 44,
     "data": 0,
     "rodata": 0,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 1914,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 1898,
     "unwind": 0
    }
   },
@@ -568,16 +568,16 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 8,
+     "text": 6,
      "unwind": 0
     },
     "port": {
-     "bss": 68,
+     "bss": 32,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 704,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 690,
      "unwind": 0
     },
     "program": {
@@ -591,12 +591,12 @@
     }
    },
    "sections": {
-    "bss": 76,
+    "bss": 40,
     "data": 0,
     "rodata": 0,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 1854,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 1838,
     "unwind": 0
    }
   },
@@ -9264,7 +9264,7 @@
    "port/__rtos_lock_acquire.o:__rtos_lock_acquire": 16,
    "port/__rtos_lock_create.o:__rtos_lock_create": 8,
    "port/__rtos_lock_destroy.o:__rtos_lock_destroy": 8,
-   "port/__rtos_lock_release.o:__rtos_lock_release": 16,
+   "port/__rtos_lock_release.o:__rtos_lock_release": 8,
    "port/__rtos_open.o:__rtos_open": 40,
    "port/__rtos_read.o:__rtos_read": 24,
    "port/__rtos_remove.o:__rtos_remove": 24,
