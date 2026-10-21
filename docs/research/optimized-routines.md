@@ -515,9 +515,10 @@ Result and exceptions raised (I invalid, Z divide-by-zero, O overflow, U underfl
   | `log10f` | `0x1.fddcf4p-98` | `-0x1.d33a44p+4` |
   | `cosf` | `±0x1.2b9622p+67` | `0x1.f0285cp-1` |
 
-- These cores compute in double and round to float. The double result is
-  then within 2^-29 float ulps of a float halfway point, so the second
-  rounding goes the wrong way.
+- These cores compute in double and round to float. For these arguments
+  the exact value lies so close to a float halfway point that rounding it
+  to double first moves it onto, or across, that point, and the second
+  rounding then goes the wrong way.
 
 **Directed rounding modes.** Ours are correctly rounded in every mode for
 float (0 % misrounded), and within 1.02 ulp for double.
