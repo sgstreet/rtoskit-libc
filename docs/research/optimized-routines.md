@@ -300,3 +300,13 @@ vectors above) and passes on all six boards. On armv7e-m it links 45 AOR
 symbols: the string functions, the math functions with their tables, and the
 soft double helpers. On armv7e-m-dp only `__aeabi_d2lz` and `__aeabi_l2d` of
 the fp set are needed.
+
+## Found in the size comparison (P4.04)
+
+AOR's `strcmp-armv6m.S` and `strlen-armv6t2.S` keep EHABI unwind directives.
+
+- **Effect:** their `.ARM.exidx` entries refer to `__aeabi_unwind_cpp_pr0`, so
+  a program that links either gets libgcc's unwinder: about 3.6 KB for a 136-
+  or 216-byte routine.
+- **How it is reported:** `docs/size/phase-4.md` reports AOR as it builds and
+  names the effect, rather than stripping the tables (D95).

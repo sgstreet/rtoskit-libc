@@ -1,0 +1,356 @@
+{
+ "aor": "f67e7daa5457646fad9f75580263dba654c988aa",
+ "arch": "x86_64",
+ "board": "linux-x86_64",
+ "images": {
+  "float-exact": {
+   "aor": {
+    "code": 3256,
+    "ram": 40
+   },
+   "size": {
+    "code": 3256,
+    "ram": 40
+   },
+   "speed": {
+    "code": 3256,
+    "ram": 40
+   },
+   "substituted": []
+  },
+  "hello-printf-float": {
+   "aor": {
+    "code": 10399,
+    "ram": 432
+   },
+   "size": {
+    "code": 10399,
+    "ram": 432
+   },
+   "speed": {
+    "code": 10625,
+    "ram": 432
+   },
+   "substituted": []
+  },
+  "hello-printf-int": {
+   "aor": {
+    "code": 10352,
+    "ram": 432
+   },
+   "size": {
+    "code": 10352,
+    "ram": 432
+   },
+   "speed": {
+    "code": 10578,
+    "ram": 432
+   },
+   "substituted": []
+  },
+  "hello-puts": {
+   "aor": {
+    "code": 2300,
+    "ram": 432
+   },
+   "size": {
+    "code": 2300,
+    "ram": 432
+   },
+   "speed": {
+    "code": 2412,
+    "ram": 432
+   },
+   "substituted": []
+  },
+  "malloc-heavy": {
+   "aor": {
+    "code": 2517,
+    "ram": 96
+   },
+   "size": {
+    "code": 2517,
+    "ram": 96
+   },
+   "speed": {
+    "code": 2675,
+    "ram": 96
+   },
+   "substituted": []
+  },
+  "math-float": {
+   "aor": {
+    "code": 4714,
+    "ram": 40
+   },
+   "size": {
+    "code": 13045,
+    "ram": 40
+   },
+   "speed": {
+    "code": 13045,
+    "ram": 40
+   },
+   "substituted": [
+    "cosf",
+    "expf",
+    "logf",
+    "powf",
+    "sinf"
+   ]
+  },
+  "math-mix": {
+   "aor": {
+    "code": 26724,
+    "ram": 40
+   },
+   "size": {
+    "code": 16623,
+    "ram": 40
+   },
+   "speed": {
+    "code": 16623,
+    "ram": 40
+   },
+   "substituted": [
+    "cosf",
+    "exp",
+    "expf",
+    "log",
+    "logf",
+    "pow",
+    "powf",
+    "sinf"
+   ]
+  }
+ },
+ "order": [
+  "cosf",
+  "erf",
+  "erff",
+  "exp",
+  "exp2",
+  "exp2f",
+  "expf",
+  "log",
+  "log10f",
+  "log2",
+  "log2f",
+  "logf",
+  "pow",
+  "powf",
+  "sinf"
+ ],
+ "routines": {
+  "cosf": {
+   "aor": {
+    "code": 833,
+    "ram": 0
+   },
+   "size": {
+    "code": 3193,
+    "ram": 0
+   },
+   "speed": {
+    "code": 3193,
+    "ram": 0
+   }
+  },
+  "erf": {
+   "aor": {
+    "code": 5180,
+    "ram": 0
+   },
+   "size": {
+    "code": 6877,
+    "ram": 0
+   },
+   "speed": {
+    "code": 6877,
+    "ram": 0
+   }
+  },
+  "erff": {
+   "aor": {
+    "code": 2825,
+    "ram": 0
+   },
+   "size": {
+    "code": 6897,
+    "ram": 0
+   },
+   "speed": {
+    "code": 6897,
+    "ram": 0
+   }
+  },
+  "exp": {
+   "aor": {
+    "code": 2813,
+    "ram": 0
+   },
+   "size": {
+    "code": 2970,
+    "ram": 0
+   },
+   "speed": {
+    "code": 2970,
+    "ram": 0
+   }
+  },
+  "exp2": {
+   "aor": {
+    "code": 2824,
+    "ram": 0
+   },
+   "size": {
+    "code": 3239,
+    "ram": 0
+   },
+   "speed": {
+    "code": 3239,
+    "ram": 0
+   }
+  },
+  "exp2f": {
+   "aor": {
+    "code": 653,
+    "ram": 0
+   },
+   "size": {
+    "code": 3259,
+    "ram": 0
+   },
+   "speed": {
+    "code": 3259,
+    "ram": 0
+   }
+  },
+  "expf": {
+   "aor": {
+    "code": 662,
+    "ram": 0
+   },
+   "size": {
+    "code": 2990,
+    "ram": 0
+   },
+   "speed": {
+    "code": 2990,
+    "ram": 0
+   }
+  },
+  "log": {
+   "aor": {
+    "code": 4992,
+    "ram": 0
+   },
+   "size": {
+    "code": 2660,
+    "ram": 0
+   },
+   "speed": {
+    "code": 2660,
+    "ram": 0
+   }
+  },
+  "log10f": {
+   "aor": {
+    "code": 628,
+    "ram": 0
+   },
+   "size": {
+    "code": 2838,
+    "ram": 0
+   },
+   "speed": {
+    "code": 2838,
+    "ram": 0
+   }
+  },
+  "log2": {
+   "aor": {
+    "code": 2992,
+    "ram": 0
+   },
+   "size": {
+    "code": 3221,
+    "ram": 0
+   },
+   "speed": {
+    "code": 3221,
+    "ram": 0
+   }
+  },
+  "log2f": {
+   "aor": {
+    "code": 612,
+    "ram": 0
+   },
+   "size": {
+    "code": 3241,
+    "ram": 0
+   },
+   "speed": {
+    "code": 3241,
+    "ram": 0
+   }
+  },
+  "logf": {
+   "aor": {
+    "code": 620,
+    "ram": 0
+   },
+   "size": {
+    "code": 2680,
+    "ram": 0
+   },
+   "speed": {
+    "code": 2680,
+    "ram": 0
+   }
+  },
+  "pow": {
+   "aor": {
+    "code": 8252,
+    "ram": 0
+   },
+   "size": {
+    "code": 8408,
+    "ram": 0
+   },
+   "speed": {
+    "code": 8408,
+    "ram": 0
+   }
+  },
+  "powf": {
+   "aor": {
+    "code": 1703,
+    "ram": 0
+   },
+   "size": {
+    "code": 8432,
+    "ram": 0
+   },
+   "speed": {
+    "code": 8432,
+    "ram": 0
+   }
+  },
+  "sinf": {
+   "aor": {
+    "code": 834,
+    "ram": 0
+   },
+   "size": {
+    "code": 3761,
+    "ram": 0
+   },
+   "speed": {
+    "code": 3761,
+    "ram": 0
+   }
+  }
+ }
+}

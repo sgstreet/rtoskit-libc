@@ -70,10 +70,17 @@ It is fetched with a shallow `git fetch` of that commit; the commit ID is the co
 - [x] Results in `docs/perf/phase-4.md`.
   *Summary, method, caveats and per-board tables. `make bench` shows no change outside the 20 new cases on any board or flavour.*
 
-## P4.04 — Size comparison  `[ ]`
-- [ ] Per-routine code size (`.text` + `.rodata`, tables included) for each AOR routine against ours, both flavours, per core.
-- [ ] The `test/size` reference programs relinked with AOR's routines: image sizes and stack depths through `size-report`.
-- [ ] Results in `docs/size/phase-4.md`.
+## P4.04 — Size comparison  `[x]`
+- [x] Per-routine code size (`.text` + `.rodata`, tables included) for each AOR routine against ours, both flavours, per core.
+  *D95. `size-report aor` measures what each routine adds to an empty program. That counts its tables and helpers, for example the soft double that libgcc's 64-bit conversions and AOR's float functions pull in.*
+  - *Ours are smaller for the string routines and, on the soft and single-precision cores, for the float functions (1.3–2.2 KB less).*
+  - *AOR's are smaller for the Thumb-1 comparisons (a quarter to a third of libgcc's), for the Thumb-2 conversions (`d2lz` 140 bytes against libgcc's 1926), and for the float functions on armv7e-m-dp and x86_64 (`powf` 1452 against 5534 on armv7e-m-dp).*
+- [x] The `test/size` reference programs relinked with AOR's routines: image sizes and stack depths through `size-report`.
+  *Images grow with AOR on every board for `math-mix` (+19 to +80 %). `math-float` grows 21–66 % on the soft and single-precision cores and shrinks 55–64 % on armv7e-m-dp and x86_64.*
+  - *`hello-puts` and `malloc-heavy` grow about 4 KB on Thumb-2 because AOR's `strlen` object pulls libgcc's EHABI unwinder.*
+  - *Stack depths are not compared: AOR's assembly has no call graph. This is recorded in D95.*
+- [x] Results in `docs/size/phase-4.md`.
+  *The library is unchanged: `size-report diff` shows no change, and the size budget holds.*
 
 ## P4.05 — Accuracy comparison  `[ ]`
 - [ ] Float functions exhaustively on the host (all 2^32 inputs, or a documented subset where too slow), double functions on random and hard-case sets: max ulp error and the count of results not correctly rounded, for AOR and for us, against an MPFR or mpmath reference.

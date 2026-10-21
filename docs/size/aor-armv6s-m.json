@@ -1,0 +1,792 @@
+{
+ "aor": "f67e7daa5457646fad9f75580263dba654c988aa",
+ "arch": "armv6s-m",
+ "board": "linux-armv6s-m",
+ "images": {
+  "float-exact": {
+   "aor": {
+    "code": 4660,
+    "ram": 20
+   },
+   "size": {
+    "code": 3744,
+    "ram": 20
+   },
+   "speed": {
+    "code": 3744,
+    "ram": 20
+   },
+   "substituted": [
+    "__aeabi_cfcmpeq",
+    "__aeabi_cfcmple",
+    "__aeabi_cfrcmple",
+    "__aeabi_fadd",
+    "__aeabi_fcmpeq",
+    "__aeabi_fcmpge",
+    "__aeabi_fcmpgt",
+    "__aeabi_fcmple",
+    "__aeabi_fcmplt",
+    "__aeabi_fcmpun",
+    "__aeabi_fmul",
+    "__aeabi_frsub",
+    "__aeabi_fsub",
+    "__gesf2",
+    "__lesf2"
+   ]
+  },
+  "hello-printf-float": {
+   "aor": {
+    "code": 10366,
+    "ram": 348
+   },
+   "size": {
+    "code": 10366,
+    "ram": 348
+   },
+   "speed": {
+    "code": 10806,
+    "ram": 348
+   },
+   "substituted": []
+  },
+  "hello-printf-int": {
+   "aor": {
+    "code": 7761,
+    "ram": 348
+   },
+   "size": {
+    "code": 7761,
+    "ram": 348
+   },
+   "speed": {
+    "code": 8201,
+    "ram": 348
+   },
+   "substituted": []
+  },
+  "hello-puts": {
+   "aor": {
+    "code": 2155,
+    "ram": 348
+   },
+   "size": {
+    "code": 2155,
+    "ram": 348
+   },
+   "speed": {
+    "code": 2243,
+    "ram": 348
+   },
+   "substituted": []
+  },
+  "malloc-heavy": {
+   "aor": {
+    "code": 2206,
+    "ram": 52
+   },
+   "size": {
+    "code": 2206,
+    "ram": 52
+   },
+   "speed": {
+    "code": 2330,
+    "ram": 52
+   },
+   "substituted": []
+  },
+  "math-float": {
+   "aor": {
+    "code": 10928,
+    "ram": 20
+   },
+   "size": {
+    "code": 9036,
+    "ram": 20
+   },
+   "speed": {
+    "code": 11460,
+    "ram": 20
+   },
+   "substituted": [
+    "__aeabi_dcmpeq",
+    "__aeabi_dcmpgt",
+    "__aeabi_dcmple",
+    "__aeabi_fadd",
+    "__aeabi_fcmpeq",
+    "__aeabi_fcmpgt",
+    "__aeabi_fcmplt",
+    "__aeabi_fcmpun",
+    "__aeabi_fmul",
+    "__aeabi_frsub",
+    "__aeabi_fsub",
+    "cosf",
+    "expf",
+    "logf",
+    "powf",
+    "sinf"
+   ]
+  },
+  "math-mix": {
+   "aor": {
+    "code": 39888,
+    "ram": 20
+   },
+   "size": {
+    "code": 33584,
+    "ram": 20
+   },
+   "speed": {
+    "code": 36060,
+    "ram": 20
+   },
+   "substituted": [
+    "__aeabi_cdcmpeq",
+    "__aeabi_cdcmple",
+    "__aeabi_cdrcmple",
+    "__aeabi_dcmpeq",
+    "__aeabi_dcmpge",
+    "__aeabi_dcmpgt",
+    "__aeabi_dcmple",
+    "__aeabi_dcmplt",
+    "__aeabi_dcmpun",
+    "__aeabi_fadd",
+    "__aeabi_fcmpeq",
+    "__aeabi_fcmpgt",
+    "__aeabi_fcmplt",
+    "__aeabi_fcmpun",
+    "__aeabi_fmul",
+    "__aeabi_frsub",
+    "__aeabi_fsub",
+    "__gedf2",
+    "__ledf2",
+    "cosf",
+    "exp",
+    "expf",
+    "log",
+    "logf",
+    "pow",
+    "powf",
+    "sinf"
+   ]
+  }
+ },
+ "order": [
+  "strcmp",
+  "cosf",
+  "erf",
+  "erff",
+  "exp",
+  "exp2",
+  "exp2f",
+  "expf",
+  "log",
+  "log10f",
+  "log2",
+  "log2f",
+  "logf",
+  "pow",
+  "powf",
+  "sinf",
+  "__aeabi_cdcmpeq",
+  "__aeabi_cdcmple",
+  "__aeabi_cdrcmple",
+  "__aeabi_cfcmpeq",
+  "__aeabi_cfcmple",
+  "__aeabi_cfrcmple",
+  "__aeabi_dcmpeq",
+  "__aeabi_dcmpge",
+  "__aeabi_dcmpgt",
+  "__aeabi_dcmple",
+  "__aeabi_dcmplt",
+  "__aeabi_dcmpun",
+  "__aeabi_fadd",
+  "__aeabi_fcmpeq",
+  "__aeabi_fcmpge",
+  "__aeabi_fcmpgt",
+  "__aeabi_fcmple",
+  "__aeabi_fcmplt",
+  "__aeabi_fcmpun",
+  "__aeabi_fmul",
+  "__aeabi_fsub",
+  "__gedf2",
+  "__gesf2",
+  "__ledf2",
+  "__lesf2"
+ ],
+ "routines": {
+  "__aeabi_cdcmpeq": {
+   "aor": {
+    "code": 116,
+    "ram": 0
+   },
+   "size": {
+    "code": 642,
+    "ram": 0
+   },
+   "speed": {
+    "code": 642,
+    "ram": 0
+   }
+  },
+  "__aeabi_cdcmple": {
+   "aor": {
+    "code": 120,
+    "ram": 0
+   },
+   "size": {
+    "code": 642,
+    "ram": 0
+   },
+   "speed": {
+    "code": 642,
+    "ram": 0
+   }
+  },
+  "__aeabi_cdrcmple": {
+   "aor": {
+    "code": 120,
+    "ram": 0
+   },
+   "size": {
+    "code": 642,
+    "ram": 0
+   },
+   "speed": {
+    "code": 642,
+    "ram": 0
+   }
+  },
+  "__aeabi_cfcmpeq": {
+   "aor": {
+    "code": 88,
+    "ram": 0
+   },
+   "size": {
+    "code": 402,
+    "ram": 0
+   },
+   "speed": {
+    "code": 402,
+    "ram": 0
+   }
+  },
+  "__aeabi_cfcmple": {
+   "aor": {
+    "code": 88,
+    "ram": 0
+   },
+   "size": {
+    "code": 402,
+    "ram": 0
+   },
+   "speed": {
+    "code": 402,
+    "ram": 0
+   }
+  },
+  "__aeabi_cfrcmple": {
+   "aor": {
+    "code": 88,
+    "ram": 0
+   },
+   "size": {
+    "code": 402,
+    "ram": 0
+   },
+   "speed": {
+    "code": 402,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmpeq": {
+   "aor": {
+    "code": 180,
+    "ram": 0
+   },
+   "size": {
+    "code": 642,
+    "ram": 0
+   },
+   "speed": {
+    "code": 642,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmpge": {
+   "aor": {
+    "code": 180,
+    "ram": 0
+   },
+   "size": {
+    "code": 642,
+    "ram": 0
+   },
+   "speed": {
+    "code": 642,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmpgt": {
+   "aor": {
+    "code": 180,
+    "ram": 0
+   },
+   "size": {
+    "code": 642,
+    "ram": 0
+   },
+   "speed": {
+    "code": 642,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmple": {
+   "aor": {
+    "code": 180,
+    "ram": 0
+   },
+   "size": {
+    "code": 642,
+    "ram": 0
+   },
+   "speed": {
+    "code": 642,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmplt": {
+   "aor": {
+    "code": 180,
+    "ram": 0
+   },
+   "size": {
+    "code": 642,
+    "ram": 0
+   },
+   "speed": {
+    "code": 642,
+    "ram": 0
+   }
+  },
+  "__aeabi_dcmpun": {
+   "aor": {
+    "code": 28,
+    "ram": 0
+   },
+   "size": {
+    "code": 62,
+    "ram": 0
+   },
+   "speed": {
+    "code": 62,
+    "ram": 0
+   }
+  },
+  "__aeabi_fadd": {
+   "aor": {
+    "code": 724,
+    "ram": 0
+   },
+   "size": {
+    "code": 810,
+    "ram": 0
+   },
+   "speed": {
+    "code": 810,
+    "ram": 0
+   }
+  },
+  "__aeabi_fcmpeq": {
+   "aor": {
+    "code": 136,
+    "ram": 0
+   },
+   "size": {
+    "code": 402,
+    "ram": 0
+   },
+   "speed": {
+    "code": 402,
+    "ram": 0
+   }
+  },
+  "__aeabi_fcmpge": {
+   "aor": {
+    "code": 136,
+    "ram": 0
+   },
+   "size": {
+    "code": 402,
+    "ram": 0
+   },
+   "speed": {
+    "code": 402,
+    "ram": 0
+   }
+  },
+  "__aeabi_fcmpgt": {
+   "aor": {
+    "code": 136,
+    "ram": 0
+   },
+   "size": {
+    "code": 402,
+    "ram": 0
+   },
+   "speed": {
+    "code": 402,
+    "ram": 0
+   }
+  },
+  "__aeabi_fcmple": {
+   "aor": {
+    "code": 136,
+    "ram": 0
+   },
+   "size": {
+    "code": 402,
+    "ram": 0
+   },
+   "speed": {
+    "code": 402,
+    "ram": 0
+   }
+  },
+  "__aeabi_fcmplt": {
+   "aor": {
+    "code": 136,
+    "ram": 0
+   },
+   "size": {
+    "code": 402,
+    "ram": 0
+   },
+   "speed": {
+    "code": 402,
+    "ram": 0
+   }
+  },
+  "__aeabi_fcmpun": {
+   "aor": {
+    "code": 24,
+    "ram": 0
+   },
+   "size": {
+    "code": 42,
+    "ram": 0
+   },
+   "speed": {
+    "code": 42,
+    "ram": 0
+   }
+  },
+  "__aeabi_fmul": {
+   "aor": {
+    "code": 554,
+    "ram": 0
+   },
+   "size": {
+    "code": 402,
+    "ram": 0
+   },
+   "speed": {
+    "code": 402,
+    "ram": 0
+   }
+  },
+  "__aeabi_fsub": {
+   "aor": {
+    "code": 724,
+    "ram": 0
+   },
+   "size": {
+    "code": 826,
+    "ram": 0
+   },
+   "speed": {
+    "code": 826,
+    "ram": 0
+   }
+  },
+  "__gedf2": {
+   "aor": {
+    "code": 264,
+    "ram": 0
+   },
+   "size": {
+    "code": 202,
+    "ram": 0
+   },
+   "speed": {
+    "code": 202,
+    "ram": 0
+   }
+  },
+  "__gesf2": {
+   "aor": {
+    "code": 180,
+    "ram": 0
+   },
+   "size": {
+    "code": 108,
+    "ram": 0
+   },
+   "speed": {
+    "code": 108,
+    "ram": 0
+   }
+  },
+  "__ledf2": {
+   "aor": {
+    "code": 260,
+    "ram": 0
+   },
+   "size": {
+    "code": 202,
+    "ram": 0
+   },
+   "speed": {
+    "code": 202,
+    "ram": 0
+   }
+  },
+  "__lesf2": {
+   "aor": {
+    "code": 176,
+    "ram": 0
+   },
+   "size": {
+    "code": 106,
+    "ram": 0
+   },
+   "speed": {
+    "code": 106,
+    "ram": 0
+   }
+  },
+  "cosf": {
+   "aor": {
+    "code": 5338,
+    "ram": 0
+   },
+   "size": {
+    "code": 3822,
+    "ram": 0
+   },
+   "speed": {
+    "code": 4774,
+    "ram": 0
+   }
+  },
+  "erf": {
+   "aor": {
+    "code": 11714,
+    "ram": 0
+   },
+   "size": {
+    "code": 13390,
+    "ram": 0
+   },
+   "speed": {
+    "code": 13390,
+    "ram": 0
+   }
+  },
+  "erff": {
+   "aor": {
+    "code": 8926,
+    "ram": 0
+   },
+   "size": {
+    "code": 4290,
+    "ram": 0
+   },
+   "speed": {
+    "code": 7122,
+    "ram": 0
+   }
+  },
+  "exp": {
+   "aor": {
+    "code": 5922,
+    "ram": 0
+   },
+   "size": {
+    "code": 6418,
+    "ram": 0
+   },
+   "speed": {
+    "code": 6418,
+    "ram": 0
+   }
+  },
+  "exp2": {
+   "aor": {
+    "code": 5934,
+    "ram": 0
+   },
+   "size": {
+    "code": 6882,
+    "ram": 0
+   },
+   "speed": {
+    "code": 6882,
+    "ram": 0
+   }
+  },
+  "exp2f": {
+   "aor": {
+    "code": 5030,
+    "ram": 0
+   },
+   "size": {
+    "code": 2914,
+    "ram": 0
+   },
+   "speed": {
+    "code": 3366,
+    "ram": 0
+   }
+  },
+  "expf": {
+   "aor": {
+    "code": 5042,
+    "ram": 0
+   },
+   "size": {
+    "code": 3118,
+    "ram": 0
+   },
+   "speed": {
+    "code": 3594,
+    "ram": 0
+   }
+  },
+  "log": {
+   "aor": {
+    "code": 9478,
+    "ram": 0
+   },
+   "size": {
+    "code": 8018,
+    "ram": 0
+   },
+   "speed": {
+    "code": 8018,
+    "ram": 0
+   }
+  },
+  "log10f": {
+   "aor": {
+    "code": 5094,
+    "ram": 0
+   },
+   "size": {
+    "code": 3770,
+    "ram": 0
+   },
+   "speed": {
+    "code": 3770,
+    "ram": 0
+   }
+  },
+  "log2": {
+   "aor": {
+    "code": 7418,
+    "ram": 0
+   },
+   "size": {
+    "code": 8650,
+    "ram": 0
+   },
+   "speed": {
+    "code": 8650,
+    "ram": 0
+   }
+  },
+  "log2f": {
+   "aor": {
+    "code": 5086,
+    "ram": 0
+   },
+   "size": {
+    "code": 3574,
+    "ram": 0
+   },
+   "speed": {
+    "code": 4574,
+    "ram": 0
+   }
+  },
+  "logf": {
+   "aor": {
+    "code": 5086,
+    "ram": 0
+   },
+   "size": {
+    "code": 3770,
+    "ram": 0
+   },
+   "speed": {
+    "code": 4842,
+    "ram": 0
+   }
+  },
+  "pow": {
+   "aor": {
+    "code": 13294,
+    "ram": 0
+   },
+   "size": {
+    "code": 14762,
+    "ram": 0
+   },
+   "speed": {
+    "code": 14762,
+    "ram": 0
+   }
+  },
+  "powf": {
+   "aor": {
+    "code": 6826,
+    "ram": 0
+   },
+   "size": {
+    "code": 5366,
+    "ram": 0
+   },
+   "speed": {
+    "code": 5366,
+    "ram": 0
+   }
+  },
+  "sinf": {
+   "aor": {
+    "code": 5766,
+    "ram": 0
+   },
+   "size": {
+    "code": 3842,
+    "ram": 0
+   },
+   "speed": {
+    "code": 4794,
+    "ram": 0
+   }
+  },
+  "strcmp": {
+   "aor": {
+    "code": 3970,
+    "ram": 0
+   },
+   "size": {
+    "code": 20,
+    "ram": 0
+   },
+   "speed": {
+    "code": 22,
+    "ram": 0
+   }
+  }
+ }
+}
