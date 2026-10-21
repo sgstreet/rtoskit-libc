@@ -462,6 +462,68 @@
     "insns": 356.41
    }
   },
+  "softfloat": {
+   "d2f": {
+    "insns": 51.5
+   },
+   "d2i": {
+    "insns": 38.44
+   },
+   "d2l": {
+    "insns": 696.44
+   },
+   "dadd": {
+    "insns": 106.69
+   },
+   "dcmp": {
+    "insns": 66.88
+   },
+   "ddiv": {
+    "insns": 844.38
+   },
+   "dmul": {
+    "insns": 263.62
+   },
+   "dsub": {
+    "insns": 116.19
+   },
+   "f2d": {
+    "insns": 32.44
+   },
+   "f2i": {
+    "insns": 24.94
+   },
+   "f2l": {
+    "insns": 689.44
+   },
+   "fadd": {
+    "insns": 90.31
+   },
+   "fcmp": {
+    "insns": 44.44
+   },
+   "fdiv": {
+    "insns": 291.75
+   },
+   "fmul": {
+    "insns": 109.06
+   },
+   "fsub": {
+    "insns": 84.75
+   },
+   "i2d": {
+    "insns": 61.62
+   },
+   "i2f": {
+    "insns": 76.62
+   },
+   "l2d": {
+    "insns": 472.62
+   },
+   "l2f": {
+    "insns": 524.62
+   }
+  },
   "stdio": {
    "fprintf/mix": {
     "insns": 4077.0

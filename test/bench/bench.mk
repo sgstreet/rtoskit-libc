@@ -15,8 +15,8 @@
 # tools/bench-runner ("make bench"); every program links the harness objects
 
 ifeq ($(findstring ${BUILD_ROOT},${CURDIR}),)
-SUBDIRS := harness string stdio strto malloc malloc-tiny qsort math threads
-string stdio strto malloc qsort math threads: harness
+SUBDIRS := harness string stdio strto malloc malloc-tiny qsort math softfloat threads
+string stdio strto malloc qsort math softfloat threads: harness
 malloc-tiny: malloc
 include ${PROJECT_ROOT}/tools/makefiles/target.mk
 else

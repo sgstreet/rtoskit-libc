@@ -739,3 +739,57 @@ against the P3.05h baselines; only the program that changed is shown.
 | `qsort/reversed/1024` | 35.6 (-94 %) |
 | `qsort/sorted/1024` | 27.1 (-96 %) |
 | `qsort/strings/256` | 303 (-48 %) |
+
+## P4.03 — New program: `softfloat`
+
+The floating-point operations that become run-time library calls without an FPU (PLAN D92). The cases are new, so there is no change column; the other programs are unchanged.
+
+### Release (size flavour)
+
+| Case | insns/op |
+|---|---:|
+| `d2f` | 6.8 |
+| `d2i` | 7.8 |
+| `d2l` | 26.9 |
+| `dadd` | 9.9 |
+| `dcmp` | 10.8 |
+| `ddiv` | 9.9 |
+| `dmul` | 9.9 |
+| `dsub` | 9.9 |
+| `f2d` | 8.9 |
+| `f2i` | 7.8 |
+| `f2l` | 25.9 |
+| `fadd` | 7.8 |
+| `fcmp` | 10.8 |
+| `fdiv` | 7.8 |
+| `fmul` | 7.8 |
+| `fsub` | 7.8 |
+| `i2d` | 9.9 |
+| `i2f` | 7.8 |
+| `l2d` | 48.6 |
+| `l2f` | 32.9 |
+
+### Speed flavour
+
+| Case | insns/op |
+|---|---:|
+| `d2f` | 6.8 |
+| `d2i` | 7.8 |
+| `d2l` | 26.9 |
+| `dadd` | 9.9 |
+| `dcmp` | 10.8 |
+| `ddiv` | 9.9 |
+| `dmul` | 9.9 |
+| `dsub` | 9.9 |
+| `f2d` | 8.9 |
+| `f2i` | 7.8 |
+| `f2l` | 25.9 |
+| `fadd` | 7.8 |
+| `fcmp` | 10.8 |
+| `fdiv` | 7.8 |
+| `fmul` | 7.8 |
+| `fsub` | 7.8 |
+| `i2d` | 9.9 |
+| `i2f` | 7.8 |
+| `l2d` | 48.6 |
+| `l2f` | 32.9 |
