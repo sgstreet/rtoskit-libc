@@ -7,6 +7,63 @@ AOR revision `f67e7daa5457646fad9f75580263dba654c988aa`, built with arm-none-eab
 GCC 16.2 (and gcc-14 on x86_64) by `tools/scripts/aor-build`. AOR is measured
 only; nothing of it is in `libc.a`.
 
+## Phase summary (P4.07)
+
+Phase 4 measured rtoskit-libc against Arm Optimized Routines (AOR) on every
+board, in three parts: speed (below), size (`docs/size/phase-4.md`) and
+accuracy (`docs/research/optimized-routines.md`, Accuracy). The library itself
+did not change in this phase.
+
+**Speed.** AOR is ahead in:
+
+- the double `exp`/`log`/`pow` (AOR takes 0.16–0.45 of our instructions);
+- the float functions on cores with a double FPU, and on x86_64 (0.14–0.31);
+- Thumb-2 `memchr` (0.51);
+- the Armv6-M soft-float `fadd`/`fmul`/comparisons (0.36–0.61);
+- the Thumb-2 double helpers that we take from libgcc (`ddiv` 0.14, 64-bit
+  conversions 0.15).
+
+We are ahead in:
+
+- the float functions on single-precision and soft-float cores (AOR takes
+  4–7 times our instructions);
+- `memset`;
+- `erf`/`erff` on cores without FMA.
+
+**Size.**
+
+- Our string routines are smaller everywhere. AOR's `strcmp`/`strlen`
+  objects also pull libgcc's 3.6 KB unwinder.
+- AOR's Thumb-1 comparisons and Thumb-2 conversions are much smaller than
+  libgcc's.
+- AOR's float functions are smaller where the FPU has double, and larger
+  elsewhere.
+
+**Accuracy.**
+
+- Our float functions are correctly rounded in every mode, except 8
+  arguments that every core misrounds (Q19).
+- AOR misrounds 0.004 % to 3.9 % of all floats per function (worst 1.09 ulp),
+  and up to 35 % in the upward rounding mode (worst 2 ulp).
+- Both libraries' doubles stay below 0.53 ulp, except AOR's `erf` (0.89 ulp).
+
+**Follow-up.** The gaps are open questions Q18–Q25 in PLAN.md (Analysis in
+the research note); Q19 is a correctness defect to fix first.
+
+### Reproducing the phase
+
+```sh
+make aor                                          # fetch AOR (pinned), build its archives, smoke test every board
+tools/scripts/bench-runner aor --record           # speed: docs/perf/aor-<arch>.json and the tables below
+tools/scripts/size-report aor --record            # size: docs/size/aor-<arch>.json and docs/size/phase-4.md's tables
+tools/scripts/aor-accuracy host                   # accuracy on x86_64 (libmpfr-dev; about 2 h; --resume continues)
+tools/scripts/aor-accuracy arm                    # accuracy samples on armv6-m, armv7e-m, armv7e-m-dp under qemu
+tools/scripts/aor-accuracy markdown [results]     # the accuracy tables
+```
+
+`--from-record` regenerates the speed and size tables, byte for byte, without
+building or measuring.
+
 ## Speed (P4.03)
 
 ### Method
