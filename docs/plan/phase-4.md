@@ -60,10 +60,15 @@ It is fetched with a shallow `git fetch` of that commit; the commit ID is the co
   - *The check also found a naming bug (`__leff2`), now fixed.*
   - *The library is unchanged: `make check` on linux-x86_64 release still passes 219/219 and the unit tests.*
 
-## P4.03 — Performance comparison  `[ ]`
-- [ ] `bench-runner compare` gains an AOR column: the test/bench programs relinked with AOR's routines ahead of `libc.a`, in the size and speed flavours.
-- [ ] Per-function tables for string (`memcpy`, `memset`, `memchr`, `strcmp`, `strlen`, `strcpy`), libm (float and double, throughput and latency) and soft-float (`__aeabi_fadd`/`fmul`/`fdiv`, `dcmp`, conversions on Armv6-M), with the geometric means.
-- [ ] Results in `docs/perf/phase-4.md`.
+## P4.03 — Performance comparison  `[x]`
+- [x] `bench-runner compare` gains an AOR column: the test/bench programs relinked with AOR's routines ahead of `libc.a`, in the size and speed flavours.
+  *D94: `bench-runner aor` relinks the speed build's objects with AOR's archives. Each table sets AOR beside both flavours' baselines; the size flavour's AOR images are P4.04's. `--record`/`--from-record` use `docs/perf/aor-<arch>.json`.*
+- [x] Per-function tables for string (`memcpy`, `memset`, `memchr`, `strcmp`, `strlen`, `strcpy`), libm (float and double, throughput and latency) and soft-float (`__aeabi_fadd`/`fmul`/`fdiv`, `dcmp`, conversions on Armv6-M), with the geometric means.
+  *The new `test/bench/softfloat` program (20 cases) is in every baseline. The tables cover string (AOR's `memchr`/`memset`/`strlen`/`strcmp`; it has no M-profile `memcpy`/`strcpy`), libm throughput and softfloat, with geometric means per program. Findings:*
+  - *Ahead of us, AOR has: Thumb-2 `memchr` (0.51 at 1 KiB); the Armv6-M soft-float `fadd`/`fmul`/`fcmp` (0.52–0.61); the at32 double helpers that replace libgcc (`ddiv` 0.14, `f2l`/`d2l` 0.15); and the double `exp`/`log`/`pow` (0.16–0.45). On double-FPU and x86_64 cores, its float functions also lead (0.14–0.31).*
+  - *Behind us, AOR has: its float functions on the single-precision FPU (4–4.5×, soft double); `expf`/`exp2f`/`log2f`/`erff` on Armv6-M (3.6–7×, our fixed-point paths); `memset` at 1 KiB; and `erf`/`erff` without FMA.*
+- [x] Results in `docs/perf/phase-4.md`.
+  *Summary, method, caveats and per-board tables. `make bench` shows no change outside the 20 new cases on any board or flavour.*
 
 ## P4.04 — Size comparison  `[ ]`
 - [ ] Per-routine code size (`.text` + `.rodata`, tables included) for each AOR routine against ours, both flavours, per core.
