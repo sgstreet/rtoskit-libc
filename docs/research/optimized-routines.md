@@ -613,9 +613,10 @@ math images), from the build of this step:
 
 **3. Float functions where the FPU has double, and on x86_64 (speed and size, Q20).**
 
-- **Gap:** AOR takes 0.14–0.31 of our instructions and 0.6–1.7 KB of code
+- **Gap:** AOR takes 0.14–0.31 of our instructions and 0.5–1.7 KB of code
   where ours take 2.3–8.4 KB. For example, `powf` is 1452 bytes against 5534
-  on armv7e-m-dp.
+  on armv7e-m-dp. The exception is x86_64's `erff` at 2.8 KB, with its
+  software `fma`.
 - **Cause:** our float functions on these cores call our double cores, so
   they carry the double-double tables and series. AOR's evaluate a short
   polynomial in double. Double's 29 extra bits leave AOR's results within
