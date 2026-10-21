@@ -29,7 +29,8 @@
 # The full host run takes about an hour on four threads: every float
 # argument of eight functions, 2^24 samples of each double function and
 # 2^26 of powf, 2^20 per directed rounding mode. --quick divides every
-# count by 64 and skips the exhaustive runs, for a check of the tooling.
+# count by 64 and skips the exhaustive runs, for a check of the tooling;
+# --resume keeps the results file and runs only the steps it lacks.
 
 import argparse
 import os
@@ -86,8 +87,20 @@ def command_host(args):
 	steps += [['modes', name, str((1 << 20) // scale)] for name in ALL_FUNCTIONS]
 	steps += [['special']]
 	results = os.path.join(WORK, 'results.txt')
-	with open(results, 'w') as out:
+	done = set()
+	if args.resume and os.path.exists(results):
+		# A step is done when its last line ("... aor ..." or the special table) is in the file
+		with open(results) as f:
+			for line in f:
+				fields = line.split()
+				if fields and fields[0] == 'special':
+					done.add(('special',))
+				elif len(fields) > 3 and fields[3] == 'aor':
+					done.add((fields[0], fields[1]))
+	with open(results, 'a' if args.resume else 'w') as out:
 		for step in steps:
+			if tuple(step[:2]) in done or tuple(step[:1]) in done:
+				continue
 			print(' '.join(step), file=sys.stderr, flush=True)
 			out.write(run([program] + step))
 			out.flush()
@@ -212,7 +225,9 @@ def command_markdown(args):
 			what = 'all 2^32' if kind == 'exhaustive' else f'{entry["arguments"]:,} sampled'
 			rt = entry['rt']
 			aor = entry['aor']
-			print(f'| `{name}` | {what} | {rt["checked"]:,} | {entry["differ"]:,} | {rt["max"]:.4f} | {fraction(rt["wrong"], rt["checked"])} | {aor["max"]:.4f} | {fraction(aor["wrong"], aor["checked"])} |')
+			# Exhaustive runs check every argument whose results differ but only a sample of the others: share of all arguments
+			total = entry['arguments'] if kind == 'exhaustive' else rt['checked']
+			print(f'| `{name}` | {what} | {rt["checked"]:,} | {entry["differ"]:,} | {rt["max"]:.4f} | {fraction(rt["wrong"], total)} | {aor["max"]:.4f} | {fraction(aor["wrong"], total)} |')
 	print('\n#### Directed rounding modes\n')
 	print('Maximum ulp error and the share not correctly rounded in that mode (rtoskit / AOR).\n')
 	print('| Function | upward | downward | toward zero |')
@@ -244,6 +259,7 @@ def main():
 	sub = parser.add_subparsers(dest='command', required=True)
 	p = sub.add_parser('host')
 	p.add_argument('--quick', action='store_true')
+	p.add_argument('--resume', action='store_true', help='keep results.txt and run only the steps it lacks')
 	p = sub.add_parser('arm')
 	p.add_argument('--board', nargs='+', default=ARM_BOARDS)
 	p = sub.add_parser('markdown')
