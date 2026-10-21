@@ -494,3 +494,62 @@ Result and exceptions raised (I invalid, Z divide-by-zero, O overflow, U underfl
 | `log2` | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 |
 | `erf` | 0.500 / 0 | 0.500 / 0 | 0.837 / 1560 | 0.500 / 0 | 0.500 / 0 | 0.837 / 1560 | 0.500 / 0 | 0.500 / 0 | 0.837 / 1541 |
 | `pow` | 0.500 / 0 | 0.500 / 0 | 0.502 / 6 | 0.500 / 0 | 0.500 / 0 | 0.502 / 6 | 0.500 / 0 | 0.500 / 0 | 0.502 / 6 |
+
+### What the accuracy comparison shows
+
+**Our float functions on x86_64.**
+
+- They are correctly rounded to nearest for all but 8 of the 2^32 arguments,
+  which falls short of D47's claim.
+- The 8 arguments are all in the set where the two libraries differ. The
+  1-in-16 sample of agreeing arguments found no more, and the per-function
+  counts match the exhaustive run exactly:
+
+  | Function | Argument | Our result |
+  |---|---|---|
+  | `exp2f` | `0x1.853a6ep-9` | `0x1.008708p+0` |
+  | `exp2f` | `-0x1.e7526ep-6` | `0x1.f58d6p-1` |
+  | `logf` | `0x1.b121a6p+76` | `0x1.a9a3fp+5` |
+  | `logf` | `0x1.6351d8p+95` | `0x1.08b51p+6` |
+  | `logf` | `0x1.827a74p-7` | `-0x1.1c2b2p+2` |
+  | `log10f` | `0x1.fddcf4p-98` | `-0x1.d33a44p+4` |
+  | `cosf` | `±0x1.2b9622p+67` | `0x1.f0285cp-1` |
+
+- These cores compute in double and round to float. The double result is
+  then within 2^-29 float ulps of a float halfway point, so the second
+  rounding goes the wrong way.
+
+**Directed rounding modes.** Ours are correctly rounded in every mode for
+float (0 % misrounded), and within 1.02 ulp for double.
+
+**AOR's float functions.**
+
+- To nearest: 0.004–0.01 % misrounded for the exp and log family, 0.66–0.68 %
+  for `sinf`/`cosf`, and 3.9 % for `erff`, with a worst case of 1.09 ulp
+  (`erff`).
+- In the directed modes, `expf`, `exp2f` and `powf` reach 2 ulp upward, and
+  35 % of results are misrounded.
+
+**Double functions.**
+
+- Both libraries stay below 0.53 ulp, except AOR's `erf` at 0.89 ulp (9.7 %
+  misrounded).
+- Ours misround up to 0.023 % (`exp2`, `exp10`) and AOR's up to 0.053 %.
+
+**Special arguments.**
+
+- Both libraries return the same values and raise the same exceptions (by
+  arithmetic) for 61 of the 62 cases.
+- The exception: AOR's `pow(-2, 3)` raises a spurious inexact.
+- AOR's Arm soft-float raises no flags at all, so on the cores without
+  hardware double its flags are lost. This is not measured here; see the
+  caveats.
+
+**On Arm.**
+
+- **Ours:** no misrounded result in 16,384 samples per function, in either
+  flavour on any of the three cores. The Armv6-M speed flavour's fixed-point
+  paths are included.
+- **AOR:** its results are the same on every core, which is expected because
+  soft double is exact IEEE. They show the same misrounding pattern as on
+  x86_64 (`erff` 6.5–7.9 %, `erf` 9.5 %).
