@@ -310,3 +310,187 @@ AOR's `strcmp-armv6m.S` and `strlen-armv6t2.S` keep EHABI unwind directives.
   or 216-byte routine.
 - **How it is reported:** `docs/size/phase-4.md` reports AOR as it builds and
   names the effect, rather than stripping the tables (D95).
+
+## Accuracy (P4.05)
+
+`tools/scripts/aor-accuracy` (needs `libmpfr-dev` on the host). The raw
+results are in `docs/research/aor-accuracy-host.txt` and
+`docs/research/aor-accuracy-arm.txt`; `aor-accuracy markdown <file>` prints
+the tables below.
+
+### Method
+
+**Host program.** `tools/aor/accuracy.c` is built for x86_64 with glibc,
+MPFR and four threads. It calls our x86_64 functions as `rt_*`: `libc.a` with
+every symbol prefixed, so it stays whole beside glibc. It calls AOR's
+functions as `aor_*`: their entry points renamed, with `fma` from glibc. The
+reference is MPFR at 200 bits.
+
+**What counts as correctly rounded.** The correctly rounded result is
+computed by MPFR straight into the format and the mode, subnormals included.
+Rounding the 200-bit value instead would get `exp(2^-842)` wrong in an upward
+mode, which a first version of the harness did.
+
+**Error.** Measured in ulps of the exact value's binade, using the subnormal
+ulp below the normal range. Results beyond the format's range count only as
+correctly rounded or not.
+
+**Coverage.**
+
+- **Float functions:** every one of the 2^32 arguments. Where the two
+  libraries' results differ, both are checked against MPFR. Where they agree,
+  1 argument in 16 is checked: an agreeing result is either correct or wrong
+  in both libraries, and the sample estimates the latter.
+- **`powf` and the double functions:** 2^26 and 2^24 sampled arguments, every
+  one checked. Half of them are uniform over the function's useful domain and
+  half are spread over the binades.
+- **Directed rounding modes:** 2^20 samples per mode. Only the library calls
+  run in that mode; MPFR and the argument generator run in round to nearest.
+- **Special arguments:** each library's result and the exceptions it raises.
+
+**Arm check.** `tools/aor/arm-sample.c` runs under qemu on armv6-m, armv7e-m
+and armv7e-m-dp: 16,384 sampled arguments per function, for our size flavour,
+our speed flavour, and AOR (string, math `-O3` and fp). The host measures its
+records. This covers AOR's soft double, our float-float layer (`sp-nearest`)
+and our Armv6-M fixed-point paths.
+
+### Results on x86_64
+
+For the exhaustive rows, "not correctly rounded" counts every misrounded
+result among the arguments where the two libraries differ, plus those found
+in the 1-in-16 sample where they agree, as a share of all 2^32 arguments.
+
+#### Round to nearest
+
+| Function | Arguments | Checked | Results that differ | rtoskit max ulp | rtoskit not correctly rounded | AOR max ulp | AOR not correctly rounded |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `expf` | all 2^32 | 215,844,847 | 170,646 | 0.5000 | 0 | 0.5016 | 170646 (0.00397 %) |
+| `exp2f` | all 2^32 | 216,164,354 | 168,364 | 0.5000 | 2 (4.66e-08 %) | 0.5016 | 168362 (0.00392 %) |
+| `logf` | all 2^32 | 134,084,024 | 416,909 | 0.5000 | 3 (6.98e-08 %) | 0.8177 | 416906 (0.00971 %) |
+| `log2f` | all 2^32 | 133,987,074 | 313,550 | 0.5000 | 0 | 0.7518 | 313550 (0.0073 %) |
+| `log10f` | all 2^32 | 134,084,584 | 417,552 | 0.5000 | 1 (2.33e-08 %) | 0.8197 | 417551 (0.00972 %) |
+| `sinf` | all 2^32 | 294,913,660 | 29,362,802 | 0.5000 | 0 | 0.5607 | 29362802 (0.684 %) |
+| `cosf` | all 2^32 | 293,831,862 | 28,209,648 | 0.5000 | 2 (4.66e-08 %) | 0.7758 | 28209646 (0.657 %) |
+| `erff` | all 2^32 | 425,327,258 | 168,467,910 | 0.5000 | 0 | 1.0900 | 168467910 (3.92 %) |
+| `powf` | 67,108,864 sampled | 67,108,864 | 15,625 | 0.5000 | 0 | 0.5059 | 15625 (0.0233 %) |
+| `exp` | 16,777,216 sampled | 16,777,216 | 7,961 | 0.5000 | 26 (0.000155 %) | 0.5082 | 7973 (0.0475 %) |
+| `exp2` | 16,777,216 sampled | 16,777,216 | 9,996 | 0.5068 | 3805 (0.0227 %) | 0.5084 | 8103 (0.0483 %) |
+| `exp10` | 16,777,216 sampled | 16,777,216 | 10,775 | 0.5061 | 3828 (0.0228 %) | 0.5093 | 8955 (0.0534 %) |
+| `log` | 16,777,216 sampled | 16,777,216 | 42 | 0.5000 | 0 | 0.5098 | 42 (0.00025 %) |
+| `log2` | 16,777,216 sampled | 16,777,216 | 97 | 0.5000 | 0 | 0.5170 | 97 (0.000578 %) |
+| `erf` | 16,777,216 sampled | 16,777,216 | 1,631,640 | 0.5300 | 1151 (0.00686 %) | 0.8871 | 1631801 (9.73 %) |
+| `pow` | 16,777,216 sampled | 16,777,216 | 4,969 | 0.5051 | 1291 (0.00769 %) | 0.5084 | 4436 (0.0264 %) |
+
+#### Directed rounding modes
+
+Maximum ulp error and the share not correctly rounded in that mode (rtoskit / AOR).
+
+| Function | upward | downward | toward zero |
+|---|---|---|---|
+| `expf` | 1.000 (0 %) / 2.000 (36 %) | 1.000 (0 %) / 1.120 (1.1 %) | 1.000 (0 %) / 1.120 (1.1 %) |
+| `exp2f` | 1.000 (0 %) / 2.000 (36 %) | 1.000 (0 %) / 1.120 (1.1 %) | 1.000 (0 %) / 1.120 (1.1 %) |
+| `logf` | 1.000 (0 %) / 1.248 (0.01 %) | 1.000 (0 %) / 1.198 (0.0098 %) | 1.000 (0 %) / 1.201 (0.01 %) |
+| `log2f` | 1.000 (0 %) / 1.201 (0.0092 %) | 1.000 (0 %) / 1.215 (0.0082 %) | 1.000 (0 %) / 1.161 (0.0072 %) |
+| `log10f` | 1.000 (0 %) / 1.126 (0.011 %) | 1.000 (0 %) / 1.135 (0.012 %) | 1.000 (0 %) / 1.109 (0.011 %) |
+| `sinf` | 1.000 (0 %) / 1.060 (22 %) | 1.000 (0 %) / 1.060 (22 %) | 1.000 (0 %) / 1.060 (43 %) |
+| `cosf` | 1.000 (0 %) / 1.059 (0.72 %) | 1.000 (0 %) / 1.060 (43 %) | 1.000 (0 %) / 1.060 (43 %) |
+| `erff` | 1.000 (0 %) / 1.553 (12 %) | 1.000 (0 %) / 1.619 (14 %) | 1.000 (0 %) / 1.581 (19 %) |
+| `powf` | 1.000 (0 %) / 2.000 (35 %) | 1.000 (0 %) / 1.120 (0.78 %) | 1.000 (0 %) / 1.120 (0.79 %) |
+| `exp` | 1.000 (9.5e-05 %) / 1.012 (0.93 %) | 1.000 (0.00019 %) / 1.240 (1.5 %) | 1.000 (0.00019 %) / 1.240 (1.5 %) |
+| `exp2` | 1.010 (0.046 %) / 1.012 (0.9 %) | 1.011 (0.042 %) / 1.271 (1.7 %) | 1.009 (0.048 %) / 1.275 (1.7 %) |
+| `exp10` | 1.012 (0.048 %) / 1.009 (1.7 %) | 1.009 (0.045 %) / 1.185 (1.2 %) | 1.008 (0.044 %) / 1.184 (1.2 %) |
+| `log` | 1.000 (0 %) / 1.004 (0.00076 %) | 1.000 (0 %) / 1.006 (0.0014 %) | 1.000 (0 %) / 1.006 (0.002 %) |
+| `log2` | 1.000 (0 %) / 1.026 (0.052 %) | 1.000 (0 %) / 1.119 (0.05 %) | 1.000 (0 %) / 1.020 (0.047 %) |
+| `erf` | 1.010 (0.0061 %) / 1.523 (11 %) | 1.016 (0.0055 %) / 1.562 (11 %) | 1.006 (0.0064 %) / 1.470 (11 %) |
+| `pow` | 1.010 (0.016 %) / 1.014 (0.55 %) | 1.009 (0.019 %) / 1.246 (0.93 %) | 1.010 (0.02 %) / 1.248 (0.93 %) |
+
+#### Special arguments
+
+Result and exceptions raised (I invalid, Z divide-by-zero, O overflow, U underflow, X inexact); rows where the libraries differ are marked.
+
+| Function | x | y | rtoskit | AOR | |
+|---|---|---|---|---|---|
+| `expf` | `0x0p+0` |  | `0x1p+0` - | `0x1p+0` - |  |
+| `expf` | `-0x0p+0` |  | `0x1p+0` - | `0x1p+0` - |  |
+| `expf` | `inf` |  | `inf` - | `inf` - |  |
+| `expf` | `-inf` |  | `0x0p+0` - | `0x0p+0` - |  |
+| `expf` | `nan` |  | `nan` - | `nan` - |  |
+| `expf` | `0x1.64p+6` |  | `inf` OX | `inf` OX |  |
+| `expf` | `-0x1.ap+6` |  | `0x0p+0` UX | `0x0p+0` UX |  |
+| `expf` | `-0x1.9fe368p+6` |  | `0x1p-149` UX | `0x1p-149` UX |  |
+| `logf` | `0x0p+0` |  | `-inf` Z | `-inf` Z |  |
+| `logf` | `-0x0p+0` |  | `-inf` Z | `-inf` Z |  |
+| `logf` | `-0x1p+0` |  | `-nan` I | `-nan` I |  |
+| `logf` | `0x1p+0` |  | `0x0p+0` - | `0x0p+0` - |  |
+| `logf` | `inf` |  | `inf` - | `inf` - |  |
+| `logf` | `-inf` |  | `-nan` I | `-nan` I |  |
+| `logf` | `nan` |  | `nan` - | `nan` - |  |
+| `logf` | `0x1p-149` |  | `-0x1.9d1dap+6` X | `-0x1.9d1dap+6` X |  |
+| `sinf` | `0x0p+0` |  | `0x0p+0` - | `0x0p+0` - |  |
+| `sinf` | `-0x0p+0` |  | `-0x0p+0` - | `-0x0p+0` - |  |
+| `sinf` | `inf` |  | `-nan` I | `-nan` I |  |
+| `sinf` | `nan` |  | `nan` - | `nan` - |  |
+| `sinf` | `0x1p-149` |  | `0x1p-149` UX | `0x1p-149` UX |  |
+| `sinf` | `0x1p+127` |  | `0x1.3f2c62p-1` X | `0x1.3f2c62p-1` X |  |
+| `cosf` | `inf` |  | `-nan` I | `-nan` I |  |
+| `cosf` | `0x0p+0` |  | `0x1p+0` - | `0x1p+0` - |  |
+| `erff` | `0x0p+0` |  | `0x0p+0` - | `0x0p+0` - |  |
+| `erff` | `-0x0p+0` |  | `-0x0p+0` - | `-0x0p+0` - |  |
+| `erff` | `inf` |  | `0x1p+0` - | `0x1p+0` - |  |
+| `erff` | `-inf` |  | `-0x1p+0` - | `-0x1p+0` - |  |
+| `erff` | `0x1p-149` |  | `0x1p-149` UX | `0x1p-149` UX |  |
+| `powf` | `0x0p+0` | `-0x1p+0` | `inf` Z | `inf` Z |  |
+| `powf` | `-0x0p+0` | `-0x1p+0` | `-inf` Z | `-inf` Z |  |
+| `powf` | `-0x1p+0` | `0x1p-1` | `-nan` I | `-nan` I |  |
+| `powf` | `-0x1p+0` | `inf` | `0x1p+0` - | `0x1p+0` - |  |
+| `powf` | `0x1p+0` | `nan` | `0x1p+0` - | `0x1p+0` - |  |
+| `powf` | `nan` | `0x0p+0` | `0x1p+0` - | `0x1p+0` - |  |
+| `powf` | `0x1p+1` | `0x1p+7` | `inf` OX | `inf` OX |  |
+| `powf` | `0x1p+1` | `-0x1.2cp+7` | `0x0p+0` UX | `0x0p+0` UX |  |
+| `powf` | `-0x1p+1` | `0x1.8p+1` | `-0x1p+3` - | `-0x1p+3` - |  |
+| `powf` | `inf` | `-0x1p-1` | `0x0p+0` - | `0x0p+0` - |  |
+| `exp` | `0x0p+0` |  | `0x1p+0` - | `0x1p+0` - |  |
+| `exp` | `inf` |  | `inf` - | `inf` - |  |
+| `exp` | `-inf` |  | `0x0p+0` - | `0x0p+0` - |  |
+| `exp` | `nan` |  | `nan` - | `nan` - |  |
+| `exp` | `0x1.63p+9` |  | `inf` OX | `inf` OX |  |
+| `exp` | `-0x1.75p+9` |  | `0x0p+0` UX | `0x0p+0` UX |  |
+| `exp` | `-0x1.6232bdd7abcd2p+9` |  | `0x1.000000000007cp-1022` X | `0x1.000000000007cp-1022` X |  |
+| `log` | `0x0p+0` |  | `-inf` Z | `-inf` Z |  |
+| `log` | `-0x1p+0` |  | `-nan` I | `-nan` I |  |
+| `log` | `0x1p+0` |  | `0x0p+0` - | `0x0p+0` - |  |
+| `log` | `inf` |  | `inf` - | `inf` - |  |
+| `log` | `0x0.0000000000001p-1022` |  | `-0x1.74385446d71c3p+9` X | `-0x1.74385446d71c3p+9` X |  |
+| `erf` | `0x0p+0` |  | `0x0p+0` - | `0x0p+0` - |  |
+| `erf` | `-0x0p+0` |  | `-0x0p+0` - | `-0x0p+0` - |  |
+| `erf` | `inf` |  | `0x1p+0` - | `0x1p+0` - |  |
+| `erf` | `0x0.0000000000001p-1022` |  | `0x0.0000000000001p-1022` UX | `0x0.0000000000001p-1022` UX |  |
+| `pow` | `0x0p+0` | `-0x1p+0` | `inf` Z | `inf` Z |  |
+| `pow` | `-0x1p+0` | `0x1p-1` | `-nan` I | `-nan` I |  |
+| `pow` | `0x1p+1` | `0x1p+10` | `inf` OX | `inf` OX |  |
+| `pow` | `0x1p+1` | `-0x1.0ccp+10` | `0x0p+0` UX | `0x0p+0` UX |  |
+| `pow` | `-0x1p+1` | `0x1.8p+1` | `-0x1p+3` - | `-0x1p+3` X | **differs** |
+| `pow` | `0x1p+0` | `nan` | `0x1p+0` - | `0x1p+0` - |  |
+| `pow` | `nan` | `0x0p+0` | `0x1p+0` - | `0x1p+0` - |  |
+
+### Results on the Arm targets
+
+16,384 sampled arguments per function, round to nearest: maximum ulp error / results not correctly rounded.
+
+| Function | armv6-m/size | armv6-m/speed | armv6-m/aor | armv7e-m/size | armv7e-m/speed | armv7e-m/aor | armv7e-m-dp/size | armv7e-m-dp/speed | armv7e-m-dp/aor |
+|---|---|---|---|---|---|---|---|---|---|
+| `expf` | 0.500 / 0 | 0.500 / 0 | 0.501 / 4 | 0.500 / 0 | 0.500 / 0 | 0.501 / 4 | 0.500 / 0 | 0.500 / 0 | 0.501 / 4 |
+| `exp2f` | 0.500 / 0 | 0.500 / 0 | 0.501 / 5 | 0.500 / 0 | 0.500 / 0 | 0.501 / 5 | 0.500 / 0 | 0.500 / 0 | 0.501 / 5 |
+| `logf` | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 |
+| `log2f` | 0.500 / 0 | 0.500 / 0 | 0.541 / 1 | 0.500 / 0 | 0.500 / 0 | 0.541 / 1 | 0.500 / 0 | 0.500 / 0 | 0.541 / 1 |
+| `log10f` | 0.500 / 0 | 0.500 / 0 | 0.510 / 6 | 0.500 / 0 | 0.500 / 0 | 0.510 / 6 | 0.500 / 0 | 0.500 / 0 | 0.510 / 6 |
+| `sinf` | 0.500 / 0 | 0.500 / 0 | 0.559 / 110 | 0.500 / 0 | 0.500 / 0 | 0.559 / 110 | 0.500 / 0 | 0.500 / 0 | 0.559 / 110 |
+| `cosf` | 0.500 / 0 | 0.500 / 0 | 0.558 / 108 | 0.500 / 0 | 0.500 / 0 | 0.558 / 108 | 0.500 / 0 | 0.500 / 0 | 0.558 / 108 |
+| `erff` | 0.500 / 0 | 0.500 / 0 | 0.887 / 1298 | 0.500 / 0 | 0.500 / 0 | 0.887 / 1063 | 0.500 / 0 | 0.500 / 0 | 0.887 / 1063 |
+| `powf` | 0.500 / 0 | 0.500 / 0 | 0.504 / 6 | 0.500 / 0 | 0.500 / 0 | 0.504 / 6 | 0.500 / 0 | 0.500 / 0 | 0.504 / 6 |
+| `exp` | 0.500 / 0 | 0.500 / 0 | 0.502 / 9 | 0.500 / 0 | 0.500 / 0 | 0.502 / 9 | 0.500 / 0 | 0.500 / 0 | 0.502 / 6 |
+| `exp2` | 0.501 / 4 | 0.501 / 4 | 0.502 / 8 | 0.501 / 4 | 0.501 / 4 | 0.502 / 8 | 0.501 / 4 | 0.501 / 4 | 0.501 / 9 |
+| `log` | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 |
+| `log2` | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 | 0.500 / 0 |
+| `erf` | 0.500 / 0 | 0.500 / 0 | 0.837 / 1560 | 0.500 / 0 | 0.500 / 0 | 0.837 / 1560 | 0.500 / 0 | 0.500 / 0 | 0.837 / 1541 |
+| `pow` | 0.500 / 0 | 0.500 / 0 | 0.502 / 6 | 0.500 / 0 | 0.500 / 0 | 0.502 / 6 | 0.500 / 0 | 0.500 / 0 | 0.502 / 6 |
