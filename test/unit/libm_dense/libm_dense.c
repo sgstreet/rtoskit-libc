@@ -1,0 +1,93 @@
+/*
+ * Copyright (C) 2026 Red Rocket Computing, LLC
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * libm_dense.c
+ *
+ * Created on: Oct 21, 2026
+ *     Author: Stephen Street (stephen@redrocketcomputing.com)
+ */
+
+#include <math.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <string.h>
+
+/*
+ * Dense sweeps where the speed flavour's fixed-point float functions on
+ * Armv6-M (PLAN D86) have their largest error: the logarithms around 1,
+ * where the result is the series alone and the neighbouring table entries
+ * cancel against it, and the exponentials over their whole fast range.
+ * Each result is compared with the double function rounded to float; at most
+ * one in ten thousand, plus one, may differ (the float-float paths' own
+ * allowance, D57, and the reference's double rounding). A fast path that
+ * rounded without its error test fails here. Every board runs the sweeps on
+ * the library as built.
+ */
+
+static int failures;
+
+static uint32_t bits_of(float x)
+{
+	uint32_t bits;
+
+	memcpy(&bits, &x, sizeof(bits));
+	return bits;
+}
+
+static float float_of(uint32_t bits)
+{
+	float x;
+
+	memcpy(&x, &bits, sizeof(x));
+	return x;
+}
+
+/* Every stride-th float in [low, high), both signs if asked */
+static void sweep(const char *name, float (*function)(float), double (*reference)(double), float low, float high, uint32_t stride, bool both_signs)
+{
+	unsigned long count = 0;
+	unsigned long wrong = 0;
+
+	for (uint32_t bits = bits_of(low); bits < bits_of(high); bits += stride) {
+		for (int sign = 0; sign <= (both_signs ? 1 : 0); ++sign) {
+			float x = float_of(bits | (sign != 0 ? 0x80000000u : 0));
+			float result = function(x);
+			float want = (float)reference((double)x);
+
+			++count;
+			if (bits_of(result) != bits_of(want)) {
+				if (wrong < 3)
+					printf("%s(%a) = %a, want %a\n", name, (double)x, (double)result, (double)want);
+				++wrong;
+			}
+		}
+	}
+
+	printf("%s: %lu of %lu not correctly rounded\n", name, wrong, count);
+	if (wrong > count / 10000 + 1)
+		++failures;
+}
+
+int main(void)
+{
+	/* Around 1 and across sqrt(2), where the reduction changes binade */
+	sweep("logf", logf, log, 0x1.d0p-1f, 0x1.18p0f, 127, false);
+	sweep("log2f", log2f, log2, 0x1.d0p-1f, 0x1.18p0f, 127, false);
+	sweep("logf", logf, log, 0x1.64p0f, 0x1.70p0f, 31, false);
+	sweep("log2f", log2f, log2, 0x1.64p0f, 0x1.70p0f, 31, false);
+
+	/* The exponentials over one binade of arguments of either sign, and arguments of every binade */
+	sweep("expf", expf, exp, 0x1p4f, 0x1p5f, 1021, true);
+	sweep("exp2f", exp2f, exp2, 0x1p4f, 0x1p5f, 1021, true);
+	sweep("expf", expf, exp, 0x1p-30f, 0x1.5cp6f, 1u << 17, true);
+	sweep("exp2f", exp2f, exp2, 0x1p-30f, 0x1.f8p6f, 1u << 17, true);
+
+	if (failures == 0)
+		puts("pass: libm_dense");
+
+	return failures == 0 ? 0 : 1;
+}

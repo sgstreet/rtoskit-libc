@@ -108,8 +108,9 @@ Split (the step named four function families; each fixed-point rewrite needs its
 - [x] Research note; tests; size and speed budgets.
   *`docs/research/softfloat.md`; `test/unit/softfp` checks `fmul`, `fdiv` and `sqrtf` against double on armv6-m, armv6s-m and x86-64, with operands that reach every guard and sticky position (mutants caught); on the host, all 2^32 `sqrtf` inputs and 3 × 10^8 operation pairs match the hardware. Both budgets hold; the 24-byte stack growth of `sinf`, `expf` and `powf` is justified in `docs/size/armv6-m.md`.*
 
-### P3.05f — Armv6-M fixed-point exponentials and logarithms
-- [ ] armv6-m: `expf`/`exp2f`/`logf`/`log2f` (11–13k instructions) in fixed point, correctly rounded as the `sp-nearest` layer is (D57); research note with the error analysis; tests; both budgets.
+### P3.05f — Armv6-M fixed-point exponentials and logarithms  `[x]`
+- [x] armv6-m: `expf`/`exp2f`/`logf`/`log2f` (11–13k instructions) in fixed point, correctly rounded as the `sp-nearest` layer is (D57); research note with the error analysis; tests; both budgets.
+  *D86: speed flavour only (`libc/math/nofp/speed`), a 32-bit fixed-point fast path with Ziv's rounding test before the float-float code. `exp2f` 9269 → 316, `expf` 11034 → 375, `log2f` 10547 → 583, `logf` 12367 → 2210. The error bounds hold over every float argument (core code run on the host, `docs/research/libm-fixed.md`). New `test/unit/libm_dense` (dense sweeps where the error peaks) catches a fast path without the rounding test, which `float_accuracy` missed for the logarithms. Size flavour unchanged; speed budget holds (`math-float` 10520 of 10604).*
 
 ### P3.05g — Armv6-M fixed-point sine and cosine
 - [ ] armv6-m: `sinf`/`cosf`/`tanf` (18–36k instructions) in fixed point after the integer reduction (D60); research note; tests; both budgets.

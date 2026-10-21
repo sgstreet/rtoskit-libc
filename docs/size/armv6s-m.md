@@ -650,3 +650,21 @@ Grew, justified:
 - `__aeabi_fmul` and `__aeabi_fdiv` are new members, and they replace larger libgcc objects in every image that uses them.
 - Each has a 32-byte frame. Thumb-1 has eight low registers, and the operands, the partial products or the remainder, and both exponents are live together. So the stack depth of `sinf`, `expf` and `powf` grows by 24 bytes (272 → 296, 160 → 184, 208 → 232), and `main` of `math-float` 312 → 336.
 - The other arrangements tried were larger or slower: two calls to the shared rounding, which then is not inlined, made a 12-byte frame of its own and cost 24 bytes more code.
+
+## P3.05f — fixed-point exponentials and logarithms (speed flavour)
+
+Decision D86, `docs/research/libm-fixed.md`. The release build is unchanged. In the speed build, `libc/math/nofp/speed`
+replaces `expf`, `exp2f`, `logf` and `log2f`: each keeps its float-float code as the fallback and adds a fixed-point
+fast path, with the cores `__libc_exp2f_fixed` (250 bytes) and `__libc_log2f_fixed` (786) and the shared product
+`__libc_fixed_wide` (48). Speed build, before → after:
+
+| Program | code | budget (Phase 2 + 10 %) |
+|---|---|---|
+| math-float | 9036 → 10520 | 10604 |
+| math-mix | 33584 → 35120 | 37527 |
+
+Other programs are unchanged. Grew, justified: the fast paths are the step's purpose, and the speed flavour's budget
+holds. `logf`'s frame grows from 40 to 48 bytes.
+
+`-Os` had kept a local copy of the 64-bit product in each object, and the log table had 16-byte entries. With those,
+`math-float` was 10728 bytes, over the budget; one shared helper and two arrays fixed it.
