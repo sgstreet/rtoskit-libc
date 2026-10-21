@@ -101,8 +101,21 @@ Split by target (the speed baseline after P3.04: `sinf` 19k instructions on Armv
 - [x] Cortex-M7 specifics for armv7e-m-dp: the dual-issue pipeline and the 64-bit AXI/TCM path; `LDRD`/`VLDM` for `memcpy`. Measure with the DWT cycle counter on hardware if available (Q5).
   *D84: no hardware is attached, and qemu's instruction count cannot see dual issue or bus width. `memcpy` already moves 32 bytes per `LDM`/`STM` pair, more than `LDRD` per instruction and as much as `VLDM` without touching FPU registers. No M7 variant until DWT cycle counts exist (Q5 stays open).*
 
-### P3.05e — Armv6-M integer-only float
-- [ ] armv6-m: integer-only `float` implementations where they beat soft-float emulation (`sqrtf` 2k, `expf`/`logf` 11–13k, `sinf`/`cosf` 19k, `erff` 152k instructions).
+### P3.05e — Armv6-M integer float operations  `[x]`
+Split (the step named four function families; each fixed-point rewrite needs its own error analysis): P3.05e is the soft-float operations every float function calls, and `sqrtf`; P3.05f–h are the fixed-point functions.
+- [x] armv6-m: integer-only `float` implementations where they beat soft-float emulation (`sqrtf` 2k instructions); the multiplication and division helpers.
+  *D85: `__aeabi_fmul` (four 12-bit half products) and `__aeabi_fdiv` (restoring division) in integers in the `nofp` layer, with one shared rounding (`softfloat.h`); `sqrtf` by a 32-bit digit recurrence. `sqrtf` 2036 → 461, `hypotf` 8371 → 6293, `erff` 151747 → 141024, `expf` 11458 → 11034; 62 cases faster, none slower. The helpers are 340 and 296 bytes against libgcc's 504 and 512; `math-float` −604 bytes. An integer `__aeabi_fadd` was exact but slower than libgcc's (51 cases slower), so it was not taken.*
+- [x] Research note; tests; size and speed budgets.
+  *`docs/research/softfloat.md`; `test/unit/softfp` checks `fmul`, `fdiv` and `sqrtf` against double on armv6-m, armv6s-m and x86-64, with operands that reach every guard and sticky position (mutants caught); on the host, all 2^32 `sqrtf` inputs and 3 × 10^8 operation pairs match the hardware. Both budgets hold; the 24-byte stack growth of `sinf`, `expf` and `powf` is justified in `docs/size/armv6-m.md`.*
+
+### P3.05f — Armv6-M fixed-point exponentials and logarithms
+- [ ] armv6-m: `expf`/`exp2f`/`logf`/`log2f` (11–13k instructions) in fixed point, correctly rounded as the `sp-nearest` layer is (D57); research note with the error analysis; tests; both budgets.
+
+### P3.05g — Armv6-M fixed-point sine and cosine
+- [ ] armv6-m: `sinf`/`cosf`/`tanf` (18–36k instructions) in fixed point after the integer reduction (D60); research note; tests; both budgets.
+
+### P3.05h — Armv6-M fixed-point error function
+- [ ] armv6-m: `erff`/`erfcf` (120–142k instructions) in fixed point; research note; tests; both budgets.
 
 ## P3.06 — Phase wrap-up
 - [ ] Final perf report against the Phase 2 baseline, and against picolibc/newlib for context.

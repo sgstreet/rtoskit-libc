@@ -764,3 +764,141 @@ changed are shown.
 | `fixed/256` | 232 (-4 %) |
 | `fixed/4096` | 232 (-4 %) |
 | `realloc/grow` | 224 (-4 %) |
+
+## P3.05e — Integer float multiplication, division and square root (both flavours)
+
+`__aeabi_fmul`, `__aeabi_fdiv` and `sqrtf` are computed in integers in the `nofp` layer (PLAN D85). Every float function
+of the `sp-nearest` layer calls the helpers. Change against the P3.05c baselines; only the programs that changed are
+shown.
+
+### Release (size flavour)
+
+#### strto
+
+| Case | insns/op |
+|---|---:|
+| `atoi` | 1211 |
+| `strtod/17-digits` | 24062 |
+| `strtod/exp-large` | 692937 |
+| `strtod/exp-small` | 416299 |
+| `strtod/fixed` | 3863 |
+| `strtod/hex` | 2101 |
+| `strtod/integer` | 2909 |
+| `strtod/long` | 47601 |
+| `strtod/micro` | 3368 |
+| `strtod/min-normal` | 1850827 |
+| `strtod/short` | 3352 |
+| `strtod/subnormal` | 2040498 |
+| `strtof/9-digits` | 16877 (-0 %) |
+| `strtof/exp` | 78884 (-0 %) |
+| `strtof/short` | 1529 (-6 %) |
+| `strtol/hex` | 1678 |
+| `strtol/int` | 1501 |
+| `strtol/short` | 914 |
+| `strtoll/long` | 2350 |
+| `strtoul/hex16` | 1671 |
+| `strtoull/hex` | 2544 |
+
+#### math
+
+Throughput, per call (the latency counts are the same under qemu).
+
+| Function | float | double |
+|---|---:|---:|
+| `acos` | 23828 (-11 %) | 35771 |
+| `acosh` | 19926 (-10 %) | 34288 |
+| `asin` | 23011 (-11 %) | 34679 |
+| `asinh` | 19353 (-11 %) | 39824 |
+| `atan` | 17750 (-5 %) | 21229 |
+| `atan2` | 18422 (-5 %) | 22656 |
+| `atanh` | 15868 (-4 %) | 25888 |
+| `cbrt` | 8590 (-9 %) | 14545 |
+| `cos` | 18281 (-3 %) | 17700 |
+| `cosh` | 15181 (-4 %) | 16736 |
+| `erf` | 141024 (-7 %) | 40695 |
+| `erfc` | 119604 (-7 %) | 112996 |
+| `exp` | 11034 (-4 %) | 10356 |
+| `exp2` | 9269 (-4 %) | 14172 |
+| `expm1` | 12310 (-3 %) | 10978 |
+| `floor` | 105 | 212 |
+| `fmod` | 273 | 486 |
+| `hypot` | 6293 (-25 %) | 14812 |
+| `lgamma` | 36729 (-4 %) | 47161 |
+| `log` | 12367 (-4 %) | 17003 |
+| `log10` | 12365 (-4 %) | 21106 |
+| `log1p` | 12789 (-4 %) | 18064 |
+| `log2` | 10547 (-4 %) | 21459 |
+| `pow` | 22158 (-4 %) | 31562 |
+| `round` | 103 | 210 |
+| `sin` | 18350 (-3 %) | 17710 |
+| `sinh` | 15310 (-4 %) | 17881 |
+| `sqrt` | 461 (-77 %) | 4208 |
+| `tan` | 36223 (-4 %) | 32504 |
+| `tanh` | 15977 (-4 %) | 20206 |
+| `tgamma` | 55326 (-4 %) | 64810 |
+
+### Speed flavour
+
+#### strto
+
+| Case | insns/op |
+|---|---:|
+| `atoi` | 277 |
+| `strtod/17-digits` | 3799 |
+| `strtod/exp-large` | 4087 |
+| `strtod/exp-small` | 3838 |
+| `strtod/fixed` | 2928 |
+| `strtod/hex` | 2116 |
+| `strtod/integer` | 2005 |
+| `strtod/long` | 5026 |
+| `strtod/micro` | 2435 |
+| `strtod/min-normal` | 3853 |
+| `strtod/short` | 2459 |
+| `strtod/subnormal` | 3849 |
+| `strtof/9-digits` | 2389 (-1 %) |
+| `strtof/exp` | 2427 (-0 %) |
+| `strtof/short` | 903 (-10 %) |
+| `strtol/hex` | 458 |
+| `strtol/int` | 422 |
+| `strtol/short` | 170 |
+| `strtoll/long` | 1060 |
+| `strtoul/hex16` | 436 |
+| `strtoull/hex` | 1027 |
+
+#### math
+
+Throughput, per call (the latency counts are the same under qemu).
+
+| Function | float | double |
+|---|---:|---:|
+| `acos` | 23828 (-11 %) | 35757 |
+| `acosh` | 19926 (-10 %) | 34288 |
+| `asin` | 23011 (-11 %) | 34665 |
+| `asinh` | 19353 (-11 %) | 39824 |
+| `atan` | 17750 (-5 %) | 21215 |
+| `atan2` | 18422 (-5 %) | 22642 |
+| `atanh` | 15868 (-4 %) | 25874 |
+| `cbrt` | 8590 (-9 %) | 14545 |
+| `cos` | 18281 (-3 %) | 17700 |
+| `cosh` | 15181 (-4 %) | 16736 |
+| `erf` | 141024 (-7 %) | 40695 |
+| `erfc` | 119604 (-7 %) | 112996 |
+| `exp` | 11034 (-4 %) | 10356 |
+| `exp2` | 9269 (-4 %) | 14172 |
+| `expm1` | 12310 (-3 %) | 10978 |
+| `floor` | 105 | 212 |
+| `fmod` | 273 | 486 |
+| `hypot` | 6293 (-25 %) | 14812 |
+| `lgamma` | 36729 (-4 %) | 47123 |
+| `log` | 12367 (-4 %) | 17003 |
+| `log10` | 12365 (-4 %) | 21106 |
+| `log1p` | 12789 (-4 %) | 18064 |
+| `log2` | 10547 (-4 %) | 21459 |
+| `pow` | 22158 (-4 %) | 31562 |
+| `round` | 103 | 210 |
+| `sin` | 18350 (-3 %) | 17710 |
+| `sinh` | 15310 (-4 %) | 17881 |
+| `sqrt` | 461 (-77 %) | 4208 |
+| `tan` | 36223 (-4 %) | 32490 |
+| `tanh` | 15977 (-4 %) | 20192 |
+| `tgamma` | 55326 (-4 %) | 64762 |

@@ -18,11 +18,14 @@
  * The soft-float helpers of the Arm run-time ABI (RTABI 4.1.2), which the
  * compiler calls for floating-point arithmetic on cores without an FPU. The
  * compiler's library provides them; the nofp math layer replaces the two
- * subtractions (PLAN D55).
+ * subtractions (PLAN D55) and the single-precision multiplication and
+ * division (D85).
  */
 double __aeabi_dadd(double a, double b);
 double __aeabi_dsub(double a, double b);
 float __aeabi_fadd(float a, float b);
 float __aeabi_fsub(float a, float b);
+float __aeabi_fmul(float a, float b);
+float __aeabi_fdiv(float a, float b);
 
 #endif /* _INTERNAL_AEABI_H */

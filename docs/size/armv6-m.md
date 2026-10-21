@@ -628,3 +628,25 @@ Decision D79, `docs/research/locks.md`. Before → after, release build; `libc.a
 Other programs are unchanged. The port drops `__rtos_thread_self` from the lock path and the owner pointer from every lock (4 bytes on 32-bit cores, 8 on x86-64), and gains the thread-local token.
 
 Grew, justified: `__rtos_lock_acquire`'s frame, 32 → 40 bytes, and so the depth of every entry point that takes a lock by 8 bytes (`malloc` 104 → 112, `calloc` 120 → 128, `realloc` 128 → 136, `free` 104 → 112, …). `__atomic_compare_exchange_4` is a five-argument call on this core, with four values live across it; every arrangement without the extra frame had more code, which the size budget does not allow.
+
+## P3.05e — integer float multiplication, division and square root
+
+Decision D85, `docs/research/softfloat.md`. Before → after, release build. The `nofp` layer replaces libgcc's
+`__aeabi_fmul` (504 bytes) and `__aeabi_fdiv` (512) with integer ones (340 and 296). Its `sqrtf` replaces the `sp`
+layer's, which went through the 64-bit `__libc_isqrt`.
+
+`libc.a` text: 157196 → 157678 (+482), the two helpers added (+636) and `sqrtf` 320 → 166 (−154). The images link
+those helpers instead of libgcc's.
+
+| Program | code | libc code |
+|---|---|---|
+| math-mix | 34116 → 33584 | +482 |
+| float-exact | 3908 → 3744 | +340 |
+| math-float | 9640 → 9036 | +482 |
+
+Other programs are unchanged.
+
+Grew, justified:
+- `__aeabi_fmul` and `__aeabi_fdiv` are new members, and they replace larger libgcc objects in every image that uses them.
+- Each has a 32-byte frame. Thumb-1 has eight low registers, and the operands, the partial products or the remainder, and both exponents are live together. So the stack depth of `sinf`, `expf` and `powf` grows by 24 bytes (272 → 296, 160 → 184, 208 → 232), and `main` of `math-float` 312 → 336.
+- The other arrangements tried were larger or slower: two calls to the shared rounding, which then is not inlined, made a 12-byte frame of its own and cost 24 bytes more code.
