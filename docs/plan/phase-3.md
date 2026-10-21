@@ -71,9 +71,11 @@ Split in two (locks, then the allocators).
 - [x] Research note; tests (recursion, contention, every lock user); measure with the allocator, stdio and thread benchmarks; size and speed budgets.
   *`docs/research/locks.md`; `test/unit/locks` (word states, nesting through both paths, tokens, four threads contending); `test/unit/threads` covers malloc and stdio. Both flavours, malloc + free: armv7e-m 107.5 → 92.5, x86-64 107 → 84, armv6-m 233 → 224; no case slower. Both budgets hold. Images shrink; the Armv6-M acquire frame grows by 8 bytes, justified in `docs/size`.*
 
-### P3.04b — Allocator fast paths
-- [ ] Fast paths for small size classes.
-- [ ] Measure with the allocator benchmarks; check fragmentation regressions.
+### P3.04b — Allocator fast paths  `[x]`
+- [x] Fast paths for small size classes.
+  *Measured and rejected (D80). Exact-size bins in front of nano's first fit: twelve, with consolidation, and three. All lose more on mixed sizes than they win on one: `fixed/16` −12 %, but `batch/fifo` +11 % and `realloc/grow` +48–223 %, through unmerged chunks. TLSF was 70–170 % slower, and nano at `-O2` gained nothing. The lock fast path (P3.04a) was the one that paid.*
+- [x] Measure with the allocator benchmarks; check fragmentation regressions.
+  *`docs/research/malloc-speed.md` has every variant's numbers per board. The allocator is unchanged, so there is no fragmentation regression; one pinned small chunk was enough to break in-place `realloc` growth, which is the evidence against deferred coalescing here.*
 
 ## P3.05 — libm hot paths
 - [ ] armv7e-m and v8-m.main: the single-precision functions use the FPU fully (`vsqrt.f32`, `vfma`), with table-driven reductions in the speed flavour.
