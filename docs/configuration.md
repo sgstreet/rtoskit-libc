@@ -30,13 +30,14 @@ Each board builds two optimised libraries (D73):
 | Build type | Install | What it is |
 |---|---|---|
 | `release` | `images/<board>/release/` | the size flavour: the smallest code, the default |
-| `speed` | `images/<board>/speed/` | the speed flavour: the same `-Os` library with faster kernels (on the Thumb-2 cores, `memcpy`/`memmove`/`memset` that copy 32 bytes per iteration and use unaligned word access, and word-at-a-time `strcmp`/`strchr`; on Armv6-M, block copies and shift-merged misaligned copies; on every core, `strtol` and printf integer conversions without 64-bit division), within 10 % of the size flavour's code size (`docs/size/budget.json`) |
+| `speed` | `images/<board>/speed/` | the speed flavour: the same `-Os` library with faster kernels (on the Thumb-2 cores, `memcpy`/`memmove`/`memset` that copy 32 bytes per iteration and use unaligned word access, and word-at-a-time `strcmp`/`strchr`; on Armv6-M, block copies and shift-merged misaligned copies; on every core, `strtol` and printf integer conversions without 64-bit division and a `strtod` fast path; on Armv6-M, fixed-point `expf`, `exp2f`, `logf`, `log2f`, `sinf`, `cosf`, `tanf`, `erff` and `erfcf` that fall back to the size flavour's code when their rounding is not certain), within 10 % of the size flavour's code size, 20 % for the math reference programs (`docs/size/budget.json`, D87) |
 
 Both flavours ship the same headers and archives (`libc.a`, the flavour
 archives, `libm.a`). The speed flavour's Thumb-2 kernels use unaligned
 `LDR`/`STR`, as GCC's own code does on these cores; a system that sets
 `CCR.UNALIGN_TRP`, or copies Device memory with `memcpy`, should link the
-size flavour. Speed figures: `docs/perf/<arch>.md`.
+size flavour. Speed figures: `docs/perf/<arch>.md`; the phase 3 summary, with picolibc and newlib-nano for
+context, is `docs/perf/phase-3.md`.
 
 ## Choosing the core
 

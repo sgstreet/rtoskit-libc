@@ -26,6 +26,11 @@
 #                                                        print the summary tables of a baseline, against
 #                                                        the baseline at git revision REF, or the baseline
 #                                                        file FILE (<arch> replaced), if given
+#   tools/scripts/bench-runner compare [--board B ...] [--work DIR]
+#                                                        build the test/bench programs against picolibc and
+#                                                        newlib-nano (the packages of size-report compare),
+#                                                        count them the same way and print a Markdown table
+#                                                        beside the baselines (context, not a gate; P3.06)
 #
 # Figures: per case of each test/bench program, the guest instructions per
 # operation counted by the qemu plugin tools/qemu-plugins/bench-roi.c (on
@@ -35,7 +40,10 @@
 # so they are what diff gates; cycles are reported, not gated.
 
 import argparse
+import importlib.machinery
+import importlib.util
 import json
+import math
 import os
 import re
 import shutil
@@ -319,6 +327,95 @@ def command_markdown(args):
 	return 0
 
 
+# Comparison with picolibc and newlib-nano (P3.06): the same benchmark sources, built against each
+# library with the shims of tools/bench-compare (Linux write and exit, a static heap), run under the same
+# qemu and plugin. malloc-tiny is rtoskit's own allocator and threads needs <threads.h>, so neither is compared.
+COMPARE_PROGRAMS = ['string', 'stdio', 'strto', 'malloc', 'qsort', 'math']
+COMPARE_LIBRARIES = ['picolibc', 'newlib-nano']
+COMPARE_FLAGS = ['-Os', '-std=gnu23', '-fno-builtin', '-fno-tree-loop-distribute-patterns', '-ffunction-sections', '-fdata-sections']
+
+# The cases the table shows; every common case enters the geometric means
+COMPARE_CASES = {
+	'string': ['memcpy/16/0:0', 'memcpy/1024/0:0', 'memset/1024/0', 'strlen/64/0', 'strcmp/64/0:0'],
+	'stdio': ['snprintf/%d', 'snprintf/%s', 'snprintf/%f', 'snprintf/%g', 'fprintf/mix'],
+	'strto': ['strtol/int', 'strtod/short', 'strtod/17-digits'],
+	'malloc': ['fixed/16', 'batch/shuffled', 'realloc/grow'],
+	'qsort': ['qsort/random/1024'],
+	'math': ['sqrtf/throughput', 'expf/throughput', 'logf/throughput', 'sinf/throughput', 'powf/throughput', 'erff/throughput', 'exp/throughput', 'log/throughput', 'sin/throughput', 'pow/throughput'],
+}
+
+
+def size_report():
+	loader = importlib.machinery.SourceFileLoader('size_report', os.path.join('tools', 'scripts', 'size-report'))
+	module = importlib.util.module_from_spec(importlib.util.spec_from_loader('size_report', loader))
+	loader.exec_module(module)
+	return module
+
+
+def compare_build(report, roots, library, board, program, work):
+	gcc = os.path.abspath(os.path.join('local', 'bin', 'arm-none-eabi-gcc'))
+	arch = arch_of(board)
+	flags = report.cross_flags(arch) + COMPARE_FLAGS + ['-I' + os.path.join('test', 'bench', 'harness')]
+	sources = [os.path.join('tools', 'bench-compare', 'start.S'), os.path.join('tools', 'bench-compare', 'picolibc.c' if library == 'picolibc' else 'newlib.c'),
+		   os.path.join('test', 'bench', 'harness', 'bench.c'), os.path.join('test', 'bench', program, program + '.c')]
+	directory = os.path.join(work, library, arch)
+	os.makedirs(directory, exist_ok=True)
+	elf = os.path.join(directory, f'bench-{program}.elf')
+	link = ['-static', '-Wl,--gc-sections', '-Wl,--no-warn-rwx-segments', '-Wl,--no-warn-execstack']
+	if library == 'picolibc':
+		# picolibc's own linker script, with room for the heap; qemu loads every segment at its address
+		prefix = os.path.join(roots['picolibc'], 'usr')
+		command = [gcc] + flags + [f'--specs={prefix}/lib/picolibc/arm-none-eabi/picolibc.specs', f'--picolibc-prefix={prefix}', '-nostartfiles',
+					   '-Wl,--defsym=__flash=0x10000', '-Wl,--defsym=__flash_size=0x400000', '-Wl,--defsym=__ram=0x1000000', '-Wl,--defsym=__ram_size=0x1000000'] + link + ['-o', elf] + sources + ['-lm']
+	else:
+		# newlib-nano formats floating point only when asked to (the stdio cases use it)
+		usr = os.path.join(roots['newlib'], 'usr')
+		include = os.path.join(roots['newlib-dev'], 'usr', 'include', 'newlib')
+		multilib = subprocess.run([gcc] + flags + ['-print-multi-directory'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+		libdir = os.path.join(usr, 'lib', 'arm-none-eabi', 'newlib', multilib)
+		gcc_include = subprocess.run([gcc, '-print-file-name=include'], stdout=subprocess.PIPE, text=True, check=True).stdout.strip()
+		command = [gcc] + flags + ['-nostdinc', '-isystem', include + '/nano', '-isystem', include, '-isystem', gcc_include, '-nostdlib', '-Wl,-T,' + os.path.join('port', 'linux', 'arm', 'headers.ld')] + link + \
+			['-u', '_printf_float', '-u', '_scanf_float', '-o', elf] + sources + ['-L' + libdir, '-Wl,--start-group', '-lc_nano', '-lm', '-lnosys', '-lgcc', '-Wl,--end-group']
+	result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+	if result.returncode != 0:
+		raise SystemExit(' '.join(command) + '\n' + result.stdout)
+	return elf
+
+
+def geometric_mean(ratios):
+	return math.exp(sum(math.log(r) for r in ratios) / len(ratios)) if ratios else float('nan')
+
+
+def command_compare(args):
+	check_tools()
+	report = size_report()
+	os.makedirs(args.work, exist_ok=True)
+	roots = report.fetch_packages(args.work)
+	for board in [b for b in args.board if is_arm(b)]:
+		arch = arch_of(board)
+		ours = {flavour: read_json(baseline_path(args.baseline_dir, board, build_type))['programs'] for flavour, build_type in (('size', 'release'), ('speed', 'speed'))}
+		theirs = {}
+		for library in COMPARE_LIBRARIES:
+			theirs[library] = {program: count_instructions(board, compare_build(report, roots, library, board, program, args.work)) for program in COMPARE_PROGRAMS}
+			write_json(os.path.join(args.work, library, arch, 'results.json'), theirs[library])
+		print(f'### {arch}\n')
+		print('Instructions per operation; the geometric mean is over every case all four builds share, as a ratio to rtoskit\'s speed flavour.\n')
+		print('| Program | Case | rtoskit (size) | rtoskit (speed) | picolibc | newlib-nano |')
+		print('|---|---|---:|---:|---:|---:|')
+		for program in COMPARE_PROGRAMS:
+			common = [case for case in ours['speed'][program] if case in ours['size'][program] and all(case in theirs[library][program] for library in COMPARE_LIBRARIES)]
+			means = [geometric_mean([source[program][case]['insns'] / ours['speed'][program][case]['insns'] if isinstance(source[program][case], dict) else source[program][case] / ours['speed'][program][case]['insns']
+						 for case in common if ours['speed'][program][case]['insns'] > 0]) for source in (ours['size'], ours['speed'], theirs['picolibc'], theirs['newlib-nano'])]
+			print(f'| {program} | geometric mean ({len(common)} cases) | ' + ' | '.join(f'{m:.2f}' for m in means) + ' |')
+			for case in COMPARE_CASES[program]:
+				if case not in common:
+					continue
+				figures = [ours['size'][program][case]['insns'], ours['speed'][program][case]['insns'], theirs['picolibc'][program][case], theirs['newlib-nano'][program][case]]
+				print(f'| | `{case}` | ' + ' | '.join(f'{f:.0f}' if f >= 100 else f'{f:.1f}' for f in figures) + ' |')
+		print()
+	return 0
+
+
 def main():
 	parser = argparse.ArgumentParser(description='Phase 3 benchmark measurements (PLAN D72)')
 	parser.add_argument('--build-type', default='release')
@@ -333,10 +430,13 @@ def main():
 		if name == 'markdown':
 			p.add_argument('--previous', help='a git revision whose baseline to compare with')
 			p.add_argument('--against', help='a baseline file to compare with (<arch> is replaced), e.g. the other flavour')
+	p = sub.add_parser('compare')
+	p.add_argument('--board', action='append', choices=BOARDS)
+	p.add_argument('--work', default=os.path.join('build', 'bench-compare'), help='where the packages are unpacked and the programs built')
 	args = parser.parse_args()
 	if getattr(args, 'board', None) is None:
 		args.board = BOARDS
-	commands = {'run': command_run, 'diff': command_diff, 'report': command_report, 'markdown': command_markdown}
+	commands = {'run': command_run, 'diff': command_diff, 'report': command_report, 'markdown': command_markdown, 'compare': command_compare}
 	return commands[args.command](args)
 
 
