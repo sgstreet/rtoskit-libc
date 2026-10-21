@@ -17,7 +17,7 @@
 
 void __rtos_lock_destroy(struct __rtos_lock *lock)
 {
-	if (lock->depth != 0)
+	if (lock->word != 0)
 		__rtos_abort();
 
 	__atomic_store_n(&lock->allocated, 0, __ATOMIC_RELEASE);

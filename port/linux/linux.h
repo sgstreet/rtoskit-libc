@@ -75,17 +75,18 @@ static inline int __linux_clock(int base)
 #define __LINUX_LOCK_POOL_SIZE 32
 
 /*
- * A recursive futex mutex (docs/research/threads.md): state 0 unlocked, 1
- * locked, 2 locked with waiters; the owner and depth make it recursive.
- * Releasing a lock the caller does not hold aborts, which makes unbalanced
- * locking visible in the tests.
+ * A recursive futex mutex on the seam's lock word (rtos-port.h, PLAN D79):
+ * the word holds the owner's token and the slow bit, and depth counts the
+ * owner's acquisitions beyond the first.
  */
 struct __rtos_lock {
-	unsigned int state;
+	unsigned int word;
 	unsigned int depth;
-	struct __rtos_thread *owner;
 	unsigned int allocated;
 };
+
+/* The initial thread's lock token; the others count up from it in steps of two */
+#define __LINUX_MAIN_LOCK_TOKEN 2u
 
 /* futex operations */
 #define __LINUX_FUTEX_WAIT 0

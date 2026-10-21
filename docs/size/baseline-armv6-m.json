@@ -134,16 +134,16 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 16,
+     "text": 14,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 44,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 744,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 738,
      "unwind": 0
     },
     "program": {
@@ -157,12 +157,12 @@
     }
    },
    "sections": {
-    "bss": 344,
+    "bss": 304,
     "data": 36,
     "rodata": 198,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 10176,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 10168,
     "unwind": 0
    }
   },
@@ -215,16 +215,16 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 16,
+     "text": 14,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 44,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 744,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 738,
      "unwind": 0
     },
     "program": {
@@ -238,12 +238,12 @@
     }
    },
    "sections": {
-    "bss": 344,
+    "bss": 304,
     "data": 36,
     "rodata": 201,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 7568,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 7560,
     "unwind": 0
    }
   },
@@ -296,16 +296,16 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 14,
+     "text": 12,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 44,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 744,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 738,
      "unwind": 0
     },
     "program": {
@@ -319,12 +319,12 @@
     }
    },
    "sections": {
-    "bss": 344,
+    "bss": 304,
     "data": 36,
     "rodata": 111,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 4608,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 4600,
     "unwind": 0
    }
   },
@@ -377,16 +377,16 @@
      "rodata": 1,
      "tbss": 0,
      "tdata": 0,
-     "text": 16,
+     "text": 14,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 44,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 744,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 738,
      "unwind": 0
     },
     "program": {
@@ -400,18 +400,18 @@
     }
    },
    "sections": {
-    "bss": 344,
+    "bss": 304,
     "data": 36,
     "rodata": 111,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 4876,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 4868,
     "unwind": 0
    }
   },
   "hello-puts": {
    "main": {
-    "depth": 176,
+    "depth": 184,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
@@ -455,16 +455,16 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 10,
+     "text": 8,
      "unwind": 0
     },
     "port": {
-     "bss": 84,
+     "bss": 44,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 744,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 738,
      "unwind": 0
     },
     "program": {
@@ -478,18 +478,18 @@
     }
    },
    "sections": {
-    "bss": 344,
+    "bss": 304,
     "data": 36,
     "rodata": 15,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 2148,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 2140,
     "unwind": 0
    }
   },
   "malloc-heavy": {
    "main": {
-    "depth": 232,
+    "depth": 240,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
@@ -532,16 +532,16 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 10,
+     "text": 8,
      "unwind": 0
     },
     "port": {
-     "bss": 68,
+     "bss": 32,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 752,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 746,
      "unwind": 0
     },
     "program": {
@@ -555,18 +555,18 @@
     }
    },
    "sections": {
-    "bss": 80,
+    "bss": 44,
     "data": 0,
     "rodata": 0,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 2214,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 2206,
     "unwind": 0
    }
   },
   "malloc-heavy-tiny": {
    "main": {
-    "depth": 232,
+    "depth": 240,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
@@ -609,16 +609,16 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 10,
+     "text": 8,
      "unwind": 0
     },
     "port": {
-     "bss": 68,
+     "bss": 32,
      "data": 0,
      "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 752,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 746,
      "unwind": 0
     },
     "program": {
@@ -632,12 +632,12 @@
     }
    },
    "sections": {
-    "bss": 76,
+    "bss": 40,
     "data": 0,
     "rodata": 0,
-    "tbss": 8,
-    "tdata": 0,
-    "text": 2134,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 2126,
     "unwind": 0
    }
   },
@@ -7958,7 +7958,7 @@
     ]
    },
    "calloc": {
-    "depth": 120,
+    "depth": 128,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memset",
@@ -8117,7 +8117,7 @@
     ]
    },
    "fclose": {
-    "depth": 120,
+    "depth": 128,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "indirect call"
@@ -8132,7 +8132,7 @@
     ]
    },
    "fflush": {
-    "depth": 144,
+    "depth": 152,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "indirect call"
@@ -8148,7 +8148,7 @@
     ]
    },
    "fgets": {
-    "depth": 168,
+    "depth": 176,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "indirect call"
@@ -8165,7 +8165,7 @@
     ]
    },
    "fopen": {
-    "depth": 160,
+    "depth": 168,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memset",
@@ -8205,7 +8205,7 @@
     ]
    },
    "fputs": {
-    "depth": 168,
+    "depth": 176,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
@@ -8224,7 +8224,7 @@
     ]
    },
    "free": {
-    "depth": 104,
+    "depth": 112,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "indirect call"
@@ -8355,7 +8355,7 @@
     ]
    },
    "malloc": {
-    "depth": 104,
+    "depth": 112,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "indirect call"
@@ -8479,7 +8479,7 @@
     ]
    },
    "puts": {
-    "depth": 168,
+    "depth": 176,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
@@ -8509,7 +8509,7 @@
     ]
    },
    "realloc": {
-    "depth": 128,
+    "depth": 136,
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
@@ -9515,7 +9515,7 @@
    "port/__rtos_linux_reap.o:__rtos_linux_reap": 48,
    "port/__rtos_linux_set_tp.o:__rtos_linux_set_tp": 24,
    "port/__rtos_linux_start.o:__rtos_linux_start": 48,
-   "port/__rtos_lock_acquire.o:__rtos_lock_acquire": 32,
+   "port/__rtos_lock_acquire.o:__rtos_lock_acquire": 40,
    "port/__rtos_lock_create.o:__rtos_lock_create": 48,
    "port/__rtos_lock_destroy.o:__rtos_lock_destroy": 8,
    "port/__rtos_lock_release.o:__rtos_lock_release": 16,

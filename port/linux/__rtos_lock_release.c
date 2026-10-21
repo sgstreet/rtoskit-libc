@@ -15,15 +15,21 @@
 
 #include "linux.h"
 
+/*
+ * Releasing a lock the caller does not hold aborts, which makes unbalanced
+ * locking visible in the tests. The last release clears the word and wakes
+ * a waiter if it was marked slow.
+ */
 void __rtos_lock_release(struct __rtos_lock *lock)
 {
-	if (__atomic_load_n(&lock->owner, __ATOMIC_RELAXED) != __rtos_thread_self() || lock->depth == 0)
+	if ((__atomic_load_n(&lock->word, __ATOMIC_RELAXED) & ~__RTOS_LOCK_SLOW) != __rtos_lock_token)
 		__rtos_abort();
 
-	if (--lock->depth != 0)
+	if (lock->depth != 0) {
+		--lock->depth;
 		return;
+	}
 
-	__atomic_store_n(&lock->owner, nullptr, __ATOMIC_RELAXED);
-	if (__atomic_exchange_n(&lock->state, 0, __ATOMIC_RELEASE) == 2)
-		__rtos_futex_wake(&lock->state, 1);
+	if ((__atomic_exchange_n(&lock->word, 0, __ATOMIC_RELEASE) & __RTOS_LOCK_SLOW) != 0)
+		__rtos_futex_wake(&lock->word, 1);
 }

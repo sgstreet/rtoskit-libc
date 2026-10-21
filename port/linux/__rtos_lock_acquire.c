@@ -15,22 +15,35 @@
 
 #include "linux.h"
 
-/* The three-state futex mutex of docs/research/threads.md, made recursive by the owner and depth */
+/*
+ * The seam's lock word (rtos-port.h, PLAN D79) on a futex. One compare-and-
+ * swap either takes a free lock or marks a held one slow. The owner counts
+ * nested acquisitions in depth and marks the word slow so that its releases
+ * come here: a plain store, since anyone else only ever sets that same bit.
+ * Another thread marks the word and sleeps until it finds it free, then
+ * takes it still marked, since more threads may be waiting.
+ */
 void __rtos_lock_acquire(struct __rtos_lock *lock)
 {
-	struct __rtos_thread *self = __rtos_thread_self();
-	unsigned int state = 0;
+	unsigned int self = __rtos_lock_token;
+	unsigned int word = 0;
 
-	if (__atomic_load_n(&lock->owner, __ATOMIC_RELAXED) == self) {
-		++lock->depth;
-		return;
+	while (true) {
+		/* The caller's own token, marked or not; after a wait, self carries the mark too */
+		if ((word | __RTOS_LOCK_SLOW) == (self | __RTOS_LOCK_SLOW)) {
+			++lock->depth;
+			__atomic_store_n(&lock->word, self | __RTOS_LOCK_SLOW, __ATOMIC_RELAXED);
+			return;
+		}
+
+		unsigned int want = word == 0 ? self : word | __RTOS_LOCK_SLOW;
+
+		if (__atomic_compare_exchange_n(&lock->word, &word, want, false, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED)) {
+			if (word == 0)
+				return;
+			__rtos_futex_wait(&lock->word, want, nullptr);
+			self |= __RTOS_LOCK_SLOW;
+			word = 0;
+		}
 	}
-
-	if (!__atomic_compare_exchange_n(&lock->state, &state, 1, false, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED)) {
-		while (__atomic_exchange_n(&lock->state, 2, __ATOMIC_ACQUIRE) != 0)
-			__rtos_futex_wait(&lock->state, 2, nullptr);
-	}
-
-	__atomic_store_n(&lock->owner, self, __ATOMIC_RELAXED);
-	lock->depth = 1;
 }

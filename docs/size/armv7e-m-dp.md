@@ -518,3 +518,20 @@ Decision D70, `docs/research/string-asm.md`. Before → after, release build.
 Members that grew or are new, justified:
 
 - Reduced: 4 members, -158 bytes; the largest: `memmove.o` 168 → 60, `memcpy.o` 80 → 60, `memset.o` 68 → 48, `strlen.o` 54 → 44.
+
+## P3.04a — the lock word fast path in the port
+
+Decision D79, `docs/research/locks.md`. Before → after, release build; `libc.a` is unchanged, the change is in
+`port/linux` (the size images' port).
+
+| Program | code | RAM | TLS |
+|---|---|---|---|
+| hello-puts | 1903 → 1887 | 380 → 340 | 8 → 8 |
+| hello-printf-int | 7220 → 7204 | 380 → 340 | 8 → 8 |
+| hello-printf-float | 7244 → 7228 | 380 → 340 | 8 → 8 |
+| malloc-heavy | 1934 → 1914 | 80 → 44 | 8 → 8 |
+| hello-printf-int-nofloat | 4471 → 4455 | 380 → 340 | 8 → 8 |
+| hello-printf-int-minimal | 4231 → 4215 | 380 → 340 | 8 → 8 |
+| malloc-heavy-tiny | 1874 → 1854 | 76 → 40 | 8 → 8 |
+
+Other programs are unchanged. The port drops `__rtos_thread_self` from the lock path and the owner pointer from every lock (4 bytes on 32-bit cores, 8 on x86-64), and gains the thread-local token.

@@ -110,14 +110,31 @@ int __rtos_clock_getres(int base, struct timespec *res);
 bool __rtos_heap_region(unsigned int index, void **base, size_t *size);
 
 /*
- * Locks (PLAN D31). The port defines struct __rtos_lock; libc only handles
- * pointers to it, so one libc.a serves every port. Locks are recursive: the
- * owning thread may acquire a lock it holds, and must release it as often.
- * libc names the statically allocated locks below, which the port defines;
- * __rtos_lock_create and __rtos_lock_destroy serve locks libc creates at run
- * time. A single-threaded port implements them all as no-ops.
+ * Locks (PLAN D31, D79). The port defines struct __rtos_lock; libc only
+ * handles pointers to it, so one libc.a serves every port. Locks are
+ * recursive: the owning thread may acquire a lock it holds, and must release
+ * it as often. libc names the statically allocated locks below, which the
+ * port defines; __rtos_lock_create and __rtos_lock_destroy serve locks libc
+ * creates at run time.
+ *
+ * The lock word (D79). struct __rtos_lock starts with an unsigned int that
+ * is 0 when the lock is free and otherwise holds the owner's token, with
+ * __RTOS_LOCK_SLOW set when releasing needs the port: the owner holds it
+ * more than once, or another thread may be waiting. A thread's token is its
+ * value of __rtos_lock_token, which the port defines and keeps nonzero,
+ * even and unique among the threads that may hold a lock. libc may take a
+ * free lock by an atomic compare-and-swap of 0 to its token, and give back
+ * a lock held once without waiters by a compare-and-swap of its token to 0,
+ * calling __rtos_lock_acquire and __rtos_lock_release only when those fail.
+ * The port's functions must accept such a lock word at any time. A
+ * single-threaded port may still implement them as no-ops: no other thread
+ * can see that a nested release then frees the word early.
  */
 struct __rtos_lock;
+
+#define __RTOS_LOCK_SLOW 1u
+
+extern thread_local unsigned int __rtos_lock_token;
 
 /* Serialises the memory management functions */
 extern struct __rtos_lock __rtos_malloc_lock;

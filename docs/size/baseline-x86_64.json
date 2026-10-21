@@ -107,7 +107,7 @@
      "unwind": 0
     },
     "other": {
-     "bss": 48,
+     "bss": 32,
      "data": 0,
      "rodata": 91,
      "tbss": 0,
@@ -116,12 +116,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 144,
+     "bss": 64,
      "data": 0,
      "rodata": 0,
-     "tbss": 8,
-     "tdata": 0,
-     "text": 733,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 649,
      "unwind": 0
     },
     "program": {
@@ -135,12 +135,12 @@
     }
    },
    "sections": {
-    "bss": 456,
+    "bss": 360,
     "data": 64,
     "rodata": 880,
-    "tbss": 12,
-    "tdata": 0,
-    "text": 9603,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 9519,
     "unwind": 0
    }
   },
@@ -180,7 +180,7 @@
      "unwind": 0
     },
     "other": {
-     "bss": 48,
+     "bss": 32,
      "data": 0,
      "rodata": 88,
      "tbss": 0,
@@ -189,12 +189,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 144,
+     "bss": 64,
      "data": 0,
      "rodata": 0,
-     "tbss": 8,
-     "tdata": 0,
-     "text": 733,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 649,
      "unwind": 0
     },
     "program": {
@@ -208,12 +208,12 @@
     }
    },
    "sections": {
-    "bss": 456,
+    "bss": 360,
     "data": 64,
     "rodata": 848,
-    "tbss": 12,
-    "tdata": 0,
-    "text": 9588,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 9504,
     "unwind": 0
    }
   },
@@ -253,7 +253,7 @@
      "unwind": 0
     },
     "other": {
-     "bss": 48,
+     "bss": 32,
      "data": 0,
      "rodata": 34,
      "tbss": 0,
@@ -262,12 +262,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 144,
+     "bss": 64,
      "data": 0,
      "rodata": 0,
-     "tbss": 8,
-     "tdata": 0,
-     "text": 733,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 649,
      "unwind": 0
     },
     "program": {
@@ -281,12 +281,12 @@
     }
    },
    "sections": {
-    "bss": 456,
+    "bss": 360,
     "data": 64,
     "rodata": 552,
-    "tbss": 12,
-    "tdata": 0,
-    "text": 5602,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 5518,
     "unwind": 0
    }
   },
@@ -326,7 +326,7 @@
      "unwind": 0
     },
     "other": {
-     "bss": 48,
+     "bss": 32,
      "data": 0,
      "rodata": 34,
      "tbss": 0,
@@ -335,12 +335,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 144,
+     "bss": 64,
      "data": 0,
      "rodata": 0,
-     "tbss": 8,
-     "tdata": 0,
-     "text": 733,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 649,
      "unwind": 0
     },
     "program": {
@@ -354,12 +354,12 @@
     }
    },
    "sections": {
-    "bss": 456,
+    "bss": 360,
     "data": 64,
     "rodata": 672,
-    "tbss": 12,
-    "tdata": 0,
-    "text": 5862,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 5778,
     "unwind": 0
    }
   },
@@ -397,7 +397,7 @@
      "unwind": 0
     },
     "other": {
-     "bss": 48,
+     "bss": 32,
      "data": 0,
      "rodata": 0,
      "tbss": 0,
@@ -406,12 +406,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 144,
+     "bss": 64,
      "data": 0,
      "rodata": 0,
-     "tbss": 8,
-     "tdata": 0,
-     "text": 733,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 649,
      "unwind": 0
     },
     "program": {
@@ -425,12 +425,12 @@
     }
    },
    "sections": {
-    "bss": 456,
+    "bss": 360,
     "data": 64,
     "rodata": 15,
-    "tbss": 12,
-    "tdata": 0,
-    "text": 2369,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 2285,
     "unwind": 0
    }
   },
@@ -466,7 +466,7 @@
      "unwind": 0
     },
     "other": {
-     "bss": 40,
+     "bss": 12,
      "data": 0,
      "rodata": 0,
      "tbss": 0,
@@ -475,12 +475,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 120,
+     "bss": 52,
      "data": 0,
      "rodata": 0,
-     "tbss": 8,
-     "tdata": 0,
-     "text": 787,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 703,
      "unwind": 0
     },
     "program": {
@@ -494,12 +494,12 @@
     }
    },
    "sections": {
-    "bss": 184,
+    "bss": 88,
     "data": 0,
     "rodata": 0,
-    "tbss": 12,
-    "tdata": 0,
-    "text": 2601,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 2517,
     "unwind": 0
    }
   },
@@ -535,7 +535,7 @@
      "unwind": 0
     },
     "other": {
-     "bss": 40,
+     "bss": 12,
      "data": 0,
      "rodata": 0,
      "tbss": 0,
@@ -544,12 +544,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 120,
+     "bss": 52,
      "data": 0,
      "rodata": 0,
-     "tbss": 8,
-     "tdata": 0,
-     "text": 787,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 703,
      "unwind": 0
     },
     "program": {
@@ -563,12 +563,12 @@
     }
    },
    "sections": {
-    "bss": 176,
+    "bss": 80,
     "data": 0,
     "rodata": 0,
-    "tbss": 12,
-    "tdata": 0,
-    "text": 2484,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 2400,
     "unwind": 0
    }
   },
@@ -7693,7 +7693,7 @@
      "fclose",
      "__libc_file_unlink",
      "__rtos_lock_acquire",
-     "__rtos_thread_self"
+     "__rtos_futex_wait"
     ]
    },
    "fflush": {
@@ -7704,7 +7704,7 @@
      "__libc_stdio_flush_all",
      "libc/stdio/__libc_stdio_flush_all.c:flush_one.part.0",
      "__rtos_lock_acquire",
-     "__rtos_thread_self"
+     "__rtos_futex_wait"
     ]
    },
    "fgets": {
@@ -7763,7 +7763,7 @@
     "path": [
      "free",
      "__rtos_lock_acquire",
-     "__rtos_thread_self"
+     "__rtos_futex_wait"
     ]
    },
    "fscanf": {
@@ -8752,7 +8752,7 @@
    "port/__rtos_lock_acquire.o:__rtos_lock_acquire": 32,
    "port/__rtos_lock_create.o:__rtos_lock_create": 8,
    "port/__rtos_lock_destroy.o:__rtos_lock_destroy": 16,
-   "port/__rtos_lock_release.o:__rtos_lock_release": 32,
+   "port/__rtos_lock_release.o:__rtos_lock_release": 16,
    "port/__rtos_open.o:__rtos_open": 24,
    "port/__rtos_read.o:__rtos_read": 8,
    "port/__rtos_remove.o:__rtos_remove": 8,

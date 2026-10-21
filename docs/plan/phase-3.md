@@ -62,7 +62,17 @@ Split in two (integers, then floating point).
   *`docs/research/conversions-speed.md`; `test/unit/strtod` gains short random inputs checked exactly in every direction and model-found fixed cases; 10 of 12 mutants killed, 2 equivalent; budgets hold, no benchmark case slower.*
 
 ## P3.04 — malloc and locking
-- [ ] Fast paths for small size classes, and uncontended lock fast paths in the seam contract (an inline atomic check before calling `__rtos_*`).
+
+Split in two (locks, then the allocators).
+
+### P3.04a — Uncontended lock fast path  `[x]`
+- [x] Uncontended lock fast paths in the seam contract: an inline atomic check before calling `__rtos_*`, in both ports.
+  *D79: the lock word (owner token, slow bit) is now part of `rtos-port.h`, with a port-defined thread-local token. The Linux port's functions start with that compare-and-swap and keep the slow path for recursion and contention; `port/none` keeps no-ops. The in-line check in libc measured 92.5 → 67.5 instructions per malloc + free on armv7e-m, but breaks the speed budget by up to 200 bytes per image. The contract allows it, and libc doesn't use it yet (Q16).*
+- [x] Research note; tests (recursion, contention, every lock user); measure with the allocator, stdio and thread benchmarks; size and speed budgets.
+  *`docs/research/locks.md`; `test/unit/locks` (word states, nesting through both paths, tokens, four threads contending); `test/unit/threads` covers malloc and stdio. Both flavours, malloc + free: armv7e-m 107.5 → 92.5, x86-64 107 → 84, armv6-m 233 → 224; no case slower. Both budgets hold. Images shrink; the Armv6-M acquire frame grows by 8 bytes, justified in `docs/size`.*
+
+### P3.04b — Allocator fast paths
+- [ ] Fast paths for small size classes.
 - [ ] Measure with the allocator benchmarks; check fragmentation regressions.
 
 ## P3.05 — libm hot paths

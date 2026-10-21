@@ -609,3 +609,22 @@ Decision D70, `docs/research/string-asm.md`. Before → after, release build.
 Members that grew or are new, justified:
 
 - Reduced: 0 members, 0 bytes; the largest: .
+
+## P3.04a — the lock word fast path in the port
+
+Decision D79, `docs/research/locks.md`. Before → after, release build; `libc.a` is unchanged, the change is in
+`port/linux` (the size images' port).
+
+| Program | code | RAM | TLS |
+|---|---|---|---|
+| hello-puts | 2163 → 2155 | 380 → 340 | 8 → 8 |
+| hello-printf-int | 7769 → 7761 | 380 → 340 | 8 → 8 |
+| hello-printf-float | 10374 → 10366 | 380 → 340 | 8 → 8 |
+| malloc-heavy | 2214 → 2206 | 80 → 44 | 8 → 8 |
+| hello-printf-int-nofloat | 4987 → 4979 | 380 → 340 | 8 → 8 |
+| hello-printf-int-minimal | 4719 → 4711 | 380 → 340 | 8 → 8 |
+| malloc-heavy-tiny | 2134 → 2126 | 76 → 40 | 8 → 8 |
+
+Other programs are unchanged. The port drops `__rtos_thread_self` from the lock path and the owner pointer from every lock (4 bytes on 32-bit cores, 8 on x86-64), and gains the thread-local token.
+
+Grew, justified: `__rtos_lock_acquire`'s frame, 32 → 40 bytes, and so the depth of every entry point that takes a lock by 8 bytes (`malloc` 104 → 112, `calloc` 120 → 128, `realloc` 128 → 136, `free` 104 → 112, …). `__atomic_compare_exchange_4` is a five-argument call on this core, with four values live across it; every arrangement without the extra frame had more code, which the size budget does not allow.
