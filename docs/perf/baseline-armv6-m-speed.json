@@ -464,73 +464,73 @@
   },
   "stdio": {
    "fprintf/mix": {
-    "insns": 4142.0
+    "insns": 4086.0
    },
    "fputs/line": {
     "insns": 451.0
    },
    "snprintf/%-20s": {
-    "insns": 1164.0
+    "insns": 1131.0
    },
    "snprintf/%.17g": {
-    "insns": 13910.0
+    "insns": 13887.0
    },
    "snprintf/%.3f": {
-    "insns": 13789.0
+    "insns": 13778.0
    },
    "snprintf/%08x": {
-    "insns": 916.0
+    "insns": 801.0
    },
    "snprintf/%a": {
-    "insns": 1126.0
+    "insns": 1101.0
    },
    "snprintf/%c": {
-    "insns": 290.0
+    "insns": 291.0
    },
    "snprintf/%d": {
-    "insns": 1636.0
+    "insns": 1622.0
    },
    "snprintf/%e": {
-    "insns": 16913.0
+    "insns": 16901.0
    },
    "snprintf/%f": {
-    "insns": 13209.0
+    "insns": 13202.0
    },
    "snprintf/%g": {
-    "insns": 14771.0
+    "insns": 14761.0
    },
    "snprintf/%lld": {
-    "insns": 11025.0
+    "insns": 3702.0
    },
    "snprintf/%p": {
-    "insns": 537.0
+    "insns": 495.0
    },
    "snprintf/%s": {
-    "insns": 449.0
+    "insns": 428.0
    },
    "snprintf/%u-small": {
     "insns": 429.0
    },
    "snprintf/%x": {
-    "insns": 629.0
+    "insns": 514.0
    },
    "snprintf/literal": {
-    "insns": 555.0
+    "insns": 354.0
    },
    "snprintf/mix": {
-    "insns": 3556.0
+    "insns": 3439.0
    },
    "sscanf/%d": {
-    "insns": 784.0
+    "insns": 655.0
    },
    "sscanf/%lf": {
-    "insns": 5107.0
+    "insns": 5088.0
    },
    "sscanf/%x": {
-    "insns": 966.0
+    "insns": 815.0
    },
    "sscanf/mix": {
-    "insns": 3294.0
+    "insns": 2756.0
    }
   },
   "string": {
@@ -2346,7 +2346,7 @@
   },
   "strto": {
    "atoi": {
-    "insns": 1211.0
+    "insns": 277.0
    },
    "strtod/17-digits": {
     "insns": 23288.0
@@ -2391,22 +2391,22 @@
     "insns": 1634.0
    },
    "strtol/hex": {
-    "insns": 1678.0
+    "insns": 458.0
    },
    "strtol/int": {
-    "insns": 1501.0
+    "insns": 422.0
    },
    "strtol/short": {
-    "insns": 914.0
+    "insns": 170.0
    },
    "strtoll/long": {
-    "insns": 2350.0
+    "insns": 1060.0
    },
    "strtoul/hex16": {
-    "insns": 1671.0
+    "insns": 436.0
    },
    "strtoull/hex": {
-    "insns": 2544.0
+    "insns": 1027.0
    }
   },
   "threads": {

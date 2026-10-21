@@ -39,6 +39,8 @@ TARGET_OBJ_LIBS += libc/startup
 TARGET_OBJ_LIBS += libc/stdbit
 TARGET_OBJ_LIBS += libc/stdio
 TARGET_OBJ_LIBS += libc/stdlib
+# The speed flavour's replacement files (PLAN D77)
+TARGET_OBJ_LIBS += $(if $(filter speed,${LIBC_FLAVOUR}),libc/stdio/speed libc/stdlib/speed)
 TARGET_OBJ_LIBS += libc/string
 TARGET_OBJ_LIBS += $(addprefix libc/string/,${LIBC_STRING_KERNELS})
 TARGET_OBJ_LIBS += libc/threads

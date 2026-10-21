@@ -388,3 +388,64 @@ Aligned / worst of the misaligned offsets.
 | `qsort/reversed/1024` | 602 |
 | `qsort/sorted/1024` | 677 |
 | `qsort/strings/256` | 585 (-2 %) |
+
+## P3.03a — Speed flavour: integer conversions
+
+Division-free `strtol` and relatives, 64-bit decimals in 10^9 chunks, 32-bit shifts for hex and octal, and a
+`memcpy` buffer sink, all in the speed flavour's `libc/stdlib/speed` and `libc/stdio/speed` (PLAN D77); the scanf
+engine at `-O2`. Change against the P3.02 speed baseline; only the programs that changed are shown, and the release
+build is unchanged.
+
+### stdio
+
+| Case | insns/op |
+|---|---:|
+| `fprintf/mix` | 2166 (-2 %) |
+| `fputs/line` | 270 |
+| `snprintf/%-20s` | 574 (-5 %) |
+| `snprintf/%.17g` | 14829 (-0 %) |
+| `snprintf/%.3f` | 15139 (-0 %) |
+| `snprintf/%08x` | 469 (-12 %) |
+| `snprintf/%a` | 862 (-3 %) |
+| `snprintf/%c` | 260 (+0 %) |
+| `snprintf/%d` | 455 (-3 %) |
+| `snprintf/%e` | 13867 (-0 %) |
+| `snprintf/%f` | 14652 (-0 %) |
+| `snprintf/%g` | 15453 (-0 %) |
+| `snprintf/%lld` | 1353 (-82 %) |
+| `snprintf/%p` | 420 (-7 %) |
+| `snprintf/%s` | 395 (-5 %) |
+| `snprintf/%u-small` | 353 (-1 %) |
+| `snprintf/%x` | 450 (-12 %) |
+| `snprintf/literal` | 308 (-40 %) |
+| `snprintf/mix` | 1836 (-5 %) |
+| `sscanf/%d` | 374 (-18 %) |
+| `sscanf/%lf` | 3378 (-1 %) |
+| `sscanf/%x` | 435 (-19 %) |
+| `sscanf/mix` | 1624 (-22 %) |
+
+### strto
+
+| Case | insns/op |
+|---|---:|
+| `atoi` | 207 (-81 %) |
+| `strtod/17-digits` | 4472 |
+| `strtod/exp-large` | 170760 |
+| `strtod/exp-small` | 24686 |
+| `strtod/fixed` | 2232 |
+| `strtod/hex` | 1112 |
+| `strtod/integer` | 1497 |
+| `strtod/long` | 7433 |
+| `strtod/micro` | 2086 |
+| `strtod/min-normal` | 86186 |
+| `strtod/short` | 1962 |
+| `strtod/subnormal` | 94698 |
+| `strtof/9-digits` | 3338 |
+| `strtof/exp` | 7360 |
+| `strtof/short` | 1125 |
+| `strtol/hex` | 322 (-73 %) |
+| `strtol/int` | 305 (-75 %) |
+| `strtol/short` | 135 (-86 %) |
+| `strtoll/long` | 516 (-66 %) |
+| `strtoul/hex16` | 309 (-74 %) |
+| `strtoull/hex` | 508 (-65 %) |

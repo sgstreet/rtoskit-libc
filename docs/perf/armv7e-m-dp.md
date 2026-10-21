@@ -388,3 +388,64 @@ Aligned / worst of the misaligned offsets.
 | `qsort/reversed/1024` | 602 |
 | `qsort/sorted/1024` | 677 |
 | `qsort/strings/256` | 585 (-2 %) |
+
+## P3.03a — Speed flavour: integer conversions
+
+Division-free `strtol` and relatives, 64-bit decimals in 10^9 chunks, 32-bit shifts for hex and octal, and a
+`memcpy` buffer sink, all in the speed flavour's `libc/stdlib/speed` and `libc/stdio/speed` (PLAN D77); the scanf
+engine at `-O2`. Change against the P3.02 speed baseline; only the programs that changed are shown, and the release
+build is unchanged.
+
+### stdio
+
+| Case | insns/op |
+|---|---:|
+| `fprintf/mix` | 2166 (-2 %) |
+| `fputs/line` | 270 |
+| `snprintf/%-20s` | 574 (-5 %) |
+| `snprintf/%.17g` | 14832 (-0 %) |
+| `snprintf/%.3f` | 14568 (-0 %) |
+| `snprintf/%08x` | 469 (-12 %) |
+| `snprintf/%a` | 865 (-3 %) |
+| `snprintf/%c` | 260 (+0 %) |
+| `snprintf/%d` | 455 (-3 %) |
+| `snprintf/%e` | 13870 (-0 %) |
+| `snprintf/%f` | 14655 (-0 %) |
+| `snprintf/%g` | 15456 (-0 %) |
+| `snprintf/%lld` | 1353 (-82 %) |
+| `snprintf/%p` | 420 (-7 %) |
+| `snprintf/%s` | 395 (-5 %) |
+| `snprintf/%u-small` | 353 (-1 %) |
+| `snprintf/%x` | 450 (-12 %) |
+| `snprintf/literal` | 308 (-40 %) |
+| `snprintf/mix` | 1836 (-5 %) |
+| `sscanf/%d` | 374 (-18 %) |
+| `sscanf/%lf` | 2752 (-1 %) |
+| `sscanf/%x` | 435 (-19 %) |
+| `sscanf/mix` | 1624 (-22 %) |
+
+### strto
+
+| Case | insns/op |
+|---|---:|
+| `atoi` | 207 (-81 %) |
+| `strtod/17-digits` | 4275 |
+| `strtod/exp-large` | 170534 |
+| `strtod/exp-small` | 24495 |
+| `strtod/fixed` | 1421 |
+| `strtod/hex` | 915 |
+| `strtod/integer` | 1234 |
+| `strtod/long` | 7236 |
+| `strtod/micro` | 1281 |
+| `strtod/min-normal` | 85988 |
+| `strtod/short` | 1151 |
+| `strtod/subnormal` | 93889 |
+| `strtof/9-digits` | 3341 |
+| `strtof/exp` | 7363 |
+| `strtof/short` | 1128 |
+| `strtol/hex` | 322 (-73 %) |
+| `strtol/int` | 305 (-75 %) |
+| `strtol/short` | 135 (-86 %) |
+| `strtoll/long` | 516 (-66 %) |
+| `strtoul/hex16` | 309 (-74 %) |
+| `strtoull/hex` | 508 (-65 %) |

@@ -20,4 +20,8 @@ include ${PROJECT_ROOT}/tools/makefiles/project.mk
 CPPFLAGS += -I${PROJECT_ROOT}/libc
 CFLAGS += ${LIBC_CFLAGS}
 
+# The speed flavour compiles the scanf engine for speed (PLAN D73, D77); the printf engine at -O2
+# breaks the speed budget of every printf image (+12 to +34 %)
+${CURDIR}/__libc_scan.o: CFLAGS += ${LIBC_SPEED_CFLAGS}
+
 endif
