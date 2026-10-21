@@ -319,3 +319,11 @@ Where rtoskit stands:
     - `%f`/`%g` cost 3.7 times picolibc's on the FPU cores, because the exact decimal conversion (D39) handles every digit.
     - On Armv6-M, picolibc's `%f` is slower than ours, and newlib-nano's takes half our instructions.
   - **qsort:** about 2.6 times the instructions. It is a heapsort (D33), chosen for its worst case without recursion or extra memory, and no phase 3 step targeted it. Recorded as Q17.
+
+## Addendum: P3.07, the speed flavour's qsort
+
+After the phase tag, Q17 was answered by an introsort with a run check in the speed flavour (D90, `docs/research/qsort-speed.md`).
+- **Against phase 2:** the speed flavour's qsort geometric mean (all eight cases, bsearch included) is 0.23–0.27 on every board, from 0.98–1.00.
+- **Against the other libraries:** on random input it now takes the same count as picolibc and newlib-nano (armv7e-m: 274 against 278 and 277). Over all eight cases, they take 1.35–1.49 times its instructions.
+
+The size flavour keeps the heapsort.

@@ -689,3 +689,10 @@ over the former +10 % (10604); by the user's choice the speed flavour's math ima
 Decision D88, `docs/research/libm-fixed.md`. The release build is unchanged. The speed build adds
 `__libc_erff_fixed` (2328 bytes, about 1 KB of it tables) and fast paths in `erff` (+68) and `erfcf` (+64). No
 reference program links the error functions, so every image is unchanged; both budgets hold.
+
+## P3.07 — introsort qsort (speed flavour)
+
+Decision D90, `docs/research/qsort-speed.md`. The release build is unchanged. In the speed build, `qsort.o` grows by
+about 625 bytes (the introsort keeps the heapsort as its fallback), and `qsort`'s stack depth by about 440 bytes, most
+of it the stack of waiting ranges (one per bit of `size_t`). No reference program links `qsort`; every image is
+unchanged and both budgets hold.

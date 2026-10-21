@@ -127,3 +127,7 @@ Split (the step named four function families; each fixed-point rewrite needs its
   *Both budgets hold on every board. The size flavour is 0.1–8.9 % below the phase 2 lock in every image, and the speed flavour is within +8.8 % (+18.9 % for Armv6-M `math-float`, D87). libc-test 219/219 and every unit test pass in all 18 configurations.*
 - [x] Tag `phase-3-complete`.
   *Pushed by the maintainer on 62a4cdb (P3.06).*
+
+## P3.07 — Speed-flavour qsort (Q17, after the phase tag)  `[x]`
+- [x] `qsort` in the speed flavour: introsort (median-of-three quicksort, insertion sort for small ranges, heapsort past a depth limit), no recursion and a bounded stack; the size flavour keeps its heapsort. Research note; tests with adversarial inputs and a comparison-count bound; both budgets; benchmarks against the baseline and against picolibc/newlib-nano.
+  *D90: a run check (n − 1 comparisons for an input in order, all equal or strictly reversed), then an introsort: Hoare partition, median of three or a ninther, insertion sort at 8 or fewer, heapsort past 2·log2 n; iterative, with pointer arithmetic. Speed flavour, armv7e-m: random 640 → 274 (picolibc 278, newlib-nano 277), strings 585 → 303, ordered inputs 27–36; 7 cases faster on every board, none slower. `test/unit/stdlib` compares the results with an insertion sort, element for element, and bounds the comparisons, including McIlroy's adversary (a mutant without the depth limit fails). No reference program links `qsort`; both budgets hold.*

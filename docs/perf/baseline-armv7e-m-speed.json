@@ -441,25 +441,25 @@
     "insns": 142.92
    },
    "qsort/equal/1024": {
-    "insns": 114.38
+    "insns": 27.05
    },
    "qsort/random/1024": {
-    "insns": 640.45
+    "insns": 273.96
    },
    "qsort/random/16": {
-    "insns": 223.94
+    "insns": 128.12
    },
    "qsort/random/256": {
-    "insns": 496.55
+    "insns": 215.74
    },
    "qsort/reversed/1024": {
-    "insns": 601.75
+    "insns": 35.56
    },
    "qsort/sorted/1024": {
-    "insns": 676.64
+    "insns": 27.05
    },
    "qsort/strings/256": {
-    "insns": 584.74
+    "insns": 303.37
    }
   },
   "stdio": {
