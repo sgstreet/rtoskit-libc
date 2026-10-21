@@ -1,0 +1,254 @@
+exhaustive expf nearest arguments 4294967296 differ 170646
+exhaustive expf nearest rt max 0.5000 at -0x1.d2259ap+3 0x0p+0 wrong 0 of 215844847
+exhaustive expf nearest aor max 0.5016 at -0x1.ce651ep-8 0x0p+0 wrong 170646 of 215844847
+exhaustive exp2f nearest arguments 4294967296 differ 168364
+exhaustive exp2f nearest rt max 0.5000 at 0x1.853a6ep-9 0x0p+0 wrong 2 of 216164354
+exhaustive exp2f nearest aor max 0.5016 at -0x1.4795f8p-7 0x0p+0 wrong 168362 of 216164354
+exhaustive logf nearest arguments 4294967296 differ 416909
+exhaustive logf nearest rt max 0.5000 at 0x1.6351d8p+95 0x0p+0 wrong 3 of 134084024
+exhaustive logf nearest aor max 0.8177 at 0x1.060106p+0 0x0p+0 wrong 416906 of 134084024
+exhaustive log2f nearest arguments 4294967296 differ 313550
+exhaustive log2f nearest rt max 0.5000 at 0x1.22952p-128 0x0p+0 wrong 0 of 133987074
+exhaustive log2f nearest aor max 0.7518 at 0x1.0057f8p+0 0x0p+0 wrong 313550 of 133987074
+exhaustive log10f nearest arguments 4294967296 differ 417552
+exhaustive log10f nearest rt max 0.5000 at 0x1.fddcf4p-98 0x0p+0 wrong 1 of 134084584
+exhaustive log10f nearest aor max 0.8197 at 0x1.f6e2cp-1 0x0p+0 wrong 417551 of 134084584
+exhaustive sinf nearest arguments 4294967296 differ 29362802
+exhaustive sinf nearest rt max 0.5000 at 0x1.8d9d8p+73 0x0p+0 wrong 0 of 294913660
+exhaustive sinf nearest aor max 0.5607 at 0x1.0c05ccp-1 0x0p+0 wrong 29362802 of 294913660
+exhaustive cosf nearest arguments 4294967296 differ 28209648
+exhaustive cosf nearest rt max 0.5000 at 0x1.2b9622p+67 0x0p+0 wrong 2 of 293831862
+exhaustive cosf nearest aor max 0.7758 at 0x1.019c5p+6 0x0p+0 wrong 28209646 of 293831862
+exhaustive erff nearest arguments 4294967296 differ 168467910
+exhaustive erff nearest rt max 0.5000 at 0x1.81d5acp-13 0x0p+0 wrong 0 of 425327258
+exhaustive erff nearest aor max 1.0900 at 0x1.c111acp-1 0x0p+0 wrong 168467910 of 425327258
+sample powf nearest arguments 67108864 differ 15625
+sample powf nearest rt max 0.5000 at 0x1.5f6544p-4 0x1.13fd02p+5 wrong 0 of 67108864
+sample powf nearest aor max 0.5059 at 0x1.15ec2p+2 0x1.1d60bap+5 wrong 15625 of 67108864
+sample exp nearest arguments 16777216 differ 7961
+sample exp nearest rt max 0.5000 at -0x1.84338416948a6p+8 0x0p+0 wrong 26 of 16777216
+sample exp nearest aor max 0.5082 at 0x1.b2b8c5bd981bp+6 0x0p+0 wrong 7973 of 16777216
+sample exp2 nearest arguments 16777216 differ 9996
+sample exp2 nearest rt max 0.5068 at 0x1.b57b05769a0b8p+9 0x0p+0 wrong 3805 of 16777216
+sample exp2 nearest aor max 0.5084 at 0x1.b1ee2134d7b6p+7 0x0p+0 wrong 8103 of 16777216
+sample exp10 nearest arguments 16777216 differ 10775
+sample exp10 nearest rt max 0.5061 at 0x1.14f0c202396bep+8 0x0p+0 wrong 3828 of 16777216
+sample exp10 nearest aor max 0.5093 at 0x1.814a9a479038p+5 0x0p+0 wrong 8955 of 16777216
+sample log nearest arguments 16777216 differ 42
+sample log nearest rt max 0.5000 at 0x1.360588682400cp-269 0x0p+0 wrong 0 of 16777216
+sample log nearest aor max 0.5098 at 0x1.19fad0fff6d74p+0 0x0p+0 wrong 42 of 16777216
+sample log2 nearest arguments 16777216 differ 97
+sample log2 nearest rt max 0.5000 at 0x1.70793160ee81ap+729 0x0p+0 wrong 0 of 16777216
+sample log2 nearest aor max 0.5170 at 0x1.0f6150e1a5f2p+0 0x0p+0 wrong 97 of 16777216
+sample erf nearest arguments 16777216 differ 1631640
+sample erf nearest rt max 0.5300 at 0x1.bb8ba18f2d2f2p-29 0x0p+0 wrong 1151 of 16777216
+sample erf nearest aor max 0.8871 at 0x1.3943bb4166e1p+0 0x0p+0 wrong 1631801 of 16777216
+sample pow nearest arguments 16777216 differ 4969
+sample pow nearest rt max 0.5051 at 0x1.94c6498e307cbp-37 -0x1.552354609668p+4 wrong 1291 of 16777216
+sample pow nearest aor max 0.5084 at 0x1.be82a2cec2c7cp+2 0x1.1375c47c48cdcp+7 wrong 4436 of 16777216
+modes expf upward arguments 1048576 differ 375120
+modes expf upward rt max 1.0000 at 0x1.cfp-141 0x0p+0 wrong 0 of 1048576
+modes expf upward aor max 2.0000 at -0x1.ffae72p-54 0x0p+0 wrong 375120 of 1048576
+modes expf downward arguments 1048576 differ 11312
+modes expf downward rt max 1.0000 at -0x1.357608p-98 0x0p+0 wrong 0 of 1048576
+modes expf downward aor max 1.1202 at -0x1.c27616p-25 0x0p+0 wrong 11312 of 1048576
+modes expf towardzero arguments 1048576 differ 11439
+modes expf towardzero rt max 1.0000 at -0x1.47330ep-122 0x0p+0 wrong 0 of 1048576
+modes expf towardzero aor max 1.1200 at -0x1.c28bc4p-25 0x0p+0 wrong 11439 of 1048576
+modes exp2f upward arguments 1048576 differ 374549
+modes exp2f upward rt max 1.0000 at 0x1.7eab8ap-77 0x0p+0 wrong 0 of 1048576
+modes exp2f upward aor max 2.0000 at -0x1.710c0cp-53 0x0p+0 wrong 374549 of 1048576
+modes exp2f downward arguments 1048576 differ 11134
+modes exp2f downward rt max 1.0000 at -0x1.357608p-87 0x0p+0 wrong 0 of 1048576
+modes exp2f downward aor max 1.1202 at -0x1.09e72p-22 0x0p+0 wrong 11134 of 1048576
+modes exp2f towardzero arguments 1048576 differ 11263
+modes exp2f towardzero rt max 1.0000 at -0x1.5e8016p-92 0x0p+0 wrong 0 of 1048576
+modes exp2f towardzero aor max 1.1200 at -0x1.9e1c7p-19 0x0p+0 wrong 11263 of 1048576
+modes logf upward arguments 1048576 differ 105
+modes logf upward rt max 1.0000 at 0x1.931cep-71 0x0p+0 wrong 0 of 1048576
+modes logf upward aor max 1.2485 at 0x1.06137ap+0 0x0p+0 wrong 105 of 1048576
+modes logf downward arguments 1048576 differ 103
+modes logf downward rt max 1.0000 at 0x1.32005ap+97 0x0p+0 wrong 0 of 1048576
+modes logf downward aor max 1.1975 at 0x1.f825cap-1 0x0p+0 wrong 103 of 1048576
+modes logf towardzero arguments 1048576 differ 108
+modes logf towardzero rt max 1.0000 at 0x1.2a0e44p+39 0x0p+0 wrong 0 of 1048576
+modes logf towardzero aor max 1.2008 at 0x1.15a966p+0 0x0p+0 wrong 108 of 1048576
+modes log2f upward arguments 1048576 differ 96
+modes log2f upward rt max 1.0000 at 0x1.2e88cep+39 0x0p+0 wrong 0 of 1048576
+modes log2f upward aor max 1.2008 at 0x1.ff5bacp-1 0x0p+0 wrong 96 of 1048576
+modes log2f downward arguments 1048576 differ 86
+modes log2f downward rt max 1.0000 at 0x1.26194cp+99 0x0p+0 wrong 0 of 1048576
+modes log2f downward aor max 1.2147 at 0x1.f61416p-1 0x0p+0 wrong 86 of 1048576
+modes log2f towardzero arguments 1048576 differ 76
+modes log2f towardzero rt max 1.0000 at 0x1.26379p+98 0x0p+0 wrong 0 of 1048576
+modes log2f towardzero aor max 1.1608 at 0x1.fdd73ep-1 0x0p+0 wrong 76 of 1048576
+modes log10f upward arguments 1048576 differ 117
+modes log10f upward rt max 1.0000 at 0x1.93d73cp+98 0x0p+0 wrong 0 of 1048576
+modes log10f upward aor max 1.1263 at 0x1.043208p+0 0x0p+0 wrong 117 of 1048576
+modes log10f downward arguments 1048576 differ 125
+modes log10f downward rt max 1.0000 at 0x1.874042p+99 0x0p+0 wrong 0 of 1048576
+modes log10f downward aor max 1.1349 at 0x1.08b92ep+0 0x0p+0 wrong 125 of 1048576
+modes log10f towardzero arguments 1048576 differ 118
+modes log10f towardzero rt max 1.0000 at 0x1.de64fap+98 0x0p+0 wrong 0 of 1048576
+modes log10f towardzero aor max 1.1093 at 0x1.f5e9cap-1 0x0p+0 wrong 118 of 1048576
+modes sinf upward arguments 1048576 differ 227649
+modes sinf upward rt max 1.0000 at -0x1.bd0892p-54 0x0p+0 wrong 0 of 1048576
+modes sinf upward aor max 1.0596 at 0x1.319c38p+13 0x0p+0 wrong 227649 of 1048576
+modes sinf downward arguments 1048576 differ 227001
+modes sinf downward rt max 1.0000 at 0x1.fa511cp-96 0x0p+0 wrong 0 of 1048576
+modes sinf downward aor max 1.0599 at -0x1.cb08a4p+11 0x0p+0 wrong 227001 of 1048576
+modes sinf towardzero arguments 1048576 differ 448407
+modes sinf towardzero rt max 1.0000 at 0x1.d8649cp-121 0x0p+0 wrong 0 of 1048576
+modes sinf towardzero aor max 1.0599 at 0x1.27fb0ap+13 0x0p+0 wrong 448407 of 1048576
+modes cosf upward arguments 1048576 differ 7591
+modes cosf upward rt max 1.0000 at -0x1.e01586p+12 0x0p+0 wrong 0 of 1048576
+modes cosf upward aor max 1.0589 at 0x1.6766fap+12 0x0p+0 wrong 7591 of 1048576
+modes cosf downward arguments 1048576 differ 447052
+modes cosf downward rt max 1.0000 at -0x1.27bd3p-49 0x0p+0 wrong 0 of 1048576
+modes cosf downward aor max 1.0595 at -0x1.c50b2ep+11 0x0p+0 wrong 447052 of 1048576
+modes cosf towardzero arguments 1048576 differ 448129
+modes cosf towardzero rt max 1.0000 at 0x1.d58b08p-66 0x0p+0 wrong 0 of 1048576
+modes cosf towardzero aor max 1.0602 at -0x1.44e49ap+12 0x0p+0 wrong 448129 of 1048576
+modes erff upward arguments 1048576 differ 130946
+modes erff upward rt max 1.0000 at 0x1.9016c8p+0 0x0p+0 wrong 0 of 1048576
+modes erff upward aor max 1.5527 at 0x1.15f916p+0 0x0p+0 wrong 130946 of 1048576
+modes erff downward arguments 1048576 differ 144426
+modes erff downward rt max 1.0000 at 0x1.092c5ap+1 0x0p+0 wrong 0 of 1048576
+modes erff downward aor max 1.6195 at 0x1.39c292p+0 0x0p+0 wrong 144426 of 1048576
+modes erff towardzero arguments 1048576 differ 194708
+modes erff towardzero rt max 1.0000 at -0x1.61b96ap-115 0x0p+0 wrong 0 of 1048576
+modes erff towardzero aor max 1.5812 at 0x1.3728a4p+0 0x0p+0 wrong 194708 of 1048576
+modes powf upward arguments 1048576 differ 364612
+modes powf upward rt max 1.0000 at 0x1.7eab8ap-41 0x1.026722p+5 wrong 0 of 1048576
+modes powf upward aor max 2.0000 at 0x1.8p-148 0x1.40a1bap-60 wrong 364612 of 1048576
+modes powf downward arguments 1048576 differ 8179
+modes powf downward rt max 1.0000 at 0x1.62001ep+2 -0x1.2bdc3ep-121 wrong 0 of 1048576
+modes powf downward aor max 1.1202 at 0x1.b5d078p-1 0x1.4aab8p-17 wrong 8179 of 1048576
+modes powf towardzero arguments 1048576 differ 8300
+modes powf towardzero rt max 1.0000 at 0x1.47330ep-30 0x1.d8649cp-125 wrong 0 of 1048576
+modes powf towardzero aor max 1.1202 at 0x1.1237acp-34 0x1.82f62p-26 wrong 8300 of 1048576
+modes exp upward arguments 1048576 differ 9755
+modes exp upward rt max 1.0000 at 0x1.cf533b5efa6dp-842 0x0p+0 wrong 1 of 1048576
+modes exp upward aor max 1.0117 at -0x1.352823fd8715ap+8 0x0p+0 wrong 9754 of 1048576
+modes exp downward arguments 1048576 differ 15374
+modes exp downward rt max 1.0000 at -0x1.f3e2ab1c4abc6p-178 0x0p+0 wrong 2 of 1048576
+modes exp downward aor max 1.2399 at -0x1.07ff0a558b022p-39 0x0p+0 wrong 15372 of 1048576
+modes exp towardzero arguments 1048576 differ 15447
+modes exp towardzero rt max 1.0000 at -0x1.70ec4ba42b554p+8 0x0p+0 wrong 2 of 1048576
+modes exp towardzero aor max 1.2402 at -0x1.547184ff3be8p-38 0x0p+0 wrong 15447 of 1048576
+modes exp2 upward arguments 1048576 differ 9498
+modes exp2 upward rt max 1.0103 at 0x1.7d730c5f35182p+9 0x0p+0 wrong 487 of 1048576
+modes exp2 upward aor max 1.0123 at -0x1.c90e6d561630ap+9 0x0p+0 wrong 9433 of 1048576
+modes exp2 downward arguments 1048576 differ 17167
+modes exp2 downward rt max 1.0109 at 0x1.91e8f713c6dbp+9 0x0p+0 wrong 445 of 1048576
+modes exp2 downward aor max 1.2709 at -0x1.e928c0e3cf0fcp-18 0x0p+0 wrong 17452 of 1048576
+modes exp2 towardzero arguments 1048576 differ 17431
+modes exp2 towardzero rt max 1.0086 at 0x1.f568fb6704ddp+9 0x0p+0 wrong 501 of 1048576
+modes exp2 towardzero aor max 1.2749 at -0x1.ff07309081403p-37 0x0p+0 wrong 17336 of 1048576
+modes exp10 upward arguments 1048576 differ 18584
+modes exp10 upward rt max 1.0115 at -0x1.1111c7bc2ca54p+8 0x0p+0 wrong 504 of 1048576
+modes exp10 upward aor max 1.0091 at -0x1.34cc1f10310fp+4 0x0p+0 wrong 18232 of 1048576
+modes exp10 downward arguments 1048576 differ 12003
+modes exp10 downward rt max 1.0090 at 0x1.0afba112ea49cp+8 0x0p+0 wrong 471 of 1048576
+modes exp10 downward aor max 1.1850 at -0x1.6c2231894443ep-27 0x0p+0 wrong 12308 of 1048576
+modes exp10 towardzero arguments 1048576 differ 12517
+modes exp10 towardzero rt max 1.0084 at 0x1.f6ad98b2e603cp+7 0x0p+0 wrong 458 of 1048576
+modes exp10 towardzero aor max 1.1838 at -0x1.92b4be0a22178p-47 0x0p+0 wrong 12433 of 1048576
+modes log upward arguments 1048576 differ 8
+modes log upward rt max 1.0000 at 0x1.a8f4bb8fdfe1p-708 0x0p+0 wrong 0 of 1048576
+modes log upward aor max 1.0043 at 0x1.2e1acf6875c84p+0 0x0p+0 wrong 8 of 1048576
+modes log downward arguments 1048576 differ 15
+modes log downward rt max 1.0000 at 0x1.3bda459d1d901p+996 0x0p+0 wrong 0 of 1048576
+modes log downward aor max 1.0059 at 0x1.bb516b64d2622p-1 0x0p+0 wrong 15 of 1048576
+modes log towardzero arguments 1048576 differ 21
+modes log towardzero rt max 1.0000 at 0x1.4a487b020cd89p+440 0x0p+0 wrong 0 of 1048576
+modes log towardzero aor max 1.0057 at 0x1.ba5ca2f577f6cp-1 0x0p+0 wrong 21 of 1048576
+modes log2 upward arguments 1048576 differ 542
+modes log2 upward rt max 1.0000 at 0x1.029d045f2fdbep-634 0x0p+0 wrong 0 of 1048576
+modes log2 upward aor max 1.0256 at 0x1.cc27ba64c6a86p-1 0x0p+0 wrong 542 of 1048576
+modes log2 downward arguments 1048576 differ 525
+modes log2 downward rt max 1.0000 at 0x1.710f7ae4ee5bp-168 0x0p+0 wrong 0 of 1048576
+modes log2 downward aor max 1.1185 at 0x1.143fec0f79b08p+0 0x0p+0 wrong 525 of 1048576
+modes log2 towardzero arguments 1048576 differ 494
+modes log2 towardzero rt max 1.0000 at 0x1.ef454f6b1387dp+995 0x0p+0 wrong 0 of 1048576
+modes log2 towardzero aor max 1.0204 at 0x1.efda9d3d3068ep-1 0x0p+0 wrong 494 of 1048576
+modes erf upward arguments 1048576 differ 111115
+modes erf upward rt max 1.0101 at 0x1.7276913c21898p-29 0x0p+0 wrong 64 of 1048576
+modes erf upward aor max 1.5230 at 0x1.b3dfe0c0cd5fp-1 0x0p+0 wrong 111137 of 1048576
+modes erf downward arguments 1048576 differ 115978
+modes erf downward rt max 1.0158 at -0x1.89847625e6d8p-29 0x0p+0 wrong 58 of 1048576
+modes erf downward aor max 1.5618 at 0x1.b1491c095c9dp-1 0x0p+0 wrong 115996 of 1048576
+modes erf towardzero arguments 1048576 differ 115715
+modes erf towardzero rt max 1.0064 at 0x1.dac9a9dc4a6bp-2 0x0p+0 wrong 67 of 1048576
+modes erf towardzero aor max 1.4701 at -0x1.b88e0c983c907p-10 0x0p+0 wrong 115718 of 1048576
+modes pow upward arguments 1048576 differ 5752
+modes pow upward rt max 1.0103 at 0x1.f08ba4b9b26f1p+3 0x1.a21419155280ap+7 wrong 171 of 1048576
+modes pow upward aor max 1.0142 at 0x1.c03ecfca4c41p-1 0x1.f4c8d975777b4p+6 wrong 5751 of 1048576
+modes pow downward arguments 1048576 differ 9615
+modes pow downward rt max 1.0088 at 0x1.824842e89dbdap+3 0x1.db3a26784e284p+7 wrong 195 of 1048576
+modes pow downward aor max 1.2458 at 0x1.902419dbbe4dep+2 -0x1.18d799f9e8d7ap-30 wrong 9704 of 1048576
+modes pow towardzero arguments 1048576 differ 9833
+modes pow towardzero rt max 1.0096 at 0x1.b972ac62b411bp+3 0x1.e884aa3d89d22p+7 wrong 205 of 1048576
+modes pow towardzero aor max 1.2475 at 0x1.d9dd79de39114p-220 0x1.f9a918d77d147p-48 wrong 9788 of 1048576
+special expf 0x0p+0 0x0p+0 rt 0x1p+0 - aor 0x1p+0 -
+special expf -0x0p+0 0x0p+0 rt 0x1p+0 - aor 0x1p+0 -
+special expf inf 0x0p+0 rt inf - aor inf -
+special expf -inf 0x0p+0 rt 0x0p+0 - aor 0x0p+0 -
+special expf nan 0x0p+0 rt nan - aor nan -
+special expf 0x1.64p+6 0x0p+0 rt inf OX aor inf OX
+special expf -0x1.ap+6 0x0p+0 rt 0x0p+0 UX aor 0x0p+0 UX
+special expf -0x1.9fe368p+6 0x0p+0 rt 0x1p-149 UX aor 0x1p-149 UX
+special logf 0x0p+0 0x0p+0 rt -inf Z aor -inf Z
+special logf -0x0p+0 0x0p+0 rt -inf Z aor -inf Z
+special logf -0x1p+0 0x0p+0 rt -nan I aor -nan I
+special logf 0x1p+0 0x0p+0 rt 0x0p+0 - aor 0x0p+0 -
+special logf inf 0x0p+0 rt inf - aor inf -
+special logf -inf 0x0p+0 rt -nan I aor -nan I
+special logf nan 0x0p+0 rt nan - aor nan -
+special logf 0x1p-149 0x0p+0 rt -0x1.9d1dap+6 X aor -0x1.9d1dap+6 X
+special sinf 0x0p+0 0x0p+0 rt 0x0p+0 - aor 0x0p+0 -
+special sinf -0x0p+0 0x0p+0 rt -0x0p+0 - aor -0x0p+0 -
+special sinf inf 0x0p+0 rt -nan I aor -nan I
+special sinf nan 0x0p+0 rt nan - aor nan -
+special sinf 0x1p-149 0x0p+0 rt 0x1p-149 UX aor 0x1p-149 UX
+special sinf 0x1p+127 0x0p+0 rt 0x1.3f2c62p-1 X aor 0x1.3f2c62p-1 X
+special cosf inf 0x0p+0 rt -nan I aor -nan I
+special cosf 0x0p+0 0x0p+0 rt 0x1p+0 - aor 0x1p+0 -
+special erff 0x0p+0 0x0p+0 rt 0x0p+0 - aor 0x0p+0 -
+special erff -0x0p+0 0x0p+0 rt -0x0p+0 - aor -0x0p+0 -
+special erff inf 0x0p+0 rt 0x1p+0 - aor 0x1p+0 -
+special erff -inf 0x0p+0 rt -0x1p+0 - aor -0x1p+0 -
+special erff 0x1p-149 0x0p+0 rt 0x1p-149 UX aor 0x1p-149 UX
+special powf 0x0p+0 -0x1p+0 rt inf Z aor inf Z
+special powf -0x0p+0 -0x1p+0 rt -inf Z aor -inf Z
+special powf -0x1p+0 0x1p-1 rt -nan I aor -nan I
+special powf -0x1p+0 inf rt 0x1p+0 - aor 0x1p+0 -
+special powf 0x1p+0 nan rt 0x1p+0 - aor 0x1p+0 -
+special powf nan 0x0p+0 rt 0x1p+0 - aor 0x1p+0 -
+special powf 0x1p+1 0x1p+7 rt inf OX aor inf OX
+special powf 0x1p+1 -0x1.2cp+7 rt 0x0p+0 UX aor 0x0p+0 UX
+special powf -0x1p+1 0x1.8p+1 rt -0x1p+3 - aor -0x1p+3 -
+special powf inf -0x1p-1 rt 0x0p+0 - aor 0x0p+0 -
+special exp 0x0p+0 0x0p+0 rt 0x1p+0 - aor 0x1p+0 -
+special exp inf 0x0p+0 rt inf - aor inf -
+special exp -inf 0x0p+0 rt 0x0p+0 - aor 0x0p+0 -
+special exp nan 0x0p+0 rt nan - aor nan -
+special exp 0x1.63p+9 0x0p+0 rt inf OX aor inf OX
+special exp -0x1.75p+9 0x0p+0 rt 0x0p+0 UX aor 0x0p+0 UX
+special exp -0x1.6232bdd7abcd2p+9 0x0p+0 rt 0x1.000000000007cp-1022 X aor 0x1.000000000007cp-1022 X
+special log 0x0p+0 0x0p+0 rt -inf Z aor -inf Z
+special log -0x1p+0 0x0p+0 rt -nan I aor -nan I
+special log 0x1p+0 0x0p+0 rt 0x0p+0 - aor 0x0p+0 -
+special log inf 0x0p+0 rt inf - aor inf -
+special log 0x0.0000000000001p-1022 0x0p+0 rt -0x1.74385446d71c3p+9 X aor -0x1.74385446d71c3p+9 X
+special erf 0x0p+0 0x0p+0 rt 0x0p+0 - aor 0x0p+0 -
+special erf -0x0p+0 0x0p+0 rt -0x0p+0 - aor -0x0p+0 -
+special erf inf 0x0p+0 rt 0x1p+0 - aor 0x1p+0 -
+special erf 0x0.0000000000001p-1022 0x0p+0 rt 0x0.0000000000001p-1022 UX aor 0x0.0000000000001p-1022 UX
+special pow 0x0p+0 -0x1p+0 rt inf Z aor inf Z
+special pow -0x1p+0 0x1p-1 rt -nan I aor -nan I
+special pow 0x1p+1 0x1p+10 rt inf OX aor inf OX
+special pow 0x1p+1 -0x1.0ccp+10 rt 0x0p+0 UX aor 0x0p+0 UX
+special pow -0x1p+1 0x1.8p+1 rt -0x1p+3 - aor -0x1p+3 X
+special pow 0x1p+0 nan rt 0x1p+0 - aor 0x1p+0 -
+special pow nan 0x0p+0 rt 0x1p+0 - aor 0x1p+0 -
