@@ -129,11 +129,15 @@ Out of range, the conversions to integers saturate, and NaN gives 0. That is wha
 - **The fix:** the layer defines those four helpers itself, following C23 Annex G.5.2:
   - multiplication by the textbook formula, with the recovery of infinite results when both parts come out NaN;
   - double division with the divisor scaled by a power of two (`logb`/`scalbn`), and the infinity and zero cases;
-  - float division in double, where the products of floats are exact and nothing overflows;
+  - the double division skips the scaling when every part is zero or within 2^-128 to 2^128. There every product, numerator, denominator and quotient stays normal, scaled or not, so the result is the same bits without four library calls;
+  - float division in double, where the products of floats are exact and nothing overflows, through one reciprocal and two products;
   - `powi` by squaring.
 
   `__mulsc3` stays libgcc's: it computes in the FPU's single precision and calls no double helper.
 - **Checked:** programs using double and float complex multiplication and division, `cpow`, `__builtin_powi` and a 64-bit conversion link without any libgcc floating-point member on both cores. `test/unit/complex_ops` checks the helpers' Annex G cases, the scaling and their agreement with the textbook formula on every board, against libgcc's versions elsewhere.
+- **Speed** (armv7e-m, instructions per call; `docs/perf/armv7e-m.md`): `__muldc3` 371, `__divdc3` 1059, `__divsc3` 882 and `__powidf2` 300.
+  - Against libgcc's own helpers on this layer's arithmetic, that is +0.5 %, −8 %, −4 % and equal.
+  - Against all-libgcc: 402, 2460, 1812 and 321.
 - **What stays libgcc's:** helpers this layer does not define, such as libgcc's fixed-point conversions (`_Fract` types, a GNU extension) or the GNU-named `__adddf3` family. A program that reaches one now either links libgcc's object or fails with a duplicate symbol, which shows where the layer needs to grow.
 
 **The C models.** The general C addition and multiplication written first are kept as the models of the assembly, `test/unit/softdp/reference_{add,multiply}.c`:
