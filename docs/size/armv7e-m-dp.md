@@ -558,3 +558,13 @@ Decision D90, `docs/research/qsort-speed.md`. The release build is unchanged. In
 about 625 bytes (the introsort keeps the heapsort as its fallback), and `qsort`'s stack depth by about 440 bytes, most
 of it the stack of waiting ranges (one per bit of `size_t`). No reference program links `qsort`; every image is
 unchanged and both budgets hold.
+
+## D98 — Correctly rounded float functions on the double path (Q19)
+
+The 18 float functions with hard cases carry a table of them (8 bytes per
+case) and the inline halfway test, and share the out-of-line lookup
+`__libc_float_case` (88 bytes). `libc.a` grows by 1136 bytes of text and
+392 of rodata. `math-float` and `math-mix` grow by 352 and 360 bytes (it
+links `cosf`, `logf` and `sinf`), which leaves `math-float` 64 bytes
+inside the size budget. No other image changes; the soft-float cores do not
+use these wrappers.
