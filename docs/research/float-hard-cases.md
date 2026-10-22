@@ -122,3 +122,26 @@ question (Q26).
 The hard cases found by the search, with their correctly rounded results:
 the `cases` tables in the changed function files and in
 `test/unit/float_hard/float_hard.c`.
+
+## Result
+
+- **The search:** found 49 hard cases in 18 functions (`acosf` ×2,
+  `acoshf` ×2, `asinhf` ×6, `atanf` ×2, `atanpif` ×2, `cosf` ×4, `erfcf`,
+  `exp10m1f`, `exp2f` ×2, `lgammaf` ×2, `log10f`, `log10p1f` ×2, `log1pf` ×9,
+  `log2p1f` ×2, `logf` ×5, `sinf` ×2, `sinhf` ×2, `tgammaf` ×2).
+  - In every one, the double result is exactly a float halfway point.
+  - P4.05's comparison with AOR had shown only 8 of them: AOR misrounds some
+    of the same arguments, which hid them in the set where the libraries
+    agree.
+- **The fix:**
+  - **Search:** a rerun against the fixed library (36 functions, every
+    argument) finds 0 misrounded arguments.
+  - **Unit test:** `test/unit/float_hard` passes 196 of 196 (49 cases × 4
+    rounding directions) on x86_64 and armv7e-m-dp.
+  - **Mutants:** it fails 49 when the table is ignored (round to nearest
+    only, as expected) and 147 when the direction is reversed.
+- **Cost:**
+  - **Speed:** +5 to +9 instructions per call in the 18 functions (+0.6–3.1 %
+    on x86_64, +1.1–5.9 % on armv7e-m-dp; `docs/perf/<arch>.md`).
+  - **Size:** +352 bytes in armv7e-m-dp `math-float`, inside its budget
+    (`docs/size/armv7e-m-dp.md`).
