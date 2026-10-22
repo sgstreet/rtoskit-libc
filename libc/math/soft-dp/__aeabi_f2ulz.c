@@ -19,9 +19,9 @@
 /*
  * (unsigned long long)a, truncated toward zero (C23 6.3.1.4p1; PLAN D99).
  * Out of range the behaviour is undefined; the result saturates, a negative
- * value and NaN give 0. Weak, as __aeabi_dmul.
+ * value and NaN give 0.
  */
-[[gnu::weak]] __LIBC_AEABI unsigned long long __aeabi_f2ulz(float a)
+__LIBC_AEABI unsigned long long __aeabi_f2ulz(float a)
 {
 	uint32_t bits = __libc_softdouble_float_bits(a);
 

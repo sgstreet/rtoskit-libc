@@ -19,10 +19,9 @@
 /*
  * (long long)a, truncated toward zero (C23 6.3.1.4p1; PLAN D99). Out of
  * range the behaviour is undefined; the result saturates and NaN gives 0.
- * libgcc's version is 1.9 KB with the double arithmetic it calls. Weak, as
- * __aeabi_dmul.
+ * libgcc's version is 1.9 KB with the double arithmetic it calls.
  */
-[[gnu::weak]] __LIBC_AEABI long long __aeabi_d2lz(double a)
+__LIBC_AEABI long long __aeabi_d2lz(double a)
 {
 	uint64_t bits = __libc_softdouble_bits(a);
 	uint64_t magnitude;

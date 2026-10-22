@@ -11,11 +11,11 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-/* (double)a, rounded to nearest (C23 6.3.1.4p2, RTABI 4.1.2; PLAN D99). Weak, as __aeabi_dadd. */
+/* (double)a, rounded to nearest (C23 6.3.1.4p2, RTABI 4.1.2; PLAN D99). */
 	.syntax unified
 	.thumb
 	.section .text.__aeabi_ul2d,"ax",%progbits
-	.weak __aeabi_ul2d
+	.global __aeabi_ul2d
 	.type __aeabi_ul2d, %function
 __aeabi_ul2d:
 	movs r2, #0

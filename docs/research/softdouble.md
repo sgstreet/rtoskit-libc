@@ -120,10 +120,21 @@ So the operations that dominate the libm are Thumb-2 assembly:
 
 Out of range, the conversions to integers saturate, and NaN gives 0. That is what the FPU's own `VCVT` does; C leaves the behaviour undefined.
 
-**Weak definitions.** Every helper is weak:
+**Strong definitions, and libgcc's callers replaced** (D100, superseding D99's weak definitions). Every helper is a strong global symbol, so a clash with libgcc is a link error, not a silent substitution.
 
-- **Why it is needed:** libgcc's own complex helpers (`__muldc3`, `__divdc3`, used by `cpow`) and its fixed-point conversions call the double helpers. When one of those is pulled in, GNU ld resolves its references inside libgcc while it scans libgcc. It can then pull a libgcc member such as `_arm_addsubdf3.o` that defines a helper we also define.
-- **The effect:** a strong definition there replaces ours without a duplicate-symbol error. The reference programs link no libgcc floating-point member at all.
+- **The problem:** libgcc's own complex and `powi` helpers (`__muldc3`, `__divdc3`, `__divsc3`, `__powidf2`) call the double helpers. When a program pulls one of them in, GNU ld resolves its references while it scans libgcc, from libgcc's own double objects (`_arm_addsubdf3.o`, `_arm_cmpdf2.o`, `_arm_muldivdf3.o` and the like).
+  - Where none of their symbols was already linked from `libc.a`, libgcc's arithmetic, misrounding addition included, came in silently beside ours.
+  - Where one was, the link failed: a complex division duplicated `__aeabi_dcmpgt`.
+  - The first version of this layer made the helpers weak, which turned that error into a silent substitution.
+- **The fix:** the layer defines those four helpers itself, following C23 Annex G.5.2:
+  - multiplication by the textbook formula, with the recovery of infinite results when both parts come out NaN;
+  - double division with the divisor scaled by a power of two (`logb`/`scalbn`), and the infinity and zero cases;
+  - float division in double, where the products of floats are exact and nothing overflows;
+  - `powi` by squaring.
+
+  `__mulsc3` stays libgcc's: it computes in the FPU's single precision and calls no double helper.
+- **Checked:** programs using double and float complex multiplication and division, `cpow`, `__builtin_powi` and a 64-bit conversion link without any libgcc floating-point member on both cores. `test/unit/complex_ops` checks the helpers' Annex G cases, the scaling and their agreement with the textbook formula on every board, against libgcc's versions elsewhere.
+- **What stays libgcc's:** helpers this layer does not define, such as libgcc's fixed-point conversions (`_Fract` types, a GNU extension) or the GNU-named `__adddf3` family. A program that reaches one now either links libgcc's object or fails with a duplicate symbol, which shows where the layer needs to grow.
 
 **The C models.** The general C addition and multiplication written first are kept as the models of the assembly, `test/unit/softdp/reference_{add,multiply}.c`:
 

@@ -16,12 +16,12 @@
  * result r1:r0. A normal float's exponent field moves 20 bits down with the
  * significand above it, and the bias grows by 1023 - 127; the low 3 bits of
  * the significand go to the low word. A subnormal float is normalised
- * first, and a NaN keeps its payload, quietened. Weak, as __aeabi_dadd.
+ * first, and a NaN keeps its payload, quietened.
  */
 	.syntax unified
 	.thumb
 	.section .text.__aeabi_f2d,"ax",%progbits
-	.weak __aeabi_f2d
+	.global __aeabi_f2d
 	.type __aeabi_f2d, %function
 __aeabi_f2d:
 	/*

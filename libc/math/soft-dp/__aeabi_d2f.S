@@ -19,12 +19,12 @@
  * rest sticky, and a tie clears the last bit, for the even neighbour. A
  * carry moves into the exponent, and from the largest finite float to
  * infinity. Anything else goes to __libc_softdouble_d2f, the general C
- * version. Weak, as __aeabi_dadd.
+ * version.
  */
 	.syntax unified
 	.thumb
 	.section .text.__aeabi_d2f,"ax",%progbits
-	.weak __aeabi_d2f
+	.global __aeabi_d2f
 	.type __aeabi_d2f, %function
 __aeabi_d2f:
 	ubfx r2, r1, #20, #11
