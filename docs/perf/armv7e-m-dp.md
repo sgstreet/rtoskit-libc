@@ -793,3 +793,24 @@ The floating-point operations that become run-time library calls without an FPU 
 | `i2f` | 7.8 |
 | `l2d` | 48.6 |
 | `l2f` | 32.9 |
+
+## D98 — Correctly rounded float functions on the double path (Q19)
+
+The 18 float functions with hard cases (`docs/research/float-hard-cases.md`) test their double result for a float halfway point before rounding it, and look the argument up only when it is on one. Correctness, not speed: every call pays the test. Instructions per call, throughput (latency moves the same):
+
+| Function | release before | release after | speed before | speed after |
+|---|---:|---:|---:|---:|
+| `acosf` | 232.1 | 241.1 (+3.9 %) | 232.1 | 241.1 (+3.9 %) |
+| `acoshf` | 250.2 | 259.2 (+3.6 %) | 250.2 | 259.2 (+3.6 %) |
+| `asinhf` | 302.3 | 308.3 (+2.0 %) | 302.3 | 308.3 (+2.0 %) |
+| `atanf` | 210.7 | 216.7 (+2.8 %) | 210.7 | 216.7 (+2.8 %) |
+| `cosf` | 170.9 | 179.9 (+5.3 %) | 170.9 | 179.9 (+5.3 %) |
+| `erfcf` | 786.9 | 795.9 (+1.1 %) | 786.9 | 795.9 (+1.1 %) |
+| `exp2f` | 186.3 | 195.3 (+4.8 %) | 186.3 | 195.3 (+4.8 %) |
+| `lgammaf` | 502.9 | 511.9 (+1.8 %) | 502.9 | 511.9 (+1.8 %) |
+| `log10f` | 164.3 | 173.3 (+5.5 %) | 164.3 | 173.3 (+5.5 %) |
+| `log1pf` | 203.1 | 209.1 (+3.0 %) | 203.1 | 209.1 (+3.0 %) |
+| `logf` | 153.3 | 162.3 (+5.9 %) | 153.3 | 162.3 (+5.9 %) |
+| `sinf` | 180.9 | 186.9 (+3.3 %) | 180.9 | 186.9 (+3.3 %) |
+| `sinhf` | 217.6 | 222.6 (+2.3 %) | 217.6 | 222.6 (+2.3 %) |
+| `tgammaf` | 722.2 | 731.2 (+1.2 %) | 722.2 | 731.2 (+1.2 %) |
