@@ -18,8 +18,14 @@
 /* C23 7.12.4.3: evaluated in double, then rounded once more; tiny arguments round by hand (docs/research/libm-trig.md) */
 float atanf(float x)
 {
+	/* The arguments whose double result is a float halfway point while the exact value is not (PLAN D98) */
+	static const struct __libc_float_case cases[] = {
+		{ 0x3d8d6b23, 0x3d8d31c3 }, /* 0x1.1ad646p-4 -> 0x1.1a6386p-4 */
+		{ 0xbd8d6b23, 0xbd8d31c3 }, /* -0x1.1ad646p-4 -> -0x1.1a6386p-4 */
+	};
+
 	if (isless(fabsf(x), 0x1p-30f))
 		return __libc_math_tinyf(x, -x);
 
-	return (float)atan(x);
+	return __libc_float_round(atan(x), x, cases, sizeof(cases) / sizeof(cases[0]));
 }

@@ -13,8 +13,15 @@
 
 #include <math.h>
 
+#include "internal/math.h"
+
 /* C23 7.12.8.2: evaluated in double, then rounded once more (docs/research/libm-special.md) */
 float erfcf(float x)
 {
-	return (float)erfc(x);
+	/* The arguments whose double result is a float halfway point while the exact value is not (PLAN D98) */
+	static const struct __libc_float_case cases[] = {
+		{ 0xb76c9f62, 0x3f800085 }, /* -0x1.d93ec4p-17 -> 0x1.00010ap+0 */
+	};
+
+	return __libc_float_round(erfc(x), x, cases, sizeof(cases) / sizeof(cases[0]));
 }
