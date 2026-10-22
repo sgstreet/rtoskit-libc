@@ -32,8 +32,9 @@ include ${PROJECT_ROOT}/tools/makefiles/project.mk
 # Exercise the library, not the compiler's built-in versions of the functions
 CFLAGS += -fno-builtin
 
-# The helpers are internal to the library
+# The helpers are internal to the library; their base calling convention attribute is Arm's only
 CPPFLAGS += -I${PROJECT_ROOT}/libc
+CFLAGS += -Wno-attributes
 
 
 ${CURDIR}/nofp/%.o: ${PROJECT_ROOT}/libc/math/nofp/%.c ${EXTRA_DEPS}

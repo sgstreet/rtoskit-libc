@@ -1431,6 +1431,15 @@
     "text": 0,
     "unwind": 0
    },
+   "__libc_float_case.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 106,
+    "unwind": 0
+   },
    "__libc_float_pack.o": {
     "bss": 0,
     "data": 0,
@@ -7918,7 +7927,7 @@
    "rodata": 9934,
    "tbss": 358,
    "tdata": 8,
-   "text": 157678,
+   "text": 157784,
    "unwind": 0
   }
  },
@@ -8935,6 +8944,7 @@
    "__libc_file_write.o:__libc_file_write": 32,
    "__libc_file_write.o:libc/stdio/__libc_file_write.c:flush_at_exit": 8,
    "__libc_file_write.o:libc/stdio/__libc_file_write.c:write_through": 24,
+   "__libc_float_case.o:__libc_float_case": 24,
    "__libc_float_pack.o:__libc_float_pack": 64,
    "__libc_float_pack.o:libc/stdlib/__libc_float_pack.c:overflow": 32,
    "__libc_float_to_i64.o:__libc_float_to_i64": 8,

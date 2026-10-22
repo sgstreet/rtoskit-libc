@@ -647,3 +647,19 @@ Decision D90, `docs/research/qsort-speed.md`. The release build is unchanged. In
 about 625 bytes (the introsort keeps the heapsort as its fallback), and `qsort`'s stack depth by about 440 bytes, most
 of it the stack of waiting ranges (one per bit of `size_t`). No reference program links `qsort`; every image is
 unchanged and both budgets hold.
+
+## D99 — our own double-precision helpers (Q24)
+
+Decision D99, `docs/research/softdouble.md`. The `soft-dp` layer replaces every libgcc double helper, so no libgcc floating-point member is linked. Release build, code (text + rodata):
+
+| Program | code |
+|---|---|
+| hello-printf-float | 9138 → 8478 (−660) |
+| math-mix | 26772 → 26616 (−156) |
+
+- **Other images:** unchanged; their programs use no double arithmetic.
+- **`libc.a`:** grows by the layer's members, about 3.4 KB of text, which a program links only for the operations it uses.
+  - The largest: `__aeabi_dmul` (Thumb-2 assembly, 554 bytes, complete with subnormals and underflow), `__aeabi_dadd` (532), `__aeabi_ddiv` (480, C), `__libc_softdouble_d2f` (256, C, `d2f` outside float's normal range) and `__libc_softdouble_pack` (192, the division's rounding).
+  - The 64-bit conversions are 6 to 172 bytes each, where libgcc's were 1.6–1.9 KB with the double arithmetic they called.
+- **`__libc_float_case.o`:** also new in this baseline. It came with D98 and no armv7e-m-class image links it.
+- **Stack depths:** the C helpers use 8–40 bytes of stack. The assembly pushes 24 or 28 bytes, which is not in the call-graph files.

@@ -16,16 +16,40 @@
 
 /*
  * The soft-float helpers of the Arm run-time ABI (RTABI 4.1.2), which the
- * compiler calls for floating-point arithmetic on cores without an FPU. The
+ * compiler calls for floating-point arithmetic its FPU lacks. The
  * compiler's library provides them; the nofp math layer replaces the two
  * subtractions (PLAN D55) and the single-precision multiplication and
- * division (D85).
+ * division (D85), and the soft-dp layer the double-precision set of the
+ * single-precision FPUs (D99). They keep the base procedure call standard
+ * (RTABI 4.1.1) even in a hard-float build.
  */
-double __aeabi_dadd(double a, double b);
-double __aeabi_dsub(double a, double b);
-float __aeabi_fadd(float a, float b);
-float __aeabi_fsub(float a, float b);
-float __aeabi_fmul(float a, float b);
-float __aeabi_fdiv(float a, float b);
+#define __LIBC_AEABI [[gnu::pcs("aapcs")]]
+
+__LIBC_AEABI double __aeabi_dadd(double a, double b);
+__LIBC_AEABI double __aeabi_dsub(double a, double b);
+__LIBC_AEABI double __aeabi_dmul(double a, double b);
+__LIBC_AEABI double __aeabi_ddiv(double a, double b);
+__LIBC_AEABI int __aeabi_dcmpeq(double a, double b);
+__LIBC_AEABI int __aeabi_dcmplt(double a, double b);
+__LIBC_AEABI int __aeabi_dcmple(double a, double b);
+__LIBC_AEABI int __aeabi_dcmpge(double a, double b);
+__LIBC_AEABI int __aeabi_dcmpgt(double a, double b);
+__LIBC_AEABI int __aeabi_dcmpun(double a, double b);
+__LIBC_AEABI float __aeabi_d2f(double a);
+__LIBC_AEABI double __aeabi_f2d(float a);
+__LIBC_AEABI double __aeabi_i2d(int a);
+__LIBC_AEABI double __aeabi_ui2d(unsigned int a);
+__LIBC_AEABI double __aeabi_l2d(long long a);
+__LIBC_AEABI double __aeabi_ul2d(unsigned long long a);
+__LIBC_AEABI int __aeabi_d2iz(double a);
+__LIBC_AEABI unsigned int __aeabi_d2uiz(double a);
+__LIBC_AEABI long long __aeabi_d2lz(double a);
+__LIBC_AEABI unsigned long long __aeabi_d2ulz(double a);
+__LIBC_AEABI long long __aeabi_f2lz(float a);
+__LIBC_AEABI unsigned long long __aeabi_f2ulz(float a);
+__LIBC_AEABI float __aeabi_fadd(float a, float b);
+__LIBC_AEABI float __aeabi_fsub(float a, float b);
+__LIBC_AEABI float __aeabi_fmul(float a, float b);
+__LIBC_AEABI float __aeabi_fdiv(float a, float b);
 
 #endif /* _INTERNAL_AEABI_H */

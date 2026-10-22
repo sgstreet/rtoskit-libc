@@ -19,8 +19,9 @@ export ARCH_FAMILY := arm
 export LIBC_FPU := fpv4-sp
 # <fenv.h> implementation: x86_64, fpv5-dp (every floating type in the FPU), or soft (D44)
 export LIBC_FENV := soft
-# libm layers: libc/math/<layer> replaces the generic files of the same name and may add helpers (D46, D55)
-export LIBC_MATH_LAYERS := sp sp-nearest fpv4-sp
+# libm layers: libc/math/<layer> replaces the generic files of the same name and may add helpers (D46, D55);
+# soft-dp is the double-precision run-time ABI helpers in integers (D99)
+export LIBC_MATH_LAYERS := sp sp-nearest fpv4-sp soft-dp
 # Hand-written string kernels (libc/string/<kernels>; the first directory with a function wins)
 # per flavour: the speed build type sets LIBC_FLAVOUR (PLAN D69, D70, D73)
 LIBC_FLAVOUR ?= size
