@@ -793,3 +793,79 @@ The floating-point operations that become run-time library calls without an FPU 
 | `i2f` | 7.8 |
 | `l2d` | 48.6 |
 | `l2f` | 32.9 |
+
+## D99 — our own double-precision helpers (Q24)
+
+The `soft-dp` layer (`docs/research/softdouble.md`) replaces libgcc's double helpers. Instructions per operation, before → after. Release and speed flavour are the same, except `strto` and `stdio`. Every case not listed is unchanged.
+
+### softfloat
+
+| Case | before | after |
+|---|---:|---:|
+| `d2f` | 19.9 | 19.4 (-2.5 %) |
+| `d2i` | 21.9 | 19.9 (-9.1 %) |
+| `d2l` | 177.9 | 44.9 (-74.7 %) |
+| `dadd` | 63.9 | 55.2 (-13.7 %) |
+| `dcmp` | 48.9 | 43.9 (-10.2 %) |
+| `ddiv` | 583.2 | 173.8 (-70.2 %) |
+| `dmul` | 57.6 | 54.0 (-6.3 %) |
+| `dsub` | 67.2 | 58.1 (-13.7 %) |
+| `f2l` | 140.9 | 27.4 (-80.5 %) |
+| `i2d` | 40.9 | 21.6 (-47.3 %) |
+| `l2d` | 48.6 | 30.1 (-38.1 %) |
+
+### math (double functions, throughput; latency moves the same, but for `fmod`)
+
+| Function | before | after |
+|---|---:|---:|
+| `acos/throughput` | 16391 | 13738 (-16.2 %) |
+| `acosh/throughput` | 15690 | 13495 (-14.0 %) |
+| `asin/throughput` | 15803 | 13139 (-16.9 %) |
+| `asinh/throughput` | 18322 | 15332 (-16.3 %) |
+| `atan/throughput` | 9740 | 7800 (-19.9 %) |
+| `atan2/throughput` | 10501 | 8424 (-19.8 %) |
+| `atanh/throughput` | 11882 | 9342 (-21.4 %) |
+| `cbrt/throughput` | 6937 | 3670 (-47.1 %) |
+| `cos/throughput` | 6825 | 6493 (-4.9 %) |
+| `cosh/throughput` | 7119 | 6028 (-15.3 %) |
+| `erf/throughput` | 16960 | 12246 (-27.8 %) |
+| `erfc/throughput` | 51736 | 38068 (-26.4 %) |
+| `exp/throughput` | 4185 | 3882 (-7.3 %) |
+| `exp2/throughput` | 5775 | 5324 (-7.8 %) |
+| `expm1/throughput` | 4481 | 4143 (-7.5 %) |
+| `floor/throughput` | 119.2 | 96.6 (-19.0 %) |
+| `fmod/latency` | 265.5 | 277.0 (+4.3 %) |
+| `hypot/throughput` | 6520 | 5955 (-8.7 %) |
+| `lgamma/throughput` | 21092 | 17492 (-17.1 %) |
+| `log/throughput` | 7530 | 6252 (-17.0 %) |
+| `log10/throughput` | 9093 | 7703 (-15.3 %) |
+| `log1p/throughput` | 8079 | 6798 (-15.9 %) |
+| `log2/throughput` | 9231 | 7842 (-15.0 %) |
+| `pow/throughput` | 13390 | 11737 (-12.3 %) |
+| `round/throughput` | 117.2 | 94.6 (-19.3 %) |
+| `sin/throughput` | 6876 | 6500 (-5.5 %) |
+| `sinh/throughput` | 7566 | 6440 (-14.9 %) |
+| `sqrt/throughput` | 2009 | 2012 (+0.2 %) |
+| `tan/throughput` | 12927 | 11252 (-13.0 %) |
+| `tanh/throughput` | 8538 | 7258 (-15.0 %) |
+| `tgamma/throughput` | 28717 | 23658 (-17.6 %) |
+
+`fmod/latency` grows 4.3 %: the latency loop's `x + y * 0.0` dependency goes through the zero paths of `__aeabi_dmul` and `__aeabi_dadd`, which cost about one ordinary addition here and less in libgcc. `fmod` itself, which is integer code, is unchanged (accepted in D99).
+
+### strto and stdio (changed cases)
+
+| Case | release before | release after | speed before | speed after |
+|---|---:|---:|---:|---:|
+| `strto/strtod/17-digits` | 5376 | 5241 (-2.5 %) | 1377 | 1242 (-9.8 %) |
+| `strto/strtod/exp-large` | 176358 | 176175 (-0.1 %) | 1314 | 1131 (-13.9 %) |
+| `strto/strtod/exp-small` | 29543 | 29400 (-0.5 %) | 1440 | 1297 (-9.9 %) |
+| `strto/strtod/fixed` | 2232 | 1654 (-25.9 %) | 1341 | 763.0 (-43.1 %) |
+| `strto/strtod/hex` | 1112 | 972.0 (-12.6 %) | 1092 | 952.0 (-12.8 %) |
+| `strto/strtod/integer` | 1497 | 1346 (-10.1 %) | 648.0 | 497.0 (-23.3 %) |
+| `strto/strtod/long` | 8575 | 8435 (-1.6 %) | 2399 | 2259 (-5.8 %) |
+| `strto/strtod/micro` | 2086 | 1506 (-27.8 %) | 1217 | 637.0 (-47.7 %) |
+| `strto/strtod/min-normal` | 104376 | 104225 (-0.1 %) | 1439 | 1288 (-10.5 %) |
+| `strto/strtod/short` | 1962 | 1384 (-29.5 %) | 1137 | 559.0 (-50.8 %) |
+| `strto/strtod/subnormal` | 114654 | 113957 (-0.6 %) | 2036 | 1339 (-34.2 %) |
+| `stdio/snprintf/%.3f` | 15225 | 14814 (-2.7 %) | 15139 | 14728 (-2.7 %) |
+| `stdio/sscanf/%lf` | 3403 | 2968 (-12.8 %) | 2390 | 1955 (-18.2 %) |
