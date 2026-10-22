@@ -89,12 +89,21 @@ D47's contract is the one that is broken, and only on the double path.
    like) need no search. The binary functions (`powf`, `atan2f`, `hypotf`,
    `powrf`, `pownf`, `rootnf`, `compoundnf`) cannot be searched over 2^64
    argument pairs and stay sampled (P4.05).
-2. **Each hard case found is an exception in its function:** the argument,
-   the correctly rounded result, and the side on which the exact value lies.
+2. **Each hard case found is an exception in its function:** the argument
+   and its correctly rounded result (8 bytes).
+   - The side of the result on which the exact value lies need not be
+     stored. In every case found, the double result is exactly the float
+     halfway point; the window allows a few double ulps from it. The exact
+     value lies between that point and the result, so the double result
+     gives the side.
    - The exceptions are looked up only when the double result is near a
      float halfway point (`__libc_float_round`, `internal/math.h`). That
      test is two integer operations on the double's low 29 bits, so an
      ordinary argument pays a few instructions.
+   - The lookup itself is out of line and shared
+     (`libc/math/__libc_float_case.c`, 88 bytes on Thumb-2). The first
+     version inlined it into every function and pushed `math-float` on
+     armv7e-m-dp over the size budget.
    - In a directed mode the result is the stored value nudged by
      2^-30 of itself toward the exact value. The hardware addition then
      rounds it in the current direction and raises inexact. This is correct
