@@ -22,8 +22,8 @@
 /*
  * The soft-dp layer's helpers (PLAN D99), compiled into this test on
  * x86_64 and called directly, against the hardware's operations case by
- * case: the C ones, and for the addition, the multiplication and the
- * narrowing conversion, whose fast paths are Thumb-2 assembly, the general
+ * case: the C ones, and for the addition, the multiplication, the
+ * comparisons and the narrowing conversion, whose fast paths are Thumb-2 assembly, the general
  * C versions those fall back on (the conversions written in assembly alone
  * are checked on the Arm cores, by the hash). The hash in softdp.c covers the layer as the Arm cores link it.
  */
@@ -74,8 +74,14 @@ static void check(double x, double y, float f, uint64_t v)
 		fail("dmul", ua, ub);
 	if (!same(__aeabi_ddiv(a, b), a / b))
 		fail("ddiv", ua, ub);
-	if (__aeabi_dcmpeq(a, b) != (a == b) || __aeabi_dcmplt(a, b) != (a < b) || __aeabi_dcmple(a, b) != (a <= b) || __aeabi_dcmpgt(a, b) != (a > b) || __aeabi_dcmpge(a, b) != (a >= b) || __aeabi_dcmpun(a, b) != isunordered(a, b))
-		fail("dcmp", ua, ub);
+	{
+		int order = reference_compare(ua, ub);
+
+		if ((order == REFERENCE_LESS) != (a < b) || (order == REFERENCE_EQUAL) != (a == b) || (order == REFERENCE_GREATER) != (a > b) || (order == REFERENCE_UNORDERED) != isunordered(a, b))
+			fail("compare model", ua, ub);
+	}
+	if (__aeabi_dcmpun(a, b) != isunordered(a, b))
+		fail("dcmpun", ua, ub);
 	if (!same_float(__libc_softdouble_d2f(a), (float)a))
 		fail("d2f", ua, 0);
 	if (!same(__aeabi_i2d((int)v), (double)(int)v) || !same(__aeabi_ui2d((unsigned int)v), (double)(unsigned int)v))

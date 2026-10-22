@@ -35,4 +35,14 @@ void test_layer(void);
 __LIBC_AEABI double reference_add(double a, double b);
 __LIBC_AEABI double reference_multiply(double a, double b);
 
+/* The model of the comparisons (reference_compare.c): the ordering of the doubles with these bits */
+enum {
+	REFERENCE_LESS,
+	REFERENCE_EQUAL,
+	REFERENCE_GREATER,
+	REFERENCE_UNORDERED,
+};
+
+int reference_compare(uint64_t ua, uint64_t ub);
+
 #endif /* _SOFTDP_H */

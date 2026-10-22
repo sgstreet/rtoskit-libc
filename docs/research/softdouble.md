@@ -114,8 +114,11 @@ So the operations that dominate the libm are Thumb-2 assembly:
   - the final remainder gives an exact sticky bit;
   - 174 instructions, against libgcc's 583.
 - **The comparisons:**
-  - `__aeabi_dcmp{eq,lt,le,ge,gt}` call one shared ordering, `__libc_softdouble_compare`: the magnitude bits, negated for a negative sign, compared as one signed integer;
-  - `__aeabi_dcmpun` tests the two NaNs directly, because every `isnan` in the libm calls it.
+  - `__aeabi_dcmp{eq,lt,le,ge,gt}` call one shared ordering, `__libc_softdouble_compare`. It is Thumb-2 assembly since D101; at first it was C (the magnitude bits, negated for a negative sign, compared as one signed integer), which is now the test's model, `test/unit/softdp/reference_compare.c`.
+  - The assembly sets the flags as `CMP` would for two ordered integers: Z for equal, C clear for less. Unordered is C set with Z clear, which none of the conditions the callers test (`LO`, `LS`, `EQ`) reads as true. `gt` and `ge` exchange the operands first.
+  - On the common path, each operand costs one compare for an exponent field of 2047; only then does it test for a NaN. Same signs compare as unsigned 64-bit integers, reversed for two negatives, and two zeros of one sign come out equal there. Only opposite signs need the test for two zeros.
+  - The shared ordering touches only ip, so each predicate is a call and one conditional move.
+  - `__aeabi_dcmpun` tests the two NaNs directly, in C, because every `isnan` in the libm calls it.
 - **The rest:** `__aeabi_i2d`, `__aeabi_ui2d`, and the truncating 64-bit conversions `__aeabi_d2lz`, `__aeabi_d2ulz`, `__aeabi_f2lz` and `__aeabi_f2ulz`. These are a few integer shifts, against libgcc's 1.6–1.9 KB each.
 
 Out of range, the conversions to integers saturate, and NaN gives 0. That is what the FPU's own `VCVT` does; C leaves the behaviour undefined.
@@ -188,7 +191,7 @@ Instructions per operation (armv7e-m and armv8-m.main, both flavours; libgcc →
 | `dsub` | 67.2 | 58.1 | 46.3 |
 | `dmul` | 57.6 | 54.0 | 54.9 |
 | `ddiv` | 583 | 174 | 82 |
-| `dcmp` | 48.9 | 43.9 | 20.2 |
+| `dcmp` | 48.9 | 28.9 (43.9 in C) | 20.2 |
 | `f2d` | 15.9 | 15.9 | |
 | `d2f` | 19.9 | 19.4 | 17.9 |
 | `d2i` | 21.9 | 19.9 | |
@@ -207,4 +210,5 @@ Instructions per operation (armv7e-m and armv8-m.main, both flavours; libgcc →
 ## Left open
 
 - **armv7e-m-dp:** the double-precision FPU does the arithmetic. Only the 64-bit conversions are still libgcc's there (the rest of Q24).
-- **Division and comparisons:** `ddiv` (174 instructions) and the comparisons (44) are still well behind AOR's 82 and 20; assembly for them is a possible later step.
+- **Division:** `ddiv` (174 instructions) is still well behind AOR's 82. Division is rare in the libm, so assembly for it pays only for code that divides in loops.
+- **Comparisons:** now 28.9 instructions (D101), against AOR's 20.2. The rest is the call into the shared ordering; inlining it into the five predicates would cost about 400 bytes.

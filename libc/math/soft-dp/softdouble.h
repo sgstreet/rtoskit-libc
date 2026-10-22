@@ -46,14 +46,6 @@ double __powidf2(double x, int n);
 /* The general cases of __aeabi_d2f, whose fast path is Thumb-2 assembly */
 __LIBC_AEABI float __libc_softdouble_d2f(double a);
 
-/* The ordering of two doubles, as __libc_softdouble_compare gives it */
-enum {
-	__LIBC_SOFTDOUBLE_LESS,
-	__LIBC_SOFTDOUBLE_EQUAL,
-	__LIBC_SOFTDOUBLE_GREATER,
-	__LIBC_SOFTDOUBLE_UNORDERED,
-};
-
 static inline uint64_t __libc_softdouble_bits(double x)
 {
 	uint64_t bits;
@@ -123,14 +115,6 @@ static inline uint64_t __libc_softdouble_unpack(uint64_t bits, int *exponent)
  * next exponent through the addition, to infinity at the top.
  */
 uint64_t __libc_softdouble_pack(uint64_t sign, int exponent, uint64_t x);
-
-/*
- * The ordering of a and b (IEEE 754-2019 5.11): NaN is unordered with
- * everything, and the zeros are equal. Every other double orders as its
- * magnitude bits do, negated for a negative sign, which is one signed
- * integer comparison.
- */
-int __libc_softdouble_compare(uint64_t ua, uint64_t ub);
 
 /* sign | u exactly (C23 6.3.1.4p2: every 32-bit integer is a double) */
 static inline uint64_t __libc_softdouble_from_u32(uint64_t sign, uint32_t u)
