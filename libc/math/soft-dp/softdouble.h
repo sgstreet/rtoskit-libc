@@ -33,6 +33,16 @@
 #define __LIBC_SOFTDOUBLE_DEFAULT_NAN 0x7ff8000000000000ULL
 #define __LIBC_SOFTDOUBLE_HIDDEN 0x0010000000000000ULL
 
+/*
+ * The compiler's own helpers whose libgcc versions call the double helpers
+ * from inside libgcc, where the linker would take libgcc's double objects
+ * to resolve them (PLAN D100); their prototypes are the compiler's
+ */
+_Complex double __muldc3(double a, double b, double c, double d);
+_Complex double __divdc3(double a, double b, double c, double d);
+_Complex float __divsc3(float a, float b, float c, float d);
+double __powidf2(double x, int n);
+
 /* The general cases of __aeabi_d2f, whose fast path is Thumb-2 assembly */
 __LIBC_AEABI float __libc_softdouble_d2f(double a);
 

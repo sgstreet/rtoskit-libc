@@ -16,13 +16,12 @@
  * is r1:r0. For an unbiased exponent t in [0, 30] the result is the top 32
  * bits of the significand shifted right 31 - t places. Below that the
  * result is 0; above it the behaviour is undefined, and the result
- * saturates and NaN gives 0, as the FPU's own conversion does. Weak, as
- * __aeabi_dadd.
+ * saturates and NaN gives 0, as the FPU's own conversion does.
  */
 	.syntax unified
 	.thumb
 	.section .text.__aeabi_d2iz,"ax",%progbits
-	.weak __aeabi_d2iz
+	.global __aeabi_d2iz
 	.type __aeabi_d2iz, %function
 __aeabi_d2iz:
 	ubfx r2, r1, #20, #11

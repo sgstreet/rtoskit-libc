@@ -663,3 +663,18 @@ Decision D99, `docs/research/softdouble.md`. The `soft-dp` layer replaces every 
   - The 64-bit conversions are 6 to 172 bytes each, where libgcc's were 1.6–1.9 KB with the double arithmetic they called.
 - **`__libc_float_case.o`:** also new in this baseline. It came with D98 and no armv7e-m-class image links it.
 - **Stack depths:** the C helpers use 8–40 bytes of stack. The assembly pushes 24 or 28 bytes, which is not in the call-graph files.
+
+## D100 — strong helpers, and libgcc's complex helpers replaced
+
+Decision D100. The `soft-dp` helpers are strong symbols now, and the layer adds the four libgcc helpers that called them from inside libgcc. No reference program uses complex arithmetic or `__builtin_powi`, so every image is unchanged.
+
+`libc.a` gains the four, about the size of libgcc's own:
+
+| Member | ours | libgcc's |
+|---|---:|---:|
+| `__muldc3.o` | 1104 | 1184 |
+| `__divdc3.o` | 1240 | 2012 |
+| `__divsc3.o` | 860 | 724 |
+| `__powidf2.o` | 116 | 116 |
+
+A program using them no longer links libgcc's double objects as well, which were 888–2344 bytes more.

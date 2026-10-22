@@ -16,8 +16,8 @@
 #include "internal/aeabi.h"
 #include "softdouble.h"
 
-/* (double)a, exact (C23 6.3.1.4p2; PLAN D99). Weak, as __aeabi_dmul. */
-[[gnu::weak]] __LIBC_AEABI double __aeabi_i2d(int a)
+/* (double)a, exact (C23 6.3.1.4p2; PLAN D99). */
+__LIBC_AEABI double __aeabi_i2d(int a)
 {
 	uint32_t magnitude = a < 0 ? 0 - (uint32_t)a : (uint32_t)a;
 

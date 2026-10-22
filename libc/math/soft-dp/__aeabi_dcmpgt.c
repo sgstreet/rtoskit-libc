@@ -14,8 +14,8 @@
 #include "internal/aeabi.h"
 #include "softdouble.h"
 
-/* a > b, 1 or 0 (IEEE 754-2019 5.11; PLAN D99). Weak, as __aeabi_dmul. */
-[[gnu::weak]] __LIBC_AEABI int __aeabi_dcmpgt(double a, double b)
+/* a > b, 1 or 0 (IEEE 754-2019 5.11; PLAN D99). */
+__LIBC_AEABI int __aeabi_dcmpgt(double a, double b)
 {
 	return __libc_softdouble_compare(__libc_softdouble_bits(a), __libc_softdouble_bits(b)) == __LIBC_SOFTDOUBLE_GREATER;
 }

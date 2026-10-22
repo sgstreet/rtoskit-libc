@@ -14,13 +14,12 @@
 /*
  * a - b is a + (-b) (IEEE 754-2019 5.4.1), with the same result and sign
  * of zero (PLAN D55, D99): b's sign bit flips in r3, which is not a
- * floating-point operation, and the addition does the rest. Weak, as
- * __aeabi_dadd.
+ * floating-point operation, and the addition does the rest.
  */
 	.syntax unified
 	.thumb
 	.section .text.__aeabi_dsub,"ax",%progbits
-	.weak __aeabi_dsub
+	.global __aeabi_dsub
 	.type __aeabi_dsub, %function
 __aeabi_dsub:
 	eor r3, r3, #0x80000000

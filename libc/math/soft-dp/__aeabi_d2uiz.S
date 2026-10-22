@@ -17,12 +17,12 @@
  * is the top 32 bits of the significand shifted right 31 - t places. Below
  * that the result is 0; above it, and for a negative a, the behaviour is
  * undefined: the result saturates, and a negative value and NaN give 0, as
- * the FPU's own conversion does. Weak, as __aeabi_dadd.
+ * the FPU's own conversion does.
  */
 	.syntax unified
 	.thumb
 	.section .text.__aeabi_d2uiz,"ax",%progbits
-	.weak __aeabi_d2uiz
+	.global __aeabi_d2uiz
 	.type __aeabi_d2uiz, %function
 __aeabi_d2uiz:
 	ubfx r2, r1, #20, #11

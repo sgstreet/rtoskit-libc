@@ -78,9 +78,7 @@
      "assembly: __rtos_linux_syscall",
      "assembly: memmove",
      "assembly: memset",
-     "indirect call",
-     "libgcc: __aeabi_ddiv",
-     "libgcc: __aeabi_i2d"
+     "indirect call"
     ],
     "path": [
      "main",
@@ -677,15 +675,7 @@
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d",
-     "assembly: memset",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_ddiv",
-     "libgcc: __aeabi_i2d"
+     "assembly: memset"
     ],
     "path": [
      "main",
@@ -1060,6 +1050,24 @@
     "tbss": 0,
     "tdata": 0,
     "text": 372,
+    "unwind": 0
+   },
+   "__divdc3.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 1244,
+    "unwind": 0
+   },
+   "__divsc3.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 868,
     "unwind": 0
    },
    "__flt_rounds.o": {
@@ -2230,6 +2238,24 @@
     "tbss": 0,
     "tdata": 0,
     "text": 98,
+    "unwind": 0
+   },
+   "__muldc3.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 1112,
+    "unwind": 0
+   },
+   "__powidf2.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 116,
     "unwind": 0
    },
    "_exit.o": {
@@ -8053,7 +8079,7 @@
    "rodata": 9982,
    "tbss": 358,
    "tdata": 8,
-   "text": 143354,
+   "text": 146694,
    "unwind": 0
   }
  },
@@ -8078,14 +8104,7 @@
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
      "assembly: __aeabi_dmul",
-     "assembly: __aeabi_dsub",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_ddiv",
-     "libgcc: __aeabi_i2d"
+     "assembly: __aeabi_dsub"
     ],
     "path": [
      "atan2",
@@ -8137,12 +8156,7 @@
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d",
-     "assembly: memset",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun"
+     "assembly: memset"
     ],
     "path": [
      "cos",
@@ -8158,16 +8172,7 @@
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d",
-     "assembly: memset",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_ddiv",
-     "libgcc: __aeabi_i2d",
-     "libgcc: __muldc3"
+     "assembly: memset"
     ],
     "path": [
      "cpow",
@@ -8185,15 +8190,7 @@
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
      "assembly: __aeabi_dmul",
-     "assembly: __aeabi_dsub",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_ddiv",
-     "libgcc: __aeabi_i2d"
+     "assembly: __aeabi_dsub"
     ],
     "path": [
      "erfc",
@@ -8220,12 +8217,7 @@
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
      "assembly: __aeabi_dmul",
-     "assembly: __aeabi_dsub",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun"
+     "assembly: __aeabi_dsub"
     ],
     "path": [
      "exp",
@@ -8377,15 +8369,7 @@
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
      "assembly: __aeabi_dmul",
-     "assembly: __aeabi_dsub",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_ddiv",
-     "libgcc: __aeabi_i2d"
+     "assembly: __aeabi_dsub"
     ],
     "path": [
      "lgamma",
@@ -8420,14 +8404,7 @@
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
      "assembly: __aeabi_dmul",
-     "assembly: __aeabi_dsub",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_ddiv",
-     "libgcc: __aeabi_i2d"
+     "assembly: __aeabi_dsub"
     ],
     "path": [
      "log",
@@ -8481,15 +8458,7 @@
      "assembly: __aeabi_dadd",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
-     "assembly: __aeabi_ul2d",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_ddiv",
-     "libgcc: __aeabi_i2d"
+     "assembly: __aeabi_ul2d"
     ],
     "path": [
      "pow",
@@ -8572,12 +8541,7 @@
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d",
-     "assembly: memset",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun"
+     "assembly: memset"
     ],
     "path": [
      "sin",
@@ -8695,13 +8659,7 @@
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d",
-     "assembly: memset",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_ddiv"
+     "assembly: memset"
     ],
     "path": [
      "tan",
@@ -8715,15 +8673,7 @@
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
      "assembly: __aeabi_dmul",
-     "assembly: __aeabi_dsub",
-     "libgcc: __aeabi_dcmpeq",
-     "libgcc: __aeabi_dcmpge",
-     "libgcc: __aeabi_dcmpgt",
-     "libgcc: __aeabi_dcmple",
-     "libgcc: __aeabi_dcmplt",
-     "libgcc: __aeabi_dcmpun",
-     "libgcc: __aeabi_ddiv",
-     "libgcc: __aeabi_i2d"
+     "assembly: __aeabi_dsub"
     ],
     "path": [
      "tgamma",
@@ -8750,19 +8700,19 @@
    }
   },
   "frames": {
-   "__aeabi_d2lz.o:libc/math/soft-dp/__aeabi_d2lz.c:__aeabi_d2lz": 16,
-   "__aeabi_d2ulz.o:libc/math/soft-dp/__aeabi_d2ulz.c:__aeabi_d2ulz": 16,
-   "__aeabi_dcmpeq.o:libc/math/soft-dp/__aeabi_dcmpeq.c:__aeabi_dcmpeq": 8,
-   "__aeabi_dcmpge.o:libc/math/soft-dp/__aeabi_dcmpge.c:__aeabi_dcmpge": 8,
-   "__aeabi_dcmpgt.o:libc/math/soft-dp/__aeabi_dcmpgt.c:__aeabi_dcmpgt": 8,
-   "__aeabi_dcmple.o:libc/math/soft-dp/__aeabi_dcmple.c:__aeabi_dcmple": 8,
-   "__aeabi_dcmplt.o:libc/math/soft-dp/__aeabi_dcmplt.c:__aeabi_dcmplt": 8,
-   "__aeabi_dcmpun.o:libc/math/soft-dp/__aeabi_dcmpun.c:__aeabi_dcmpun": 12,
-   "__aeabi_ddiv.o:libc/math/soft-dp/__aeabi_ddiv.c:__aeabi_ddiv": 40,
-   "__aeabi_f2lz.o:libc/math/soft-dp/__aeabi_f2lz.c:__aeabi_f2lz": 8,
-   "__aeabi_f2ulz.o:libc/math/soft-dp/__aeabi_f2ulz.c:__aeabi_f2ulz": 0,
-   "__aeabi_i2d.o:libc/math/soft-dp/__aeabi_i2d.c:__aeabi_i2d": 8,
-   "__aeabi_ui2d.o:libc/math/soft-dp/__aeabi_ui2d.c:__aeabi_ui2d": 12,
+   "__aeabi_d2lz.o:__aeabi_d2lz": 16,
+   "__aeabi_d2ulz.o:__aeabi_d2ulz": 16,
+   "__aeabi_dcmpeq.o:__aeabi_dcmpeq": 8,
+   "__aeabi_dcmpge.o:__aeabi_dcmpge": 8,
+   "__aeabi_dcmpgt.o:__aeabi_dcmpgt": 8,
+   "__aeabi_dcmple.o:__aeabi_dcmple": 8,
+   "__aeabi_dcmplt.o:__aeabi_dcmplt": 8,
+   "__aeabi_dcmpun.o:__aeabi_dcmpun": 12,
+   "__aeabi_ddiv.o:__aeabi_ddiv": 40,
+   "__aeabi_f2lz.o:__aeabi_f2lz": 8,
+   "__aeabi_f2ulz.o:__aeabi_f2ulz": 0,
+   "__aeabi_i2d.o:__aeabi_i2d": 8,
+   "__aeabi_ui2d.o:__aeabi_ui2d": 12,
    "__atomic_add.o:__atomic_add_fetch_1": 24,
    "__atomic_add.o:__atomic_add_fetch_2": 24,
    "__atomic_add.o:__atomic_add_fetch_4": 24,
@@ -8842,6 +8792,8 @@
    "__atomic_xor.o:__atomic_xor_fetch_4": 24,
    "__atomic_xor.o:__atomic_xor_fetch_8": 32,
    "__atomic_xor.o:libc/atomic/__atomic_xor.c:__libc_atomic_cas_small": 32,
+   "__divdc3.o:__divdc3": 96,
+   "__divsc3.o:__divsc3": 80,
    "__flt_rounds.o:__flt_rounds": 0,
    "__libc_asctime.o:__libc_asctime": 32,
    "__libc_asctime.o:libc/time/__libc_asctime.c:put": 8,
@@ -9033,6 +8985,8 @@
    "__libc_tz_is_dst.o:libc/time/__libc_tz_is_dst.c:change_time": 48,
    "__libc_u64_to_double.o:__libc_u64_to_double": 8,
    "__libc_udivmod64.o:__libc_udivmod64": 24,
+   "__muldc3.o:__muldc3": 112,
+   "__powidf2.o:__powidf2": 32,
    "_exit.o:_Exit": 8,
    "abort.o:abort": 8,
    "abs.o:abs": 0,

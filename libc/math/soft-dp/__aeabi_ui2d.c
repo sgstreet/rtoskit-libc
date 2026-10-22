@@ -16,8 +16,8 @@
 #include "internal/aeabi.h"
 #include "softdouble.h"
 
-/* (double)a, exact (C23 6.3.1.4p2; PLAN D99). Weak, as __aeabi_dmul. */
-[[gnu::weak]] __LIBC_AEABI double __aeabi_ui2d(unsigned int a)
+/* (double)a, exact (C23 6.3.1.4p2; PLAN D99). */
+__LIBC_AEABI double __aeabi_ui2d(unsigned int a)
 {
 	return __libc_softdouble_from(__libc_softdouble_from_u32(0, a));
 }

@@ -20,9 +20,9 @@
  * a / b in integers (IEEE 754-2019 5.4.1, PLAN D99): long division of the
  * significands in base 2^18, three digits after a leading 1, each estimated
  * from a 32-bit reciprocal of the divisor and corrected by the remainder,
- * which ends exact, so the sticky bit is exact too. Weak, as __aeabi_dmul.
+ * which ends exact, so the sticky bit is exact too.
  */
-[[gnu::weak]] __LIBC_AEABI double __aeabi_ddiv(double a, double b)
+__LIBC_AEABI double __aeabi_ddiv(double a, double b)
 {
 	uint64_t ua = __libc_softdouble_bits(a);
 	uint64_t ub = __libc_softdouble_bits(b);

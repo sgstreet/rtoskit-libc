@@ -41,14 +41,11 @@
  * difference is +0 (6.3). Two subnormals add or subtract exactly as
  * integers. Infinity minus infinity is the default NaN (7.2); of two NaNs
  * the one with the larger payload is returned, quietened (6.2.3).
- *
- * Weak: should libgcc's own complex helpers pull its double object in,
- * its definitions win instead of clashing with this one.
  */
 	.syntax unified
 	.thumb
 	.section .text.__aeabi_dadd,"ax",%progbits
-	.weak __aeabi_dadd
+	.global __aeabi_dadd
 	.type __aeabi_dadd, %function
 __aeabi_dadd:
 	push {r4-r8, lr}

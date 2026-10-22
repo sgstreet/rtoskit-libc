@@ -33,14 +33,11 @@
  * first NaN, quietened (IEEE 754-2019 6.2.3); infinity times zero is the
  * default NaN (7.2); a zero times a finite operand is a zero signed by the
  * signs' difference (6.3).
- *
- * Weak: should libgcc's own complex helpers pull its double object in,
- * its definitions win instead of clashing with this one.
  */
 	.syntax unified
 	.thumb
 	.section .text.__aeabi_dmul,"ax",%progbits
-	.weak __aeabi_dmul
+	.global __aeabi_dmul
 	.type __aeabi_dmul, %function
 __aeabi_dmul:
 	push {r4-r9, lr}

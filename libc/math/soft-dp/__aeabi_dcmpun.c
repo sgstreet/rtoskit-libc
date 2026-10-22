@@ -17,9 +17,9 @@
 /*
  * isunordered(a, b), 1 or 0 (IEEE 754-2019 5.11; PLAN D99): a NaN on
  * either side, tested on the bits alone, since the libm functions call
- * this for every isnan. Weak, as __aeabi_dmul.
+ * this for every isnan.
  */
-[[gnu::weak]] __LIBC_AEABI int __aeabi_dcmpun(double a, double b)
+__LIBC_AEABI int __aeabi_dcmpun(double a, double b)
 {
 	return __libc_softdouble_is_nan(__libc_softdouble_bits(a)) || __libc_softdouble_is_nan(__libc_softdouble_bits(b));
 }
