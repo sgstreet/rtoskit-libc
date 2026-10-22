@@ -680,8 +680,10 @@ Decision D100. The `soft-dp` helpers are strong symbols now, and the layer adds 
 | Member | ours | libgcc's |
 |---|---:|---:|
 | `__muldc3.o` | 1112 | 1200 |
-| `__divdc3.o` | 1244 | 2012 |
-| `__divsc3.o` | 868 | 724 |
+| `__divdc3.o` | 1384 | 2012 |
+| `__divsc3.o` | 884 | 724 |
 | `__powidf2.o` | 116 | 116 |
 
 A program using them no longer links libgcc's double objects as well, which were 888–2344 bytes more.
+
+The faster `__divdc3` and `__divsc3` (see `docs/perf/armv7e-m.md`, D100) add 140–144 and 16 bytes for the range test and the reciprocal; the table shows the final sizes.

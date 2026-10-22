@@ -869,3 +869,18 @@ The `soft-dp` layer (`docs/research/softdouble.md`) replaces libgcc's double hel
 | `strto/strtod/subnormal` | 114674 | 113977 (-0.6 %) | 2035 | 1338 (-34.3 %) |
 | `stdio/snprintf/%.3f` | 15224 | 14813 (-2.7 %) | 15138 | 14727 (-2.7 %) |
 | `stdio/sscanf/%lf` | 3403 | 2968 (-12.8 %) | 2398 | 1963 (-18.1 %) |
+
+## D100 — strong helpers, and the layer's complex helpers
+
+Making the soft-dp helpers strong changes no instruction. A full `make bench` shows all 824 cases unchanged, in both flavours.
+
+The compiler's complex and `powi` helpers are in no benchmark program. They were measured separately: 1,000 calls each on moderate random operands, with the bench's qemu plugin, on armv7e-m (release). Instructions per call, including the loop:
+
+| Helper | all libgcc (before D99) | libgcc's helper on soft-dp arithmetic (D99) | soft-dp (D100) |
+|---|---:|---:|---:|
+| `__muldc3` | 402 | 369 | 371 (+0.5 %) |
+| `__divdc3` | 2460 | 1153 | 1059 (−8 %) |
+| `__divsc3` | 1812 | 922 | 882 (−4 %) |
+| `__powidf2` | 321 | 300 | 300 |
+
+The first version of `__divdc3` (1393) called `logb` and `scalbn` three times for every division. It now skips the scaling when every part is zero or within 2^-128 to 2^128. Its results are unchanged, bit for bit, over 50 million host cases that include values on both sides of those bounds. `__divsc3` multiplies by one reciprocal instead of dividing twice. Over the same 50 million cases that gave the same float results.

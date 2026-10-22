@@ -1058,7 +1058,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 1244,
+    "text": 1384,
     "unwind": 0
    },
    "__divsc3.o": {
@@ -1067,7 +1067,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 868,
+    "text": 884,
     "unwind": 0
    },
    "__flt_rounds.o": {
@@ -8079,7 +8079,7 @@
    "rodata": 9982,
    "tbss": 358,
    "tdata": 8,
-   "text": 146694,
+   "text": 146850,
    "unwind": 0
   }
  },
@@ -8792,8 +8792,9 @@
    "__atomic_xor.o:__atomic_xor_fetch_4": 24,
    "__atomic_xor.o:__atomic_xor_fetch_8": 32,
    "__atomic_xor.o:libc/atomic/__atomic_xor.c:__libc_atomic_cas_small": 32,
-   "__divdc3.o:__divdc3": 96,
-   "__divsc3.o:__divsc3": 80,
+   "__divdc3.o:__divdc3": 88,
+   "__divdc3.o:libc/math/soft-dp/__divdc3.c:moderate": 8,
+   "__divsc3.o:__divsc3": 88,
    "__flt_rounds.o:__flt_rounds": 0,
    "__libc_asctime.o:__libc_asctime": 32,
    "__libc_asctime.o:libc/time/__libc_asctime.c:put": 8,

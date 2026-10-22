@@ -20,15 +20,18 @@
  * (a + bi)/(c + di) in float, the compiler's helper for float complex
  * division (C23 6.5.6, Annex G.5.2; PLAN D100), computed in double: the
  * products of floats are exact there, and c^2 + d^2 lies between 2^-298
- * and 2^256, so no scaling is needed; each part is then rounded to float.
+ * and 2^256, so no scaling is needed. One reciprocal and two products
+ * replace two divisions: their error, a few double ulps, is far below
+ * float's, and each part is then rounded to float.
  * When both parts come out NaN, G.5.2p1's cases are recovered as in
  * __divdc3. libgcc's version would bring its own double helpers with it.
  */
 float complex __divsc3(float a, float b, float c, float d)
 {
 	double denominator = (double)c * c + (double)d * d;
-	double x = ((double)a * c + (double)b * d) / denominator;
-	double y = ((double)b * c - (double)a * d) / denominator;
+	double reciprocal = 1.0 / denominator;
+	double x = ((double)a * c + (double)b * d) * reciprocal;
+	double y = ((double)b * c - (double)a * d) * reciprocal;
 
 	if (!isnan(x) || !isnan(y))
 		return CMPLXF((float)x, (float)y);
