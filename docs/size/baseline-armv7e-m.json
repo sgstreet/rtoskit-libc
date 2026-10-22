@@ -672,6 +672,11 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpge",
+     "assembly: __aeabi_dcmpgt",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d",
@@ -693,7 +698,7 @@
      "rodata": 3700,
      "tbss": 0,
      "tdata": 0,
-     "text": 22262,
+     "text": 22286,
      "unwind": 0
     },
     "libgcc": {
@@ -739,7 +744,7 @@
     "rodata": 3700,
     "tbss": 0,
     "tdata": 0,
-    "text": 23068,
+    "text": 23092,
     "unwind": 0
    }
   }
@@ -815,7 +820,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 18,
+    "text": 26,
     "unwind": 0
    },
    "__aeabi_dcmpgt.o": {
@@ -824,7 +829,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 14,
+    "text": 26,
     "unwind": 0
    },
    "__aeabi_dcmple.o": {
@@ -833,7 +838,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 16,
+    "text": 14,
     "unwind": 0
    },
    "__aeabi_dcmplt.o": {
@@ -2048,7 +2053,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 100,
+    "text": 106,
     "unwind": 0
    },
    "__libc_softdouble_d2f.o": {
@@ -8079,7 +8084,7 @@
    "rodata": 9982,
    "tbss": 358,
    "tdata": 8,
-   "text": 146850,
+   "text": 146874,
    "unwind": 0
   }
  },
@@ -8103,6 +8108,10 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpgt",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub"
     ],
@@ -8153,6 +8162,10 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpge",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d",
@@ -8169,6 +8182,11 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpge",
+     "assembly: __aeabi_dcmpgt",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d",
@@ -8189,6 +8207,11 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpge",
+     "assembly: __aeabi_dcmpgt",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub"
     ],
@@ -8216,6 +8239,10 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpgt",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub"
     ],
@@ -8368,6 +8395,11 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpge",
+     "assembly: __aeabi_dcmpgt",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub"
     ],
@@ -8403,6 +8435,10 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpgt",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub"
     ],
@@ -8456,6 +8492,11 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpge",
+     "assembly: __aeabi_dcmpgt",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d"
@@ -8538,6 +8579,10 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpge",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d",
@@ -8656,6 +8701,10 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpge",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub",
      "assembly: __aeabi_ul2d",
@@ -8672,6 +8721,11 @@
     "notes": [
      "assembly: __aeabi_d2iz",
      "assembly: __aeabi_dadd",
+     "assembly: __aeabi_dcmpeq",
+     "assembly: __aeabi_dcmpge",
+     "assembly: __aeabi_dcmpgt",
+     "assembly: __aeabi_dcmple",
+     "assembly: __aeabi_dcmplt",
      "assembly: __aeabi_dmul",
      "assembly: __aeabi_dsub"
     ],
@@ -8702,11 +8756,6 @@
   "frames": {
    "__aeabi_d2lz.o:__aeabi_d2lz": 16,
    "__aeabi_d2ulz.o:__aeabi_d2ulz": 16,
-   "__aeabi_dcmpeq.o:__aeabi_dcmpeq": 8,
-   "__aeabi_dcmpge.o:__aeabi_dcmpge": 8,
-   "__aeabi_dcmpgt.o:__aeabi_dcmpgt": 8,
-   "__aeabi_dcmple.o:__aeabi_dcmple": 8,
-   "__aeabi_dcmplt.o:__aeabi_dcmplt": 8,
    "__aeabi_dcmpun.o:__aeabi_dcmpun": 12,
    "__aeabi_ddiv.o:__aeabi_ddiv": 40,
    "__aeabi_f2lz.o:__aeabi_f2lz": 8,
@@ -8957,7 +9006,6 @@
    "__libc_sinhcoshf_core.o:__libc_sinhcoshf_core": 104,
    "__libc_sinhcoshf_core.o:libc/math/sp-nearest/__libc_sinhcoshf_core.c:__libc_ff_add": 32,
    "__libc_sinhcoshf_core.o:libc/math/sp-nearest/__libc_sinhcoshf_core.c:__libc_ff_multiply": 32,
-   "__libc_softdouble_compare.o:__libc_softdouble_compare": 20,
    "__libc_softdouble_d2f.o:__libc_softdouble_d2f": 16,
    "__libc_softdouble_pack.o:__libc_softdouble_pack": 20,
    "__libc_start_main.o:__libc_start_main": 8,

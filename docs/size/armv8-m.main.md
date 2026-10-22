@@ -680,3 +680,7 @@ Decision D100. The `soft-dp` helpers are strong symbols now, and the layer adds 
 A program using them no longer links libgcc's double objects as well, which were 888–2344 bytes more.
 
 The faster `__divdc3` and `__divsc3` (see `docs/perf/armv8-m.main.md`, D100) add 140–144 and 16 bytes for the range test and the reciprocal; the table shows the final sizes.
+
+## D101 — the comparisons in Thumb-2 assembly
+
+`math-mix` grows by 24 bytes. `__aeabi_dcmpgt` and `__aeabi_dcmpge` exchange their operands before calling the shared ordering (+12 and +8 bytes); `__libc_softdouble_compare` is 106 bytes against 100 in C. That pays for comparisons 34 % faster. The size budget holds; no other image changes.

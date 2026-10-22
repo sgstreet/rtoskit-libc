@@ -884,3 +884,19 @@ The compiler's complex and `powi` helpers are in no benchmark program. They were
 | `__powidf2` | 321 | 300 | 300 |
 
 The first version of `__divdc3` (1393) called `logb` and `scalbn` three times for every division. It now skips the scaling when every part is zero or within 2^-128 to 2^128. Its results are unchanged, bit for bit, over 50 million host cases that include values on both sides of those bounds. `__divsc3` multiplies by one reciprocal instead of dividing twice. Over the same 50 million cases that gave the same float results.
+
+## D101 — the comparisons in Thumb-2 assembly
+
+The shared double ordering of `__aeabi_dcmp{lt,le,eq,gt,ge}` is Thumb-2 assembly now; it sets the flags for the callers, which are a call and one conditional move. The figures are instructions per operation, and are the same in both flavours.
+
+| Case | before | after |
+|---|---:|---:|
+| `softfloat/dcmp` | 43.9 | 28.9 (−34.1 %) |
+| `math/sqrt` | 2012 | 1968 (−2.2 %) |
+| `math/hypot` | 5955 | 5835 (−2.0 %) |
+| `math/exp` | 3882 | 3813 (−1.8 %) |
+| `math/pow` | 11737 | 11533 (−1.7 %) |
+| `math/atan2` | 8424 | 8314 (−1.3 %) |
+| `math/sin` | 6500 | 6435 (−1.0 %) |
+
+57 cases are faster in all, the double functions by 0.8 to 2.2 %, and none is slower.

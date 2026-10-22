@@ -17,9 +17,9 @@
 #include "softdp.h"
 
 /*
- * The soft-dp layer's Thumb-2 assembly (PLAN D99): __aeabi_dadd,
- * __aeabi_dsub and __aeabi_dmul against the C models that x86_64 checks
- * against its hardware, bit for bit; a NaN must be a quiet NaN, whose
+ * The soft-dp layer's Thumb-2 assembly (PLAN D99, D101): __aeabi_dadd,
+ * __aeabi_dsub, __aeabi_dmul and the comparisons against the C models
+ * that x86_64 checks against its hardware, bit for bit; a NaN must be a quiet NaN, whose
  * payload may differ. The operands are pairs of every exponent difference
  * up to 80 and below 4, significands that cancel, carry or tie, zeros,
  * subnormals, infinities and NaNs, and products around the range's ends.
@@ -52,6 +52,19 @@ static void check(const char *what, uint64_t a, uint64_t b, uint64_t got, uint64
 	if (is_nan(want) && is_nan(got) && (got & 0x0008000000000000ULL) != 0)
 		return;
 	fail(what, a, b);
+}
+
+/* Every predicate against the model's ordering */
+static void check_compare(uint64_t ua, uint64_t ub)
+{
+	int order = reference_compare(ua, ub);
+	double a = from_bits(ua);
+	double b = from_bits(ub);
+
+	if (__aeabi_dcmplt(a, b) != (order == REFERENCE_LESS) || __aeabi_dcmple(a, b) != (order == REFERENCE_LESS || order == REFERENCE_EQUAL) || __aeabi_dcmpeq(a, b) != (order == REFERENCE_EQUAL))
+		fail("dcmp lt/le/eq", ua, ub);
+	if (__aeabi_dcmpgt(a, b) != (order == REFERENCE_GREATER) || __aeabi_dcmpge(a, b) != (order == REFERENCE_GREATER || order == REFERENCE_EQUAL) || __aeabi_dcmpun(a, b) != (order == REFERENCE_UNORDERED))
+		fail("dcmp gt/ge/un", ua, ub);
 }
 
 void test_layer(void)
@@ -123,5 +136,8 @@ void test_layer(void)
 		check("dadd", ua, ub, bits_of(__aeabi_dadd(from_bits(ua), from_bits(ub))), bits_of(reference_add(from_bits(ua), from_bits(ub))));
 		check("dsub", ua, ub, bits_of(__aeabi_dsub(from_bits(ua), from_bits(ub))), bits_of(reference_add(from_bits(ua), from_bits(ub ^ 0x8000000000000000ULL))));
 		check("dmul", ua, uc, bits_of(__aeabi_dmul(from_bits(ua), from_bits(uc))), bits_of(reference_multiply(from_bits(ua), from_bits(uc))));
+		check_compare(ua, ub);
+		check_compare(ua, ua ^ (t & 1));
+		check_compare(ua & 0x8000000000000000ULL, ub & 0x8000000000000000ULL);
 	}
 }
