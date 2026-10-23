@@ -13,7 +13,7 @@
 
 #include <math.h>
 
-#include "softdouble.h"
+#include "internal/softdouble.h"
 
 /*
  * x^n for an int n, the compiler's helper for __builtin_powi (PLAN D100):

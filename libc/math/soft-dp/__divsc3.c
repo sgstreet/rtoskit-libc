@@ -14,7 +14,7 @@
 #include <complex.h>
 #include <math.h>
 
-#include "softdouble.h"
+#include "internal/softdouble.h"
 
 /*
  * (a + bi)/(c + di) in float, the compiler's helper for float complex

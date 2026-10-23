@@ -14,6 +14,6 @@
 #include "softdp.h"
 
 /* No soft-dp layer to check here: it is compiled into the test on x86_64 and linked on armv7e-m and armv8-m.main (PLAN D99) */
-void test_layer(void)
+void test_layer([[maybe_unused]] unsigned long iterations, [[maybe_unused]] unsigned long float_stride)
 {
 }

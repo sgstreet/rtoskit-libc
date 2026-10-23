@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 
-#include "softdouble.h"
+#include "internal/softdouble.h"
 #include "softdp.h"
 
 /*

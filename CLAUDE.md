@@ -209,6 +209,9 @@ Any exception needs a PLAN.md decision entry.
   `test/libc-test/expected/<board>.txt` and fails on PASS→FAIL and on failures
   missing from the baseline. Record improvements with
   `make check LIBC_TEST_UPDATE=1` (it refuses while anything regressed).
+- `make check` ends with `tools/scripts/libgcc-check`: it fails when any link map includes a libgcc member that
+  defines one of `libc*.a`'s symbols (D102). `tools/scripts/softdp-diff` is the long, manual comparison of the
+  double helpers (`test/unit/softdp` with 100 million cases).
 - `test/libc-test/shim/` is test-only replacement code for libc-test's POSIX
   helpers. It is never part of `libc.a`.
 - `test/unit/` holds our own tests for everything libc-test misses (the C23

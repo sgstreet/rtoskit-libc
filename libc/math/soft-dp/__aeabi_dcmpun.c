@@ -12,7 +12,7 @@
  */
 
 #include "internal/aeabi.h"
-#include "softdouble.h"
+#include "internal/softdouble.h"
 
 /*
  * isunordered(a, b), 1 or 0 (IEEE 754-2019 5.11; PLAN D99): a NaN on

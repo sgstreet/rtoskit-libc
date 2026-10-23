@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 
-#include "softdouble.h"
+#include "internal/softdouble.h"
 
 /*
  * The double nearest x 2^(exponent - 1085), ties to even, with the sign:

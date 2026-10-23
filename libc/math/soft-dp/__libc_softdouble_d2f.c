@@ -14,7 +14,7 @@
 #include <stdint.h>
 
 #include "internal/aeabi.h"
-#include "softdouble.h"
+#include "internal/softdouble.h"
 
 /*
  * (float)a, rounded to nearest (C23 6.3.1.5p2; PLAN D99), for any a: the

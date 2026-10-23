@@ -1114,3 +1114,19 @@ The floating-point operations that become run-time library calls without an FPU 
 | `i2f` | 76.6 |
 | `l2d` | 473 |
 | `l2f` | 525 |
+
+## D102 — the conversions to integers in the soft-int and nofp layers
+
+`__aeabi_d2lz`, `__aeabi_d2ulz`, `__aeabi_f2lz`, `__aeabi_f2ulz`, `__aeabi_d2uiz` and `__aeabi_f2uiz` replace libgcc's. libgcc's versions subtracted in floating point and linked libgcc's `subdf3.o`. 76 cases are faster in each flavour and none is slower. Instructions per operation (release and speed alike unless shown):
+
+| Case | before | after | change |
+|---|---:|---:|---:|
+| `softfloat/d2l` | 696 | 62.5 | −91.0 % |
+| `softfloat/f2l` | 689 | 45.4 | −93.4 % |
+| `strto/strtod/integer` | 2909 (speed 2005) | 2272 (1368) | −21.9 % (−31.8 %) |
+| `strto/strtod/hex` | 2101 (2116) | 1469 (1484) | −30.1 % (−29.9 %) |
+| `strto/strtod/short` | 3352 (2459) | 2720 (1827) | −18.9 % (−25.7 %) |
+| `strto/strtod/17-digits` | 24062 (3799) | 23430 (3167) | −2.6 % (−16.6 %) |
+| `stdio/sscanf/%lf` | 5107 (4076) | 5028 (3997) | −1.5 % (−1.9 %) |
+
+Only `d2l` and `f2l` measure the library. The other changes are the benchmarks' own conversions: `run_strtod` folds each result into its checksum through `__aeabi_d2lz` (634 instructions fewer per operation), the double `math` loops do the same (39.6 fewer), and `run_sscanf_f` through `__aeabi_d2uiz` (79 fewer). `strtod`, `sscanf` and the libm functions are unchanged; `floor` and `round` show −16 to −19 % only because they are short.

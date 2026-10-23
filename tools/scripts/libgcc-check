@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+#
+# Copyright (C) 2026 Red Rocket Computing, LLC
+#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# libgcc-check
+#
+# Created on: Oct 22, 2026
+#     Author: Stephen Street (stephen@redrocketcomputing.com)
+#
+# Fails when a program of the build links a libgcc object that defines a
+# symbol the library itself defines (PLAN D102). Such an object replaces our
+# helper silently: libgcc's own helpers (the complex arithmetic, the 64-bit
+# conversions) call the run-time ABI helpers, and the linker resolves those
+# calls inside libgcc while it scans it, so libgcc's double arithmetic, which
+# misrounds (D99), could come in beside ours, or instead of it, without a
+# duplicate-symbol error. make check runs it after the unit tests:
+#
+#   tools/scripts/libgcc-check --nm NM --libgcc LIBGCC BUILD_ROOT
+#
+# reads every link map under BUILD_ROOT (build/<board>/<build type>), lists
+# the libgcc members each one includes, and reports every member that
+# defines a global symbol some libc*.a under BUILD_ROOT/libc also defines.
+
+import argparse
+import glob
+import os
+import re
+import subprocess
+import sys
+
+MEMBER = re.compile(r'libgcc\.a\(([^)]+)\)')
+
+
+def defined_symbols(nm, archive):
+	"""{member: set of global symbols it defines} for an archive"""
+	output = subprocess.run([nm, '-A', '-g', '--defined-only', archive], check=True, capture_output=True, text=True).stdout
+	members = {}
+	for line in output.splitlines():
+		# <archive>:<member>:<value> <type> <symbol>, the value absent for some types
+		fields = line.split()
+		if len(fields) < 2:
+			continue
+		location = fields[0].rsplit(':', 2)
+		if len(location) < 2:
+			continue
+		members.setdefault(location[1], set()).add(fields[-1])
+	return members
+
+
+def main():
+	parser = argparse.ArgumentParser(description='Fail when a program links a libgcc object that defines one of the library\'s own symbols (PLAN D102)')
+	parser.add_argument('--nm', required=True)
+	parser.add_argument('--libgcc', required=True)
+	parser.add_argument('build_root')
+	args = parser.parse_args()
+
+	ours = set()
+	for archive in glob.glob(os.path.join(args.build_root, 'libc', 'libc*.a')):
+		for symbols in defined_symbols(args.nm, archive).values():
+			ours |= symbols
+	libgcc = defined_symbols(args.nm, args.libgcc)
+
+	maps = sorted(glob.glob(os.path.join(args.build_root, '**', '*.map'), recursive=True))
+	problems = 0
+	for path in maps:
+		with open(path, errors='replace') as f:
+			included = sorted(set(MEMBER.findall(f.read())))
+		for member in included:
+			clash = sorted(libgcc.get(member, set()) & ours)
+			if clash:
+				problems += 1
+				print(f'{os.path.relpath(path, args.build_root)}: libgcc {member} defines {", ".join(clash)}')
+
+	print(f'libgcc-check: {len(maps)} link maps, {problems} libgcc object(s) defining the library\'s symbols')
+	return 1 if problems else 0
+
+
+if __name__ == '__main__':
+	sys.exit(main())

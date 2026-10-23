@@ -14,7 +14,7 @@
 #include <stdint.h>
 
 #include "internal/aeabi.h"
-#include "softdouble.h"
+#include "internal/softdouble.h"
 #include "softdp.h"
 
 /*

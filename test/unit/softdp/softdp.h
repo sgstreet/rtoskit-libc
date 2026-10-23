@@ -24,12 +24,13 @@ uint64_t next(uint64_t *state);
 uint64_t operand(uint64_t *state, int kind);
 
 /*
- * The soft-dp layer checked case by case (PLAN D99): its C helpers and the
- * models of its assembly against the hardware on x86_64 (direct.c), its
- * assembly against the models on the cores that link it (assembly.c),
- * nothing elsewhere (layer_none.c)
+ * The soft-dp layer checked case by case (PLAN D99, D102): its C helpers
+ * and the models of its assembly against the hardware on x86_64
+ * (direct.c), its assembly against the models on the cores that link it
+ * (assembly.c), nothing elsewhere (layer_none.c). iterations random cases,
+ * and every float_stride-th float through the conversion from float.
  */
-void test_layer(void);
+void test_layer(unsigned long iterations, unsigned long float_stride);
 
 /* The models of __aeabi_dadd and __aeabi_dmul (reference_add.c, reference_multiply.c) */
 __LIBC_AEABI double reference_add(double a, double b);
@@ -44,5 +45,12 @@ enum {
 };
 
 int reference_compare(uint64_t ua, uint64_t ub);
+
+/* The models of the conversions written only in assembly (reference_convert.c), on bits */
+uint64_t reference_f2d(uint32_t bits);
+int32_t reference_d2iz(uint64_t bits);
+uint32_t reference_d2uiz(uint64_t bits);
+uint64_t reference_ul2d(uint64_t sign, uint64_t u);
+uint64_t reference_l2d(int64_t a);
 
 #endif /* _SOFTDP_H */

@@ -171,13 +171,29 @@ Out of range, the conversions to integers saturate, and NaN gives 0. That is wha
   - the sticky bit dropped from b's long shift;
   - the sticky bit dropped from dmul's underflow shift;
   - the sign of a zero difference of two subnormals.
-- **Development runs, not kept:**
-  - under qemu, the assembly against the C:
+- **The long comparison, `tools/scripts/softdp-diff` (D102):**
+  - It runs the same test with more cases: `softdp.elf [iterations [float-stride]]`; `make check` uses 300,000 iterations and a float stride of 65,521.
+  - On x86_64 it checks the C helpers and the models against the hardware. On armv7e-m and armv8-m.main (qemu) it checks the assembly against the models: `dadd`, `dsub`, `dmul`, the six comparisons, and the conversions `d2f`, `d2iz`, `d2uiz`, `l2d`, `ul2d` and `f2d`.
+  - The defaults are 100 million iterations and every float through `f2d`. That is about 28 minutes per Arm board and 2 minutes on x86_64; the first run found no difference (D102).
+  - The development runs before D102 were ad hoc and are not reproducible:
     - 200 million add, subtract and multiply cases;
     - 20 million each concentrated on exponent fields 0–3 and on products that underflow;
     - all 2^32 floats through `f2d`;
-    - 100 million cases each of `d2f`, `d2iz`, `d2uiz`, `l2d` and `ul2d`;
-  - on the host, 200 million cases of the C helpers against the hardware, and 300 million divisions with divisors near 2^52 and 2^53 and near-exact quotients.
+    - on the host, 300 million divisions with divisors near 2^52 and 2^53.
+  - The script replaces them. Its results are recorded in PLAN D102.
+
+## The soft-int layer and the libgcc check (D102)
+
+- **`make check` reads every link map** (`tools/scripts/libgcc-check`) and fails when a program includes a libgcc member that defines a symbol some `libc*.a` also defines. Strong symbols (D100) only make a clash an error when both definitions are linked. A libgcc helper that calls a symbol only libgcc defines can still bring in libgcc's version of one of ours, before our archive is scanned again.
+- **The check's first run found exactly that on Armv6-M,** in `bench-stdio` and `bench-strto`:
+  - libgcc's `__aeabi_d2lz` (`_fixdfdi`) negates and calls `__fixunsdfdi`;
+  - that calls `__fixunsdfsi`, which subtracts in floating point;
+  - so libgcc's `subdf3.o` came in, with its own `__aeabi_dadd`/`dsub`, in place of D85's.
+- **The fix is the conversions to 64-bit integers in C, in a new layer `soft-int`.** It holds `__aeabi_d2lz`, `__aeabi_d2ulz`, `__aeabi_f2lz` and `__aeabi_f2ulz`, moved out of soft-dp. The nofp and soft-dp cores share it.
+  - The nofp layer adds `__aeabi_d2uiz` and `__aeabi_f2uiz`, which libgcc implemented through the same subtraction.
+  - `softdouble.h` moves to `libc/internal/` for the layers that share it.
+  - The x86_64 unit test now checks those C helpers against the hardware as well.
+- **After the fix,** no program of the 18 configurations links a libgcc member that defines one of our symbols.
 
 ## Results
 
