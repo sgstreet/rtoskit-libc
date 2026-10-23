@@ -163,6 +163,12 @@ The library reaches the OS only through the `__rtos_*` functions declared in
   `qemu-arm`), not a production target.
 - A new port copies `port/none` and implements the seam for its RTOS (see
   `include/rtos/rtos-port.h` and `docs/research/threads.md`).
+- **An RTOS whose heap is an `sbrk` break** (pi-pico's `sys/sbrk.c`, D103):
+  the port's `__rtos_heap_region` takes one block from that `sbrk` at index
+  0 and returns false after it. libc calls it once, at the first allocation,
+  and owns the block from then on, so the port decides how much to take:
+  everything up to the heap's end, or all but a reserve for the RTOS's other
+  `sbrk` users, which keep working from the break above the block.
 
 ## Build variables
 
