@@ -24,7 +24,6 @@ void *malloc(size_t size)
 	void *p = nullptr;
 
 	__rtos_lock_acquire(&__rtos_malloc_lock);
-	__libc_tiny_init();
 	if (stride != 0)
 		p = __libc_tiny_allocate(stride);
 	__rtos_lock_release(&__rtos_malloc_lock);

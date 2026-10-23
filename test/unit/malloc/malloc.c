@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <rtos/rtos-port.h>
 
 #include "internal/malloc.h"
 
@@ -26,8 +27,9 @@ static constexpr size_t heap_align = 2 * sizeof(size_t);
 /*
  * The allocator (P1.04), built once per variant (malloc-nano, malloc-tlsf, malloc-tiny): alignment, zero sizes, overflow, exhaustion and
  * recovery, realloc in place and by moving, aligned_alloc, strdup/strndup,
- * and a randomised operation sequence with the heap consistency checker
- * after every step. Vectors from docs/research/malloc.md.
+ * a randomised operation sequence with the heap consistency checker
+ * after every step, and growth through __rtos_sbrk when something else
+ * moves the break (PLAN D103). Vectors from docs/research/malloc.md.
  */
 
 static int failures;
@@ -61,6 +63,118 @@ static bool filled(const unsigned char *p, size_t n, unsigned char seed)
 			return false;
 
 	return true;
+}
+
+/*
+ * The growth helper's contract on a heap record of its own (D103): in place
+ * when nothing moved the break, otherwise a new segment at least a minimum
+ * chunk above the old end that holds the stride, for every
+ * misalignment of the foreign break and for both minimum strides in use.
+ */
+static void test_grow_geometry(void)
+{
+	static const size_t min_strides[] = { heap_align, 2 * heap_align };
+
+	for (size_t m = 0; m < sizeof(min_strides) / sizeof(min_strides[0]); ++m) {
+		size_t min_stride = min_strides[m];
+		struct __libc_malloc_heap heap = {};
+		char *bridge = nullptr;
+		char *chunk = nullptr;
+
+		CHECK(__libc_malloc_grow(&heap, 4 * heap_align, min_stride, &chunk, &bridge));
+		CHECK(bridge == chunk && heap.first == chunk && aligned(chunk, heap_align) && heap.end - chunk >= (ptrdiff_t)(4 * heap_align));
+
+		for (size_t offset = 0; offset < 2 * heap_align; ++offset) {
+			for (size_t stride = heap_align; stride <= 4 * heap_align; stride += heap_align) {
+				char *end = heap.end;
+				char *brk = heap.brk;
+
+				/* In place: the new memory starts at the old end and adds at least stride */
+				CHECK(__libc_malloc_grow(&heap, stride, min_stride, &chunk, &bridge));
+				CHECK(chunk == end && bridge == chunk && aligned(heap.end, heap_align) && heap.end - end >= (ptrdiff_t)stride && heap.end <= heap.brk && heap.brk > brk);
+
+				/* Moved: a bridge of at least min_stride, then at least a whole chunk */
+				end = heap.end;
+				CHECK(offset == 0 || __rtos_sbrk((ptrdiff_t)offset) != (void *)-1);
+				CHECK(__libc_malloc_grow(&heap, stride, min_stride, &chunk, &bridge));
+				if (offset == 0)
+					continue;
+				CHECK(bridge == end && chunk - end >= (ptrdiff_t)min_stride && aligned(chunk, heap_align) && aligned(heap.end, heap_align));
+				CHECK(heap.end - chunk >= (ptrdiff_t)stride && heap.end <= heap.brk && heap.brk - heap.end < (ptrdiff_t)heap_align);
+			}
+		}
+	}
+
+	/* Requests above the bound fail before they reach __rtos_sbrk, so every increment is positive */
+	errno = 0;
+	CHECK(malloc((size_t)__LIBC_MALLOC_MAX + 1) == nullptr && errno == ENOMEM);
+	errno = 0;
+	CHECK(aligned_alloc((size_t)1 << (sizeof(size_t) * 8 - 2), 16) == nullptr && errno == ENOMEM);
+}
+
+/*
+ * Move the break behind the allocator's back between allocations (D103), so
+ * the heap continues in a new segment over a bridge: with a big request,
+ * and with a free top chunk followed by a slightly larger request, for
+ * breaks moved by one byte, an alignment unit and an odd amount. Runs on
+ * the fresh heap, before the capacity is measured.
+ */
+static void test_foreign_break(void)
+{
+	static const size_t extra[] = { 1, 2 * sizeof(size_t), 3 };
+	unsigned char *blocks[4];
+	char *foreign;
+
+	blocks[0] = malloc(1000);
+	CHECK(blocks[0] != nullptr);
+	fill(blocks[0], 1000, 1);
+
+	/* An unaligned foreign piece, then a request that needs a new segment */
+	foreign = __rtos_sbrk(4096 + 3);
+	CHECK(foreign != (char *)-1);
+	blocks[1] = malloc(100000);
+	CHECK(blocks[1] != nullptr && aligned(blocks[1], heap_align) && (char *)blocks[1] > foreign + 4096);
+	fill(blocks[1], 100000, 2);
+	CHECK(__libc_malloc_check());
+
+	/* A free top chunk and a slightly larger request: the new segment lies beyond the foreign bytes */
+	for (size_t i = 0; i < sizeof(extra) / sizeof(extra[0]); ++i) {
+		unsigned char *top = malloc(2000);
+
+		CHECK(top != nullptr);
+		free(top);
+		CHECK(__rtos_sbrk((ptrdiff_t)extra[i]) != (void *)-1);
+		top = malloc(2000 + 8 * sizeof(size_t) * i + 64);
+		CHECK(top != nullptr && aligned(top, heap_align));
+		fill(top, 2000, 3);
+		CHECK(filled(top, 2000, 3));
+		CHECK(__libc_malloc_check());
+		free(top);
+		CHECK(__libc_malloc_check());
+	}
+
+	/* Bridges never merge: freeing around them keeps the heap consistent and the payloads intact */
+	blocks[2] = malloc(300);
+	blocks[3] = realloc(blocks[0], 50000);
+	CHECK(blocks[2] != nullptr && blocks[3] != nullptr && filled(blocks[3], 1000, 1) && filled(blocks[1], 100000, 2));
+	free(blocks[1]);
+	CHECK(__libc_malloc_check());
+	free(blocks[3]);
+	free(blocks[2]);
+	CHECK(__libc_malloc_check());
+
+	/* Everything is free again: no allocation, however it walks or merges, may land in the foreign bytes */
+	{
+		static void *again[64];
+
+		for (size_t i = 0; i < sizeof(again) / sizeof(again[0]); ++i) {
+			again[i] = malloc(16 + 64 * i);
+			CHECK(again[i] != nullptr && ((char *)again[i] + 16 + 64 * i <= foreign || (char *)again[i] >= foreign + 4096 + 3));
+		}
+		for (size_t i = 0; i < sizeof(again) / sizeof(again[0]); ++i)
+			free(again[i]);
+		CHECK(__libc_malloc_check());
+	}
 }
 
 /* The largest single allocation that succeeds right now, found by bisection */
@@ -336,6 +450,8 @@ static void test_fuzz(void)
 
 int main(void)
 {
+	test_grow_geometry();
+	test_foreign_break();
 	capacity = largest_allocation();
 	CHECK(capacity > 0);
 

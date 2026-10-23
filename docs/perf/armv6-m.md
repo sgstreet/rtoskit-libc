@@ -1130,3 +1130,11 @@ The floating-point operations that become run-time library calls without an FPU 
 | `stdio/sscanf/%lf` | 5107 (4076) | 5028 (3997) | −1.5 % (−1.9 %) |
 
 Only `d2l` and `f2l` measure the library. The other changes are the benchmarks' own conversions: `run_strtod` folds each result into its checksum through `__aeabi_d2lz` (634 instructions fewer per operation), the double `math` loops do the same (39.6 fewer), and `run_sscanf_f` through `__aeabi_d2uiz` (79 fewer). `strtod`, `sscanf` and the libm functions are unchanged; `floor` and `round` show −16 to −19 % only because they are short.
+
+
+## D103 — the allocators grow the heap through `__rtos_sbrk`
+
+The `malloc` and `malloc-tiny` cases, release and speed: −0.0 % to −1.6 % instructions per operation; no other case changes.
+Growth in place by exactly the stride, tiny's single empty-heap test and direct use of the new chunk, and nano's
+out-of-line growth behind a leaf first fit keep the fast paths at least as short as with fixed regions
+(`docs/research/malloc.md`). Baselines recorded.

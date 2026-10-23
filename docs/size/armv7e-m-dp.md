@@ -568,3 +568,13 @@ case) and the inline halfway test, and share the out-of-line lookup
 links `cosf`, `logf` and `sinf`), which leaves `math-float` 64 bytes
 inside the size budget. No other image changes; the soft-float cores do not
 use these wrappers.
+
+
+## D103 — the allocators grow the heap through `__rtos_sbrk`
+
+The heap seam is `__rtos_sbrk` instead of `__rtos_heap_region`: nano, TLSF and tiny grow the heap on demand, and a
+used bridge chunk spans memory that something else took from the break (`docs/research/malloc.md`). `malloc-heavy` is
+1982 bytes of code (+68, libc +48) and `malloc-heavy-tiny` 1926 (+72, libc +52): the growth itself, the exact in-place
+growth and the out-of-line slow path that keep every malloc benchmark from regressing, and the Linux test port's
+`__rtos_sbrk`, which keeps a break and checks its bound where `__rtos_heap_region` only mapped a region. RAM grows by
+12 bytes (the port's break and limit, the heap record's third pointer). No other image changes. Grew, justified: smaller versions failed the speed gate, and by the user's choice the budgets are the new sizes, `malloc-heavy` 1934 → 1982 and `malloc-heavy-tiny` 1874 → 1926 (`budget.json`).

@@ -22,13 +22,11 @@
 void *malloc(size_t size)
 {
 	size_t stride = __libc_tlsf_request(size);
-	struct __libc_tlsf *heap;
 	void *p = nullptr;
 
 	__rtos_lock_acquire(&__rtos_malloc_lock);
-	heap = __libc_tlsf_get();
-	if (heap != nullptr && stride != 0)
-		p = __libc_tlsf_allocate(heap, stride);
+	if (stride != 0)
+		p = __libc_tlsf_allocate(&__libc_tlsf_heap, stride);
 	__rtos_lock_release(&__rtos_malloc_lock);
 
 	if (p == nullptr)

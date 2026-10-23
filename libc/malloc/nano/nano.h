@@ -17,6 +17,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "internal/malloc.h"
+
 /*
  * The small allocator, the default (LIBC_MALLOC=nano; docs/research/malloc.md,
  * PLAN D32): first fit over one free list kept in address order, merging
@@ -24,7 +26,9 @@
  *
  * A chunk is named by its payload address p. The word before p holds its
  * stride, the distance to the next chunk's payload, so a used chunk costs one
- * word. A free chunk keeps the link to the next free chunk at p.
+ * word. A free chunk keeps the link to the next free chunk at p. The heap
+ * grows with __rtos_sbrk (D103); a used bridge chunk spans any memory
+ * between its segments, so the chunks form one chain from first to end.
  */
 
 #define __LIBC_NANO_WORD sizeof(size_t)
@@ -37,18 +41,10 @@ struct __libc_nano_chunk {
 	struct __libc_nano_chunk *next;
 };
 
-/* Kept at the start of each region so the checker can walk it */
-struct __libc_nano_region {
-	struct __libc_nano_region *next;
-	void *first;
-	void *end;
-};
-
 /* Protected by __rtos_malloc_lock */
 struct __libc_nano_heap {
 	struct __libc_nano_chunk *free_list;
-	struct __libc_nano_region *regions;
-	bool initialised;
+	struct __libc_malloc_heap top;
 };
 
 extern struct __libc_nano_heap __libc_nano_heap;
@@ -63,17 +59,16 @@ static inline bool __libc_nano_below(const void *a, const void *b)
 	return (uintptr_t)a < (uintptr_t)b;
 }
 
-/* The stride holding size bytes, or 0 when it cannot be represented */
+/* The stride holding size bytes, or 0 above __LIBC_MALLOC_MAX */
 static inline size_t __libc_nano_request(size_t size)
 {
-	if (size > SIZE_MAX - __LIBC_NANO_WORD - (__LIBC_NANO_ALIGN - 1))
+	if (size > __LIBC_MALLOC_MAX)
 		return 0;
 
 	return (size + __LIBC_NANO_WORD + __LIBC_NANO_ALIGN - 1) & ~(__LIBC_NANO_ALIGN - 1);
 }
 
 /* Lock held by the callers of every function below */
-void __libc_nano_init(void);
 void *__libc_nano_allocate(size_t stride);
 void __libc_nano_release(void *p);
 void __libc_nano_trim(void *p, size_t stride);

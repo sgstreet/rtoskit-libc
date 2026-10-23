@@ -159,11 +159,15 @@ The 4.2 KB first quoted for TLSF was x86_64 code including the checker.
 
 ## Seam
 
-- **Heap:** `bool __rtos_heap_region(unsigned int index, void **base, size_t *size)`
-  rather than `__rtos_sbrk`: fixed regions match MCU linker scripts and
-  multi-bank memory, need no growth protocol, and keep allocation
-  deterministic. A port with growable memory reserves a region up front (the
-  Linux port maps 64 MiB with `MAP_NORESERVE`, so untouched pages cost nothing).
+- **Heap (D103, superseding the region seam of D31):** `void *__rtos_sbrk(ptrdiff_t increment)`,
+  the classic `sbrk` contract: move the break by `increment` and return the
+  old break, or `(void *)-1` when the memory is not there. libc only grows
+  the heap (positive increments, called with `__rtos_malloc_lock` held) and
+  never gives memory back. The first design (D31) preferred fixed regions;
+  the user's RTOS already owns the heap through a spinlock-protected `sbrk`
+  that other code can use too, so the allocators now grow on demand through
+  it. A board with several memories merges them in its own `sbrk`, or uses
+  one. See "Growing with sbrk" below.
 - **Locks:** opaque `struct __rtos_lock` defined by the port; libc only holds
   pointers and names statically allocated locks the port must provide
   (`__rtos_malloc_lock` now; stdio, `atexit` and environment locks join with
@@ -174,6 +178,103 @@ The 4.2 KB first quoted for TLSF was x86_64 code including the checker.
 - `port/none`: single-threaded no-ops. `port/linux` until P1.12: a depth counter
   that aborts on a release without an acquire, so unbalanced locking shows up
   in tests.
+
+## Growing with sbrk (D103)
+
+Sources (reviewed as design descriptions; no code taken):
+
+- picolibc `libc/stdlib/malloc.c` (<https://github.com/picolibc/picolibc/blob/main/libc/stdlib/malloc.c>):
+  the break is padded once to the chunk alignment; when the last free chunk
+  ends at the break, `malloc` asks `sbrk` only for the difference and extends
+  that chunk in place; a non-contiguous result becomes a separate free chunk
+  and the extension reports failure; nothing is ever given back.
+- Matthew Conte's TLSF, `tlsf_add_pool` (<https://github.com/mattconte/tlsf>):
+  each pool is one free block followed by a zero-size used sentinel, two
+  words of overhead; pools are never merged with one another, and the walker
+  cannot cross from one pool to the next (the barebox patches of 2025,
+  <https://lists.infradead.org/pipermail/barebox/2025-April/050297.html>, add
+  a pool list for that reason). TLSF 2.4 grows its pool through `sbrk` or
+  `mmap` when built with `USE_SBRK`.
+- dlmalloc (`MORECORE_CONTIGUOUS`, e.g. the copy in U-Boot
+  <https://qemu.googlesource.com/u-boot/+/5d2fae79c7d60eaf7f50322e4ec125d2f58544e9/common/dlmalloc.c>):
+  the top chunk is extended by `MORECORE`; when the result is not contiguous
+  a new segment starts and the old top is fenced off.
+
+Chosen design, the same in all three allocators:
+
+- **Heap state:** `first` (the first chunk, null until the first growth),
+  `end` (the payload address of the end marker; its header word is the last
+  word of the heap) and `brk` (the break as libc last left it, null until
+  the first growth). Chunks tile `first` to `end`; tiny and TLSF keep their
+  zero-stride used sentinel at `end`, nano needs none (its free list finds
+  the chunks).
+- **Growth on demand:** an allocation that finds no chunk asks `sbrk` for
+  its whole stride. In place that is exactly enough (the aligned new end is
+  at least the old end plus the stride), so steady growth leaves no slack
+  chunks behind. The first growth, and a growth that finds the break moved,
+  needs one minimum chunk and two alignment units more (a bridge's offset
+  and the alignment of both ends): the first asks for them at once, the
+  moved case with a second `sbrk` call (if something moves the break between
+  the two calls, that memory is lost and the growth fails).
+- **Speed (each found with the benchmarks):** slack left in every growth
+  became small free chunks that tiny's walk crossed (+8 % to +24 % on its
+  batch cases); tiny's walk tests for the empty heap once, not at every
+  step; tiny takes the new chunk directly (it holds the stride) instead of
+  walking again; nano's growth sits in an out-of-line function behind a
+  leaf first-fit path (inlined, it cost x86_64 five register saves on every
+  `malloc`).
+- **Not only the difference (the user's choice, for size):** picolibc asks
+  only for what a free top chunk lacks. That needs the top chunk's size at
+  every growth and cost 40–50 bytes more in each allocator. Without it, a
+  large request near the end of a fixed heap can fail although a free top
+  chunk plus the rest of the break would have held it; the free top chunk
+  still merges with whatever the next growth adds.
+- **Contiguous result** (`sbrk` returned `brk`): the new memory up to the
+  aligned new break becomes a chunk at the old `end`, merged with a free top
+  chunk, and the end marker moves up.
+- **Non-contiguous result** (something else moved the break): the old end
+  marker becomes a used *bridge* chunk whose stride reaches over the foreign
+  memory to the new segment, so the heap stays one chain that the checkers
+  and tiny's walk follow, and that merging never crosses. Its stride is at
+  least one minimum chunk. This replaces both nano's region records and
+  TLSF's region table.
+- **One inline helper,** `__libc_malloc_grow` (`libc/internal/malloc.h`),
+  computes all of this, so each allocator folds its own minimum chunk. It
+  hands back where the bridge goes, or the new chunk itself when there is
+  none (in place, or the first growth), so the caller writes the bridge
+  header unconditionally and the chunk's own header overwrites it.
+- **Grow only:** the break never goes down (the user's choice), so freed
+  memory stays in the allocator, and a port may refuse negative increments.
+  The seam contract forbids other users to move the break below memory libc
+  holds; libc does not check it.
+- **Request bound:** every allocator refuses requests above
+  `__LIBC_MALLOC_MAX` (`PTRDIFF_MAX / 4`, 512 MiB on 32-bit targets) and
+  alignments above it, so a stride plus an alignment, TLSF's class rounding
+  and the growth slack stays below `PTRDIFF_MAX`: every increment is
+  positive and no growth computation can overflow.
+- **TLSF's control block** moves to static storage with first-level lists
+  for every stride `size_t` can hold (26 on 32-bit targets, 1.8 KiB; 57 on
+  x86_64), since the heap's final size is no longer known when it is set up.
+  It grows by the rounded-up class, so a found list head always fits; when
+  `sbrk` cannot supply that, a free top block that holds the exact stride is
+  still used.
+- **Edge cases:** a failed `sbrk` changes nothing; the first growth has no
+  top chunk and no bridge; repeated non-contiguous results each add a bridge
+  and terminate when `sbrk` fails.
+- **Size (release, D103):** `malloc-heavy` grows by 72 bytes on Armv6-M and
+  68 on the Thumb-2 cores (libc 48, the Linux test port's `__rtos_sbrk` the
+  rest), `malloc-heavy-tiny` by 76 and 72 (libc 52); RAM by 12 bytes (the
+  port's break and limit, the heap record's third pointer). Smaller versions
+  failed the speed gate; by the user's choice the two programs' budgets on
+  the Arm boards are the new sizes (`docs/size/budget.json`), and every
+  malloc benchmark is faster or unchanged on every board and flavour.
+- **Tests:** `test/unit/malloc` checks the helper's geometry directly (in
+  place and after the break moved by every misalignment, for both minimum
+  strides in use), moves the break with `__rtos_sbrk` between allocations
+  of every allocator to force bridges, then measures the capacity, exhausts,
+  frees and checks the heap. Mutants caught: a bridge shorter than a minimum
+  chunk, a new segment without room for the stride, an in-place growth
+  treated as contiguous after a foreign move, tiny's bridge left free.
 
 ## Implementation-defined choices (C23 J.3.12)
 

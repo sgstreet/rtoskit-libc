@@ -24,6 +24,6 @@ void free(void *ptr)
 		return;
 
 	__rtos_lock_acquire(&__rtos_malloc_lock);
-	__libc_tlsf_release(__libc_tlsf_get(), ptr);
+	__libc_tlsf_release(&__libc_tlsf_heap, ptr);
 	__rtos_lock_release(&__rtos_malloc_lock);
 }

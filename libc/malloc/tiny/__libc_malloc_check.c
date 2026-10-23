@@ -22,8 +22,7 @@ bool __libc_malloc_check(void)
 	bool status = true;
 
 	__rtos_lock_acquire(&__rtos_malloc_lock);
-	__libc_tiny_init();
-	for (char *p = __libc_tiny_heap.first; status && p != nullptr && __libc_tiny_stride(p) != 0; p += __libc_tiny_stride(p))
+	for (char *p = __libc_tiny_heap.top.first; status && p != nullptr && __libc_tiny_stride(p) != 0; p += __libc_tiny_stride(p))
 		status = __libc_tiny_stride(p) % __LIBC_TINY_ALIGN == 0 && __libc_tiny_stride(p) >= __LIBC_TINY_MIN_STRIDE;
 	__rtos_lock_release(&__rtos_malloc_lock);
 

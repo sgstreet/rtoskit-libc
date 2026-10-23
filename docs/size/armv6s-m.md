@@ -704,3 +704,13 @@ and `__aeabi_f2ulz` (80), and the nofp layer's `__aeabi_d2uiz` (80) and `__aeabi
 converted a double to a 64-bit integer linked libgcc's conversions, which subtract in floating point and brought in
 libgcc's `subdf3.o` (its own `__aeabi_dadd`, about 1.4 KB) in place of D85's. No reference program converts to a
 64-bit integer, so every image is unchanged and both budgets hold.
+
+
+## D103 — the allocators grow the heap through `__rtos_sbrk`
+
+The heap seam is `__rtos_sbrk` instead of `__rtos_heap_region`: nano, TLSF and tiny grow the heap on demand, and a
+used bridge chunk spans memory that something else took from the break (`docs/research/malloc.md`). `malloc-heavy` is
+2278 bytes of code (+72, libc +48) and `malloc-heavy-tiny` 2202 (+76, libc +52): the growth itself, the exact in-place
+growth and the out-of-line slow path that keep every malloc benchmark from regressing, and the Linux test port's
+`__rtos_sbrk`, which keeps a break and checks its bound where `__rtos_heap_region` only mapped a region. RAM grows by
+12 bytes (the port's break and limit, the heap record's third pointer). No other image changes. Grew, justified: smaller versions failed the speed gate, and by the user's choice the budgets are the new sizes, `malloc-heavy` 2214 → 2278 and `malloc-heavy-tiny` 2134 → 2202 (`budget.json`).

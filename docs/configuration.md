@@ -138,8 +138,9 @@ make clean && make LIBC_MALLOC=tlsf
 ```
 
 `make clean` is needed when changing it, because archives are updated in
-place. The heap comes from the port: `__rtos_heap_region` describes one or
-more regions (`tiny` uses only the first).
+place. The heap comes from the port: every allocator grows it on demand
+through `__rtos_sbrk` (the `sbrk` contract, D103) and never shrinks it. Other
+code may move the break too; the allocators continue above it.
 
 ## Ports (D4)
 
@@ -151,8 +152,9 @@ The library reaches the OS only through the `__rtos_*` functions declared in
     `__rtos_none_start(&tls_image)`. That places the TLS block in a static
     1024-byte buffer and runs `main` through `__libc_start_main`.
   - **Heap:** the linker script defines `__rtos_none_heap_start` and
-    `__rtos_none_heap_end`. Or the board defines its own
-    `__rtos_heap_region` for several regions.
+    `__rtos_none_heap_end`, and the weak `__rtos_sbrk` moves a break between
+    them. Or the board defines its own `__rtos_sbrk` (an RTOS with an `sbrk`
+    of its own forwards to it).
   - **Output:** `stdout`/`stderr` bytes go to the weak
     `__rtos_none_output(buffer, count)`, which discards them. Define it,
     for example over a UART.

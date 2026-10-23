@@ -10,13 +10,12 @@
  * Created on: Oct 18, 2026
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
-
 #include <stddef.h>
 
 #include "nano.h"
 
 /* First fit; a large enough remainder stays in the list in the chunk's place */
-void *__libc_nano_allocate(size_t stride)
+static void *find(size_t stride)
 {
 	for (struct __libc_nano_chunk **link = &__libc_nano_heap.free_list; *link != nullptr; link = &(*link)->next) {
 		struct __libc_nano_chunk *chunk = *link;
@@ -40,4 +39,35 @@ void *__libc_nano_allocate(size_t stride)
 	}
 
 	return nullptr;
+}
+
+/* Add a chunk of at least stride bytes from __rtos_sbrk, merged with a free top chunk when in place (D103) */
+static bool grow(size_t stride)
+{
+	struct __libc_malloc_heap *top = &__libc_nano_heap.top;
+	char *bridge;
+	char *chunk;
+
+	if (!__libc_malloc_grow(top, stride, __LIBC_NANO_MIN_STRIDE, &chunk, &bridge))
+		return false;
+
+	/* The old end becomes a used bridge over memory that is not the heap's */
+	*__libc_nano_header(bridge) = chunk - bridge;
+	*__libc_nano_header(chunk) = top->end - chunk;
+	__libc_nano_release(chunk);
+
+	return true;
+}
+
+/* Out of line, so that the first-fit path saves no registers for it */
+[[gnu::noinline]] static void *grow_and_allocate(size_t stride)
+{
+	return grow(stride) ? __libc_nano_allocate(stride) : nullptr;
+}
+
+void *__libc_nano_allocate(size_t stride)
+{
+	void *p = find(stride);
+
+	return p != nullptr ? p : grow_and_allocate(stride);
 }

@@ -17,15 +17,19 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "internal/malloc.h"
+
 /*
  * The tiny allocator (LIBC_MALLOC=tiny, libc-tinymalloc.a; docs/research/
  * malloc-tiny.md, PLAN D54): an implicit free list. A chunk is named by its
  * payload address p; the word before p holds its stride, the distance to
  * the next chunk's payload, with bit 0 set while the chunk is in use. The
- * chunks tile the port's first heap region (the only one used), and a used
+ * chunks tile the heap, which grows with __rtos_sbrk (D103), and a used
  * sentinel chunk of stride 0 ends it, so the heap is found by walking from
- * one pointer and merging stops at the sentinel by itself. free only clears the bit; allocation walks first fit,
- * merging the free chunks it passes. Smaller than nano, with a slower malloc.
+ * one pointer and merging stops at the sentinel by itself; a used bridge
+ * chunk spans any memory between segments. free only clears the bit;
+ * allocation walks first fit, merging the free chunks it passes. Smaller
+ * than nano, with a slower malloc.
  */
 
 #define __LIBC_TINY_WORD sizeof(size_t)
@@ -35,10 +39,9 @@
 
 static_assert(__LIBC_TINY_ALIGN >= alignof(max_align_t), "payloads must suit every fundamental type");
 
-/* Protected by __rtos_malloc_lock; first is null until the heap is set up */
+/* Protected by __rtos_malloc_lock */
 struct __libc_tiny_heap {
-	char *first;
-	bool initialised;
+	struct __libc_malloc_heap top;
 };
 
 extern struct __libc_tiny_heap __libc_tiny_heap;
@@ -53,17 +56,16 @@ static inline size_t __libc_tiny_stride(void *p)
 	return *__libc_tiny_header(p) & ~__LIBC_TINY_USED;
 }
 
-/* The stride holding size bytes, or 0 when it cannot be represented */
+/* The stride holding size bytes, or 0 above __LIBC_MALLOC_MAX */
 static inline size_t __libc_tiny_request(size_t size)
 {
-	if (size > SIZE_MAX - __LIBC_TINY_WORD - (__LIBC_TINY_ALIGN - 1))
+	if (size > __LIBC_MALLOC_MAX)
 		return 0;
 
 	return (size + __LIBC_TINY_WORD + __LIBC_TINY_ALIGN - 1) & ~(__LIBC_TINY_ALIGN - 1);
 }
 
 /* Lock held by the callers of every function below */
-void __libc_tiny_init(void);
 void *__libc_tiny_allocate(size_t stride);
 void __libc_tiny_merge(void *p);
 void __libc_tiny_trim(void *p, size_t stride);

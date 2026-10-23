@@ -101,13 +101,16 @@ int __rtos_clock_gettime(int base, struct timespec *ts);
 int __rtos_clock_getres(int base, struct timespec *res);
 
 /*
- * Heap (PLAN D31). libc's allocator asks for its memory once, at the first
- * allocation, by calling this with index 0, 1, 2, ... until it returns false
- * (at most 8 regions). Each region is a fixed block of memory the allocator
- * owns from then on; it needs no particular alignment. A port without heap
- * memory returns false for index 0, and every allocation then fails.
+ * Heap (PLAN D103, superseding D31's regions). __rtos_sbrk has the sbrk
+ * contract: it moves the break by increment and returns the old break, or
+ * (void *)-1, leaving the break alone, when the memory is not there. The
+ * break needs no particular alignment. libc's allocator grows the heap with
+ * it on demand, only ever by positive increments (a port may refuse others),
+ * and calls it with __rtos_malloc_lock held; the port protects the break
+ * itself if anything else moves it. Other users may move it between libc's
+ * calls, but never below memory libc has been given.
  */
-bool __rtos_heap_region(unsigned int index, void **base, size_t *size);
+void *__rtos_sbrk(ptrdiff_t increment);
 
 /*
  * Locks (PLAN D31, D79). The port defines struct __rtos_lock; libc only

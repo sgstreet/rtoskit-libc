@@ -23,9 +23,6 @@ static bool in_list(struct __libc_tlsf *heap, void *p)
 	unsigned int sl;
 
 	__libc_tlsf_mapping(__libc_tlsf_stride(p), &fl, &sl);
-	if (fl >= heap->fl_count)
-		return false;
-
 	for (struct __libc_free_block *block = heap->lists[fl][sl]; block != nullptr; block = block->next)
 		if (block == p)
 			return true;
@@ -33,42 +30,40 @@ static bool in_list(struct __libc_tlsf *heap, void *p)
 	return false;
 }
 
-/* Every block of every region: strides, flags, merging and list membership */
+/* Every block from first to the sentinel, bridges included: strides, flags, merging and list membership */
 static bool check_blocks(struct __libc_tlsf *heap, size_t *free_count)
 {
-	for (unsigned int r = 0; r < heap->region_count; ++r) {
-		char *p = heap->regions[r].first;
-		char *end = heap->regions[r].end;
-		bool prev_free = false;
+	char *p = heap->top.first;
+	char *end = heap->top.end;
+	bool prev_free = false;
 
-		while (p != end) {
-			size_t stride = __libc_tlsf_stride(p);
-			bool is_free = __libc_tlsf_is_free(p);
+	if (p == nullptr)
+		return true;
 
-			if (stride < __LIBC_TLSF_MIN_STRIDE || stride % __LIBC_TLSF_ALIGN != 0 || stride > (size_t)(end - p))
-				return false;
-			if (__libc_tlsf_prev_is_free(p) != prev_free)
-				return false;
-			if (is_free && (prev_free || *__libc_tlsf_back_pointer(p + stride) != p || !in_list(heap, p)))
-				return false;
+	while (p != end) {
+		size_t stride = __libc_tlsf_stride(p);
+		bool is_free = __libc_tlsf_is_free(p);
 
-			*free_count += is_free;
-			prev_free = is_free;
-			p += stride;
-		}
-
-		/* The sentinel: zero stride, used, and its flag mirrors the last block */
-		if (__libc_tlsf_stride(end) != 0 || __libc_tlsf_is_free(end) || __libc_tlsf_prev_is_free(end) != prev_free)
+		if (stride < __LIBC_TLSF_MIN_STRIDE || stride % __LIBC_TLSF_ALIGN != 0 || stride > (size_t)(end - p))
 			return false;
+		if (__libc_tlsf_prev_is_free(p) != prev_free)
+			return false;
+		if (is_free && (prev_free || *__libc_tlsf_back_pointer(p + stride) != p || !in_list(heap, p)))
+			return false;
+
+		*free_count += is_free;
+		prev_free = is_free;
+		p += stride;
 	}
 
-	return true;
+	/* The sentinel: zero stride, used, and its flag mirrors the last block */
+	return __libc_tlsf_stride(end) == 0 && !__libc_tlsf_is_free(end) && __libc_tlsf_prev_is_free(end) == prev_free;
 }
 
 /* Every list: its blocks map to it, links are consistent, bitmaps match */
 static bool check_lists(struct __libc_tlsf *heap, size_t *free_count)
 {
-	for (unsigned int fl = 0; fl < heap->fl_count; ++fl) {
+	for (unsigned int fl = 0; fl < __LIBC_TLSF_FL_COUNT; ++fl) {
 		bool fl_used = false;
 
 		for (unsigned int sl = 0; sl < __LIBC_TLSF_SL_COUNT; ++sl) {
@@ -100,15 +95,13 @@ static bool check_lists(struct __libc_tlsf *heap, size_t *free_count)
 
 bool __libc_malloc_check(void)
 {
-	struct __libc_tlsf *heap;
+	struct __libc_tlsf *heap = &__libc_tlsf_heap;
 	size_t in_blocks = 0;
 	size_t in_lists = 0;
-	bool status = true;
+	bool status;
 
 	__rtos_lock_acquire(&__rtos_malloc_lock);
-	heap = __libc_tlsf_get();
-	if (heap != nullptr)
-		status = check_blocks(heap, &in_blocks) && check_lists(heap, &in_lists) && in_blocks == in_lists;
+	status = check_blocks(heap, &in_blocks) && check_lists(heap, &in_lists) && in_blocks == in_lists;
 	__rtos_lock_release(&__rtos_malloc_lock);
 
 	return status;

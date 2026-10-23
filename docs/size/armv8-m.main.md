@@ -684,3 +684,13 @@ The faster `__divdc3` and `__divsc3` (see `docs/perf/armv8-m.main.md`, D100) add
 ## D101 — the comparisons in Thumb-2 assembly
 
 `math-mix` grows by 24 bytes. `__aeabi_dcmpgt` and `__aeabi_dcmpge` exchange their operands before calling the shared ordering (+12 and +8 bytes); `__libc_softdouble_compare` is 106 bytes against 100 in C. That pays for comparisons 34 % faster. The size budget holds; no other image changes.
+
+
+## D103 — the allocators grow the heap through `__rtos_sbrk`
+
+The heap seam is `__rtos_sbrk` instead of `__rtos_heap_region`: nano, TLSF and tiny grow the heap on demand, and a
+used bridge chunk spans memory that something else took from the break (`docs/research/malloc.md`). `malloc-heavy` is
+1966 bytes of code (+68, libc +48) and `malloc-heavy-tiny` 1910 (+72, libc +52): the growth itself, the exact in-place
+growth and the out-of-line slow path that keep every malloc benchmark from regressing, and the Linux test port's
+`__rtos_sbrk`, which keeps a break and checks its bound where `__rtos_heap_region` only mapped a region. RAM grows by
+12 bytes (the port's break and limit, the heap record's third pointer). No other image changes. Grew, justified: smaller versions failed the speed gate, and by the user's choice the budgets are the new sizes, `malloc-heavy` 1914 → 1966 and `malloc-heavy-tiny` 1854 → 1910 (`budget.json`).

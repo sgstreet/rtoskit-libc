@@ -37,13 +37,12 @@ void *aligned_alloc(size_t alignment, size_t size)
 	if (alignment <= __LIBC_NANO_ALIGN)
 		return malloc(size);
 
-	if (stride == 0 || stride > SIZE_MAX - alignment - __LIBC_NANO_MIN_STRIDE) {
+	if (stride == 0 || alignment > __LIBC_MALLOC_MAX) {
 		errno = ENOMEM;
 		return nullptr;
 	}
 
 	__rtos_lock_acquire(&__rtos_malloc_lock);
-	__libc_nano_init();
 	p = __libc_nano_allocate(stride + alignment + __LIBC_NANO_MIN_STRIDE);
 	if (p != nullptr) {
 		address = ((uintptr_t)p + alignment - 1) & ~(uintptr_t)(alignment - 1);

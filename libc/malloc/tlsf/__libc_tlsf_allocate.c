@@ -42,12 +42,9 @@ static struct __libc_free_block *find(struct __libc_tlsf *heap, unsigned int fl,
 	uint32_t sl_map;
 	size_t fl_map;
 
-	if (fl >= heap->fl_count)
-		return nullptr;
-
 	sl_map = heap->sl_bitmap[fl] & (UINT32_MAX << sl);
 	if (sl_map == 0) {
-		fl_map = fl + 1 < __LIBC_TLSF_FL_MAX ? heap->fl_bitmap & (SIZE_MAX << (fl + 1)) : 0;
+		fl_map = fl + 1 < __LIBC_TLSF_FL_COUNT ? heap->fl_bitmap & (SIZE_MAX << (fl + 1)) : 0;
 		if (fl_map == 0)
 			return nullptr;
 		fl = stdc_trailing_zeros(fl_map);
@@ -57,7 +54,41 @@ static struct __libc_free_block *find(struct __libc_tlsf *heap, unsigned int fl,
 	return heap->lists[fl][stdc_trailing_zeros(sl_map)];
 }
 
-/* Take a block of at least stride bytes from the free lists and mark it used */
+/* The free block that ends at the sentinel, or nullptr */
+static void *free_top(struct __libc_tlsf *heap)
+{
+	char *end = heap->top.end;
+
+	return end != nullptr && __libc_tlsf_prev_is_free(end) ? *__libc_tlsf_back_pointer(end) : nullptr;
+}
+
+/* Add a block of at least search bytes from __rtos_sbrk, merged with a free top block when in place (D103) */
+static bool grow(struct __libc_tlsf *heap, size_t search)
+{
+	struct __libc_malloc_heap *top = &heap->top;
+	char *end = top->end;
+	size_t prev_flag = end != nullptr ? *__libc_tlsf_header(end) & __LIBC_TLSF_PREV_FREE : 0;
+	char *bridge;
+	char *chunk;
+
+	if (!__libc_malloc_grow(top, search, __LIBC_TLSF_MIN_STRIDE, &chunk, &bridge))
+		return false;
+
+	/* The old sentinel becomes a used bridge over memory that is not the heap's */
+	if (bridge != chunk) {
+		*__libc_tlsf_header(end) = (size_t)(chunk - end) | prev_flag;
+		prev_flag = 0;
+	}
+
+	/* A used block that release merges with a free top block and files */
+	*__libc_tlsf_header(top->end) = 0;
+	*__libc_tlsf_header(chunk) = (size_t)(top->end - chunk) | prev_flag;
+	__libc_tlsf_release(heap, chunk);
+
+	return true;
+}
+
+/* Take a block of at least stride bytes from the free lists, growing the heap when none fits, and mark it used */
 void *__libc_tlsf_allocate(struct __libc_tlsf *heap, size_t stride)
 {
 	size_t search = round_to_class(stride);
@@ -69,9 +100,15 @@ void *__libc_tlsf_allocate(struct __libc_tlsf *heap, size_t stride)
 		return nullptr;
 
 	__libc_tlsf_mapping(search, &fl, &sl);
-	p = find(heap, fl, sl);
-	if (p == nullptr)
-		return nullptr;
+	while ((p = find(heap, fl, sl)) == nullptr) {
+		if (!grow(heap, search)) {
+			/* No class-sized block and no more memory: a free top block may still hold stride exactly */
+			p = free_top(heap);
+			if (p == nullptr || __libc_tlsf_stride(p) < stride)
+				return nullptr;
+			break;
+		}
+	}
 
 	__libc_tlsf_remove(heap, p);
 	*__libc_tlsf_header(p) &= ~(size_t)__LIBC_TLSF_FREE;

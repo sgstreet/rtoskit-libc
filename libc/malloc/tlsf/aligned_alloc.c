@@ -29,7 +29,7 @@ void *aligned_alloc(size_t alignment, size_t size)
 {
 	size_t stride = __libc_tlsf_request(size);
 	size_t total;
-	struct __libc_tlsf *heap;
+	struct __libc_tlsf *heap = &__libc_tlsf_heap;
 	uintptr_t address;
 	void *p = nullptr;
 
@@ -40,16 +40,14 @@ void *aligned_alloc(size_t alignment, size_t size)
 	if (alignment <= __LIBC_TLSF_ALIGN)
 		return malloc(size);
 
-	if (stride == 0 || stride > SIZE_MAX - alignment - __LIBC_TLSF_MIN_STRIDE) {
+	if (stride == 0 || alignment > __LIBC_MALLOC_MAX) {
 		errno = ENOMEM;
 		return nullptr;
 	}
 	total = stride + alignment + __LIBC_TLSF_MIN_STRIDE;
 
 	__rtos_lock_acquire(&__rtos_malloc_lock);
-	heap = __libc_tlsf_get();
-	if (heap != nullptr)
-		p = __libc_tlsf_allocate(heap, total);
+	p = __libc_tlsf_allocate(heap, total);
 
 	if (p != nullptr) {
 		address = ((uintptr_t)p + alignment - 1) & ~(uintptr_t)(alignment - 1);

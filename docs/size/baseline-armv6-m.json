@@ -416,7 +416,8 @@
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
      "assembly: strlen",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "main",
@@ -495,7 +496,86 @@
      "assembly: memcpy",
      "assembly: memset",
      "assembly: strlen",
-     "indirect call"
+     "indirect call",
+     "recursion"
+    ],
+    "path": [
+     "main",
+     "realloc",
+     "malloc",
+     "__rtos_lock_acquire",
+     "__atomic_compare_exchange_4",
+     "libc/atomic/__atomic_compare_exchange.c:__libc_atomic_cas_small",
+     "__rtos_atomic_cas"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 16,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 4,
+     "tdata": 0,
+     "text": 1322,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 8,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 40,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 770,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 178,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 56,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 2278,
+    "unwind": 0
+   }
+  },
+  "malloc-heavy-tiny": {
+   "main": {
+    "depth": 240,
+    "notes": [
+     "assembly: __rtos_linux_syscall",
+     "assembly: memcpy",
+     "assembly: memset",
+     "assembly: strlen",
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "main",
@@ -514,7 +594,7 @@
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 1274,
+     "text": 1246,
      "unwind": 0
     },
     "libgcc": {
@@ -536,12 +616,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 32,
+     "bss": 40,
      "data": 0,
      "rodata": 0,
      "tbss": 0,
      "tdata": 4,
-     "text": 746,
+     "text": 770,
      "unwind": 0
     },
     "program": {
@@ -555,89 +635,12 @@
     }
    },
    "sections": {
-    "bss": 44,
+    "bss": 52,
     "data": 0,
     "rodata": 0,
     "tbss": 4,
     "tdata": 4,
-    "text": 2206,
-    "unwind": 0
-   }
-  },
-  "malloc-heavy-tiny": {
-   "main": {
-    "depth": 240,
-    "notes": [
-     "assembly: __rtos_linux_syscall",
-     "assembly: memcpy",
-     "assembly: memset",
-     "assembly: strlen",
-     "indirect call"
-    ],
-    "path": [
-     "main",
-     "realloc",
-     "malloc",
-     "__rtos_lock_acquire",
-     "__atomic_compare_exchange_4",
-     "libc/atomic/__atomic_compare_exchange.c:__libc_atomic_cas_small",
-     "__rtos_atomic_cas"
-    ]
-   },
-   "origin": {
-    "libc": {
-     "bss": 8,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 1194,
-     "unwind": 0
-    },
-    "libgcc": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 0,
-     "unwind": 0
-    },
-    "other": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 8,
-     "unwind": 0
-    },
-    "port": {
-     "bss": 32,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 4,
-     "text": 746,
-     "unwind": 0
-    },
-    "program": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 178,
-     "unwind": 0
-    }
-   },
-   "sections": {
-    "bss": 40,
-    "data": 0,
-    "rodata": 0,
-    "tbss": 4,
-    "tdata": 4,
-    "text": 2126,
+    "text": 2202,
     "unwind": 0
    }
   },
@@ -828,6 +831,33 @@
  },
  "libc": {
   "members": {
+   "__aeabi_d2lz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 164,
+    "unwind": 0
+   },
+   "__aeabi_d2uiz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 80,
+    "unwind": 0
+   },
+   "__aeabi_d2ulz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 116,
+    "unwind": 0
+   },
    "__aeabi_dsub.o": {
     "bss": 0,
     "data": 0,
@@ -835,6 +865,33 @@
     "tbss": 0,
     "tdata": 0,
     "text": 14,
+    "unwind": 0
+   },
+   "__aeabi_f2lz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 116,
+    "unwind": 0
+   },
+   "__aeabi_f2uiz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 62,
+    "unwind": 0
+   },
+   "__aeabi_f2ulz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 80,
     "unwind": 0
    },
    "__aeabi_fdiv.o": {
@@ -1644,7 +1701,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 212,
+    "text": 164,
     "unwind": 0
    },
    "__libc_math_divbyzero.o": {
@@ -1752,25 +1809,16 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 56,
+    "text": 188,
     "unwind": 0
    },
    "__libc_nano_heap.o": {
-    "bss": 12,
+    "bss": 16,
     "data": 0,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
     "text": 0,
-    "unwind": 0
-   },
-   "__libc_nano_init.o": {
-    "bss": 0,
-    "data": 0,
-    "rodata": 0,
-    "tbss": 0,
-    "tdata": 0,
-    "text": 88,
     "unwind": 0
    },
    "__libc_nano_release.o": {
@@ -2220,7 +2268,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 196,
+    "text": 192,
     "unwind": 0
    },
    "asctime.o": {
@@ -5955,7 +6003,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 180,
+    "text": 184,
     "unwind": 0
    },
    "remainder.o": {
@@ -7922,12 +7970,12 @@
    }
   },
   "totals": {
-   "bss": 1184,
+   "bss": 1188,
    "data": 108,
    "rodata": 9934,
    "tbss": 358,
    "tdata": 8,
-   "text": 157784,
+   "text": 158398,
    "unwind": 0
   }
  },
@@ -7983,7 +8031,8 @@
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memset",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "calloc",
@@ -8172,7 +8221,8 @@
     "depth": 176,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "fgets",
@@ -8190,7 +8240,8 @@
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memset",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "fopen",
@@ -8231,7 +8282,8 @@
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
      "assembly: strlen",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "fputs",
@@ -8272,7 +8324,8 @@
      "libgcc: __aeabi_lmul",
      "libgcc: __aeabi_uidiv",
      "libgcc: __aeabi_uidivmod",
-     "libgcc: __clzdi2"
+     "libgcc: __clzdi2",
+     "recursion"
     ],
     "path": [
      "fscanf",
@@ -8379,7 +8432,8 @@
     "depth": 112,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "malloc",
@@ -8504,7 +8558,8 @@
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
      "assembly: strlen",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "puts",
@@ -8533,7 +8588,8 @@
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "realloc",
@@ -8621,7 +8677,8 @@
      "libgcc: __aeabi_lmul",
      "libgcc: __aeabi_uidiv",
      "libgcc: __aeabi_uidivmod",
-     "libgcc: __clzdi2"
+     "libgcc: __clzdi2",
+     "recursion"
     ],
     "path": [
      "sscanf",
@@ -8774,7 +8831,8 @@
      "assembly: __rtos_linux_clone",
      "assembly: __rtos_linux_syscall",
      "assembly: memset",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "thrd_create",
@@ -8787,7 +8845,13 @@
    }
   },
   "frames": {
+   "__aeabi_d2lz.o:__aeabi_d2lz": 24,
+   "__aeabi_d2uiz.o:__aeabi_d2uiz": 8,
+   "__aeabi_d2ulz.o:__aeabi_d2ulz": 16,
    "__aeabi_dsub.o:__aeabi_dsub": 16,
+   "__aeabi_f2lz.o:__aeabi_f2lz": 16,
+   "__aeabi_f2uiz.o:__aeabi_f2uiz": 0,
+   "__aeabi_f2ulz.o:__aeabi_f2ulz": 8,
    "__aeabi_fdiv.o:__aeabi_fdiv": 32,
    "__aeabi_fmul.o:__aeabi_fmul": 32,
    "__aeabi_fsub.o:__aeabi_fsub": 8,
@@ -8991,7 +9055,7 @@
    "__libc_log2p1f_core.o:libc/math/sp-nearest/__libc_log2p1f_core.c:__libc_ff_product": 32,
    "__libc_log_core.o:__libc_log_core": 144,
    "__libc_log_core.o:libc/math/__libc_log_core.c:__libc_dd_product": 56,
-   "__libc_malloc_check.o:__libc_malloc_check": 40,
+   "__libc_malloc_check.o:__libc_malloc_check": 32,
    "__libc_math_divbyzero.o:__libc_math_divbyzero": 0,
    "__libc_math_invalid.o:__libc_math_invalid": 0,
    "__libc_math_invalidf.o:__libc_math_invalidf": 0,
@@ -9003,8 +9067,8 @@
    "__libc_math_underflow.o:__libc_math_underflow": 0,
    "__libc_mutex_lock.o:__libc_mutex_lock": 32,
    "__libc_mutex_unlock.o:__libc_mutex_unlock": 16,
-   "__libc_nano_allocate.o:__libc_nano_allocate": 20,
-   "__libc_nano_init.o:__libc_nano_init": 32,
+   "__libc_nano_allocate.o:__libc_nano_allocate": 24,
+   "__libc_nano_allocate.o:libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate": 32,
    "__libc_nano_release.o:__libc_nano_release": 32,
    "__libc_nano_trim.o:__libc_nano_trim": 8,
    "__libc_pow_integer.o:__libc_pow_integer": 176,
@@ -9532,7 +9596,6 @@
    "port/__rtos_futex_wait.o:__rtos_futex_wait": 48,
    "port/__rtos_futex_wake.o:__rtos_futex_wake": 24,
    "port/__rtos_getenv.o:__rtos_getenv": 12,
-   "port/__rtos_heap_region.o:__rtos_heap_region": 32,
    "port/__rtos_linux_get_tp.o:__rtos_linux_get_tp": 8,
    "port/__rtos_linux_reap.o:__rtos_linux_reap": 48,
    "port/__rtos_linux_set_tp.o:__rtos_linux_set_tp": 24,
@@ -9545,6 +9608,7 @@
    "port/__rtos_read.o:__rtos_read": 24,
    "port/__rtos_remove.o:__rtos_remove": 24,
    "port/__rtos_rename.o:__rtos_rename": 24,
+   "port/__rtos_sbrk.o:__rtos_sbrk": 32,
    "port/__rtos_seek.o:__rtos_seek": 32,
    "port/__rtos_system.o:__rtos_system": 0,
    "port/__rtos_thread_create.o:__rtos_thread_create": 56,

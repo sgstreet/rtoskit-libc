@@ -814,3 +814,11 @@ The 18 float functions with hard cases (`docs/research/float-hard-cases.md`) tes
 | `sinf` | 180.9 | 186.9 (+3.3 %) | 180.9 | 186.9 (+3.3 %) |
 | `sinhf` | 217.6 | 222.6 (+2.3 %) | 217.6 | 222.6 (+2.3 %) |
 | `tgammaf` | 722.2 | 731.2 (+1.2 %) | 722.2 | 731.2 (+1.2 %) |
+
+
+## D103 — the allocators grow the heap through `__rtos_sbrk`
+
+The `malloc` and `malloc-tiny` cases, release and speed: −0.5 % to −3.3 % instructions per operation; no other case changes.
+Growth in place by exactly the stride, tiny's single empty-heap test and direct use of the new chunk, and nano's
+out-of-line growth behind a leaf first fit keep the fast paths at least as short as with fixed regions
+(`docs/research/malloc.md`). Baselines recorded.

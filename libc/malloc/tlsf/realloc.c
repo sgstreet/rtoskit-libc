@@ -42,7 +42,7 @@ void *realloc(void *ptr, size_t size)
 	}
 
 	__rtos_lock_acquire(&__rtos_malloc_lock);
-	heap = __libc_tlsf_get();
+	heap = &__libc_tlsf_heap;
 	current = __libc_tlsf_stride(ptr);
 
 	if (stride > current) {

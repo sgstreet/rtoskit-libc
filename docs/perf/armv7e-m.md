@@ -900,3 +900,11 @@ The shared double ordering of `__aeabi_dcmp{lt,le,eq,gt,ge}` is Thumb-2 assembly
 | `math/sin` | 6500 | 6435 (−1.0 %) |
 
 57 cases are faster in all, the double functions by 0.8 to 2.2 %, and none is slower.
+
+
+## D103 — the allocators grow the heap through `__rtos_sbrk`
+
+The `malloc` and `malloc-tiny` cases, release and speed: −0.5 % to −3.3 % instructions per operation; no other case changes.
+Growth in place by exactly the stride, tiny's single empty-heap test and direct use of the new chunk, and nano's
+out-of-line growth behind a leaf first fit keep the fast paths at least as short as with fixed regions
+(`docs/research/malloc.md`). Baselines recorded.

@@ -381,7 +381,8 @@
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
-     "assembly: strlen"
+     "assembly: strlen",
+     "recursion"
     ],
     "path": [
      "main",
@@ -457,7 +458,83 @@
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
      "assembly: memset",
-     "assembly: strlen"
+     "assembly: strlen",
+     "recursion"
+    ],
+    "path": [
+     "main",
+     "calloc",
+     "malloc",
+     "__rtos_lock_acquire",
+     "__rtos_futex_wait"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 16,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 4,
+     "tdata": 0,
+     "text": 1058,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 6,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 40,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 710,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 192,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 56,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 1966,
+    "unwind": 0
+   }
+  },
+  "malloc-heavy-tiny": {
+   "main": {
+    "depth": 184,
+    "notes": [
+     "assembly: __rtos_linux_syscall",
+     "assembly: memcpy",
+     "assembly: memset",
+     "assembly: strlen",
+     "recursion"
     ],
     "path": [
      "main",
@@ -474,7 +551,7 @@
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 1010,
+     "text": 1002,
      "unwind": 0
     },
     "libgcc": {
@@ -496,12 +573,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 32,
+     "bss": 40,
      "data": 0,
      "rodata": 0,
      "tbss": 0,
      "tdata": 4,
-     "text": 690,
+     "text": 710,
      "unwind": 0
     },
     "program": {
@@ -515,86 +592,12 @@
     }
    },
    "sections": {
-    "bss": 44,
+    "bss": 52,
     "data": 0,
     "rodata": 0,
     "tbss": 4,
     "tdata": 4,
-    "text": 1898,
-    "unwind": 0
-   }
-  },
-  "malloc-heavy-tiny": {
-   "main": {
-    "depth": 184,
-    "notes": [
-     "assembly: __rtos_linux_syscall",
-     "assembly: memcpy",
-     "assembly: memset",
-     "assembly: strlen"
-    ],
-    "path": [
-     "main",
-     "calloc",
-     "malloc",
-     "__rtos_lock_acquire",
-     "__rtos_futex_wait"
-    ]
-   },
-   "origin": {
-    "libc": {
-     "bss": 8,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 950,
-     "unwind": 0
-    },
-    "libgcc": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 0,
-     "unwind": 0
-    },
-    "other": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 6,
-     "unwind": 0
-    },
-    "port": {
-     "bss": 32,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 4,
-     "text": 690,
-     "unwind": 0
-    },
-    "program": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 192,
-     "unwind": 0
-    }
-   },
-   "sections": {
-    "bss": 40,
-    "data": 0,
-    "rodata": 0,
-    "tbss": 4,
-    "tdata": 4,
-    "text": 1838,
+    "text": 1910,
     "unwind": 0
    }
   },
@@ -1747,7 +1750,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 204,
+    "text": 160,
     "unwind": 0
    },
    "__libc_math_divbyzero.o": {
@@ -1855,25 +1858,16 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 56,
+    "text": 196,
     "unwind": 0
    },
    "__libc_nano_heap.o": {
-    "bss": 12,
+    "bss": 16,
     "data": 0,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
     "text": 0,
-    "unwind": 0
-   },
-   "__libc_nano_init.o": {
-    "bss": 0,
-    "data": 0,
-    "rodata": 0,
-    "tbss": 0,
-    "tdata": 0,
-    "text": 88,
     "unwind": 0
    },
    "__libc_nano_release.o": {
@@ -2377,7 +2371,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 196,
+    "text": 188,
     "unwind": 0
    },
    "asctime.o": {
@@ -5590,7 +5584,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 68,
+    "text": 64,
     "unwind": 0
    },
    "mblen.o": {
@@ -8079,12 +8073,12 @@
    }
   },
   "totals": {
-   "bss": 1184,
+   "bss": 1188,
    "data": 108,
    "rodata": 9982,
    "tbss": 358,
    "tdata": 8,
-   "text": 145860,
+   "text": 145856,
    "unwind": 0
   }
  },
@@ -8136,7 +8130,8 @@
     "depth": 88,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "assembly: memset"
+     "assembly: memset",
+     "recursion"
     ],
     "path": [
      "calloc",
@@ -8289,7 +8284,8 @@
    "fgets": {
     "depth": 120,
     "notes": [
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "recursion"
     ],
     "path": [
      "fgets",
@@ -8304,7 +8300,8 @@
     "depth": 120,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "assembly: memset"
+     "assembly: memset",
+     "recursion"
     ],
     "path": [
      "fopen",
@@ -8337,7 +8334,8 @@
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
-     "assembly: strlen"
+     "assembly: strlen",
+     "recursion"
     ],
     "path": [
      "fputs",
@@ -8365,7 +8363,8 @@
      "assembly: __rtos_linux_syscall",
      "assembly: memmove",
      "assembly: memset",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "fscanf",
@@ -8451,7 +8450,8 @@
    "malloc": {
     "depth": 72,
     "notes": [
-     "assembly: __rtos_linux_syscall"
+     "assembly: __rtos_linux_syscall",
+     "recursion"
     ],
     "path": [
      "malloc",
@@ -8539,7 +8539,8 @@
     "notes": [
      "assembly: __rtos_linux_syscall",
      "assembly: memcpy",
-     "assembly: strlen"
+     "assembly: strlen",
+     "recursion"
     ],
     "path": [
      "puts",
@@ -8565,7 +8566,8 @@
     "depth": 88,
     "notes": [
      "assembly: __rtos_linux_syscall",
-     "assembly: memcpy"
+     "assembly: memcpy",
+     "recursion"
     ],
     "path": [
      "realloc",
@@ -8625,7 +8627,8 @@
      "assembly: __rtos_linux_syscall",
      "assembly: memmove",
      "assembly: memset",
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "sscanf",
@@ -8744,7 +8747,8 @@
     "notes": [
      "assembly: __rtos_linux_clone",
      "assembly: __rtos_linux_syscall",
-     "assembly: memset"
+     "assembly: memset",
+     "recursion"
     ],
     "path": [
      "thrd_create",
@@ -8971,8 +8975,8 @@
    "__libc_math_underflow.o:__libc_math_underflow": 0,
    "__libc_mutex_lock.o:__libc_mutex_lock": 24,
    "__libc_mutex_unlock.o:__libc_mutex_unlock": 16,
-   "__libc_nano_allocate.o:__libc_nano_allocate": 12,
-   "__libc_nano_init.o:__libc_nano_init": 24,
+   "__libc_nano_allocate.o:__libc_nano_allocate": 8,
+   "__libc_nano_allocate.o:libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate": 24,
    "__libc_nano_release.o:__libc_nano_release": 16,
    "__libc_nano_trim.o:__libc_nano_trim": 0,
    "__libc_pow_integer.o:__libc_pow_integer": 176,
@@ -9492,7 +9496,6 @@
    "port/__rtos_futex_wait.o:__rtos_futex_wait": 48,
    "port/__rtos_futex_wake.o:__rtos_futex_wake": 24,
    "port/__rtos_getenv.o:__rtos_getenv": 12,
-   "port/__rtos_heap_region.o:__rtos_heap_region": 32,
    "port/__rtos_linux_get_tp.o:__rtos_linux_get_tp": 0,
    "port/__rtos_linux_reap.o:__rtos_linux_reap": 32,
    "port/__rtos_linux_set_tp.o:__rtos_linux_set_tp": 24,
@@ -9505,6 +9508,7 @@
    "port/__rtos_read.o:__rtos_read": 24,
    "port/__rtos_remove.o:__rtos_remove": 24,
    "port/__rtos_rename.o:__rtos_rename": 24,
+   "port/__rtos_sbrk.o:__rtos_sbrk": 32,
    "port/__rtos_seek.o:__rtos_seek": 32,
    "port/__rtos_system.o:__rtos_system": 0,
    "port/__rtos_thread_create.o:__rtos_thread_create": 48,

@@ -365,16 +365,19 @@
   },
   "hello-puts": {
    "main": {
-    "depth": 216,
-    "notes": [],
+    "depth": 200,
+    "notes": [
+     "recursion"
+    ],
     "path": [
      "main",
      "puts",
      "__libc_file_write",
      "__libc_file_setup",
      "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
+     "__libc_nano_allocate",
+     "libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate",
+     "__rtos_sbrk"
     ]
    },
    "origin": {
@@ -436,14 +439,89 @@
   },
   "malloc-heavy": {
    "main": {
-    "depth": 328,
-    "notes": [],
+    "depth": 312,
+    "notes": [
+     "recursion"
+    ],
     "path": [
      "main",
      "calloc",
      "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
+     "__libc_nano_allocate",
+     "libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate",
+     "__rtos_sbrk"
+    ]
+   },
+   "origin": {
+    "libc": {
+     "bss": 32,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 4,
+     "tdata": 0,
+     "text": 1600,
+     "unwind": 0
+    },
+    "libgcc": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "other": {
+     "bss": 28,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 0,
+     "unwind": 0
+    },
+    "port": {
+     "bss": 68,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 4,
+     "text": 728,
+     "unwind": 0
+    },
+    "program": {
+     "bss": 0,
+     "data": 0,
+     "rodata": 0,
+     "tbss": 0,
+     "tdata": 0,
+     "text": 282,
+     "unwind": 0
+    }
+   },
+   "sections": {
+    "bss": 128,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 4,
+    "tdata": 4,
+    "text": 2610,
+    "unwind": 0
+   }
+  },
+  "malloc-heavy-tiny": {
+   "main": {
+    "depth": 312,
+    "notes": [
+     "recursion"
+    ],
+    "path": [
+     "main",
+     "calloc",
+     "malloc",
+     "__libc_nano_allocate",
+     "libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate",
+     "__rtos_sbrk"
     ]
    },
    "origin": {
@@ -453,7 +531,7 @@
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 1532,
+     "text": 1526,
      "unwind": 0
     },
     "libgcc": {
@@ -475,12 +553,12 @@
      "unwind": 0
     },
     "port": {
-     "bss": 52,
+     "bss": 68,
      "data": 0,
      "rodata": 0,
      "tbss": 0,
      "tdata": 4,
-     "text": 703,
+     "text": 728,
      "unwind": 0
     },
     "program": {
@@ -494,81 +572,12 @@
     }
    },
    "sections": {
-    "bss": 88,
+    "bss": 104,
     "data": 0,
     "rodata": 0,
     "tbss": 4,
     "tdata": 4,
-    "text": 2517,
-    "unwind": 0
-   }
-  },
-  "malloc-heavy-tiny": {
-   "main": {
-    "depth": 328,
-    "notes": [],
-    "path": [
-     "main",
-     "calloc",
-     "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
-    ]
-   },
-   "origin": {
-    "libc": {
-     "bss": 16,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 4,
-     "tdata": 0,
-     "text": 1415,
-     "unwind": 0
-    },
-    "libgcc": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 0,
-     "unwind": 0
-    },
-    "other": {
-     "bss": 12,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 0,
-     "unwind": 0
-    },
-    "port": {
-     "bss": 52,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 4,
-     "text": 703,
-     "unwind": 0
-    },
-    "program": {
-     "bss": 0,
-     "data": 0,
-     "rodata": 0,
-     "tbss": 0,
-     "tdata": 0,
-     "text": 282,
-     "unwind": 0
-    }
-   },
-   "sections": {
-    "bss": 80,
-    "data": 0,
-    "rodata": 0,
-    "tbss": 4,
-    "tdata": 4,
-    "text": 2400,
+    "text": 2536,
     "unwind": 0
    }
   },
@@ -1333,7 +1342,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 248,
+    "text": 216,
     "unwind": 0
    },
    "__libc_math_divbyzero.o": {
@@ -1441,25 +1450,16 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 74,
+    "text": 275,
     "unwind": 0
    },
    "__libc_nano_heap.o": {
-    "bss": 24,
+    "bss": 32,
     "data": 0,
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
     "text": 0,
-    "unwind": 0
-   },
-   "__libc_nano_init.o": {
-    "bss": 0,
-    "data": 0,
-    "rodata": 0,
-    "tbss": 0,
-    "tdata": 0,
-    "text": 146,
     "unwind": 0
    },
    "__libc_nano_release.o": {
@@ -1864,7 +1864,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 276,
+    "text": 279,
     "unwind": 0
    },
    "asctime.o": {
@@ -5077,7 +5077,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 98,
+    "text": 102,
     "unwind": 0
    },
    "mblen.o": {
@@ -5599,7 +5599,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 241,
+    "text": 250,
     "unwind": 0
    },
    "remainder.o": {
@@ -7566,12 +7566,12 @@
    }
   },
   "totals": {
-   "bss": 1848,
+   "bss": 1856,
    "data": 188,
    "rodata": 17598,
    "tbss": 618,
    "tdata": 8,
-   "text": 100288,
+   "text": 100327,
    "unwind": 0
   }
  },
@@ -7610,13 +7610,16 @@
     ]
    },
    "calloc": {
-    "depth": 136,
-    "notes": [],
+    "depth": 120,
+    "notes": [
+     "recursion"
+    ],
     "path": [
      "calloc",
      "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
+     "__libc_nano_allocate",
+     "libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate",
+     "__rtos_sbrk"
     ]
    },
    "cnd_wait": {
@@ -7717,27 +7720,32 @@
     ]
    },
    "fgets": {
-    "depth": 184,
-    "notes": [],
+    "depth": 176,
+    "notes": [
+     "recursion"
+    ],
     "path": [
      "fgets",
-     "__libc_file_getc",
-     "__libc_file_setup",
-     "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
+     "__libc_file_before_input",
+     "__libc_stdio_flush_all",
+     "libc/stdio/__libc_stdio_flush_all.c:flush_one.part.0",
+     "__rtos_lock_acquire",
+     "__rtos_futex_wait"
     ]
    },
    "fopen": {
-    "depth": 200,
-    "notes": [],
+    "depth": 184,
+    "notes": [
+     "recursion"
+    ],
     "path": [
      "fopen",
      "__libc_file_new",
      "calloc",
      "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
+     "__libc_nano_allocate",
+     "libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate",
+     "__rtos_sbrk"
     ]
    },
    "fprintf": {
@@ -7755,15 +7763,18 @@
     ]
    },
    "fputs": {
-    "depth": 200,
-    "notes": [],
+    "depth": 184,
+    "notes": [
+     "recursion"
+    ],
     "path": [
      "fputs",
      "__libc_file_write",
      "__libc_file_setup",
      "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
+     "__libc_nano_allocate",
+     "libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate",
+     "__rtos_sbrk"
     ]
    },
    "free": {
@@ -7778,7 +7789,8 @@
    "fscanf": {
     "depth": 3592,
     "notes": [
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "fscanf",
@@ -7840,12 +7852,15 @@
     ]
    },
    "malloc": {
-    "depth": 104,
-    "notes": [],
+    "depth": 88,
+    "notes": [
+     "recursion"
+    ],
     "path": [
      "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
+     "__libc_nano_allocate",
+     "libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate",
+     "__rtos_sbrk"
     ]
    },
    "mktime": {
@@ -7905,15 +7920,18 @@
     ]
    },
    "puts": {
-    "depth": 200,
-    "notes": [],
+    "depth": 184,
+    "notes": [
+     "recursion"
+    ],
     "path": [
      "puts",
      "__libc_file_write",
      "__libc_file_setup",
      "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
+     "__libc_nano_allocate",
+     "libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate",
+     "__rtos_sbrk"
     ]
    },
    "qsort": {
@@ -7928,13 +7946,16 @@
     ]
    },
    "realloc": {
-    "depth": 136,
-    "notes": [],
+    "depth": 120,
+    "notes": [
+     "recursion"
+    ],
     "path": [
      "realloc",
      "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
+     "__libc_nano_allocate",
+     "libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate",
+     "__rtos_sbrk"
     ]
    },
    "sin": {
@@ -7975,7 +7996,8 @@
    "sscanf": {
     "depth": 3576,
     "notes": [
-     "indirect call"
+     "indirect call",
+     "recursion"
     ],
     "path": [
      "sscanf",
@@ -8068,15 +8090,17 @@
     ]
    },
    "thrd_create": {
-    "depth": 152,
+    "depth": 136,
     "notes": [
-     "assembly: __rtos_linux_clone"
+     "assembly: __rtos_linux_clone",
+     "recursion"
     ],
     "path": [
      "thrd_create",
      "malloc",
-     "__libc_nano_init",
-     "__rtos_heap_region"
+     "__libc_nano_allocate",
+     "libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate",
+     "__rtos_sbrk"
     ]
    }
   },
@@ -8262,7 +8286,7 @@
    "__libc_mutex_lock.o:__libc_mutex_lock": 48,
    "__libc_mutex_unlock.o:__libc_mutex_unlock": 32,
    "__libc_nano_allocate.o:__libc_nano_allocate": 8,
-   "__libc_nano_init.o:__libc_nano_init": 48,
+   "__libc_nano_allocate.o:libc/malloc/nano/__libc_nano_allocate.c:grow_and_allocate": 32,
    "__libc_nano_release.o:__libc_nano_release": 8,
    "__libc_nano_trim.o:__libc_nano_trim": 8,
    "__libc_pow_integer.o:__libc_pow_integer": 80,
@@ -8754,7 +8778,6 @@
    "port/__rtos_futex_wait.o:__rtos_futex_wait": 8,
    "port/__rtos_futex_wake.o:__rtos_futex_wake": 8,
    "port/__rtos_getenv.o:__rtos_getenv": 8,
-   "port/__rtos_heap_region.o:__rtos_heap_region": 24,
    "port/__rtos_linux_get_tp.o:__rtos_linux_get_tp": 8,
    "port/__rtos_linux_reap.o:__rtos_linux_reap": 8,
    "port/__rtos_linux_set_tp.o:__rtos_linux_set_tp": 8,
@@ -8767,6 +8790,7 @@
    "port/__rtos_read.o:__rtos_read": 8,
    "port/__rtos_remove.o:__rtos_remove": 8,
    "port/__rtos_rename.o:__rtos_rename": 8,
+   "port/__rtos_sbrk.o:__rtos_sbrk": 16,
    "port/__rtos_seek.o:__rtos_seek": 8,
    "port/__rtos_system.o:__rtos_system": 8,
    "port/__rtos_thread_create.o:__rtos_thread_create": 80,

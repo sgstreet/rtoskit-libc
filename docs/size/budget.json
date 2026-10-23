@@ -26,11 +26,11 @@
     "ram": 388
    },
    "malloc-heavy": {
-    "code": 2214,
+    "code": 2278,
     "ram": 88
    },
    "malloc-heavy-tiny": {
-    "code": 2134,
+    "code": 2202,
     "ram": 84
    },
    "math-float": {
@@ -68,11 +68,11 @@
     "ram": 388
    },
    "malloc-heavy": {
-    "code": 2214,
+    "code": 2278,
     "ram": 88
    },
    "malloc-heavy-tiny": {
-    "code": 2134,
+    "code": 2202,
     "ram": 84
    },
    "math-float": {
@@ -110,11 +110,11 @@
     "ram": 388
    },
    "malloc-heavy": {
-    "code": 1934,
+    "code": 1982,
     "ram": 88
    },
    "malloc-heavy-tiny": {
-    "code": 1874,
+    "code": 1926,
     "ram": 84
    },
    "math-float": {
@@ -152,11 +152,11 @@
     "ram": 388
    },
    "malloc-heavy": {
-    "code": 1934,
+    "code": 1982,
     "ram": 88
    },
    "malloc-heavy-tiny": {
-    "code": 1874,
+    "code": 1926,
     "ram": 84
    },
    "math-float": {
@@ -194,11 +194,11 @@
     "ram": 388
    },
    "malloc-heavy": {
-    "code": 1914,
+    "code": 1966,
     "ram": 88
    },
    "malloc-heavy-tiny": {
-    "code": 1854,
+    "code": 1910,
     "ram": 84
    },
    "math-float": {
