@@ -163,7 +163,10 @@ The 4.2 KB first quoted for TLSF was x86_64 code including the checker.
   rather than `__rtos_sbrk`: fixed regions match MCU linker scripts and
   multi-bank memory, need no growth protocol, and keep allocation
   deterministic. A port with growable memory reserves a region up front (the
-  Linux port maps 64 MiB with `MAP_NORESERVE`, so untouched pages cost nothing).
+  Linux port maps 64 MiB with `MAP_NORESERVE`, so untouched pages cost
+  nothing); an RTOS whose heap is an `sbrk` break takes region 0 from it at
+  the first call. D103 measured the alternative and kept this seam; see
+  "Growing with sbrk, evaluated" below.
 - **Locks:** opaque `struct __rtos_lock` defined by the port; libc only holds
   pointers and names statically allocated locks the port must provide
   (`__rtos_malloc_lock` now; stdio, `atexit` and environment locks join with
@@ -174,6 +177,62 @@ The 4.2 KB first quoted for TLSF was x86_64 code including the checker.
 - `port/none`: single-threaded no-ops. `port/linux` until P1.12: a depth counter
   that aborts on a release without an acquire, so unbalanced locking shows up
   in tests.
+
+## Growing with sbrk, evaluated (D103)
+
+The question: should the allocators grow the heap on demand through an
+`__rtos_sbrk` seam, so that an RTOS whose heap is an `sbrk` break (pi-pico's
+`sys/sbrk.c`, a spinlock-protected break between `__heap_start` and
+`__heap_end`) can share it? A complete implementation was built, tested and
+measured; it is kept on the branch `claude/sbrk-allocators` (commit fa6bbe1)
+and in the history of PR #78.
+
+Sources (design descriptions only): picolibc `libc/stdlib/malloc.c`
+(<https://github.com/picolibc/picolibc/blob/main/libc/stdlib/malloc.c>), which
+extends a free top chunk by the difference and turns a non-contiguous result
+into a separate chunk; Matthew Conte's TLSF `tlsf_add_pool`
+(<https://github.com/mattconte/tlsf>), whose pools end in a used sentinel and
+never merge; the barebox pool-tracking patches
+(<https://lists.infradead.org/pipermail/barebox/2025-April/050297.html>);
+dlmalloc's `MORECORE_CONTIGUOUS` handling.
+
+The design that was built:
+
+- Each heap kept `first`, `end` (the end marker) and `brk`. An allocation that
+  found no chunk asked for its whole stride; a break nothing else had moved
+  extended the heap in place by exactly that, and a moved break was spanned
+  by a used *bridge* chunk to a new segment (one more `sbrk` call for a
+  bridge offset and alignment), so each heap stayed one chain.
+- Requests were bounded by `PTRDIFF_MAX / 4` so that no increment could be
+  negative; TLSF's control block became static with lists for every
+  `size_t` stride (1.8 KiB on 32-bit targets).
+- It passed every check, and four deliberate mutants (a short bridge, no
+  slack after a moved break, a moved break taken as contiguous, tiny's
+  bridge left free) were caught by the tests.
+
+What it cost, against the regions:
+
+- **Size:** `malloc-heavy` +68 to +72 bytes on the Arm boards and
+  `malloc-heavy-tiny` +72 to +76 (libc 48 to 52 of it, the rest the Linux
+  port's break), RAM +12, over the +0 % budget. Asking `sbrk` only for what a
+  free top chunk lacks, as picolibc does, would have cost 40 to 50 bytes
+  more; without it a large request near the end of a fixed heap can fail
+  although the free top chunk and the rest of the break would hold it.
+- **Speed traps found with the benchmarks:** slack left by every growth
+  became free chunks that tiny's walk crossed, and an empty-heap test inside
+  tiny's walk cost every step (+8 % to +24 % on its batch cases); growth
+  inlined into nano's first-fit loop cost x86_64 five register saves per
+  `malloc` (+5 %). Fixed, the version was 0.5 to 3.3 % faster on Arm, but
+  the speed came from the tuning, not from `sbrk`.
+- **Determinism and memory layout:** allocation could call into the port
+  (and its lock) at any time and fail for reasons outside libc; disjoint
+  memories had to be stitched together inside the port's `sbrk`; a break
+  moved between two calls lost memory.
+
+Decision: keep `__rtos_heap_region`. An `sbrk`-backed RTOS gets the sharing
+it needs by taking region 0 from its break at the first allocation (all of
+it, or all but a reserve for its other `sbrk` users), so libc keeps the
+smaller, deterministic allocators with the whole heap in one free chunk.
 
 ## Implementation-defined choices (C23 J.3.12)
 
