@@ -14,7 +14,7 @@
 #include <stdint.h>
 
 #include "internal/aeabi.h"
-#include "softdouble.h"
+#include "internal/softdouble.h"
 
 /* (double)a, exact (C23 6.3.1.4p2; PLAN D99). */
 __LIBC_AEABI double __aeabi_ui2d(unsigned int a)

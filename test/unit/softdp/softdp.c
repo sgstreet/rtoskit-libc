@@ -14,6 +14,7 @@
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "softdp.h"
@@ -211,9 +212,15 @@ static void test_known_answers(void)
 		fail("divide range", 0, 0);
 }
 
-int main(void)
+/*
+ * softdp.elf [iterations [float-stride]]: make check runs the defaults;
+ * tools/scripts/softdp-diff runs the layer's comparison at length (PLAN D102)
+ */
+int main(int argc, char **argv)
 {
 	uint64_t hash = hash_operations(30000);
+	unsigned long iterations = argc > 1 ? strtoul(argv[1], nullptr, 0) : 300000;
+	unsigned long float_stride = argc > 2 ? strtoul(argv[2], nullptr, 0) : 65521;
 
 	if (hash != EXPECTED_HASH) {
 		char message[64];
@@ -223,7 +230,7 @@ int main(void)
 		fail("hash", hash, EXPECTED_HASH);
 	}
 	test_known_answers();
-	test_layer();
+	test_layer(iterations, float_stride);
 
 	fputs(failures == 0 ? "softdp: pass\n" : "softdp: FAIL\n", stdout);
 	return failures == 0 ? 0 : 1;

@@ -696,3 +696,11 @@ Decision D90, `docs/research/qsort-speed.md`. The release build is unchanged. In
 about 625 bytes (the introsort keeps the heapsort as its fallback), and `qsort`'s stack depth by about 440 bytes, most
 of it the stack of waiting ranges (one per bit of `size_t`). No reference program links `qsort`; every image is
 unchanged and both budgets hold.
+
+## D102 — the conversions to integers no longer link libgcc's arithmetic
+
+`libc.a` grows by 618 bytes: the `soft-int` layer's `__aeabi_d2lz` (164), `__aeabi_d2ulz` (116), `__aeabi_f2lz` (116)
+and `__aeabi_f2ulz` (80), and the nofp layer's `__aeabi_d2uiz` (80) and `__aeabi_f2uiz` (62). Before, a program that
+converted a double to a 64-bit integer linked libgcc's conversions, which subtract in floating point and brought in
+libgcc's `subdf3.o` (its own `__aeabi_dadd`, about 1.4 KB) in place of D85's. No reference program converts to a
+64-bit integer, so every image is unchanged and both budgets hold.

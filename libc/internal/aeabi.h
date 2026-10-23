@@ -17,11 +17,15 @@
 /*
  * The soft-float helpers of the Arm run-time ABI (RTABI 4.1.2), which the
  * compiler calls for floating-point arithmetic its FPU lacks. The
- * compiler's library provides them; the nofp math layer replaces the two
- * subtractions (PLAN D55) and the single-precision multiplication and
- * division (D85), and the soft-dp layer the double-precision set of the
- * single-precision FPUs (D99). They keep the base procedure call standard
- * (RTABI 4.1.1) even in a hard-float build.
+ * compiler's library provides them; this library replaces some:
+ * - the nofp layer, on the cores without an FPU: the two subtractions
+ *   (PLAN D55), the single-precision multiplication and division (D85),
+ *   and the unsigned conversions to int (D102);
+ * - the soft-dp layer, on the single-precision FPUs: the double-precision
+ *   set (D99);
+ * - the soft-int layer, on both: the conversions to 64-bit integers (D102).
+ * They keep the base procedure call standard (RTABI 4.1.1) even in a
+ * hard-float build.
  */
 #define __LIBC_AEABI [[gnu::pcs("aapcs")]]
 
@@ -43,6 +47,7 @@ __LIBC_AEABI double __aeabi_l2d(long long a);
 __LIBC_AEABI double __aeabi_ul2d(unsigned long long a);
 __LIBC_AEABI int __aeabi_d2iz(double a);
 __LIBC_AEABI unsigned int __aeabi_d2uiz(double a);
+__LIBC_AEABI unsigned int __aeabi_f2uiz(float a);
 __LIBC_AEABI long long __aeabi_d2lz(double a);
 __LIBC_AEABI unsigned long long __aeabi_d2ulz(double a);
 __LIBC_AEABI long long __aeabi_f2lz(float a);

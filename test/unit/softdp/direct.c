@@ -16,16 +16,18 @@
 #include <string.h>
 
 #include "internal/aeabi.h"
-#include "softdouble.h"
+#include "internal/softdouble.h"
 #include "softdp.h"
 
 /*
- * The soft-dp layer's helpers (PLAN D99), compiled into this test on
- * x86_64 and called directly, against the hardware's operations case by
- * case: the C ones, and for the addition, the multiplication, the
- * comparisons and the narrowing conversion, whose fast paths are Thumb-2 assembly, the general
- * C versions those fall back on (the conversions written in assembly alone
- * are checked on the Arm cores, by the hash). The hash in softdp.c covers the layer as the Arm cores link it.
+ * The soft-dp, soft-int and nofp layers' C helpers (PLAN D99, D102),
+ * compiled into this test on x86_64 and called directly, against the
+ * hardware's operations case by case. For the addition, the
+ * multiplication, the comparisons and the narrowing conversion, whose fast
+ * paths are Thumb-2 assembly, the C models and the general C versions the
+ * assembly falls back on stand in. The conversions written in assembly
+ * alone are checked on the Arm cores, by the hash in softdp.c, which covers
+ * the layers as those cores link them.
  */
 static uint64_t bits_of(double x)
 {
@@ -94,13 +96,27 @@ static void check(double x, double y, float f, uint64_t v)
 		fail("f2lz", bits_of_float(f), 0);
 	if (!isnan(f) && f > -1.0f && f < 0x1p64f && __aeabi_f2ulz(f) != (unsigned long long)f)
 		fail("f2ulz", bits_of_float(f), 0);
+	if (!isnan(x) && x > -1.0 && x < 0x1p32 && __aeabi_d2uiz(a) != (unsigned int)a)
+		fail("d2uiz", ua, 0);
+	if (!isnan(f) && f > -1.0f && f < 0x1p32f && __aeabi_f2uiz(f) != (unsigned int)f)
+		fail("f2uiz", bits_of_float(f), 0);
+
+	/* The models of the conversions written only in assembly */
+	if (reference_f2d(bits_of_float(f)) != bits_of((double)f) && !(isnan(f) && (reference_f2d(bits_of_float(f)) & 0x0008000000000000ULL) != 0))
+		fail("f2d model", bits_of_float(f), 0);
+	if (!isnan(x) && fabs(x) < 0x1p31 && reference_d2iz(ua) != (int)a)
+		fail("d2iz model", ua, 0);
+	if (!isnan(x) && x > -1.0 && x < 0x1p32 && reference_d2uiz(ua) != (unsigned int)a)
+		fail("d2uiz model", ua, 0);
+	if (reference_l2d((int64_t)v) != bits_of((double)(long long)v) || reference_ul2d(0, v) != bits_of((double)v))
+		fail("l2d/ul2d model", v, 0);
 
 	/* The FPU's saturation out of range, which the helpers copy */
-	if (__aeabi_d2lz(0x1p70) != INT64_MAX || __aeabi_d2lz(NAN) != 0 || __aeabi_d2ulz(-2.0) != 0 || __aeabi_d2ulz(0x1p70) != UINT64_MAX || __aeabi_f2lz(-0x1p70f) != INT64_MIN)
+	if (__aeabi_d2lz(0x1p70) != INT64_MAX || __aeabi_d2lz(NAN) != 0 || __aeabi_d2ulz(-2.0) != 0 || __aeabi_d2ulz(0x1p70) != UINT64_MAX || __aeabi_f2lz(-0x1p70f) != INT64_MIN || __aeabi_d2uiz(0x1p40) != UINT32_MAX || __aeabi_d2uiz(-0.5) != 0 || __aeabi_f2uiz(NAN) != 0 || __aeabi_f2uiz(0x1p40f) != UINT32_MAX)
 		fail("saturation", 0, 0);
 }
 
-void test_layer(void)
+void test_layer(unsigned long iterations, unsigned long float_stride)
 {
 	static const uint64_t special[] = { 0, 0x8000000000000000ULL, 0x7ff0000000000000ULL, 0xfff0000000000000ULL, 0x7ff8000000000000ULL, 0x7ff4000000000001ULL, 1, 0x800fffffffffffffULL, 0x0010000000000000ULL, 0x7fefffffffffffffULL, 0x3ff0000000000000ULL, 0xbff0000000000000ULL, 0x3fe0000000000000ULL, 0x4340000000000000ULL, 0x3ca0000000000000ULL, 0x000fffffffffffffULL, 0x41e0000000000000ULL, 0xc1e0000000000000ULL, 0x43e0000000000000ULL };
 	int count = sizeof(special) / sizeof(special[0]);
@@ -110,7 +126,7 @@ void test_layer(void)
 		for (int k = 0; k < count; ++k)
 			check(from_bits(special[i]), from_bits(special[k]), (float)from_bits(special[k]), special[i]);
 
-	for (int i = 0; i < 300000; ++i) {
+	for (unsigned long i = 0; i < iterations; ++i) {
 		uint64_t ua = operand(&state, i);
 		uint64_t ub = i % 7 == 0 ? ua ^ (next(&state) & 0x80000000000000ffULL) : operand(&state, i / 6 + i);
 		uint32_t fb = (uint32_t)ub;
@@ -118,5 +134,17 @@ void test_layer(void)
 
 		memcpy(&f, &fb, sizeof(f));
 		check(from_bits(ua), from_bits(ub), f, next(&state) >> (i % 64));
+	}
+
+	/* Every float_stride-th float, and the two after it, through the model of the conversion from float */
+	for (uint64_t g = 0; g < (1ULL << 32); g += float_stride) {
+		for (uint32_t k = 0; k < 3; ++k) {
+			uint32_t bits = (uint32_t)g + k;
+			float h;
+
+			memcpy(&h, &bits, sizeof(h));
+			if (reference_f2d(bits) != bits_of((double)h) && !(isnan(h) && (reference_f2d(bits) & 0x0008000000000000ULL) != 0))
+				fail("f2d model sweep", bits, 0);
+		}
 	}
 }

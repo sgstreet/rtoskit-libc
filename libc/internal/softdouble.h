@@ -11,8 +11,8 @@
  *     Author: Stephen Street (stephen@redrocketcomputing.com)
  */
 
-#ifndef _SOFTDOUBLE_H
-#define _SOFTDOUBLE_H
+#ifndef _INTERNAL_SOFTDOUBLE_H
+#define _INTERNAL_SOFTDOUBLE_H
 
 #include <stdbit.h>
 #include <stdint.h>
@@ -21,7 +21,8 @@
 
 /*
  * Double-precision arithmetic in integers for the cores whose FPU has
- * single precision only (PLAN D99, docs/research/softdouble.md): round to
+ * single precision only, or that have no FPU (the soft-dp, soft-int and
+ * nofp layers; PLAN D99, D102, docs/research/softdouble.md): round to
  * nearest, ties to even, the only direction <fenv.h> has there (D44), and
  * no exception flags. Nothing in here may compute in double, or the helpers
  * would call themselves.
@@ -162,4 +163,4 @@ static inline uint64_t __libc_softdouble_truncate_float(uint32_t bits)
 	return significand >> (150 - field);
 }
 
-#endif /* _SOFTDOUBLE_H */
+#endif /* _INTERNAL_SOFTDOUBLE_H */

@@ -114,10 +114,12 @@ target: example test
 endif
 
 # Build, then run every unit test (a test directory may provide <name>.run to drive its binary)
-# and the libc-test tests against test/libc-test/expected/<board>.txt; LIBC_TEST_UPDATE=1 records improvements
+# and the libc-test tests against test/libc-test/expected/<board>.txt; LIBC_TEST_UPDATE=1 records improvements.
+# Last, no program may link a libgcc object that defines one of the library's own symbols (PLAN D102)
 check: target
 	${PROJECT_ROOT}/test/unit/run-unit ${BUILD_ROOT}/test/unit
 	${PROJECT_ROOT}/test/libc-test/run $(if ${LIBC_TEST_UPDATE},--update) ${BUILD_ROOT}/test/libc-test ${PROJECT_ROOT}/test/libc-test/expected/${BOARD_TYPE}.txt
+	${PROJECT_ROOT}/tools/scripts/libgcc-check --nm ${NM} --libgcc $(shell ${CC} ${CROSS_FLAGS} -print-libgcc-file-name) ${BUILD_ROOT}
 .PHONY: check
 
 # Build, then run the test/bench programs and compare them with docs/perf/baseline-<arch>[-speed].json

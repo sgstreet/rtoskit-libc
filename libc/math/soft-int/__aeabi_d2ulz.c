@@ -14,12 +14,14 @@
 #include <stdint.h>
 
 #include "internal/aeabi.h"
-#include "softdouble.h"
+#include "internal/softdouble.h"
 
 /*
- * (unsigned long long)a, truncated toward zero (C23 6.3.1.4p1; PLAN D99).
- * Out of range the behaviour is undefined; the result saturates, a negative
- * value and NaN give 0.
+ * (unsigned long long)a, truncated toward zero (C23 6.3.1.4p1; PLAN D99,
+ * D102). Out of range the behaviour is undefined; the result saturates, a
+ * negative value and NaN give 0. It lives in the soft-int layer that the
+ * soft-dp and nofp cores share: libgcc's version subtracts in floating
+ * point, which brings libgcc's own subtraction from inside libgcc.
  */
 __LIBC_AEABI unsigned long long __aeabi_d2ulz(double a)
 {

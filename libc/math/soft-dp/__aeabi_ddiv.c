@@ -14,7 +14,7 @@
 #include <stdint.h>
 
 #include "internal/aeabi.h"
-#include "softdouble.h"
+#include "internal/softdouble.h"
 
 /*
  * a / b in integers (IEEE 754-2019 5.4.1, PLAN D99): long division of the

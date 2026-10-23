@@ -14,12 +14,15 @@
 #include <stdint.h>
 
 #include "internal/aeabi.h"
-#include "softdouble.h"
+#include "internal/softdouble.h"
 
 /*
- * (long long)a, truncated toward zero (C23 6.3.1.4p1; PLAN D99). Out of
- * range the behaviour is undefined; the result saturates and NaN gives 0.
- * libgcc's version is 1.7 KB with the double arithmetic it calls.
+ * (long long)a, truncated toward zero (C23 6.3.1.4p1; PLAN D99, D102). Out
+ * of range the behaviour is undefined; the result saturates and NaN gives
+ * 0. It lives in the soft-int layer that the soft-dp and nofp cores share.
+ * libgcc's version (1.7 KB with the arithmetic it calls) converts through
+ * the unsigned helper and floating-point arithmetic, resolved inside libgcc
+ * in place of this library's.
  */
 __LIBC_AEABI long long __aeabi_f2lz(float a)
 {

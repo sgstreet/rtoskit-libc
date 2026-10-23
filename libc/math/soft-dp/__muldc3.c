@@ -14,7 +14,7 @@
 #include <complex.h>
 #include <math.h>
 
-#include "softdouble.h"
+#include "internal/softdouble.h"
 
 /*
  * (a + bi)(c + di), the compiler's helper for complex multiplication

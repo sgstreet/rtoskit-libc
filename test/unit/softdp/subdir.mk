@@ -15,4 +15,4 @@
 # against the C models on the cores that link it, nothing elsewhere (PLAN D99)
 SOFTDP_LAYER := $(if $(filter x86_64,${ARCH_FAMILY}),direct.c,$(if $(filter soft-dp,${LIBC_MATH_LAYERS}),assembly.c,layer_none.c))
 SRC := ${SOURCE_DIR}/softdp.c ${SOURCE_DIR}/${SOFTDP_LAYER}
-SRC += $(if $(filter layer_none.c,${SOFTDP_LAYER}),,${SOURCE_DIR}/reference_add.c ${SOURCE_DIR}/reference_multiply.c ${SOURCE_DIR}/reference_compare.c)
+SRC += $(if $(filter layer_none.c,${SOFTDP_LAYER}),,${SOURCE_DIR}/reference_add.c ${SOURCE_DIR}/reference_multiply.c ${SOURCE_DIR}/reference_compare.c ${SOURCE_DIR}/reference_convert.c)
