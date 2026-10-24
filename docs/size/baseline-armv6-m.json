@@ -31,7 +31,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 1784,
+     "text": 1760,
      "unwind": 0
     },
     "libgcc": {
@@ -58,7 +58,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 256,
+     "text": 276,
      "unwind": 0
     },
     "program": {
@@ -77,7 +77,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 3744,
+    "text": 3740,
     "unwind": 0
    }
   },
@@ -115,7 +115,7 @@
      "rodata": 185,
      "tbss": 4,
      "tdata": 0,
-     "text": 6348,
+     "text": 6324,
      "unwind": 0
     },
     "libgcc": {
@@ -142,7 +142,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 4,
-     "text": 738,
+     "text": 758,
      "unwind": 0
     },
     "program": {
@@ -161,7 +161,7 @@
     "rodata": 198,
     "tbss": 4,
     "tdata": 4,
-    "text": 10168,
+    "text": 10164,
     "unwind": 0
    }
   },
@@ -196,7 +196,7 @@
      "rodata": 185,
      "tbss": 4,
      "tdata": 0,
-     "text": 6348,
+     "text": 6324,
      "unwind": 0
     },
     "libgcc": {
@@ -223,7 +223,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 4,
-     "text": 738,
+     "text": 758,
      "unwind": 0
     },
     "program": {
@@ -242,7 +242,7 @@
     "rodata": 201,
     "tbss": 4,
     "tdata": 4,
-    "text": 7560,
+    "text": 7556,
     "unwind": 0
    }
   },
@@ -277,7 +277,7 @@
      "rodata": 95,
      "tbss": 4,
      "tdata": 0,
-     "text": 3438,
+     "text": 3414,
      "unwind": 0
     },
     "libgcc": {
@@ -304,7 +304,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 4,
-     "text": 738,
+     "text": 758,
      "unwind": 0
     },
     "program": {
@@ -323,7 +323,7 @@
     "rodata": 111,
     "tbss": 4,
     "tdata": 4,
-    "text": 4600,
+    "text": 4596,
     "unwind": 0
    }
   },
@@ -358,7 +358,7 @@
      "rodata": 95,
      "tbss": 4,
      "tdata": 0,
-     "text": 3656,
+     "text": 3632,
      "unwind": 0
     },
     "libgcc": {
@@ -385,7 +385,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 4,
-     "text": 738,
+     "text": 758,
      "unwind": 0
     },
     "program": {
@@ -404,7 +404,7 @@
     "rodata": 111,
     "tbss": 4,
     "tdata": 4,
-    "text": 4868,
+    "text": 4864,
     "unwind": 0
    }
   },
@@ -436,7 +436,7 @@
      "rodata": 2,
      "tbss": 4,
      "tdata": 0,
-     "text": 1378,
+     "text": 1354,
      "unwind": 0
     },
     "libgcc": {
@@ -463,7 +463,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 4,
-     "text": 738,
+     "text": 758,
      "unwind": 0
     },
     "program": {
@@ -482,7 +482,7 @@
     "rodata": 15,
     "tbss": 4,
     "tdata": 4,
-    "text": 2140,
+    "text": 2136,
     "unwind": 0
    }
   },
@@ -513,7 +513,7 @@
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 1274,
+     "text": 1250,
      "unwind": 0
     },
     "libgcc": {
@@ -540,7 +540,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 4,
-     "text": 746,
+     "text": 766,
      "unwind": 0
     },
     "program": {
@@ -559,7 +559,7 @@
     "rodata": 0,
     "tbss": 4,
     "tdata": 4,
-    "text": 2206,
+    "text": 2202,
     "unwind": 0
    }
   },
@@ -590,7 +590,7 @@
      "rodata": 0,
      "tbss": 4,
      "tdata": 0,
-     "text": 1194,
+     "text": 1170,
      "unwind": 0
     },
     "libgcc": {
@@ -617,7 +617,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 4,
-     "text": 746,
+     "text": 766,
      "unwind": 0
     },
     "program": {
@@ -636,7 +636,7 @@
     "rodata": 0,
     "tbss": 4,
     "tdata": 4,
-    "text": 2126,
+    "text": 2122,
     "unwind": 0
    }
   },
@@ -673,7 +673,7 @@
      "rodata": 516,
      "tbss": 0,
      "tdata": 0,
-     "text": 6470,
+     "text": 6446,
      "unwind": 0
     },
     "libgcc": {
@@ -700,7 +700,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 256,
+     "text": 276,
      "unwind": 0
     },
     "program": {
@@ -719,7 +719,7 @@
     "rodata": 516,
     "tbss": 0,
     "tdata": 0,
-    "text": 8520,
+    "text": 8516,
     "unwind": 0
    }
   },
@@ -774,7 +774,7 @@
      "rodata": 3700,
      "tbss": 0,
      "tdata": 0,
-     "text": 22428,
+     "text": 22404,
      "unwind": 0
     },
     "libgcc": {
@@ -801,7 +801,7 @@
      "rodata": 0,
      "tbss": 0,
      "tdata": 0,
-     "text": 256,
+     "text": 276,
      "unwind": 0
     },
     "program": {
@@ -820,13 +820,40 @@
     "rodata": 3700,
     "tbss": 0,
     "tdata": 0,
-    "text": 29884,
+    "text": 29880,
     "unwind": 0
    }
   }
  },
  "libc": {
   "members": {
+   "__aeabi_d2lz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 164,
+    "unwind": 0
+   },
+   "__aeabi_d2uiz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 80,
+    "unwind": 0
+   },
+   "__aeabi_d2ulz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 116,
+    "unwind": 0
+   },
    "__aeabi_dsub.o": {
     "bss": 0,
     "data": 0,
@@ -834,6 +861,33 @@
     "tbss": 0,
     "tdata": 0,
     "text": 14,
+    "unwind": 0
+   },
+   "__aeabi_f2lz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 116,
+    "unwind": 0
+   },
+   "__aeabi_f2uiz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 62,
+    "unwind": 0
+   },
+   "__aeabi_f2ulz.o": {
+    "bss": 0,
+    "data": 0,
+    "rodata": 0,
+    "tbss": 0,
+    "tdata": 0,
+    "text": 80,
     "unwind": 0
    },
    "__aeabi_fdiv.o": {
@@ -1949,7 +2003,7 @@
     "rodata": 0,
     "tbss": 0,
     "tdata": 0,
-    "text": 64,
+    "text": 40,
     "unwind": 0
    },
    "__libc_stderr.o": {
@@ -7926,7 +7980,7 @@
    "rodata": 9934,
    "tbss": 358,
    "tdata": 8,
-   "text": 157784,
+   "text": 158378,
    "unwind": 0
   }
  },
@@ -8786,7 +8840,13 @@
    }
   },
   "frames": {
+   "__aeabi_d2lz.o:__aeabi_d2lz": 24,
+   "__aeabi_d2uiz.o:__aeabi_d2uiz": 8,
+   "__aeabi_d2ulz.o:__aeabi_d2ulz": 16,
    "__aeabi_dsub.o:__aeabi_dsub": 16,
+   "__aeabi_f2lz.o:__aeabi_f2lz": 16,
+   "__aeabi_f2uiz.o:__aeabi_f2uiz": 0,
+   "__aeabi_f2ulz.o:__aeabi_f2ulz": 8,
    "__aeabi_fdiv.o:__aeabi_fdiv": 32,
    "__aeabi_fmul.o:__aeabi_fmul": 32,
    "__aeabi_fsub.o:__aeabi_fsub": 8,

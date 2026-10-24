@@ -106,6 +106,11 @@ int __rtos_clock_getres(int base, struct timespec *res);
  * (at most 8 regions). Each region is a fixed block of memory the allocator
  * owns from then on; it needs no particular alignment. A port without heap
  * memory returns false for index 0, and every allocation then fails.
+ *
+ * An RTOS that owns its heap through an sbrk-style break (PLAN D103)
+ * implements region 0 by taking one block from that break at this first
+ * call: everything up to the heap's end, or all but a reserve the RTOS keeps
+ * for its other sbrk users. Its other indexes return false.
  */
 bool __rtos_heap_region(unsigned int index, void **base, size_t *size);
 
@@ -225,9 +230,18 @@ void *__libc_tls_init(void *block, const struct __libc_tls_image *image);
 
 /*
  * Program start. The port's startup code establishes the stack and the
- * initial thread's TLS, then calls this. It runs the static constructors,
- * calls main and passes its result to exit.
+ * initial thread's TLS, then calls this. It runs the static constructors
+ * (.init_array), calls main and passes its result to exit.
+ *
+ * .preinit_array belongs to the port (PLAN D104): it is an ELF convention,
+ * not a C or compiler requirement, and an RTOS may have early hooks of its
+ * own there. A port that supports the convention runs the table, whose
+ * bounds the default linker scripts define, before calling
+ * __libc_start_main; libc never runs it.
  */
 [[noreturn]] void __libc_start_main(int (*main)(int, char **), int argc, char **argv);
+
+extern void (*const __preinit_array_start[])(void);
+extern void (*const __preinit_array_end[])(void);
 
 #endif /* _RTOS_RTOS_PORT_H */
