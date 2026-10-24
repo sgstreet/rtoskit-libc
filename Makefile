@@ -3,10 +3,11 @@ ifeq (${MAKECMDGOALS},)
 MAKECMDGOALS := all
 endif
 
-BOARDS ?= linux-x86_64 linux-armv6-m linux-armv6s-m linux-armv7e-m linux-armv7e-m-dp linux-armv8-m.main
+# The architectures (ARCH_CROSS toolchain files under tools/makefiles/, PLAN D24, D106)
+ARCHS ?= x86_64 armv6-m armv6s-m armv7e-m armv7e-m-dp armv8-m.main
 BUILDS ?= debug release speed
 
-export BOARD_TYPE ?= all
+export ARCH_CROSS ?= all
 export BUILD_TYPE ?= all
 export PROJECT_ROOT ?= ${CURDIR}
 export OUTPUT_ROOT ?= ${PROJECT_ROOT}/build
@@ -19,43 +20,56 @@ endif
 
 MAKEFLAGS += ${SILENT}
 
-ifeq (${BOARD_TYPE},all)
+# An ARCH_CROSS without a toolchain file (one a parent build exported, say) stops here, not deep in a compile
+ifneq ($(filter-out all,${ARCH_CROSS}),)
+ifeq ($(wildcard ${TOOLS_ROOT}/makefiles/${ARCH_CROSS}.mk),)
+$(error ARCH_CROSS='${ARCH_CROSS}' has no toolchain file ${TOOLS_ROOT}/makefiles/${ARCH_CROSS}.mk; use one of: ${ARCHS})
+endif
+endif
 
-# Stop at the first board that fails instead of reporting only the last one
+ifeq (${ARCH_CROSS},all)
+
+# Stop at the first architecture that fails instead of reporting only the last one
 all:
-	@for board in ${BOARDS}; do \
-		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BOARD_TYPE=$$board all || exit $$?; \
+	@for arch in ${ARCHS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile ARCH_CROSS=$$arch all || exit $$?; \
 	done
 .PHONY: all
 
 clean:
-	@for board in ${BOARDS}; do \
-		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BOARD_TYPE=$$board clean || exit $$?; \
+	@for arch in ${ARCHS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile ARCH_CROSS=$$arch clean || exit $$?; \
 	done
 .PHONY: clean
 
 check:
-	@for board in ${BOARDS}; do \
-		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BOARD_TYPE=$$board check || exit $$?; \
+	@for arch in ${ARCHS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile ARCH_CROSS=$$arch check || exit $$?; \
 	done
 .PHONY: check
 
+library:
+	@for arch in ${ARCHS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile ARCH_CROSS=$$arch library || exit $$?; \
+	done
+.PHONY: library
+
 bench:
-	@for board in ${BOARDS}; do \
-		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BOARD_TYPE=$$board bench || exit $$?; \
+	@for arch in ${ARCHS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile ARCH_CROSS=$$arch bench || exit $$?; \
 	done
 .PHONY: bench
 
 aor:
-	@for board in ${BOARDS}; do \
-		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BOARD_TYPE=$$board aor || exit $$?; \
+	@for arch in ${ARCHS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile ARCH_CROSS=$$arch aor || exit $$?; \
 	done
 .PHONY: aor
 
 else ifeq (${BUILD_TYPE},all)
 
-export INSTALL_ROOT := ${PREFIX}$(if ${BOARD_TYPE},/${BOARD_TYPE},)
-export BUILD_ROOT := ${OUTPUT_ROOT}$(if ${BOARD_TYPE},/${BOARD_TYPE},)
+export INSTALL_ROOT := ${PREFIX}$(if ${ARCH_CROSS},/${ARCH_CROSS},)
+export BUILD_ROOT := ${OUTPUT_ROOT}$(if ${ARCH_CROSS},/${ARCH_CROSS},)
 
 all:
 	@for build_type in ${BUILDS}; do \
@@ -75,6 +89,12 @@ check:
 	done
 .PHONY: check
 
+library:
+	@for build_type in ${BUILDS}; do \
+		${MAKE} --no-print-directory -f ${PROJECT_ROOT}/Makefile BUILD_TYPE=$$build_type library || exit $$?; \
+	done
+.PHONY: library
+
 # Benchmarks measure the two flavours: release (size) and speed (PLAN D73)
 bench:
 	@for build_type in release speed; do \
@@ -89,8 +109,8 @@ aor:
 
 else
 
-export INSTALL_ROOT := ${PREFIX}$(if ${BOARD_TYPE},/${BOARD_TYPE},)$(if ${BUILD_TYPE},/${BUILD_TYPE},)
-export BUILD_ROOT := ${OUTPUT_ROOT}$(if ${BOARD_TYPE},/${BOARD_TYPE},)$(if ${BUILD_TYPE},/${BUILD_TYPE},)
+export INSTALL_ROOT := ${PREFIX}$(if ${ARCH_CROSS},/${ARCH_CROSS},)$(if ${BUILD_TYPE},/${BUILD_TYPE},)
+export BUILD_ROOT := ${OUTPUT_ROOT}$(if ${ARCH_CROSS},/${ARCH_CROSS},)$(if ${BUILD_TYPE},/${BUILD_TYPE},)
 
 # Concurrent "install -D" calls can race creating the same parent directory,
 # so create the install root once, serially, for goals that install anything.
@@ -104,7 +124,7 @@ include ${TOOLS_ROOT}/makefiles/tree.mk
 
 # Dependency ordering only active for full builds (all/clean/install)
 # Individual module targets (make libc, make test/unit/smoke) are dep-free
-ifneq ($(filter-out all target clean install check bench aor,${MAKECMDGOALS}),)
+ifneq ($(filter-out all target clean install check bench aor library,${MAKECMDGOALS}),)
 target:
 else
 # The cross toolchain is downloaded into local/ on first use (tools/makefiles/setup.mk)
@@ -113,27 +133,32 @@ example test: libc port
 target: example test
 endif
 
+# The library alone, for a parent project (docs/configuration.md, "Building from another project", PLAN D105):
+# the headers, the libc*.a archives and the port archives, installed into ${INSTALL_ROOT}; no tests or examples
+library: libc port
+.PHONY: library
+
 # Build, then run every unit test (a test directory may provide <name>.run to drive its binary)
-# and the libc-test tests against test/libc-test/expected/<board>.txt; LIBC_TEST_UPDATE=1 records improvements.
+# and the libc-test tests against test/libc-test/expected/<arch>.txt; LIBC_TEST_UPDATE=1 records improvements.
 # Last, no program may link a libgcc object that defines one of the library's own symbols (PLAN D102)
 check: target
 	${PROJECT_ROOT}/test/unit/run-unit ${BUILD_ROOT}/test/unit
-	${PROJECT_ROOT}/test/libc-test/run $(if ${LIBC_TEST_UPDATE},--update) ${BUILD_ROOT}/test/libc-test ${PROJECT_ROOT}/test/libc-test/expected/${BOARD_TYPE}.txt
+	${PROJECT_ROOT}/test/libc-test/run $(if ${LIBC_TEST_UPDATE},--update) ${BUILD_ROOT}/test/libc-test ${PROJECT_ROOT}/test/libc-test/expected/${ARCH_CROSS}.txt
 	${PROJECT_ROOT}/tools/scripts/libgcc-check --nm ${NM} --libgcc $(shell ${CC} ${CROSS_FLAGS} -print-libgcc-file-name) ${BUILD_ROOT}
 .PHONY: check
 
 # Build, then run the test/bench programs and compare them with docs/perf/baseline-<arch>[-speed].json
 # (tools/scripts/bench-runner, PLAN D72); BENCH_UPDATE=1 records the results as the new baseline
 bench: target setup-bench
-	cd ${PROJECT_ROOT} && tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} run --board ${BOARD_TYPE}
-	cd ${PROJECT_ROOT} && $(if ${BENCH_UPDATE},tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} report --board ${BOARD_TYPE},tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} diff --board ${BOARD_TYPE})
+	cd ${PROJECT_ROOT} && tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} run --arch ${ARCH_CROSS}
+	cd ${PROJECT_ROOT} && $(if ${BENCH_UPDATE},tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} report --arch ${ARCH_CROSS},tools/scripts/bench-runner --build-root ${OUTPUT_ROOT} --build-type ${BUILD_TYPE} diff --arch ${ARCH_CROSS})
 .PHONY: bench
 
-# Build Arm Optimized Routines for the board into build/<board>/aor/ and run its smoke test
+# Build Arm Optimized Routines for the architecture into build/<arch>/aor/ and run its smoke test
 # against this build (tools/scripts/aor-build, Phase 4, PLAN D92); measurement only, never part of libc.a
 aor: target setup-aor
-	cd ${PROJECT_ROOT} && tools/scripts/aor-build --build-root ${OUTPUT_ROOT} build --board ${BOARD_TYPE}
-	cd ${PROJECT_ROOT} && tools/scripts/aor-build --build-root ${OUTPUT_ROOT} smoke --board ${BOARD_TYPE} --build-type ${BUILD_TYPE}
+	cd ${PROJECT_ROOT} && tools/scripts/aor-build --build-root ${OUTPUT_ROOT} build --arch ${ARCH_CROSS}
+	cd ${PROJECT_ROOT} && tools/scripts/aor-build --build-root ${OUTPUT_ROOT} smoke --arch ${ARCH_CROSS} --build-type ${BUILD_TYPE}
 .PHONY: aor
 
 endif
@@ -155,7 +180,6 @@ info:
 	@echo "LIBC_FPU=${LIBC_FPU}"
 	@echo "RTOS_PORT=${RTOS_PORT}"
 	@echo "CROSS_COMPILE=${CROSS_COMPILE}"
-	@echo "BOARD_TYPE=${BOARD_TYPE}"
 	@echo "BUILD_TYPE=${BUILD_TYPE}"
 	@echo "PROJECT_ROOT=${PROJECT_ROOT}"
 	@echo "OUTPUT_ROOT=${OUTPUT_ROOT}"
@@ -171,6 +195,7 @@ help:
 	@echo "  clean                  Clean all build artifacts"
 	@echo "  install                Install all build artifacts"
 	@echo "  check                  Build and run the tests"
+	@echo "  library                Build and install only the headers, libc*.a and the port archives"
 	@echo "  bench                  Build release and speed, run the benchmarks against docs/perf"
 	@echo "  setup-bench            Build the instruction-counting qemu for bench into local/"
 	@echo "  aor                    Fetch and build Arm Optimized Routines for comparison, run its smoke test"
@@ -180,17 +205,17 @@ help:
 	@echo "  realclean              Delete all build artifacts, directories and downloaded tools"
 	@echo "  info                   Display build configuration"
 	@echo ""
-	@echo "Direct module targets (dep-free, assumes prior full build; set BOARD_TYPE and BUILD_TYPE):"
+	@echo "Direct module targets (dep-free, assumes prior full build; set ARCH_CROSS and BUILD_TYPE):"
 	@echo "  <module>               Build a top-level module, e.g. libc, port, test"
 	@echo "  <module>/<submodule>   Build a nested module, e.g. libc/string, port/linux"
 	@echo "  test/unit/<name>       Build a single unit test, e.g. test/unit/smoke"
 	@echo ""
 	@echo "Configuration variables:"
-	@echo "  BOARD_TYPE=all         Which board(s): all (${BOARDS}), or a single board"
+	@echo "  ARCH_CROSS=all         Which architecture(s): all (${ARCHS}), or a single one"
 	@echo "  BUILD_TYPE=debug       Build variant: debug, release, speed (the speed flavour), or all"
 	@echo "  V=1                    Verbose output (show full compiler commands)"
-	@echo "  LIBC_TEST_UPDATE=1     With check: record libc-test improvements in the board baseline"
-	@echo "  BENCH_UPDATE=1         With bench: record the results as the board's benchmark baseline"
+	@echo "  LIBC_TEST_UPDATE=1     With check: record libc-test improvements in the architecture's baseline"
+	@echo "  BENCH_UPDATE=1         With bench: record the results as the architecture's benchmark baseline"
 	@echo "  PROJECT_ROOT=<path>    Override project root (required in worktrees)"
 .PHONY: help
 

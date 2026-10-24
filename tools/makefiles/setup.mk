@@ -21,7 +21,7 @@ QEMU_TARGET := ${QEMU_ROOT}/bin/qemu-arm
 BENCH_PLUGIN := ${QEMU_ROOT}/lib/bench-roi.so
 
 # Arm Optimized Routines (Phase 4, PLAN D91, D92): fetched only to measure rtoskit-libc against it,
-# built by tools/scripts/aor-build into build/<board>/aor/ and never into libc.a ("make setup-aor").
+# built by tools/scripts/aor-build into build/<arch>/aor/ and never into libc.a ("make setup-aor").
 # A shallow fetch of the pinned commit; the commit ID is the content check.
 AOR_URL := https://github.com/ARM-software/optimized-routines.git
 AOR_REVISION := f67e7daa5457646fad9f75580263dba654c988aa
@@ -30,6 +30,19 @@ AOR_TARGET := ${AOR_ROOT}/.fetched
 
 SETUP_TARGETS := ${COMPILER_TARGET}
 SETUP_PATHS := ${COMPILER_PATH}
+
+# A compiler handed in from outside (a parent build passing CROSS_COMPILE, PLAN D105) is used as it is:
+# nothing is downloaded, but it must exist and be GCC 14 or newer (D9)
+ifneq ($(filter command line environment,$(origin CROSS_COMPILE)),)
+ifeq ($(wildcard ${CROSS_COMPILE}gcc),)
+$(error CROSS_COMPILE=${CROSS_COMPILE}: ${CROSS_COMPILE}gcc does not exist)
+endif
+COMPILER_MAJOR := $(firstword $(subst ., ,$(shell ${CROSS_COMPILE}gcc -dumpversion)))
+ifneq ($(shell [ '${COMPILER_MAJOR}' -ge 14 ] 2>/dev/null && echo ok),ok)
+$(error CROSS_COMPILE=${CROSS_COMPILE}: GCC ${COMPILER_MAJOR} is older than the GCC 14 the library needs (PLAN D9))
+endif
+SETUP_TARGETS := $(filter-out ${COMPILER_TARGET},${SETUP_TARGETS})
+endif
 
 include ${PROJECT_ROOT}/tools/makefiles/common.mk
 
