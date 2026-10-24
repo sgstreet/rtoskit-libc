@@ -106,6 +106,11 @@ int __rtos_clock_getres(int base, struct timespec *res);
  * (at most 8 regions). Each region is a fixed block of memory the allocator
  * owns from then on; it needs no particular alignment. A port without heap
  * memory returns false for index 0, and every allocation then fails.
+ *
+ * An RTOS that owns its heap through an sbrk-style break (PLAN D103)
+ * implements region 0 by taking one block from that break at this first
+ * call: everything up to the heap's end, or all but a reserve the RTOS keeps
+ * for its other sbrk users. Its other indexes return false.
  */
 bool __rtos_heap_region(unsigned int index, void **base, size_t *size);
 
